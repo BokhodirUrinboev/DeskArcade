@@ -1,0 +1,69 @@
+# Flatpak of Desk Arcade, built from the prebuilt self-contained linux-x64 publish output
+# (the .NET runtime is bundled, so no .NET SDK extension is needed). Not published on Flathub;
+# see docs/RELEASING.md for building a bundle and what a Flathub submission would need.
+#
+#   dotnet publish DeskArcade.csproj -c Release -r linux-x64 --self-contained -o dist-linux/publish
+#   flatpak-builder --user --install --force-clean --state-dir=dist-linux/.flatpak-builder \
+#     dist-linux/flatpak-build packaging/flatpak/com.imperiumgames.DeskArcade.yml
+#   flatpak run com.imperiumgames.DeskArcade
+id: com.imperiumgames.DeskArcade
+runtime: org.freedesktop.Platform
+runtime-version: '24.08'
+sdk: org.freedesktop.Sdk
+command: deskarcade
+
+finish-args:
+  # The overlay is an X11 client (XShape input regions, _NET_CLIENT_LIST_STACKING, XGrabKey),
+  # also on Wayland sessions through XWayland, so it gets X11 rather than fallback-x11.
+  - --socket=x11
+  - --share=ipc
+  # OpenGL rendering through Skia; without it Avalonia falls back to software rendering.
+  - --device=dri
+  # Synthesized sound effects through libpulse-simple (PulseAudio or PipeWire).
+  - --socket=pulseaudio
+  # Tray icon: Avalonia registers a StatusNotifierItem named org.kde.StatusNotifierItem-<pid>-<n>
+  # with the watcher. <n> starts at 0 and deskarcade.sh execs the game, so it runs as pid 2.
+  - --talk-name=org.kde.StatusNotifierWatcher
+  - --own-name=org.kde.StatusNotifierItem-2-0
+  # Settings, high scores and crash.log in ~/.config/DeskArcade (src/Settings.cs), shared with the
+  # .deb and AppImage, and "Start when I sign in" in ~/.config/autostart (X11Platform.cs).
+  # deskarcade.sh points XDG_CONFIG_HOME at ~/.config so the app writes to these host folders.
+  - --filesystem=xdg-config/DeskArcade:create
+  - --filesystem=xdg-config/autostart:create
+
+modules:
+  - name: deskarcade
+    buildsystem: simple
+    build-options:
+      # Prebuilt .NET and native binaries: keep them as published.
+      no-debuginfo: true
+      strip: false
+    build-commands:
+      - test "$FLATPAK_ARCH" = x86_64 || { echo "This manifest packages the linux-x64 publish output"; exit 1; }
+      - test -x publish/DeskArcade || { echo "Publish for linux-x64 into dist-linux/publish first"; exit 1; }
+      - install -d /app/lib/deskarcade
+      - cp -r publish/. /app/lib/deskarcade/
+      - rm -f /app/lib/deskarcade/*.pdb
+      - chmod 0755 /app/lib/deskarcade/DeskArcade
+      - install -Dm0755 deskarcade.sh /app/bin/deskarcade
+      - install -Dm0644 com.imperiumgames.DeskArcade.desktop -t /app/share/applications
+      - install -Dm0644 com.imperiumgames.DeskArcade.metainfo.xml -t /app/share/metainfo
+      - install -Dm0644 DeskArcade.png /app/share/icons/hicolor/256x256/apps/com.imperiumgames.DeskArcade.png
+      - install -Dm0644 LICENSE -t /app/share/licenses/com.imperiumgames.DeskArcade
+      - install -Dm0644 THIRD-PARTY-NOTICES.md -t /app/share/licenses/com.imperiumgames.DeskArcade
+    sources:
+      - type: dir
+        path: ../../dist-linux/publish
+        dest: publish
+      - type: file
+        path: deskarcade.sh
+      - type: file
+        path: com.imperiumgames.DeskArcade.desktop
+      - type: file
+        path: com.imperiumgames.DeskArcade.metainfo.xml
+      - type: file
+        path: ../../assets/DeskArcade.png
+      - type: file
+        path: ../../LICENSE
+      - type: file
+        path: ../../THIRD-PARTY-NOTICES.md
