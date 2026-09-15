@@ -108,6 +108,14 @@ public sealed class X11Platform : IDesktopPlatform
         X11.XFlush(_dpy);
     }
 
+    /// <summary>
+    /// Mutter (GNOME, Xorg and Wayland alike) does not place a window that is larger than the working
+    /// area on the monitor it was asked for: it moves it to a monitor where it fits, which on a
+    /// two-monitor desktop is the one without the top bar. A working-area-sized window stays put and
+    /// can still be moved between monitors.
+    /// </summary>
+    public bool OverlayFitsWorkArea => true;
+
     public void SetInputRegions(IReadOnlyList<HitShape> regions, bool captureActive)
     {
         if (_win == IntPtr.Zero || _overlay == null) return;

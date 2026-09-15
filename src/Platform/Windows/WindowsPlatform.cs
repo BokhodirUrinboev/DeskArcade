@@ -83,6 +83,8 @@ public sealed class WindowsPlatform : IDesktopPlatform
         ApplyStyles();
     }
 
+    public bool OverlayFitsWorkArea => false;
+
     public void SetInputRegions(IReadOnlyList<HitShape> regions, bool captureActive)
     {
         _regions = [.. regions];
