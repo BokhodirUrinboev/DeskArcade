@@ -77,9 +77,11 @@ public sealed class BugsGame : MiniGame
     public override HudInfo Hud => new(
         _score.ToString(),
         _roundActive
-            ? $"{Math.Max(0, (int)Math.Ceiling(_roundLeft))}s left · squashed {_squashed}" + (_combo > 1 ? $" · combo ×{Math.Min(_combo, 4)}" : "")
-            : "Squash the sleeping bug to start · spare the ladybugs",
-        $"Best {Host.Settings.BestBugs}");
+            ? _combo > 1
+                ? L.F("{0}s left · squashed {1} · combo ×{2}", Math.Max(0, (int)Math.Ceiling(_roundLeft)), _squashed, Math.Min(_combo, 4))
+                : L.F("{0}s left · squashed {1}", Math.Max(0, (int)Math.Ceiling(_roundLeft)), _squashed)
+            : L.T("Squash the sleeping bug to start · spare the ladybugs"),
+        L.F("Best {0}", Host.Settings.BestBugs));
 
     // ------------------------------------------------------------------ round flow
 
@@ -130,6 +132,7 @@ public sealed class BugsGame : MiniGame
             b.EscapeT = 0;
         }
 
+        Host.Stats.Max("bugs.round", _score);
         var s = Host.Settings;
         bool best = _score > s.BestBugs;
         if (best)
@@ -139,8 +142,8 @@ public sealed class BugsGame : MiniGame
         }
         var a = Host.Arena;
         var at = new Vec2(a.Center.X, a.Top + a.Height * 0.3);
-        Host.Fx.Popup(at, best ? "NEW BEST!" : "TIME!", best ? Gold : Colors.White, 38, 2.4,
-            $"{_score} points · {_squashed} squashed · {_escaped} got away");
+        Host.Fx.Popup(at, best ? L.T("NEW BEST!") : L.T("TIME!"), best ? Gold : Colors.White, 38, 2.4,
+            L.F("{0} points · {1} squashed · {2} got away", _score, _squashed, _escaped));
         if (best)
         {
             Host.Fx.Burst(at, new[] { Gold, Colors.White, Color.FromRgb(6, 214, 160) }, 40, 520, 700, 7, 1.1);
@@ -242,7 +245,7 @@ public sealed class BugsGame : MiniGame
         {
             _score = Math.Max(0, _score - 5);
             _combo = 0;
-            Host.Fx.Popup(at - new Vec2(0, 40), "−5", Color.FromRgb(255, 110, 110), 30, 1.3, "that was a feature!");
+            Host.Fx.Popup(at - new Vec2(0, 40), "−5", Color.FromRgb(255, 110, 110), 30, 1.3, L.T("that was a feature!"));
             Host.Sound.Play("buzzer", 0.35);
         }
         else
@@ -253,6 +256,8 @@ public sealed class BugsGame : MiniGame
             int pts = (b.Kind == Kind.Golden ? 5 : b.Kind == Kind.Speedy ? 2 : 1) * mult;
             _score += pts;
             _squashed++;
+            Host.Stats.Add("bugs.squashed");
+            Host.Stats.Max("bugs.combo", mult);
             Host.Fx.Popup(at - new Vec2(0, 36), mult > 1 ? $"+{pts}  ×{mult}" : $"+{pts}", b.Kind == Kind.Golden ? Gold : Colors.White,
                 b.Kind == Kind.Golden ? 32 : 26, 1.0, BugNames[Rng.Next(BugNames.Length)]);
             Host.Fx.Burst(at, Goo, 12, 260, 700, 5, 0.5);

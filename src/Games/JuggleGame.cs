@@ -40,8 +40,8 @@ public sealed class JuggleGame : MiniGame
 
     public override HudInfo Hud => new(
         _runScore.ToString(),
-        _juggles > 0 ? $"Juggles {_juggles}" + (_stars.Count > 0 ? " · grab the star!" : " · don't let it drop") : "Click the ball to kick it up",
-        $"Best {Host.Settings.BestJuggle}");
+        _juggles > 0 ? (_stars.Count > 0 ? L.F("Juggles {0} · grab the star!", _juggles) : L.F("Juggles {0} · don't let it drop", _juggles)) : L.T("Click the ball to kick it up"),
+        L.F("Best {0}", Host.Settings.BestJuggle));
 
     public override void Layout()
     {
@@ -76,6 +76,7 @@ public sealed class JuggleGame : MiniGame
         if (_juggles == 0) _runScore = 0;
         _juggles++;
         _runScore++;
+        Host.Stats.Max("juggle.run", _runScore);
         _ball.Gravity = Math.Min(2700, BaseGravity + _juggles * 28);
 
         Host.Sound.Play("kick", 0.8, 0.9 + Rng.NextDouble() * 0.2);
@@ -114,13 +115,13 @@ public sealed class JuggleGame : MiniGame
             var at = _ball.Pos - new Vec2(0, 90);
             if (best)
             {
-                Host.Fx.Popup(at, "NEW BEST!", Gold, 32, 1.6, $"{_runScore} points");
+                Host.Fx.Popup(at, L.T("NEW BEST!"), Gold, 32, 1.6, L.F("{0} points", _runScore));
                 Host.Fx.Burst(at, GoldBurst, 30, 450, 700, 6, 1.0);
                 Host.Sound.Play("best", 0.8);
             }
             else
             {
-                Host.Fx.Popup(at, "Dropped!", Color.FromRgb(255, 130, 130), 28, 1.4, $"{_runScore} points");
+                Host.Fx.Popup(at, L.T("Dropped!"), Color.FromRgb(255, 130, 130), 28, 1.4, L.F("{0} points", _runScore));
                 Host.Sound.Play("buzzer", 0.45);
             }
         }
@@ -174,6 +175,8 @@ public sealed class JuggleGame : MiniGame
             if ((star.Pos - _ball.Pos).Length < R + 18)
             {
                 _runScore += 3;
+                Host.Stats.Add("juggle.stars");
+                Host.Stats.Max("juggle.run", _runScore);
                 Host.Fx.Popup(star.Pos - new Vec2(0, 30), "+3", Gold, 30, 1.0);
                 Host.Fx.Burst(star.Pos, GoldBurst, 18, 350, 400, 5, 0.6);
                 Host.Sound.Play("star", 0.8);

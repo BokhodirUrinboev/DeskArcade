@@ -82,8 +82,8 @@ public sealed class CansGame : MiniGame
 
     public override HudInfo Hud => new(
         _score.ToString(),
-        _gameOver ? "Game over · grab the ball to play again" : $"Stack {_stack} · balls {_ballsLeft} · cans left {CansLeft}",
-        $"Best {Host.Settings.BestCans}");
+        _gameOver ? L.T("Game over · grab the ball to play again") : L.F("Stack {0} · balls {1} · cans left {2}", _stack, _ballsLeft, CansLeft),
+        L.F("Best {0}", Host.Settings.BestCans));
 
     // ------------------------------------------------------------------ game flow
 
@@ -122,6 +122,7 @@ public sealed class CansGame : MiniGame
     void NextStack()
     {
         _stack++;
+        Host.Stats.Max("cans.stack", _stack);
         foreach (var c in _cans) _canLayer.Children.Remove(c.Sprite);
         _cans.Clear();
         int rows = 3 + Math.Min(2, (_stack - 1) / 2);
@@ -215,7 +216,7 @@ public sealed class CansGame : MiniGame
         int bonus = _ballsLeft * 5;
         AddScore(bonus);
         var at = new Vec2((_shelfX1 + _shelfX2) / 2, _shelfY - 140);
-        Host.Fx.Popup(at, "CLEAR!", Gold, 40, 1.8, bonus > 0 ? $"+{bonus} for {_ballsLeft} spare ball{(_ballsLeft == 1 ? "" : "s")}" : "next stack");
+        Host.Fx.Popup(at, L.T("CLEAR!"), Gold, 40, 1.8, bonus > 0 ? L.F("+{0} for spare balls", bonus) : L.T("next stack"));
         Host.Fx.Burst(at, Confetti, 36, 500, 700, 7, 1.0);
         Host.Sound.Play("fire", 0.8);
         NextStack();
@@ -226,7 +227,7 @@ public sealed class CansGame : MiniGame
         _gameOver = true;
         var a = Host.Arena;
         var at = new Vec2(a.Center.X, a.Top + a.Height * 0.3);
-        Host.Fx.Popup(at, _beatBest ? "NEW BEST!" : "GAME OVER", _beatBest ? Gold : Colors.White, 38, 2.4, $"{_score} points · reached stack {_stack}");
+        Host.Fx.Popup(at, _beatBest ? L.T("NEW BEST!") : L.T("GAME OVER"), _beatBest ? Gold : Colors.White, 38, 2.4, L.F("{0} points · reached stack {1}", _score, _stack));
         Host.Sound.Play(_beatBest ? "best" : "buzzer", _beatBest ? 0.8 : 0.4);
         ReturnBall();
         Host.HudChanged();
@@ -418,6 +419,7 @@ public sealed class CansGame : MiniGame
             c.Down = true;
             int pts = c.Golden ? 3 : 1;
             AddScore(pts);
+            Host.Stats.Add("cans.knocked");
             Host.Fx.Popup(c.Pos - new Vec2(0, 30), $"+{pts}", c.Golden ? Gold : Colors.White, c.Golden ? 28 : 22, 0.8);
             Host.HudChanged();
             if (_clearIn < 0 && CansLeft == 0) _clearIn = 0.7;

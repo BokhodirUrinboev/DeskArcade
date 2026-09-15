@@ -84,8 +84,8 @@ public sealed class HockeyGame : MiniGame
 
     public override HudInfo Hud => new(
         $"{_myGoals}–{_cpuGoals}",
-        _matchOver ? "Match over · grab your mallet for a rematch" : $"First to {WinGoals} · CPU level {_level} · drag your blue mallet",
-        $"Wins {Host.Settings.HockeyWins}");
+        _matchOver ? L.T("Match over · grab your mallet for a rematch") : L.F("First to {0} · CPU level {1} · drag your blue mallet", WinGoals, _level),
+        L.F("Wins {0}", Host.Settings.HockeyWins));
 
     double GoalTop => Host.Arena.Center.Y - Host.Arena.Height * GoalFraction / 2;
     double GoalBottom => Host.Arena.Center.Y + Host.Arena.Height * GoalFraction / 2;
@@ -136,11 +136,15 @@ public sealed class HockeyGame : MiniGame
     {
         var a = Host.Arena;
         var mouth = new Vec2(playerScored ? a.Right - 40 : a.Left + 40, Clamp(_puck.Y, GoalTop, GoalBottom));
-        if (playerScored) _myGoals++;
+        if (playerScored)
+        {
+            _myGoals++;
+            Host.Stats.Add("hockey.goals");
+        }
         else _cpuGoals++;
         Host.Fx.Burst(mouth, playerScored ? new[] { Blue, Gold, Colors.White } : new[] { Red, Colors.White }, 30, 480, 500, 6, 0.8);
-        Host.Fx.Popup(mouth + new Vec2(playerScored ? -90 : 90, -60), "GOAL!", playerScored ? Gold : Red, 38, 1.3,
-            playerScored ? "you score" : "CPU scores");
+        Host.Fx.Popup(mouth + new Vec2(playerScored ? -90 : 90, -60), L.T("GOAL!"), playerScored ? Gold : Red, 38, 1.3,
+            playerScored ? L.T("you score") : L.T("CPU scores"));
         Host.Sound.Play(playerScored ? "score" : "buzzer", playerScored ? 0.8 : 0.35);
 
         _puckVel = default;
@@ -162,14 +166,16 @@ public sealed class HockeyGame : MiniGame
         {
             Host.Settings.HockeyWins++;
             _level++;
+            Host.Stats.Add("hockey.wins");
+            Host.Stats.Max("hockey.level", _level);
             Host.SaveSettings();
-            Host.Fx.Popup(at, "YOU WIN!", Gold, 42, 2.6, $"{_myGoals}–{_cpuGoals} · the CPU gets faster");
+            Host.Fx.Popup(at, L.T("YOU WIN!"), Gold, 42, 2.6, L.F("{0}–{1} · the CPU gets faster", _myGoals, _cpuGoals));
             Host.Fx.Burst(at, Confetti, 44, 540, 700, 7, 1.1);
             Host.Sound.Play("best", 0.8);
         }
         else
         {
-            Host.Fx.Popup(at, "CPU WINS", Colors.White, 38, 2.4, $"{_myGoals}–{_cpuGoals} · grab your mallet for a rematch");
+            Host.Fx.Popup(at, L.T("CPU WINS"), Colors.White, 38, 2.4, L.F("{0}–{1} · grab your mallet for a rematch", _myGoals, _cpuGoals));
             Host.Sound.Play("buzzer", 0.45);
         }
     }
@@ -429,7 +435,7 @@ public sealed class HockeyGame : MiniGame
         _cpuSprite.Set(_cpu);
     }
 
-    void UpdateScoreText() => _scoreText.Text = $"YOU  {_myGoals} : {_cpuGoals}  CPU";
+    void UpdateScoreText() => _scoreText.Text = L.F("YOU  {0} : {1}  CPU", _myGoals, _cpuGoals);
 
     void PlayThrottled(string name, double vol, double pitch = 1)
     {
