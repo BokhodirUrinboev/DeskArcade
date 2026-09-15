@@ -1,0 +1,20 @@
+[Desktop Entry]
+Type=Application
+Name=Desk Arcade
+GenericName=Desktop mini-games
+Comment=Play hoops, archery and keepy-uppy on top of your windows
+Exec=deskarcade
+Icon=deskarcade
+Terminal=false
+Categories=Game;ArcadeGame;
+Keywords=basketball;archery;overlay;game;
+StartupNotify=false
+Actions=Toggle;Next;
+
+[Desktop Action Toggle]
+Name=Show / hide overlay
+Exec=deskarcade --signal toggle
+
+[Desktop Action Next]
+Name=Next game
+Exec=deskarcade --signal next

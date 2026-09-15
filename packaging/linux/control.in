@@ -1,0 +1,13 @@
+Package: deskarcade
+Version: @VERSION@
+Section: games
+Priority: optional
+Architecture: amd64
+Maintainer: Imperium Games <maintainer@example.com>
+Installed-Size: @SIZE@
+Depends: libc6, libgcc-s1, libstdc++6, libx11-6, libxext6, libice6, libsm6, libfontconfig1, procps
+Recommends: libpulse0, gnome-shell-extension-appindicator
+Description: Mini-games that play on top of your desktop
+ Shoot hoops, fire arrows and juggle a ball in a transparent overlay while
+ you wait for builds or AI agents to finish. Clicks outside the game pass
+ through to your windows, and balls can land on the tops of open windows.

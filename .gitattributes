@@ -1,0 +1,6 @@
+# Linux scripts must keep LF line endings or bash/dpkg reject them.
+*.sh                 text eol=lf
+packaging/linux/*    text eol=lf
+
+*.png binary
+*.ico binary

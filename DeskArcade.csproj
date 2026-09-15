@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyName>DeskArcade</AssemblyName>
+    <RootNamespace>DeskArcade</RootNamespace>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+    <!-- Win32/X11 calls are guarded at runtime by OperatingSystem checks. -->
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
+
+    <!-- Single source of truth for the app + installer/package version. Bump it, rebuild the
+         installer (Windows) or .deb (Ubuntu), and the new package upgrades any existing install. -->
+    <Version>1.1.0</Version>
+    <Product>Desk Arcade</Product>
+    <Description>Desktop overlay mini-games</Description>
+    <Company>Imperium Games</Company>
+    <Copyright>© 2026 Imperium Games</Copyright>
+    <ApplicationIcon>assets\DeskArcade.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.9" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.9" />
+    <PackageReference Include="Avalonia.Themes.Simple" Version="11.3.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="assets\DeskArcade.png" />
+  </ItemGroup>
+
+</Project>

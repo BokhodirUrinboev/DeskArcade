@@ -1,0 +1,43 @@
+#!/bin/sh
+# Runs before files are replaced (upgrade) or deleted (remove): close running copies first,
+# so a running game never mixes old and new files. Settings in ~/.config/DeskArcade are kept.
+set -e
+
+EXE=/opt/deskarcade/DeskArcade
+
+# Our running games. Started through the /usr/bin/deskarcade symlink the process is named
+# "deskarcade", started directly it is "DeskArcade"; /proc/PID/exe covers both where readable.
+game_pids() {
+    {
+        for dir in /proc/[0-9]*; do
+            case "$(readlink "$dir/exe" 2>/dev/null)" in
+                "$EXE" | "$EXE (deleted)") echo "${dir#/proc/}" ;;
+            esac
+        done
+        if command -v pgrep >/dev/null 2>&1; then
+            pgrep -x deskarcade || true
+            pgrep -x DeskArcade || true
+        fi
+    } | sort -u
+}
+
+case "$1" in
+    remove|upgrade|deconfigure)
+        if [ -n "$(game_pids)" ]; then
+            if [ -x "$EXE" ]; then
+                "$EXE" --signal quit >/dev/null 2>&1 || true
+            fi
+            i=0
+            while [ -n "$(game_pids)" ] && [ "$i" -lt 20 ]; do
+                sleep 0.25
+                i=$((i + 1))
+            done
+            pids="$(game_pids)"
+            if [ -n "$pids" ]; then
+                kill $pids 2>/dev/null || true
+            fi
+        fi
+        ;;
+esac
+
+exit 0
