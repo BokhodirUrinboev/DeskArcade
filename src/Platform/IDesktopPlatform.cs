@@ -29,6 +29,13 @@ public interface IDesktopPlatform : IDisposable
     void AttachOverlay(Window overlay);
 
     /// <summary>
+    /// True when the overlay should cover the monitor's working area instead of the whole monitor.
+    /// The games only ever use the working area, so nothing is lost; some window managers refuse to keep
+    /// a window that is larger than the working area on the monitor it asked for.
+    /// </summary>
+    bool OverlayFitsWorkArea { get; }
+
+    /// <summary>
     /// Areas (overlay DIPs) that take mouse input; the rest passes through.
     /// While <paramref name="captureActive"/> the whole overlay takes input (a drag is in progress).
     /// </summary>
@@ -63,6 +70,7 @@ public sealed class NullPlatform : IDesktopPlatform
 {
     public string Name => "none";
     public void AttachOverlay(Window overlay) { }
+    public bool OverlayFitsWorkArea => false;
     public void SetInputRegions(IReadOnlyList<HitShape> regions, bool captureActive) { }
     public bool TryGetCursor(out PixelPoint screenPoint) { screenPoint = default; return false; }
     public void EnumerateWindows(List<NativeWindowInfo> result) { }

@@ -214,9 +214,10 @@ public sealed class OverlayWindow : Window, IGameHost
     {
         var scr = CurrentScreen();
         if (scr == null) return;
-        Position = scr.Bounds.Position;
-        Width = scr.Bounds.Width / scr.Scaling;
-        Height = scr.Bounds.Height / scr.Scaling;
+        var bounds = _platform.OverlayFitsWorkArea ? scr.WorkingArea : scr.Bounds;
+        Position = bounds.Position;
+        Width = bounds.Width / scr.Scaling;
+        Height = bounds.Height / scr.Scaling;
     }
 
     void UpdateArena()
