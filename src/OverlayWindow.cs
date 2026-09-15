@@ -50,6 +50,8 @@ public sealed class OverlayWindow : Window, IGameHost
     UpdateInfo? _update;
     DateTime? _claudeSince;
     bool _checkingUpdates;
+    double _lastAchievementAt = -10;
+    int _achievementRow;
 
     public Settings Settings { get; } = Settings.Load();
     public Stats Stats { get; } = Stats.Load();
@@ -198,7 +200,7 @@ public sealed class OverlayWindow : Window, IGameHost
             DispatcherTimer.RunOnce(() =>
             {
                 Fx.Popup(new Vec2(Arena.Left + Arena.Width / 2, Arena.Top + Arena.Height * 0.45), L.T("Welcome to Desk Arcade"),
-                    Color.FromRgb(255, 209, 102), 34, 6, L.T("click the scoreboard to pick a game · Ctrl+Alt+G show/hide · Ctrl+Alt+N next game"));
+                    Color.FromRgb(255, 209, 102), 34, 6, L.F("click the scoreboard to pick a game · {0} show/hide · {1} next game", Shortcuts.Label('G'), Shortcuts.Label('N')));
                 Wake();
             }, TimeSpan.FromSeconds(2.2));
         }
@@ -698,7 +700,10 @@ public sealed class OverlayWindow : Window, IGameHost
     {
         Sound.Play("best", 0.7);
         if (!IsVisible) return;
-        var at = new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.18);
+        double now = _clock.Elapsed.TotalSeconds;
+        _achievementRow = now - _lastAchievementAt < 3.5 ? _achievementRow + 1 : 0; // stack unlocks that land together
+        _lastAchievementAt = now;
+        var at = new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.18 + _achievementRow * 78);
         var gold = Color.FromRgb(255, 209, 102);
         Fx.Popup(at, L.T("Achievement unlocked"), gold, 28, 3.2, L.T(a.Title));
         Fx.Burst(at, new[] { gold, Colors.White }, 30, 460, 600, 6, 1.0);

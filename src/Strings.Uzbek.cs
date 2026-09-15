@@ -34,8 +34,8 @@ public static partial class Strings
         ["Reset stats and achievements"] = "Statistika va yutuqlarni tozalash",
         ["Exit"] = "Chiqish",
         ["Welcome to Desk Arcade"] = "Desk Arcade'ga xush kelibsiz",
-        ["click the scoreboard to pick a game · Ctrl+Alt+G show/hide · Ctrl+Alt+N next game"] =
-            "o'yin tanlash uchun hisob taxtasini bosing · Ctrl+Alt+G ko'rsatish/yashirish · Ctrl+Alt+N keyingi o'yin",
+        ["click the scoreboard to pick a game · {0} show/hide · {1} next game"] =
+            "o'yin tanlash uchun hisob taxtasini bosing · {0} ko'rsatish/yashirish · {1} keyingi o'yin",
         ["Achievement unlocked"] = "Yutuq ochildi",
         ["Stats reset"] = "Statistika tozalandi",
         ["achievements start over"] = "yutuqlar boshidan boshlanadi",
@@ -199,6 +199,15 @@ public static partial class Strings
         ["{0}s left · whacked {1}"] = "{0} s qoldi · urildi {1}",
         ["Whack the sleepy bug to start · spare the ladybugs"] = "Boshlash uchun mudrayotgan qo'ng'izni uring · xonqizlarga tegmang",
         ["{0} points · {1} whacked"] = "{0} ochko · {1} ta urildi",
+
+        // ---- Clay Shooting
+        ["Click the trap machine to start · shoot the clays"] = "Boshlash uchun otish mashinasini bosing · nishonlarni uring",
+        ["click to start"] = "boshlash uchun bosing",
+        ["DOUBLE!"] = "DUPLET!",
+        ["Last round {0}/{1} · click the trap to go again"] = "Oxirgi raund {0}/{1} · qayta boshlash uchun mashinani bosing",
+        ["Pull {0}/{1} · hits {2}"] = "Otish {0}/{1} · tegdi {2}",
+        ["still rising"] = "hali ko'tarilmoqda",
+        ["{0} of {1} clays hit · {2} points"] = "{1} tadan {0} ta nishon · {2} ochko",
 
         // ---- Plinko
         ["click to drop · right-drag to move"] = "tashlash uchun bosing · surish uchun o'ng tugma bilan torting",

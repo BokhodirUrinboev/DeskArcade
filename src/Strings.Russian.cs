@@ -34,8 +34,8 @@ public static partial class Strings
         ["Reset stats and achievements"] = "Сбросить статистику и достижения",
         ["Exit"] = "Выход",
         ["Welcome to Desk Arcade"] = "Добро пожаловать в Desk Arcade",
-        ["click the scoreboard to pick a game · Ctrl+Alt+G show/hide · Ctrl+Alt+N next game"] =
-            "нажмите на табло, чтобы выбрать игру · Ctrl+Alt+G показать/скрыть · Ctrl+Alt+N следующая игра",
+        ["click the scoreboard to pick a game · {0} show/hide · {1} next game"] =
+            "нажмите на табло, чтобы выбрать игру · {0} показать/скрыть · {1} следующая игра",
         ["Achievement unlocked"] = "Достижение получено",
         ["Stats reset"] = "Статистика сброшена",
         ["achievements start over"] = "достижения начнутся заново",
@@ -201,6 +201,15 @@ public static partial class Strings
         ["{0}s left · whacked {1}"] = "осталось {0} с · прихлопнуто {1}",
         ["Whack the sleepy bug to start · spare the ladybugs"] = "Прихлопните сонного бага, чтобы начать · божьих коровок не трогайте",
         ["{0} points · {1} whacked"] = "очков: {0} · прихлопнуто {1}",
+
+        // ---- Clay Shooting
+        ["Click the trap machine to start · shoot the clays"] = "Нажмите на машинку, чтобы начать · стреляйте по тарелкам",
+        ["click to start"] = "нажмите, чтобы начать",
+        ["DOUBLE!"] = "ДУПЛЕТ!",
+        ["Last round {0}/{1} · click the trap to go again"] = "Прошлый раунд {0}/{1} · нажмите на машинку, чтобы начать снова",
+        ["Pull {0}/{1} · hits {2}"] = "Бросок {0}/{1} · попаданий {2}",
+        ["still rising"] = "ещё на подъёме",
+        ["{0} of {1} clays hit · {2} points"] = "попаданий {0} из {1} · очков {2}",
 
         // ---- Plinko
         ["click to drop · right-drag to move"] = "нажмите, чтобы бросить · правой кнопкой переместить",

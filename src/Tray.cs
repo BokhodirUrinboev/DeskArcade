@@ -40,12 +40,12 @@ public sealed class Tray : IDisposable
             games.Add(Radio(L.T(g.Title), () => _w.SwitchGame(id), () => _w.Current?.Id == id));
         }
         menu.Add(new NativeMenuItem(L.T("Game")) { Menu = games });
-        menu.Add(Item(L.T("Next game") + "   (Ctrl+Alt+N)", () => _w.NextGame()));
-        menu.Add(Item(L.T("Bring to cursor") + "   (Ctrl+Alt+B)", () => _w.SummonToCursor()));
+        menu.Add(Item(L.T("Next game") + "   (" + Shortcuts.Label('N') + ")", () => _w.NextGame()));
+        menu.Add(Item(L.T("Bring to cursor") + "   (" + Shortcuts.Label('B') + ")", () => _w.SummonToCursor()));
         menu.Add(Item(L.T("Stats & achievements…"), () => _w.OpenStats()));
         menu.Add(new NativeMenuItemSeparator());
 
-        menu.Add(Check(L.T("Show overlay") + "   (Ctrl+Alt+G)", () => _w.ToggleOverlay(), () => _w.OverlayVisible));
+        menu.Add(Check(L.T("Show overlay") + "   (" + Shortcuts.Label('G') + ")", () => _w.ToggleOverlay(), () => _w.OverlayVisible));
         menu.Add(Check(L.T("Bounce on window tops"), () => Toggle(s => s.Platforms = !s.Platforms), () => _w.Settings.Platforms));
         menu.Add(Check(L.T("Sound"), () => Toggle(s => s.Sound = !s.Sound), () => _w.Settings.Sound));
 
