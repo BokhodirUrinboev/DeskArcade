@@ -133,7 +133,15 @@ public sealed class PlinkoGame : MiniGame
         {
             _placed = true;
             _fitScale = _scale = fit;
-            PlaceNearRight();
+            if (Host.Settings.PlinkoX is double px && Host.Settings.PlinkoY is double py)
+            {
+                _origin = ClampOrigin(new Vec2(a.Left + px, a.Top + py));
+                _onFloor = a.Bottom - (_origin.Y + BoardH * _scale) < 28;
+            }
+            else
+            {
+                PlaceNearRight();
+            }
             NewRound();
         }
         else if (fit != _fitScale)
@@ -292,6 +300,7 @@ public sealed class PlinkoGame : MiniGame
         _onFloor = a.Bottom - (_origin.Y + BoardH * _scale) < 28; // let go close to the floor: stand on it
         if (_onFloor) _origin.Y = a.Bottom - BoardH * _scale;
         PlaceBoard();
+        SavePosition();
     }
 
     public override void Summon(Vec2 p)
@@ -300,6 +309,14 @@ public sealed class PlinkoGame : MiniGame
         _origin = ClampOrigin(p - new Vec2(BoardW * _scale / 2, HeaderH * _scale / 2));
         _onFloor = Host.Arena.Bottom - (_origin.Y + BoardH * _scale) < 1;
         PlaceBoard();
+        SavePosition();
+    }
+
+    void SavePosition()
+    {
+        Host.Settings.PlinkoX = _origin.X - Host.Arena.Left;
+        Host.Settings.PlinkoY = _origin.Y - Host.Arena.Top;
+        Host.SaveSettings();
     }
 
     // ------------------------------------------------------------------ simulation

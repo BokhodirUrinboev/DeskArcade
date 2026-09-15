@@ -25,6 +25,8 @@ public sealed class Settings
     public double? HoopY { get; set; }
     public double? BowX { get; set; }
     public double? BowY { get; set; }
+    public double? PlinkoX { get; set; }
+    public double? PlinkoY { get; set; }
     public double? HudX { get; set; }
     public double? HudY { get; set; }
 
@@ -79,7 +81,7 @@ public sealed class Settings
 
     public void ResetPositions()
     {
-        HoopX = HoopY = BowX = BowY = HudX = HudY = null;
+        HoopX = HoopY = BowX = BowY = HudX = HudY = PlinkoX = PlinkoY = null;
     }
 
     public void ResetScores()

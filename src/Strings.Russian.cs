@@ -226,6 +226,18 @@ public static partial class Strings
         ["wider block"] = "блок шире",
         ["Height {0}"] = "Высота {0}",
 
+        // ---- Desktop Pet
+        ["Desktop Pet"] = "Питомец",
+        ["click the pet to pet it — drag to carry and throw it"] = "нажмите на питомца, чтобы погладить — перетащите, чтобы нести и бросить",
+        ["Sleeping · click to wake"] = "Спит · нажмите, чтобы разбудить",
+        ["Wheee! · let go to throw"] = "Уиии! · отпустите, чтобы бросить",
+        ["Wheee!"] = "Уиии!",
+        ["Wants attention · click to pet"] = "Хочет внимания · нажмите, чтобы погладить",
+        ["Exploring the window tops"] = "Гуляет по верхам окон",
+        ["Click to pet · drag to carry"] = "Нажмите, чтобы погладить · перетащите, чтобы нести",
+        ["Pets {0}"] = "Поглажено {0}",
+        ["z z"] = "z z",
+
         // ---- achievements
         ["Coffee break"] = "Кофе-брейк",
         ["Play for 30 minutes in total"] = "Сыграйте в сумме 30 минут",

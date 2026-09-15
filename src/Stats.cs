@@ -25,19 +25,25 @@ public sealed class Stats
 
     Data _data = new();
     bool _dirty;
+    string _path = "";
+
+    Stats()
+    {
+    }
 
     /// <summary>Raised once when an achievement unlocks.</summary>
     public event Action<Achievement>? Unlocked;
 
-    static string FilePath => Path.Combine(Settings.DataDirectory, "stats.json");
+    static string DefaultPath => Path.Combine(Settings.DataDirectory, "stats.json");
 
-    public static Stats Load()
+    /// <param name="path">Where stats.json lives; by default next to settings.json.</param>
+    public static Stats Load(string? path = null)
     {
-        var stats = new Stats();
+        var stats = new Stats { _path = path ?? DefaultPath };
         try
         {
-            if (File.Exists(FilePath))
-                stats._data = JsonSerializer.Deserialize<Data>(File.ReadAllText(FilePath)) ?? new Data();
+            if (File.Exists(stats._path))
+                stats._data = JsonSerializer.Deserialize<Data>(File.ReadAllText(stats._path)) ?? new Data();
         }
         catch
         {
@@ -51,8 +57,8 @@ public sealed class Stats
         if (!_dirty) return;
         try
         {
-            Directory.CreateDirectory(Settings.DataDirectory);
-            File.WriteAllText(FilePath, JsonSerializer.Serialize(_data, new JsonSerializerOptions { WriteIndented = true }));
+            Directory.CreateDirectory(Path.GetDirectoryName(_path)!);
+            File.WriteAllText(_path, JsonSerializer.Serialize(_data, new JsonSerializerOptions { WriteIndented = true }));
             _dirty = false;
         }
         catch

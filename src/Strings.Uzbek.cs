@@ -226,6 +226,18 @@ public static partial class Strings
         ["wider block"] = "kengroq blok",
         ["Height {0}"] = "Balandlik {0}",
 
+        // ---- Desktop Pet
+        ["Desktop Pet"] = "Uy hayvoni",
+        ["click the pet to pet it — drag to carry and throw it"] = "erkalash uchun hayvonchani bosing — ko'tarib otish uchun torting",
+        ["Sleeping · click to wake"] = "Uxlayapti · uyg'otish uchun bosing",
+        ["Wheee! · let go to throw"] = "Uuuh! · otish uchun qo'yib yuboring",
+        ["Wheee!"] = "Uuuh!",
+        ["Wants attention · click to pet"] = "E'tibor so'rayapti · erkalash uchun bosing",
+        ["Exploring the window tops"] = "Oynalar tepasini kezmoqda",
+        ["Click to pet · drag to carry"] = "Erkalash uchun bosing · ko'tarish uchun torting",
+        ["Pets {0}"] = "Erkalashlar {0}",
+        ["z z"] = "z z",
+
         // ---- achievements
         ["Coffee break"] = "Qahva tanaffusi",
         ["Play for 30 minutes in total"] = "Jami 30 daqiqa o'ynang",
