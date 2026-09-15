@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Threading;
@@ -35,6 +36,8 @@ public sealed class X11Platform : IDesktopPlatform
     volatile bool _hkRunning;
     readonly int[] _keycodes = new int[3];
     Action<HotkeyAction>? _onHotkey;
+    GlobalShortcutsPortal? _portal;
+    volatile bool _disposed;
 
     public X11Platform()
     {
@@ -244,14 +247,38 @@ public sealed class X11Platform : IDesktopPlatform
 
     // ------------------------------------------------------------------ hotkeys
 
+    static bool IsWaylandSession =>
+        string.Equals(Environment.GetEnvironmentVariable("XDG_SESSION_TYPE"), "wayland", StringComparison.OrdinalIgnoreCase) ||
+        Environment.GetEnvironmentVariable("WAYLAND_DISPLAY") is { Length: > 0 };
+
     /// <summary>
-    /// Grabs Ctrl+Alt+G/N/B on the root window. Works on Xorg sessions; on Wayland the compositor
-    /// keeps global keys to itself, so use GNOME custom shortcuts running "deskarcade --signal ..." instead.
+    /// Ctrl+Alt+G/N/B. On Xorg they are grabbed on the root window. On Wayland the compositor keeps global keys
+    /// to itself, so they are requested in the background through the XDG GlobalShortcuts portal (GNOME 48+, KDE Plasma),
+    /// which asks the user once. Without the portal, or when the user declines, it falls back to the X11 grab, which
+    /// XWayland only honours while an X11 window has focus; custom shortcuts running "deskarcade --signal ..." still work.
     /// </summary>
     public bool RegisterHotkeys(Action<HotkeyAction> onHotkey)
     {
         _onHotkey = onHotkey;
-        if (_hkDpy != IntPtr.Zero) return true;
+        if (_hkDpy != IntPtr.Zero || _portal != null) return true;
+        if (!IsWaylandSession) return GrabHotkeys();
+
+        var portal = _portal = new GlobalShortcutsPortal(RaiseHotkey);
+        Task.Run(() => portal.StartAsync()).ContinueWith(started =>
+        {
+            if (started.IsCompletedSuccessfully && started.Result) return;
+            Dispatcher.UIThread.Post(() =>
+            {
+                if (_disposed || _portal != portal) return;
+                _portal = null;
+                GrabHotkeys();
+            });
+        }, TaskScheduler.Default);
+        return true;
+    }
+
+    bool GrabHotkeys()
+    {
         try { _hkDpy = X11.XOpenDisplay(IntPtr.Zero); }
         catch (DllNotFoundException) { return false; }
         if (_hkDpy == IntPtr.Zero) return false;
@@ -286,8 +313,7 @@ public sealed class X11Platform : IDesktopPlatform
                     if (Marshal.ReadInt32(ev, 0) != X11.KeyPress) continue;
                     int index = Array.IndexOf(_keycodes, Marshal.ReadInt32(ev, X11.KeyEventKeycodeOffset));
                     if (index < 0) continue;
-                    var action = (HotkeyAction)index;
-                    Dispatcher.UIThread.Post(() => _onHotkey?.Invoke(action));
+                    RaiseHotkey((HotkeyAction)index);
                 }
                 Thread.Sleep(40);
             }
@@ -297,6 +323,8 @@ public sealed class X11Platform : IDesktopPlatform
             Marshal.FreeHGlobal(ev);
         }
     }
+
+    void RaiseHotkey(HotkeyAction action) => Dispatcher.UIThread.Post(() => _onHotkey?.Invoke(action));
 
     // ------------------------------------------------------------------ audio & autostart
 
@@ -328,6 +356,9 @@ public sealed class X11Platform : IDesktopPlatform
 
     public void Dispose()
     {
+        _disposed = true;
+        _portal?.Dispose(); // closes the portal session and its D-Bus connection
+        _portal = null;
         _hkRunning = false;
         _hkThread?.Join(300);
         if (_hkDpy != IntPtr.Zero)

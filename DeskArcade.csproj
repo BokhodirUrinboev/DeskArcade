@@ -32,6 +32,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- D-Bus client for the XDG GlobalShortcuts portal on Wayland (Platform/Linux/GlobalShortcutsPortal.cs).
+         Avalonia already depends on it; referenced explicitly because our code uses it directly. -->
+    <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <AvaloniaResource Include="assets\DeskArcade.png" />
   </ItemGroup>
 
