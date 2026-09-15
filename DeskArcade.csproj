@@ -41,4 +41,10 @@
     <AvaloniaResource Include="assets\DeskArcade.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- the unit tests are their own project -->
+    <Compile Remove="tests/**" />
+    <None Remove="tests/**" />
+  </ItemGroup>
+
 </Project>
