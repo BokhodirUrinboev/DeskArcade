@@ -1,0 +1,8 @@
+# Template: PackageVersion 0.0.0 is a placeholder. packaging/winget/Update-WingetManifests.ps1 stamps a release.
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.version.1.10.0.schema.json
+
+PackageIdentifier: ImperiumGames.DeskArcade
+PackageVersion: 0.0.0
+DefaultLocale: en-US
+ManifestType: version
+ManifestVersion: 1.10.0
