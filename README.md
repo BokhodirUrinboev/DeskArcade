@@ -175,9 +175,13 @@ packaging/linux/build.sh                    # on Ubuntu itself
 
 ### Releasing a new version
 
-1. Bump `<Version>` in `DeskArcade.csproj` (for example `1.2.0` → `1.3.0`).
-2. Build both packages with `.\build-installer.ps1` and `.\build-linux.ps1`.
-3. Publish `DeskArcade-Setup-1.3.0.exe` and `deskarcade_1.3.0_amd64.deb`.
+1. Bump `<Version>` in `DeskArcade.csproj` (for example `1.2.0` → `1.3.0`) and merge it.
+2. Tag the commit and push the tag: `git tag v1.3.0 && git push origin v1.3.0`.
+
+The [Release workflow](.github/workflows/release.yml) then builds both Windows installers and the
+Ubuntu package and publishes them as a GitHub Release with generated notes. It refuses a tag that
+does not match the csproj version. To build the packages without publishing, run the workflow by
+hand from the Actions tab (or locally with `.\build-installer.ps1` and `.\build-linux.ps1`).
 
 Two identifiers let upgrades recognise the previous version. **Never change them:**
 
