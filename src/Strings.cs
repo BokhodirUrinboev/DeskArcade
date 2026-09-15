@@ -4,15 +4,13 @@ namespace DeskArcade;
 
 /// <summary>
 /// Translations, keyed by the exact English text passed to <see cref="L.T"/> or <see cref="L.F"/>.
-/// Keep {0}-style placeholders and the "·" separators intact. Missing entries show in English.
+/// Keep {0}-style placeholders, "·" separators and "×" intact, and keep the number last in "Best {0}"-style
+/// strings (the compact scoreboard shows only the last word). Missing entries show in English.
+/// The tables live in Strings.Uzbek.cs and Strings.Russian.cs.
 /// </summary>
-public static class Strings
+public static partial class Strings
 {
-    public static readonly IReadOnlyDictionary<string, string> Uzbek = new Dictionary<string, string>
-    {
-    };
+    public static IReadOnlyDictionary<string, string> Uzbek => UzbekTable;
 
-    public static readonly IReadOnlyDictionary<string, string> Russian = new Dictionary<string, string>
-    {
-    };
+    public static IReadOnlyDictionary<string, string> Russian => RussianTable;
 }
