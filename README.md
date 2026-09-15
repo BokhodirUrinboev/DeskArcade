@@ -4,7 +4,7 @@ Mini-games that play **on top of your desktop** in a transparent overlay, on Win
 Shoot hoops while a build, a deploy or Claude Code is working, and still see everything underneath.
 
 **Platforms:** Windows 10/11 (x64) · Ubuntu 22.04/24.04 (x64) &nbsp;·&nbsp; **License:** [MIT](LICENSE)
-&nbsp;·&nbsp; **Version:** 1.2.1
+&nbsp;·&nbsp; **Version:** 1.2.2
 
 ---
 
