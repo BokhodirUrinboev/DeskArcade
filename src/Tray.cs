@@ -7,73 +7,100 @@ namespace DeskArcade;
 
 /// <summary>
 /// Notification-area icon (Windows) / AppIndicator (Ubuntu): the always-reachable menu,
-/// since the overlay never takes keyboard focus.
+/// since the overlay never takes keyboard focus. Rebuilt when the language changes.
 /// </summary>
 public sealed class Tray : IDisposable
 {
+    static readonly double[] VolumeLevels = { 0.25, 0.5, 0.75, 1.0 };
+
     readonly OverlayWindow _w;
     readonly TrayIcon _icon;
-    readonly NativeMenuItem _show, _platforms, _sound, _notify, _autostart;
-    readonly Dictionary<NativeMenuItem, string> _gameItems = new();
+    readonly List<Action> _refreshers = new();
 
     public Tray(OverlayWindow w, WindowIcon? icon)
     {
         _w = w;
+        _icon = new TrayIcon { Icon = icon, ToolTipText = "Desk Arcade", IsVisible = true };
+        _icon.Clicked += (_, _) => _w.ToggleOverlay();
+        Rebuild();
+        if (Application.Current != null)
+            TrayIcon.SetIcons(Application.Current, new TrayIcons { _icon });
+    }
+
+    /// <summary>Recreates the whole menu, e.g. after the language changes.</summary>
+    public void Rebuild()
+    {
+        _refreshers.Clear();
         var menu = new NativeMenu();
 
         var games = new NativeMenu();
-        foreach (var g in w.Games)
+        foreach (var g in _w.Games)
         {
             string id = g.Id;
-            var item = Item(g.Title, () => _w.SwitchGame(id));
-            item.ToggleType = NativeMenuItemToggleType.Radio;
-            _gameItems[item] = id;
-            games.Add(item);
+            games.Add(Radio(L.T(g.Title), () => _w.SwitchGame(id), () => _w.Current?.Id == id));
         }
-        menu.Add(new NativeMenuItem("Game") { Menu = games });
-        menu.Add(Item("Next game   (Ctrl+Alt+N)", () => _w.NextGame()));
-        menu.Add(Item("Bring to cursor   (Ctrl+Alt+B)", () => _w.SummonToCursor()));
+        menu.Add(new NativeMenuItem(L.T("Game")) { Menu = games });
+        menu.Add(Item(L.T("Next game") + "   (Ctrl+Alt+N)", () => _w.NextGame()));
+        menu.Add(Item(L.T("Bring to cursor") + "   (Ctrl+Alt+B)", () => _w.SummonToCursor()));
+        menu.Add(Item(L.T("Stats & achievements…"), () => _w.OpenStats()));
         menu.Add(new NativeMenuItemSeparator());
 
-        _show = Check("Show overlay   (Ctrl+Alt+G)", () => _w.ToggleOverlay());
-        _platforms = Check("Bounce on window tops", () =>
-        {
-            _w.Settings.Platforms = !_w.Settings.Platforms;
-            _w.ApplySettings();
-        });
-        _sound = Check("Sound", () =>
-        {
-            _w.Settings.Sound = !_w.Settings.Sound;
-            _w.ApplySettings();
-        });
-        _notify = Check("Claude status alerts", () =>
-        {
-            _w.Settings.ClaudeNotify = !_w.Settings.ClaudeNotify;
-            _w.ApplySettings();
-        });
-        _autostart = Check("Start when I sign in", () =>
+        menu.Add(Check(L.T("Show overlay") + "   (Ctrl+Alt+G)", () => _w.ToggleOverlay(), () => _w.OverlayVisible));
+        menu.Add(Check(L.T("Bounce on window tops"), () => Toggle(s => s.Platforms = !s.Platforms), () => _w.Settings.Platforms));
+        menu.Add(Check(L.T("Sound"), () => Toggle(s => s.Sound = !s.Sound), () => _w.Settings.Sound));
+
+        var volume = new NativeMenu();
+        foreach (double level in VolumeLevels)
+            volume.Add(Radio($"{(int)(level * 100)}%", () => _w.SetVolume(level), () => Math.Abs(_w.Settings.Volume - level) < 0.126));
+        menu.Add(new NativeMenuItem(L.T("Volume")) { Menu = volume });
+
+        var language = new NativeMenu();
+        foreach (var (code, name) in L.Languages)
+            language.Add(Radio(code == "auto" ? L.T(name) : name, () => _w.SetLanguage(code), () => _w.Settings.Language == code));
+        menu.Add(new NativeMenuItem(L.T("Language")) { Menu = language });
+
+        var claude = new NativeMenu();
+        claude.Add(Check(L.T("Alerts when Claude finishes"), () => Toggle(s => s.ClaudeNotify = !s.ClaudeNotify), () => _w.Settings.ClaudeNotify));
+        claude.Add(Check(L.T("Show the overlay when Claude starts working"), () => Toggle(s => s.ClaudeAutoShow = !s.ClaudeAutoShow), () => _w.Settings.ClaudeAutoShow));
+        claude.Add(Check(L.T("Hide the overlay when Claude finishes or needs you"), () => Toggle(s => s.ClaudeAutoHide = !s.ClaudeAutoHide), () => _w.Settings.ClaudeAutoHide));
+        claude.Add(new NativeMenuItemSeparator());
+        claude.Add(Item(L.T("Copy Claude Code hook config"), () => _w.CopyHookConfig()));
+        menu.Add(new NativeMenuItem("Claude Code") { Menu = claude });
+
+        menu.Add(Check(L.T("Start when I sign in"), () =>
         {
             _w.AutostartEnabled = !_w.AutostartEnabled;
             Refresh();
-        });
-        menu.Add(_show);
-        menu.Add(_platforms);
-        menu.Add(_sound);
-        menu.Add(_notify);
-        menu.Add(_autostart);
-        menu.Add(Item("Move to next monitor", () => _w.MoveToNextMonitor()));
+        }, () => _w.AutostartEnabled));
+        menu.Add(Item(L.T("Move to next monitor"), () => _w.MoveToNextMonitor()));
         menu.Add(new NativeMenuItemSeparator());
-        menu.Add(Item("Copy Claude Code hook config", () => _w.CopyHookConfig()));
-        menu.Add(Item("Reset positions", () => _w.ResetPositions()));
-        menu.Add(Item("Reset high scores", () => _w.ResetScores()));
-        menu.Add(new NativeMenuItemSeparator());
-        menu.Add(Item("Exit", () => _w.Quit()));
 
-        _icon = new TrayIcon { Icon = icon, ToolTipText = "Desk Arcade", Menu = menu, IsVisible = true };
-        _icon.Clicked += (_, _) => _w.ToggleOverlay();
-        if (Application.Current != null)
-            TrayIcon.SetIcons(Application.Current, new TrayIcons { _icon });
+        var update = Item(L.T("Check for updates"), () =>
+        {
+            if (_w.AvailableUpdate is UpdateInfo u) UpdateChecker.OpenInBrowser(u.Url);
+            else _w.CheckForUpdates(manual: true);
+        });
+        _refreshers.Add(() => update.Header = _w.AvailableUpdate is UpdateInfo u
+            ? L.F("Download version {0}…", u.Version.ToString(3))
+            : L.T("Check for updates"));
+        menu.Add(update);
+        menu.Add(Check(L.T("Check for updates automatically"), () => Toggle(s => s.CheckForUpdates = !s.CheckForUpdates), () => _w.Settings.CheckForUpdates));
+        menu.Add(new NativeMenuItemSeparator());
+
+        menu.Add(Item(L.T("Reset positions"), () => _w.ResetPositions()));
+        menu.Add(Item(L.T("Reset high scores"), () => _w.ResetScores()));
+        menu.Add(Item(L.T("Reset stats and achievements"), () => _w.ResetStats()));
+        menu.Add(new NativeMenuItemSeparator());
+        menu.Add(Item(L.T("Exit"), () => _w.Quit()));
+
+        _icon.Menu = menu;
         Refresh();
+    }
+
+    void Toggle(Action<Settings> change)
+    {
+        change(_w.Settings);
+        _w.ApplySettings();
     }
 
     static NativeMenuItem Item(string header, Action action)
@@ -83,22 +110,23 @@ public sealed class Tray : IDisposable
         return item;
     }
 
-    static NativeMenuItem Check(string header, Action action)
+    NativeMenuItem Check(string header, Action action, Func<bool> isChecked) =>
+        Stateful(header, action, isChecked, NativeMenuItemToggleType.CheckBox);
+
+    NativeMenuItem Radio(string header, Action action, Func<bool> isChecked) =>
+        Stateful(header, action, isChecked, NativeMenuItemToggleType.Radio);
+
+    NativeMenuItem Stateful(string header, Action action, Func<bool> isChecked, NativeMenuItemToggleType type)
     {
         var item = Item(header, action);
-        item.ToggleType = NativeMenuItemToggleType.CheckBox;
+        item.ToggleType = type;
+        _refreshers.Add(() => item.IsChecked = isChecked());
         return item;
     }
 
     public void Refresh()
     {
-        _show.IsChecked = _w.OverlayVisible;
-        _platforms.IsChecked = _w.Settings.Platforms;
-        _sound.IsChecked = _w.Settings.Sound;
-        _notify.IsChecked = _w.Settings.ClaudeNotify;
-        _autostart.IsChecked = _w.AutostartEnabled;
-        foreach (var (item, id) in _gameItems)
-            item.IsChecked = id == _w.Current?.Id;
+        foreach (var refresh in _refreshers) refresh();
     }
 
     public void Dispose()

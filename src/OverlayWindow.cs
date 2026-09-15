@@ -47,6 +47,9 @@ public sealed class OverlayWindow : Window, IGameHost
     bool _loopOn, _captured, _quitting, _pushedCapture;
     double _lastTick, _idle;
     Vec2 _eventPointer;
+    UpdateInfo? _update;
+    DateTime? _claudeSince;
+    bool _checkingUpdates;
 
     public Settings Settings { get; } = Settings.Load();
     public Stats Stats { get; } = Stats.Load();
@@ -59,6 +62,7 @@ public sealed class OverlayWindow : Window, IGameHost
     public IReadOnlyList<MiniGame> Games => _games;
     public MiniGame? Current { get; private set; }
     public bool OverlayVisible => IsVisible;
+    public UpdateInfo? AvailableUpdate => _update;
 
     public bool AutostartEnabled
     {
@@ -180,6 +184,8 @@ public sealed class OverlayWindow : Window, IGameHost
         _blinkTimer.Start();
         _hudHoverTimer.Start();
         _statsTimer.Start();
+        if (Settings.CheckForUpdates && (Settings.LastUpdateCheck is not DateTime lastCheck || DateTime.UtcNow - lastCheck > TimeSpan.FromHours(20)))
+            DispatcherTimer.RunOnce(() => CheckForUpdates(manual: false), TimeSpan.FromSeconds(25));
 
         if (Settings.FirstRun)
         {
@@ -187,8 +193,8 @@ public sealed class OverlayWindow : Window, IGameHost
             SaveSettings();
             DispatcherTimer.RunOnce(() =>
             {
-                Fx.Popup(new Vec2(Arena.Left + Arena.Width / 2, Arena.Top + Arena.Height * 0.45), "Welcome to Desk Arcade",
-                    Color.FromRgb(255, 209, 102), 34, 6, "click the scoreboard to pick a game · Ctrl+Alt+G show/hide · Ctrl+Alt+N next game");
+                Fx.Popup(new Vec2(Arena.Left + Arena.Width / 2, Arena.Top + Arena.Height * 0.45), L.T("Welcome to Desk Arcade"),
+                    Color.FromRgb(255, 209, 102), 34, 6, L.T("click the scoreboard to pick a game · Ctrl+Alt+G show/hide · Ctrl+Alt+N next game"));
                 Wake();
             }, TimeSpan.FromSeconds(2.2));
         }
@@ -428,15 +434,15 @@ public sealed class OverlayWindow : Window, IGameHost
 
     static string HintFor(string id) => id switch
     {
-        "hoops" => "drag the ball and flick it into the hoop",
-        "archery" => "drag back from the bow, release to shoot",
-        "juggle" => "click the ball to kick it — don't let it drop",
-        "golf" => "drag back from the ball to putt it into the cup",
-        "bugs" => "squash the bugs — spare the ladybugs",
-        "cans" => "throw the ball from behind the line",
-        "bricks" => "click the paddle to launch — the mouse steers it",
-        "bubbles" => "click a bubble to split it — clear them all in time",
-        "hockey" => "drag your mallet and score in the right-hand goal",
+        "hoops" => L.T("drag the ball and flick it into the hoop"),
+        "archery" => L.T("drag back from the bow, release to shoot"),
+        "juggle" => L.T("click the ball to kick it — don't let it drop"),
+        "golf" => L.T("drag back from the ball to putt it into the cup"),
+        "bugs" => L.T("squash the bugs — spare the ladybugs"),
+        "cans" => L.T("throw the ball from behind the line"),
+        "bricks" => L.T("click the paddle to launch — the mouse steers it"),
+        "bubbles" => L.T("click a bubble to split it — clear them all in time"),
+        "hockey" => L.T("drag your mallet and score in the right-hand goal"),
         _ => "",
     };
 
@@ -457,7 +463,7 @@ public sealed class OverlayWindow : Window, IGameHost
         HudChanged();
         _tray?.Refresh();
         if (IsVisible)
-            Fx.Popup(new Vec2(Arena.Left + Arena.Width / 2, Arena.Top + Arena.Height * 0.28), next.Title,
+            Fx.Popup(new Vec2(Arena.Left + Arena.Width / 2, Arena.Top + Arena.Height * 0.28), L.T(next.Title),
                 Color.FromRgb(255, 209, 102), 46, 1.8, HintFor(next.Id));
         PushHitShapes();
         Wake();
@@ -502,6 +508,7 @@ public sealed class OverlayWindow : Window, IGameHost
     public void ApplySettings()
     {
         Sound.Enabled = Settings.Sound;
+        Sound.Volume = Settings.Volume;
         Platforms.Enabled = Settings.Platforms;
         RefreshPlatforms();
         SaveSettings();
@@ -556,7 +563,7 @@ public sealed class OverlayWindow : Window, IGameHost
         try
         {
             if (Clipboard != null) await Clipboard.SetTextAsync(json);
-            Notice("Hook config copied", "merge it into ~/.claude/settings.json", Color.FromRgb(255, 209, 102));
+            Notice(L.T("Hook config copied"), L.T("merge it into ~/.claude/settings.json"), Color.FromRgb(255, 209, 102));
         }
         catch { /* clipboard busy */ }
     }
@@ -576,13 +583,13 @@ public sealed class OverlayWindow : Window, IGameHost
         switch (msg)
         {
             case "working" or "start":
-                _hud.SetClaude(ClaudeStatus.Working);
+                ClaudeWorking();
                 break;
             case "done" or "stop":
-                ClaudeAlert(ClaudeStatus.Done, "done", "Claude is done", Color.FromRgb(61, 220, 132), "your turn!");
+                ClaudeAlert(ClaudeStatus.Done, "done", L.T("Claude is done"), Color.FromRgb(61, 220, 132));
                 break;
             case "attention" or "notify":
-                ClaudeAlert(ClaudeStatus.Attention, "attention", "Claude needs you", Color.FromRgb(255, 107, 107), "check the terminal");
+                ClaudeAlert(ClaudeStatus.Attention, "attention", L.T("Claude needs you"), Color.FromRgb(255, 107, 107));
                 break;
             case "idle": _hud.SetClaude(ClaudeStatus.Unknown); break;
             case "show": SetOverlayVisible(true); break;
@@ -591,16 +598,92 @@ public sealed class OverlayWindow : Window, IGameHost
             case "next": NextGame(); break;
             case "summon": SummonToCursor(); break;
             case "expand": _hud.Expand(); break;
+            case "stats": OpenStats(); break;
             case "quit": Quit(); break;
         }
     }
 
-    void ClaudeAlert(ClaudeStatus status, string sound, string title, Color color, string sub)
+    void ClaudeWorking()
     {
-        _hud.SetClaude(status);
-        if (!Settings.ClaudeNotify) return;
-        Sound.Play(sound, 0.9);
-        Notice(title, sub, color);
+        if (_hud.Status != ClaudeStatus.Working) _claudeSince = DateTime.UtcNow;
+        _hud.SetClaude(ClaudeStatus.Working, _claudeSince);
+        if (Settings.ClaudeAutoShow && !IsVisible) SetOverlayVisible(true);
+    }
+
+    void ClaudeAlert(ClaudeStatus status, string sound, string title, Color color)
+    {
+        TimeSpan? waited = _claudeSince is DateTime since ? DateTime.UtcNow - since : null;
+        _claudeSince = null;
+        _hud.SetClaude(status, null, waited);
+        if (status == ClaudeStatus.Done && IsVisible && Current != null) Stats.Add("claude.done");
+        if (Settings.ClaudeNotify)
+        {
+            Sound.Play(sound, 0.9);
+            string sub = status == ClaudeStatus.Done ? L.T("your turn!") : L.T("check the terminal");
+            if (waited is TimeSpan w && w.TotalSeconds >= 5) sub = L.F("{0} · waited {1}", sub, Hud.FormatWait(w));
+            Notice(title, sub, color);
+        }
+        if (Settings.ClaudeAutoHide && IsVisible)
+        {
+            // leave the notice on screen for a moment, then get out of the way (hiding also pauses the game)
+            DispatcherTimer.RunOnce(() =>
+            {
+                if (_hud.Status == status) SetOverlayVisible(false);
+            }, TimeSpan.FromSeconds(Settings.ClaudeNotify ? 2.5 : 0.2));
+        }
+    }
+
+    public void SetVolume(double volume)
+    {
+        Settings.Volume = volume;
+        ApplySettings();
+        Sound.Play("score", 0.7);
+    }
+
+    public void SetLanguage(string code)
+    {
+        Settings.Language = code;
+        SaveSettings();
+        L.Apply(code);
+        if (Current != null) _hud.SetGame(Current.Id, Current.Title);
+        HudChanged();
+        _tray?.Rebuild();
+    }
+
+    public void OpenStats() => StatsWindow.ShowFor(this);
+
+    public void ResetStats()
+    {
+        Stats.Reset();
+        Notice(L.T("Stats reset"), L.T("achievements start over"), Color.FromRgb(255, 209, 102));
+    }
+
+    public async void CheckForUpdates(bool manual)
+    {
+        if (_checkingUpdates) return;
+        _checkingUpdates = true;
+        try
+        {
+            var update = await UpdateChecker.CheckAsync();
+            Settings.LastUpdateCheck = DateTime.UtcNow;
+            SaveSettings();
+            _update = update;
+            _tray?.Refresh();
+            if (update != null)
+            {
+                if (manual) UpdateChecker.OpenInBrowser(update.Url);
+                Notice(L.F("Desk Arcade {0} is available", update.Version.ToString(3)),
+                    manual ? L.T("opening the download page") : L.T("download it from the tray menu"), Color.FromRgb(255, 209, 102));
+            }
+            else if (manual)
+            {
+                Notice(L.T("You're up to date"), L.F("version {0}", UpdateChecker.Current.ToString(3)), Color.FromRgb(61, 220, 132));
+            }
+        }
+        finally
+        {
+            _checkingUpdates = false;
+        }
     }
 
     void OnAchievement(Achievement a)

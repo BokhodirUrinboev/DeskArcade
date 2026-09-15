@@ -29,7 +29,7 @@ public static class Program
             Profile = new string(args[pi + 1].Where(c => char.IsAsciiLetterOrDigit(c) || c is '-' or '_').Take(32).ToArray());
 
         // Hook / CLI mode: forward a message to the running overlay and exit fast (no UI toolkit started).
-        //   DeskArcade --signal working|done|attention|show|hide|toggle|next|summon|quit
+        //   DeskArcade --signal working|done|attention|show|hide|toggle|next|summon|expand|stats|quit
         int sig = Array.FindIndex(args, a => a.Equals("--signal", StringComparison.OrdinalIgnoreCase));
         if (sig >= 0)
         {
