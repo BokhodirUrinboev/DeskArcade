@@ -4,7 +4,7 @@ Mini-games that play **on top of your desktop** in a transparent overlay, on Win
 Shoot hoops while a build, a deploy or Claude Code is working, and still see everything underneath.
 
 **Platforms:** Windows 10/11 (x64) · Ubuntu 22.04/24.04 (x64) &nbsp;·&nbsp; **License:** [MIT](LICENSE)
-&nbsp;·&nbsp; **Version:** 1.2.0
+&nbsp;·&nbsp; **Version:** 1.2.1
 
 ---
 
@@ -96,11 +96,17 @@ deskarcade            # or find "Desk Arcade" in the app grid
 The package bundles its own .NET runtime; apt installs the few X11 libraries it needs. To remove it,
 run `sudo apt remove deskarcade`.
 
+On Ubuntu the overlay window covers the monitor's working area (everything except the top bar and
+dock) rather than the whole monitor. GNOME moves a larger window to another monitor, so this keeps the
+overlay where you put it. The games only use the working area on every platform, so nothing changes
+on screen.
+
 #### Ubuntu notes
 
 | Topic | Xorg session | Wayland session (default) |
 |---|---|---|
 | Overlay, click-through, sound | ✅ | ✅ through XWayland |
+| Multi-monitor: stays on the monitor you pick (tray → **Move to next monitor**) | ✅ | ✅ |
 | Bouncing on window tops | ✅ all windows | ⚠️ only X11 windows; native Wayland apps are invisible to it |
 | Global shortcuts Ctrl+Alt+G/N/B | ✅ | ❌ Wayland keeps global keys to the compositor, see below |
 | Tray menu | ✅ AppIndicator | ✅ AppIndicator |

@@ -218,6 +218,9 @@ public sealed class OverlayWindow : Window, IGameHost
         Position = bounds.Position;
         Width = bounds.Width / scr.Scaling;
         Height = bounds.Height / scr.Scaling;
+        // Mutter judges a move with the window's size at that moment, so a window still sized for a taller
+        // monitor can be refused a monitor with a top bar. Repeat the move now that the size fits.
+        Position = bounds.Position;
     }
 
     void UpdateArena()
