@@ -148,6 +148,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new ClayGame(this));
         _games.Add(new WhackGame(this));
         _games.Add(new PlinkoGame(this));
+        _games.Add(new TowerGame(this));
 
         _hud = new Hud(_games);
         _hud.GameClicked += SwitchGame;
@@ -447,6 +448,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "bubbles" => L.T("click a bubble to split it — clear them all in time"),
         "hockey" => L.T("drag your mallet and score in the right-hand goal"),
         "clay" => L.T("click the trap machine, then shoot the clays at the top of their arc"),
+        "tower" => L.T("click the sliding block to drop it — stack as high as you can"),
         "plinko" => L.T("click the strip to drop a disc — the gold slot is the jackpot"),
         "whack" => L.T("whack the bugs as they peek out — spare the ladybugs"),
         _ => "",
