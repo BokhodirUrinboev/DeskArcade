@@ -451,6 +451,7 @@ public sealed class CansGame : MiniGame
 
         if (c.Pos.X < a.Left + CanR) { c.Pos.X = a.Left + CanR; c.Vel.X = Math.Abs(c.Vel.X) * 0.4; }
         else if (c.Pos.X > a.Right - CanR) { c.Pos.X = a.Right - CanR; c.Vel.X = -Math.Abs(c.Vel.X) * 0.4; }
+        if (c.Pos.Y < a.Top + CanR) { c.Pos.Y = a.Top + CanR; c.Vel.Y = Math.Abs(c.Vel.Y) * 0.4; }
 
         double bottom = c.Pos.Y + half;
         double ground = double.NaN;

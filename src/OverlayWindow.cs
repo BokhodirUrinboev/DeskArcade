@@ -133,6 +133,9 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new GolfGame(this));
         _games.Add(new BugsGame(this));
         _games.Add(new CansGame(this));
+        _games.Add(new BricksGame(this));
+        _games.Add(new BubblesGame(this));
+        _games.Add(new HockeyGame(this));
 
         _hud = new Hud(_games);
         _hud.GameClicked += SwitchGame;
@@ -416,6 +419,9 @@ public sealed class OverlayWindow : Window, IGameHost
         "golf" => "drag back from the ball to putt it into the cup",
         "bugs" => "squash the bugs — spare the ladybugs",
         "cans" => "throw the ball from behind the line",
+        "bricks" => "click the paddle to launch — the mouse steers it",
+        "bubbles" => "click a bubble to split it — clear them all in time",
+        "hockey" => "drag your mallet and score in the right-hand goal",
         _ => "",
     };
 

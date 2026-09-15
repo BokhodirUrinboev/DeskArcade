@@ -7,7 +7,10 @@ namespace DeskArcade.Engine;
 
 public interface IGameHost
 {
-    /// <summary>Playable area in overlay DIPs: walls = Left/Right, floor = Bottom (top of taskbar/dock).</summary>
+    /// <summary>
+    /// Playable area in overlay DIPs. It is a closed box: walls = Left/Right, ceiling = Top,
+    /// floor = Bottom (top of taskbar/dock). Nothing should leave it.
+    /// </summary>
     Rect Arena { get; }
     Platforms Platforms { get; }
     Sound Sound { get; }

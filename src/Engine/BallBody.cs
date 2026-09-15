@@ -78,7 +78,11 @@ public sealed class BallBody
             Pos.X = arena.Right - R;
             if (Vel.X > 0) { imp.Wall = Math.Max(imp.Wall, Vel.X); Vel.X = -Vel.X * WallRestitution; }
         }
-        if (Pos.Y < -4000) { Pos.Y = -4000; Vel.Y = Math.Max(Vel.Y, 0); }
+        if (Pos.Y - R < arena.Top) // closed box: the top of the screen is a ceiling
+        {
+            Pos.Y = arena.Top + R;
+            if (Vel.Y < 0) { imp.Wall = Math.Max(imp.Wall, -Vel.Y); Vel.Y = -Vel.Y * WallRestitution; }
+        }
 
         double groundY = double.NaN;
         IntPtr groundHwnd = IntPtr.Zero;

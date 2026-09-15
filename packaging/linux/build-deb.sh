@@ -33,6 +33,8 @@ ln -s /opt/deskarcade/DeskArcade "$STAGE/usr/bin/deskarcade"
 install -m 0644 "$HERE/deskarcade.desktop" "$STAGE/usr/share/applications/deskarcade.desktop"
 install -m 0644 "$ROOT/assets/DeskArcade.png" "$STAGE/usr/share/icons/hicolor/256x256/apps/deskarcade.png"
 install -m 0644 "$ROOT/README.md" "$STAGE/usr/share/doc/deskarcade/README.md"
+install -m 0644 "$ROOT/LICENSE" "$STAGE/usr/share/doc/deskarcade/copyright"
+install -m 0644 "$ROOT/THIRD-PARTY-NOTICES.md" "$STAGE/usr/share/doc/deskarcade/THIRD-PARTY-NOTICES.md"
 
 SIZE_KB="$(du -sk "$STAGE" | cut -f1)"
 sed -e "s/@VERSION@/$VERSION/" -e "s/@SIZE@/$SIZE_KB/" "$HERE/control.in" > "$STAGE/DEBIAN/control"

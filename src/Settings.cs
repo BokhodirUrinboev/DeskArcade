@@ -28,6 +28,9 @@ public sealed class Settings
     public int? BestGolf { get; set; }
     public int BestBugs { get; set; }
     public int BestCans { get; set; }
+    public int BestBricks { get; set; }
+    public int BestBubbles { get; set; }
+    public int HockeyWins { get; set; }
     public bool FirstRun { get; set; } = true;
 
     /// <summary>%APPDATA%\DeskArcade on Windows, ~/.config/DeskArcade on Linux (suffixed for --profile runs).</summary>
@@ -74,6 +77,7 @@ public sealed class Settings
     public void ResetScores()
     {
         BestHoopsStreak = BestHoopsScore = BestArchery = BestJuggle = BestBugs = BestCans = 0;
+        BestBricks = BestBubbles = HockeyWins = 0;
         BestGolf = null;
     }
 }

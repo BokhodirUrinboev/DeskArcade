@@ -253,7 +253,7 @@ public sealed class HoopsGame : MiniGame
             var a = Host.Arena;
             var target = Host.Pointer + _grabOffset;
             target.X = Clamp(target.X, a.Left + BallR, a.Right - BallR);
-            target.Y = Math.Min(target.Y, a.Bottom - BallR);
+            target.Y = Clamp(target.Y, a.Top + BallR, a.Bottom - BallR);
             _ball.Pos = target;
             _ball.Vel = default;
             _trail.Add((_time, target));

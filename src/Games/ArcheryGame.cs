@@ -50,7 +50,7 @@ public sealed class ArcheryGame : MiniGame
     {
         public required Sprite Sprite;
         public Vec2 Pos;
-        public double Phase, Speed;
+        public double Phase, Speed, Age, AtCeiling;
         public bool Gold;
     }
 
@@ -254,10 +254,11 @@ public sealed class ArcheryGame : MiniGame
         var b = new Balloon
         {
             Sprite = Art.Balloon(BalloonR, gold ? Gold : BalloonColors[Rng.Next(BalloonColors.Length)]),
-            Pos = new Vec2(minX + Rng.NextDouble() * (maxX - minX), a.Bottom + 60),
+            Pos = new Vec2(minX + Rng.NextDouble() * (maxX - minX), a.Bottom - BalloonR * 3.6),
             Phase = Rng.NextDouble() * 6, Speed = 55 + Rng.NextDouble() * 35, Gold = gold,
         };
         b.Sprite.IsHitTestVisible = false;
+        b.Sprite.Opacity = 0;
         b.Sprite.Set(b.Pos);
         _balloonLayer.Children.Add(b.Sprite);
         _balloons.Add(b);
@@ -416,7 +417,9 @@ public sealed class ArcheryGame : MiniGame
                 StickAt(ar, platAt, plat.Hwnd);
             else if (ar.Tip.Y >= arena.Bottom)
                 StickAt(ar, prev + (ar.Tip - prev) * ((arena.Bottom - prev.Y) / (ar.Tip.Y - prev.Y)), IntPtr.Zero);
-            else if (ar.Tip.X < arena.Left - 60 || ar.Tip.X > arena.Right + 60)
+            else if (CrossesBox(prev, ar.Tip, arena, out var wallAt))
+                StickAt(ar, wallAt, IntPtr.Zero); // closed box: arrows thunk into the screen edges
+            else if (ar.Tip.X < arena.Left - 60 || ar.Tip.X > arena.Right + 60 || ar.Tip.Y < arena.Top - 60)
             {
                 RemoveArrow(ar);
                 CheckRoundEnd();
@@ -539,10 +542,19 @@ public sealed class ArcheryGame : MiniGame
         {
             var b = _balloons[i];
             double sway = Math.Sin(_time * 1.3 + b.Phase);
+            b.Age += dt;
             b.Pos.Y -= b.Speed * dt;
-            b.Pos.X += (sway * 14 + _wind * 0.08) * dt;
+            b.Pos.X = Clamp(b.Pos.X + (sway * 14 + _wind * 0.08) * dt, a.Left + BalloonR, a.Right - BalloonR);
+            // closed box: balloons bump into the top of the screen, linger, then fade away
+            double ceiling = a.Top + BalloonR * 1.2;
+            if (b.Pos.Y <= ceiling)
+            {
+                b.Pos.Y = ceiling;
+                b.AtCeiling += dt;
+            }
+            b.Sprite.Opacity = Math.Min(Math.Min(1, b.Age / 0.4), Math.Max(0, 1 - (b.AtCeiling - 2) / 0.6));
             b.Sprite.Set(b.Pos, sway * 6);
-            if (b.Pos.Y < a.Top - 160)
+            if (b.AtCeiling >= 2.6)
             {
                 _balloonLayer.Children.Remove(b.Sprite);
                 _balloons.RemoveAt(i);
@@ -673,6 +685,17 @@ public sealed class ArcheryGame : MiniGame
                 -w / 2, -h / 2));
         }
         return s;
+    }
+
+    /// <summary>Where the segment a→b leaves the box through its left, right or top edge.</summary>
+    static bool CrossesBox(Vec2 a, Vec2 b, Rect box, out Vec2 at)
+    {
+        double s = 2;
+        if (b.X < box.Left && a.X >= box.Left) s = Math.Min(s, (box.Left - a.X) / (b.X - a.X));
+        if (b.X > box.Right && a.X <= box.Right) s = Math.Min(s, (box.Right - a.X) / (b.X - a.X));
+        if (b.Y < box.Top && a.Y >= box.Top) s = Math.Min(s, (box.Top - a.Y) / (b.Y - a.Y));
+        at = a + (b - a) * Math.Min(s, 1);
+        return s <= 1;
     }
 
     static double SegmentDistance(Vec2 a, Vec2 b, Vec2 p)
