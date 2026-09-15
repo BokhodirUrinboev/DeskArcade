@@ -11,6 +11,14 @@ public sealed class Settings
     public double Volume { get; set; } = 0.6;
     public bool Platforms { get; set; } = true;
     public bool ClaudeNotify { get; set; } = true;
+    /// <summary>Show the overlay when Claude starts working.</summary>
+    public bool ClaudeAutoShow { get; set; }
+    /// <summary>Hide the overlay when Claude finishes or needs you.</summary>
+    public bool ClaudeAutoHide { get; set; }
+    /// <summary>"auto" (follow the system), "en", "uz" or "ru".</summary>
+    public string Language { get; set; } = "auto";
+    public bool CheckForUpdates { get; set; } = true;
+    public DateTime? LastUpdateCheck { get; set; }
     public string? MonitorName { get; set; }
 
     public double? HoopX { get; set; }

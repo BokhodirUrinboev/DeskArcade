@@ -38,6 +38,7 @@ public sealed class OverlayWindow : Window, IGameHost
     readonly DispatcherTimer _platformTimer = new() { Interval = TimeSpan.FromMilliseconds(120) };
     readonly DispatcherTimer _blinkTimer = new() { Interval = TimeSpan.FromMilliseconds(550) };
     readonly DispatcherTimer _hudHoverTimer = new() { Interval = TimeSpan.FromMilliseconds(200) };
+    readonly DispatcherTimer _statsTimer = new() { Interval = TimeSpan.FromSeconds(30) };
     readonly IDesktopPlatform _platform;
     DispatcherTimer? _demoTimer;
 
@@ -48,6 +49,7 @@ public sealed class OverlayWindow : Window, IGameHost
     Vec2 _eventPointer;
 
     public Settings Settings { get; } = Settings.Load();
+    public Stats Stats { get; } = Stats.Load();
     public Sound Sound { get; }
     public Fx Fx { get; } = new();
     public Platforms Platforms { get; } = new();
@@ -98,6 +100,8 @@ public sealed class OverlayWindow : Window, IGameHost
         _root.Children.Add(_hudLayer);
         Content = _root;
 
+        L.Apply(Settings.Language);
+        Stats.Unlocked += OnAchievement;
         _platform = DesktopPlatform.Create();
         Sound = new Sound(_platform) { Enabled = Settings.Sound, Volume = Settings.Volume };
         Platforms.Enabled = Settings.Platforms;
@@ -105,6 +109,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _platformTimer.Tick += (_, _) => RefreshPlatforms();
         _blinkTimer.Tick += (_, _) => _hud?.Blink();
         _hudHoverTimer.Tick += (_, _) => CheckHudHover();
+        _statsTimer.Tick += (_, _) => Stats.Save();
         _root.PointerPressed += OnPointerPressed;
         _root.PointerReleased += OnPointerReleased;
         _root.PointerMoved += (_, e) => _eventPointer = e.GetPosition(_root);
@@ -174,6 +179,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _platformTimer.Start();
         _blinkTimer.Start();
         _hudHoverTimer.Start();
+        _statsTimer.Start();
 
         if (Settings.FirstRun)
         {
@@ -395,7 +401,12 @@ public sealed class OverlayWindow : Window, IGameHost
 
         UpdatePointer();
         bool busy = _captured || HudBusy;
-        if (Current != null) busy |= Current.Update(dt);
+        if (Current != null)
+        {
+            bool playing = Current.Update(dt) || _captured;
+            if (playing) Stats.AddTime(Current.Id, dt); // only time spent actually playing
+            busy |= playing;
+        }
         busy |= Fx.Update(dt);
         PushHitShapes();
 
@@ -592,6 +603,17 @@ public sealed class OverlayWindow : Window, IGameHost
         Notice(title, sub, color);
     }
 
+    void OnAchievement(Achievement a)
+    {
+        Sound.Play("best", 0.7);
+        if (!IsVisible) return;
+        var at = new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.18);
+        var gold = Color.FromRgb(255, 209, 102);
+        Fx.Popup(at, L.T("Achievement unlocked"), gold, 28, 3.2, L.T(a.Title));
+        Fx.Burst(at, new[] { gold, Colors.White }, 30, 460, 600, 6, 1.0);
+        Wake();
+    }
+
     public void Quit()
     {
         if (_quitting) return;
@@ -602,7 +624,9 @@ public sealed class OverlayWindow : Window, IGameHost
         _platformTimer.Stop();
         _blinkTimer.Stop();
         _hudHoverTimer.Stop();
+        _statsTimer.Stop();
         _demoTimer?.Stop();
+        Stats.Save();
         _tray?.Dispose();
         Sound.Dispose();
         _platform.Dispose();
