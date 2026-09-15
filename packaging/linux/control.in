@@ -2,7 +2,7 @@ Package: deskarcade
 Version: @VERSION@
 Section: games
 Priority: optional
-Architecture: amd64
+Architecture: @ARCH@
 Maintainer: Imperium Games <maintainer@example.com>
 Installed-Size: @SIZE@
 Depends: libc6, libgcc-s1, libstdc++6, libx11-6, libxext6, libice6, libsm6, libfontconfig1, procps
