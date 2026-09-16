@@ -126,16 +126,16 @@ public sealed class ArcheryGame : MiniGame
         return s;
     }
 
-    string WindText => Math.Abs(_wind) < 15 ? "calm" : (_wind > 0 ? "→ " : "← ") + (Math.Abs(_wind) / 60).ToString("0.0");
+    string WindText => Math.Abs(_wind) < 15 ? L.T("calm") : (_wind > 0 ? "→ " : "← ") + (Math.Abs(_wind) / 60).ToString("0.0");
 
     public override HudInfo Hud => new(
         _roundScore.ToString(),
-        _roundOver ? "Round over · pull the bow to play again" : $"Round {_round} · {_arrowsLeft} arrows · wind {WindText}",
-        $"Best round {Host.Settings.BestArchery}");
+        _roundOver ? L.T("Round over · pull the bow to play again") : L.F("Round {0} · {1} arrows · wind {2}", _round, _arrowsLeft, WindText),
+        L.F("Best round {0}", Host.Settings.BestArchery));
 
     void Changed()
     {
-        _infoText.Text = _roundOver ? "pull back to start a round" : $"{_arrowsLeft} arrows · wind {WindText}";
+        _infoText.Text = _roundOver ? L.T("pull back to start a round") : L.F("{0} arrows · wind {1}", _arrowsLeft, WindText);
         Host.HudChanged();
     }
 
@@ -195,19 +195,20 @@ public sealed class ArcheryGame : MiniGame
         _roundOver = true;
         _roundEndTimer = -1;
         var s = Host.Settings;
+        Host.Stats.Max("archery.round", _roundScore);
         bool best = _roundScore > s.BestArchery;
         var at = new Vec2(Host.Arena.Left + Host.Arena.Width / 2, Host.Arena.Top + Host.Arena.Height * 0.3);
         if (best)
         {
             s.BestArchery = _roundScore;
             Host.SaveSettings();
-            Host.Fx.Popup(at, "NEW BEST ROUND!", Gold, 40, 2.2, $"{_roundScore} points");
+            Host.Fx.Popup(at, L.T("NEW BEST ROUND!"), Gold, 40, 2.2, L.F("{0} points", _roundScore));
             Host.Fx.Burst(at, Confetti, 40, 520, 700, 7, 1.1);
             Host.Sound.Play("best", 0.8);
         }
         else
         {
-            Host.Fx.Popup(at, "ROUND OVER", Colors.White, 36, 2.0, $"{_roundScore} points · best {s.BestArchery}");
+            Host.Fx.Popup(at, L.T("ROUND OVER"), Colors.White, 36, 2.0, L.F("{0} points · best {1}", _roundScore, s.BestArchery));
             Host.Sound.Play("buzzer", 0.4);
         }
         Changed();
@@ -447,12 +448,13 @@ public sealed class ArcheryGame : MiniGame
             4 => Color.FromRgb(200, 205, 215),
             _ => Colors.White,
         };
-        Host.Fx.Popup(hit - new Vec2(0, 44), $"+{pts}", color, pts == 10 ? 40 : 30, 1.1, pts == 10 ? "BULLSEYE!" : null);
+        Host.Fx.Popup(hit - new Vec2(0, 44), $"+{pts}", color, pts == 10 ? 40 : 30, 1.1, pts == 10 ? L.T("BULLSEYE!") : null);
         Host.Sound.Play("thunk", 0.9);
         if (pts == 10)
         {
             Host.Sound.Play("score", 0.7);
             Host.Fx.Burst(hit, Confetti, 24, 420, 700, 6, 0.9);
+            Host.Stats.Add("archery.bullseyes");
         }
         t.Flash = 1;
         t.LeaveIn = 1.1;
@@ -475,9 +477,10 @@ public sealed class ArcheryGame : MiniGame
     {
         int pts = b.Gold ? 15 : 5;
         if (!_roundOver) _roundScore += pts;
-        Host.Fx.Popup(b.Pos - new Vec2(0, 36), $"+{pts}", b.Gold ? Gold : Colors.White, b.Gold ? 36 : 28, 1.0, b.Gold ? "GOLDEN!" : "POP!");
+        Host.Fx.Popup(b.Pos - new Vec2(0, 36), $"+{pts}", b.Gold ? Gold : Colors.White, b.Gold ? 36 : 28, 1.0, b.Gold ? L.T("GOLDEN!") : L.T("POP!"));
         Host.Fx.Burst(b.Pos, b.Gold ? Confetti : PopBurst, 16, 380, 500, 5, 0.5);
         Host.Sound.Play("pop", 0.9);
+        Host.Stats.Add("archery.balloons");
         _balloonLayer.Children.Remove(b.Sprite);
         _balloons.Remove(b);
         Changed();

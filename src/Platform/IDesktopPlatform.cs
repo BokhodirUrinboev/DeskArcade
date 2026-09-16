@@ -8,7 +8,7 @@ namespace DeskArcade.Platform;
 
 public enum HotkeyAction { ToggleOverlay, NextGame, Summon }
 
-/// <summary>A top-level application window, in screen pixels.</summary>
+/// <summary>A top-level application window, in screen pixels (points on macOS, like Avalonia's screen coordinates there).</summary>
 public readonly record struct NativeWindowInfo(IntPtr Id, PixelRect Bounds);
 
 public interface IAudioOutput : IDisposable
@@ -41,13 +41,13 @@ public interface IDesktopPlatform : IDisposable
     /// </summary>
     void SetInputRegions(IReadOnlyList<HitShape> regions, bool captureActive);
 
-    /// <summary>Global mouse position in screen pixels, when the platform can report it.</summary>
+    /// <summary>Global mouse position in screen pixels (points on macOS), when the platform can report it.</summary>
     bool TryGetCursor(out PixelPoint screenPoint);
 
     /// <summary>Visible application windows other than ours, topmost first.</summary>
     void EnumerateWindows(List<NativeWindowInfo> result);
 
-    /// <summary>Ctrl+Alt+G / N / B. Returns false if global hotkeys are unavailable.</summary>
+    /// <summary>Ctrl+Alt+G / N / B (Control+Option on macOS). Returns false if global hotkeys are unavailable.</summary>
     bool RegisterHotkeys(Action<HotkeyAction> onHotkey);
 
     IAudioOutput? OpenAudio(int sampleRate);
@@ -61,6 +61,7 @@ public static class DesktopPlatform
     {
         if (OperatingSystem.IsWindows()) return new Windows.WindowsPlatform();
         if (OperatingSystem.IsLinux()) return new Linux.X11Platform();
+        if (OperatingSystem.IsMacOS()) return new Mac.MacPlatform();
         return new NullPlatform();
     }
 }

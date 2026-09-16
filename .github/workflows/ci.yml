@@ -1,0 +1,80 @@
+# Builds Desk Arcade on Windows, Ubuntu and macOS for pull requests and pushes to main, packages and
+# install-checks the Ubuntu .deb, and lints the workflows. Publishing releases is release.yml's job.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  # A new push to a pull request cancels that PR's older run. Pushes to main and manual runs get a
+  # group of their own, so they always run to completion.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  windows:
+    name: Windows build (win-x64)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build
+        run: dotnet build DeskArcade.csproj -c Release -r win-x64
+
+  ubuntu:
+    name: Ubuntu build and .deb
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build
+        run: dotnet build DeskArcade.csproj -c Release -r linux-x64
+
+      - name: Test
+        run: dotnet test tests/DeskArcade.Tests/DeskArcade.Tests.csproj -c Release
+
+      - name: Package .deb
+        run: bash packaging/linux/build.sh
+      - name: Check the package installs
+        run: |
+          version="$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' DeskArcade.csproj | head -n1)"
+          sudo apt-get install -y "./dist-linux/deskarcade_${version}_amd64.deb"
+          test -x /usr/bin/deskarcade
+          dpkg -s deskarcade | grep -Fx "Version: $version"
+
+  macos:
+    name: macOS build (osx-arm64)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      # Compile only: the macOS platform layer is still being written.
+      - name: Build
+        run: dotnet build DeskArcade.csproj -c Release -r osx-arm64
+
+  actionlint:
+    name: Lint workflows
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # The image bundles shellcheck, so run: scripts are checked too.
+      - name: actionlint
+        uses: docker://rhysd/actionlint:latest
+        with:
+          args: -color

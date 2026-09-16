@@ -84,9 +84,9 @@ public sealed class GolfGame : MiniGame
     public override HudInfo Hud => new(
         _roundStrokes.ToString(),
         _roundOver
-            ? $"Round done · {Rel(_roundStrokes - _parDone)} vs par · putt to play again"
-            : $"Hole {_hole}/{HolesPerRound} · par {_par} · stroke {_strokes}",
-        Host.Settings.BestGolf is int best ? $"Best {Rel(best)}" : "Best —");
+            ? L.F("Round done · {0} vs par · putt to play again", Rel(_roundStrokes - _parDone))
+            : L.F("Hole {0}/{1} · par {2} · stroke {3}", _hole, HolesPerRound, _par, _strokes),
+        Host.Settings.BestGolf is int best ? L.F("Best {0}", Rel(best)) : L.T("Best —"));
 
     static string Rel(int d) => d == 0 ? "E" : d > 0 ? $"+{d}" : $"−{-d}";
 
@@ -228,7 +228,7 @@ public sealed class GolfGame : MiniGame
         if (_roundOver) return;
         _strokes++;
         _roundStrokes++;
-        Host.Fx.Popup(_ball.Pos - new Vec2(0, 40), "+1", Color.FromRgb(255, 150, 150), 24, 1.0, "penalty drop");
+        Host.Fx.Popup(_ball.Pos - new Vec2(0, 40), "+1", Color.FromRgb(255, 150, 150), 24, 1.0, L.T("penalty drop"));
         Changed();
     }
 
@@ -316,12 +316,14 @@ public sealed class GolfGame : MiniGame
     {
         int diff = _strokes - _par;
         _parDone += _par;
-        string label = _strokes == 1 ? "HOLE IN ONE!" : diff <= -2 ? "EAGLE!" : diff == -1 ? "BIRDIE!" : diff == 0 ? "PAR" :
-            diff == 1 ? "BOGEY" : diff == 2 ? "DOUBLE BOGEY" : $"+{diff}";
+        Host.Stats.Add("golf.holes");
+        if (_strokes == 1) Host.Stats.Add("golf.aces");
+        string label = _strokes == 1 ? L.T("HOLE IN ONE!") : diff <= -2 ? L.T("EAGLE!") : diff == -1 ? L.T("BIRDIE!") : diff == 0 ? L.T("PAR") :
+            diff == 1 ? L.T("BOGEY") : diff == 2 ? L.T("DOUBLE BOGEY") : $"+{diff}";
         bool great = _strokes == 1 || diff < 0;
         var color = great ? Gold : diff == 0 ? Colors.White : Color.FromRgb(255, 160, 160);
         Host.Fx.Popup(_cup - new Vec2(0, 95), label, color, _strokes == 1 ? 40 : 32, 1.4,
-            $"{_strokes} stroke{(_strokes == 1 ? "" : "s")} · par {_par}");
+            _strokes == 1 ? L.F("{0} stroke · par {1}", _strokes, _par) : L.F("{0} strokes · par {1}", _strokes, _par));
         if (great)
         {
             Host.Fx.Burst(_cup - new Vec2(0, 20), Confetti, 30, 420, 700, 6, 1.0);
@@ -335,6 +337,7 @@ public sealed class GolfGame : MiniGame
         _roundOver = true;
         int rel = _roundStrokes - _parDone;
         var s = Host.Settings;
+        if (rel < 0) Host.Stats.Add("golf.underpar");
         bool best = s.BestGolf is not int previous || rel < previous;
         if (best)
         {
@@ -343,8 +346,8 @@ public sealed class GolfGame : MiniGame
         }
         var a = Host.Arena;
         var at = new Vec2(a.Center.X, a.Top + a.Height * 0.3);
-        Host.Fx.Popup(at, best ? "NEW BEST ROUND!" : "ROUND COMPLETE", best ? Gold : Colors.White, 38, 2.4,
-            $"{_roundStrokes} strokes · {Rel(rel)} vs par");
+        Host.Fx.Popup(at, best ? L.T("NEW BEST ROUND!") : L.T("ROUND COMPLETE"), best ? Gold : Colors.White, 38, 2.4,
+            L.F("{0} strokes · {1} vs par", _roundStrokes, Rel(rel)));
         if (best)
         {
             Host.Fx.Burst(at, Confetti, 40, 520, 700, 7, 1.1);

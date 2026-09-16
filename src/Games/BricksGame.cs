@@ -89,10 +89,10 @@ public sealed class BricksGame : MiniGame
 
     public override HudInfo Hud => new(
         _score.ToString(),
-        _gameOver ? "Game over · click the paddle to play again"
-            : _live ? $"Level {_level} · balls {_balls} · bricks {BricksLeft}"
-            : $"Level {_level} · balls {_balls} · click the paddle to launch",
-        $"Best {Host.Settings.BestBricks}");
+        _gameOver ? L.T("Game over · click the paddle to play again")
+            : _live ? L.F("Level {0} · balls {1} · bricks {2}", _level, _balls, BricksLeft)
+            : L.F("Level {0} · balls {1} · click the paddle to launch", _level, _balls),
+        L.F("Best {0}", Host.Settings.BestBricks));
 
     // ------------------------------------------------------------------ game flow
 
@@ -134,6 +134,7 @@ public sealed class BricksGame : MiniGame
     void NextLevel()
     {
         _level++;
+        Host.Stats.Max("bricks.level", _level);
         _live = false;
         BuildWall();
         ParkBall();
@@ -215,13 +216,13 @@ public sealed class BricksGame : MiniGame
             _gameOver = true;
             var a = Host.Arena;
             var at = new Vec2(a.Center.X, a.Top + a.Height * 0.35);
-            Host.Fx.Popup(at, _beatBest ? "NEW BEST!" : "GAME OVER", _beatBest ? Gold : Colors.White, 38, 2.4, $"{_score} points · level {_level}");
+            Host.Fx.Popup(at, _beatBest ? L.T("NEW BEST!") : L.T("GAME OVER"), _beatBest ? Gold : Colors.White, 38, 2.4, L.F("{0} points · level {1}", _score, _level));
             if (_beatBest) Host.Fx.Burst(at, Confetti, 40, 520, 700, 7, 1.1);
             Host.Sound.Play(_beatBest ? "best" : "buzzer", _beatBest ? 0.8 : 0.4);
         }
         else
         {
-            Host.Fx.Popup(_ball - new Vec2(0, 60), "ball lost", Color.FromRgb(255, 150, 150), 24, 1.1, $"{_balls} left");
+            Host.Fx.Popup(_ball - new Vec2(0, 60), L.T("ball lost"), Color.FromRgb(255, 150, 150), 24, 1.1, L.F("{0} left", _balls));
             Host.Sound.Play("buzzer", 0.3);
         }
         ParkBall();
@@ -234,7 +235,7 @@ public sealed class BricksGame : MiniGame
         int bonus = 25 * _level;
         AddScore(bonus);
         var at = new Vec2(Host.Arena.Center.X, Host.Arena.Top + Host.Arena.Height * 0.35);
-        Host.Fx.Popup(at, "LEVEL CLEAR!", Gold, 40, 1.8, $"+{bonus} bonus");
+        Host.Fx.Popup(at, L.T("LEVEL CLEAR!"), Gold, 40, 1.8, L.F("+{0} bonus", bonus));
         Host.Fx.Burst(at, Confetti, 36, 500, 700, 7, 1.0);
         Host.Sound.Play("fire", 0.8);
         _nextIn = 1.4;
@@ -405,6 +406,7 @@ public sealed class BricksGame : MiniGame
             return;
         }
         b.Broken = true;
+        Host.Stats.Add("bricks.broken");
         AddScore(b.Points);
         var center = new Vec2(b.Box.Center.X, b.Box.Center.Y);
         Host.Fx.Burst(center, new[] { b.Color, Colors.White }, b.IsGold ? 20 : 8, 260, 900, 5, 0.5);

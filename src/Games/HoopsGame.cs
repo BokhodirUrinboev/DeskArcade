@@ -85,8 +85,8 @@ public sealed class HoopsGame : MiniGame
 
     public override HudInfo Hud => new(
         _score.ToString(),
-        _streak >= 3 ? $"Streak {_streak} · ON FIRE ×2" : _streak > 0 ? $"Streak {_streak} · keep going!" : "Drag the ball, flick it into the hoop",
-        $"Best streak {Host.Settings.BestHoopsStreak}");
+        _streak >= 3 ? L.F("Streak {0} · ON FIRE ×2", _streak) : _streak > 0 ? L.F("Streak {0} · keep going!", _streak) : L.T("Drag the ball, flick it into the hoop"),
+        L.F("Best streak {0}", Host.Settings.BestHoopsStreak));
 
     double RimY => _rimY + _bob;
     Vec2 RimCenter => new(_boardX + _dir * (RimLen + 6) / 2, RimY);
@@ -171,7 +171,7 @@ public sealed class HoopsGame : MiniGame
 
     void BreakStreak()
     {
-        if (_streak >= 3) Host.Fx.Popup(_ball.Pos - new Vec2(0, 60), "streak over", Color.FromRgb(200, 210, 225), 20, 1.0);
+        if (_streak >= 3) Host.Fx.Popup(_ball.Pos - new Vec2(0, 60), L.T("streak over"), Color.FromRgb(200, 210, 225), 20, 1.0);
         _streak = 0;
         _bestAnnounced = false;
         Host.HudChanged();
@@ -352,12 +352,15 @@ public sealed class HoopsGame : MiniGame
         int mult = _streak >= 3 ? 2 : 1;
         int gained = pts * mult;
         _score += gained;
+        Host.Stats.Add("hoops.baskets");
+        if (swish) Host.Stats.Add("hoops.swishes");
+        Host.Stats.Max("hoops.streak", _streak);
         bool beatBest = _streak > s.BestHoopsStreak;
         if (beatBest) s.BestHoopsStreak = _streak;
         if (_score > s.BestHoopsScore) s.BestHoopsScore = _score;
         Host.SaveSettings();
 
-        string label = dunk ? "DUNK!" : three ? (swish ? "SWISH THREE!" : "THREE POINTER!") : swish ? "SWISH!" : "NICE SHOT!";
+        string label = dunk ? L.T("DUNK!") : three ? (swish ? L.T("SWISH THREE!") : L.T("THREE POINTER!")) : swish ? L.T("SWISH!") : L.T("NICE SHOT!");
         Host.Fx.Popup(new Vec2(c.X, RimY - 80), $"+{gained}", mult > 1 ? Color.FromRgb(255, 120, 40) : Color.FromRgb(255, 209, 102), 42, 1.3, label);
         Host.Fx.Burst(new Vec2(c.X, RimY + 24), Confetti, swish ? 28 : 16, 420, 700, 6, 0.9);
         Host.Sound.Play("swish", 0.9);
@@ -366,17 +369,17 @@ public sealed class HoopsGame : MiniGame
 
         if (_streak == 3)
         {
-            Host.Fx.Popup(new Vec2(c.X, RimY - 160), "ON FIRE!", Color.FromRgb(255, 90, 40), 34, 1.6, "points ×2");
+            Host.Fx.Popup(new Vec2(c.X, RimY - 160), L.T("ON FIRE!"), Color.FromRgb(255, 90, 40), 34, 1.6, L.T("points ×2"));
             Host.Sound.Play("fire", 0.8);
         }
         else if (_streak == 5)
         {
-            Host.Fx.Popup(new Vec2(c.X, RimY - 160), "MOVING HOOP!", Color.FromRgb(120, 200, 255), 30, 1.6);
+            Host.Fx.Popup(new Vec2(c.X, RimY - 160), L.T("MOVING HOOP!"), Color.FromRgb(120, 200, 255), 30, 1.6);
         }
         if (beatBest && !_bestAnnounced && _streak >= 3)
         {
             _bestAnnounced = true;
-            Host.Fx.Popup(new Vec2(c.X, RimY - 220), "NEW BEST STREAK", Color.FromRgb(6, 214, 160), 26, 1.8);
+            Host.Fx.Popup(new Vec2(c.X, RimY - 220), L.T("NEW BEST STREAK"), Color.FromRgb(6, 214, 160), 26, 1.8);
             Host.Sound.Play("best", 0.7);
         }
         Host.HudChanged();

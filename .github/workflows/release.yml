@@ -1,9 +1,10 @@
-# Builds the Windows installers and the Ubuntu package and publishes them as a GitHub Release.
+# Builds every Desk Arcade package and publishes them as a GitHub Release.
 #
 # Release a new version:
 #   1. Bump <Version> in DeskArcade.csproj (for example 1.2.1 -> 1.3.0) and merge it.
 #   2. git tag v1.3.0 && git push origin v1.3.0
 # The tag must match the csproj version, so the packages upgrade an existing install correctly.
+# docs/RELEASING.md lists every artifact and covers code signing, winget and Flathub.
 name: Release
 
 on:
@@ -55,34 +56,71 @@ jobs:
           fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
-  ubuntu:
-    name: Ubuntu package
+  linux:
+    name: Linux ${{ matrix.deb-arch }} (.deb, AppImage)
     needs: version
     runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        include:
+          - deb-arch: amd64
+            rid: linux-x64
+            appimage-arch: x86_64
+          # Cross-compiled on the x64 runner (dotnet publish -r linux-arm64).
+          - deb-arch: arm64
+            rid: linux-arm64
+            appimage-arch: aarch64
     env:
       VERSION: ${{ needs.version.outputs.version }}
+      DEB_ARCH: ${{ matrix.deb-arch }}
+      RID: ${{ matrix.rid }}
+      APPIMAGE_ARCH: ${{ matrix.appimage-arch }}
+      # Runners don't guarantee FUSE: AppImages (appimagetool included) run from an extracted copy.
+      APPIMAGE_EXTRACT_AND_RUN: 1
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
+      - name: Publish
+        run: dotnet publish DeskArcade.csproj -c Release -r "$RID" --self-contained -p:Version="$VERSION" -o "dist-linux/publish-$RID"
       - name: Build .deb
-        run: bash packaging/linux/build.sh "$VERSION"
+        run: bash packaging/linux/build-deb.sh "dist-linux/publish-$RID" "$VERSION" dist-linux "$DEB_ARCH"
+      - name: Build AppImage
+        # Downloads appimagetool and the AppImage runtime at the versions pinned in the script.
+        run: bash packaging/linux/build-appimage.sh "dist-linux/publish-$RID" "$VERSION" "$APPIMAGE_ARCH" dist-linux
       - name: Check the package installs
+        if: matrix.deb-arch == 'amd64'
         run: |
           sudo apt-get install -y "./dist-linux/deskarcade_${VERSION}_amd64.deb"
           test -x /usr/bin/deskarcade
           dpkg -s deskarcade | grep -Fx "Version: $VERSION"
+          # The signal path starts the runtime without a display and exits 0 when no game is running.
+          deskarcade --signal quit
+          "./dist-linux/DeskArcade-${VERSION}-x86_64.AppImage" --signal quit
+      - name: Check the arm64 packages
+        if: matrix.deb-arch == 'arm64'
+        run: |
+          # Built on x64, so they can't be installed here: check the metadata and the binaries' architecture.
+          deb="dist-linux/deskarcade_${VERSION}_arm64.deb"
+          dpkg-deb -f "$deb" Architecture | grep -Fx arm64
+          dpkg-deb -f "$deb" Version | grep -Fx "$VERSION"
+          dpkg-deb --fsys-tarfile "$deb" | tar -xO ./opt/deskarcade/DeskArcade | file - | grep -F 'ARM aarch64'
+          file "dist-linux/DeskArcade-${VERSION}-aarch64.AppImage" | grep -F 'ARM aarch64'
       - uses: actions/upload-artifact@v4
         with:
-          name: ubuntu
-          path: dist-linux/*.deb
+          name: linux-${{ matrix.deb-arch }}
+          path: |
+            dist-linux/*.deb
+            dist-linux/*.AppImage
           if-no-files-found: error
 
   windows:
     name: Windows installers
     needs: version
     runs-on: windows-latest
+    outputs:
+      signed: ${{ steps.cert.outputs.enabled }}
     env:
       VERSION: ${{ needs.version.outputs.version }}
     steps:
@@ -96,22 +134,140 @@ jobs:
           if (-not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe")) {
             choco install innosetup --no-progress -y
           }
+      # Signing is optional: without both secrets this step only reports that the build is unsigned,
+      # SIGN_THUMBPRINT below stays empty and the build scripts skip signtool.
+      - name: Import code-signing certificate
+        id: cert
+        shell: pwsh
+        env:
+          WINDOWS_CERTIFICATE_PFX_BASE64: ${{ secrets.WINDOWS_CERTIFICATE_PFX_BASE64 }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+        run: ./packaging/windows/Import-SigningCertificate.ps1
+      # With a thumbprint, build.ps1 signs DeskArcade.exe right after publishing (before Inno Setup packs
+      # it) and Inno Setup's SignTool directive signs Setup and its uninstaller. See docs/RELEASING.md.
       - name: Build installer (needs .NET runtime)
         shell: pwsh
-        run: .\build-installer.ps1 -Version $env:VERSION
+        env:
+          SIGN_THUMBPRINT: ${{ steps.cert.outputs.thumbprint }}
+        run: .\build-installer.ps1 -Version $env:VERSION -SignCertThumbprint $env:SIGN_THUMBPRINT
       - name: Build standalone installer (runtime bundled)
         shell: pwsh
-        run: .\build-installer.ps1 -SelfContained -Version $env:VERSION
+        env:
+          SIGN_THUMBPRINT: ${{ steps.cert.outputs.thumbprint }}
+        run: .\build-installer.ps1 -SelfContained -Version $env:VERSION -SignCertThumbprint $env:SIGN_THUMBPRINT
+      - name: Build ARM64 installer (runtime bundled, cross-compiled)
+        shell: pwsh
+        env:
+          SIGN_THUMBPRINT: ${{ steps.cert.outputs.thumbprint }}
+        run: .\build-installer.ps1 -Arch arm64 -Version $env:VERSION -SignCertThumbprint $env:SIGN_THUMBPRINT
+      - name: Verify signatures
+        if: steps.cert.outputs.enabled == 'true'
+        shell: pwsh
+        run: |
+          $signtool = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\10.*\x64\signtool.exe" |
+            Sort-Object { [version]$_.Directory.Parent.Name } -Descending | Select-Object -First 1 -ExpandProperty FullName
+          # dist\DeskArcade.exe is the ARM64 exe from the last build; the others are inside the installers.
+          foreach ($file in @(Get-ChildItem installer/Output/DeskArcade-Setup-*.exe) + @(Get-Item dist/DeskArcade.exe)) {
+            & $signtool verify /pa /tw $file.FullName
+            if ($LASTEXITCODE -ne 0) { throw "Signature check failed: $($file.Name)" }
+          }
       - uses: actions/upload-artifact@v4
         with:
           name: windows
           path: installer/Output/DeskArcade-Setup-*.exe
           if-no-files-found: error
 
+  macos:
+    name: macOS ${{ matrix.arch }} (.app)
+    needs: version
+    strategy:
+      matrix:
+        include:
+          - arch: arm64
+            runner: macos-latest
+          # An Intel runner, so the launch test runs natively. Once GitHub retires it, switch to
+          # macos-latest: Apple silicon runs the x64 build through Rosetta 2.
+          - arch: x64
+            runner: macos-15-intel
+    runs-on: ${{ matrix.runner }}
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+      ARCH: ${{ matrix.arch }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Publish
+        run: dotnet publish DeskArcade.csproj -c Release -r "osx-$ARCH" --self-contained -p:Version="$VERSION" -o "dist/macos/publish-$ARCH"
+      - name: Build DeskArcade.app
+        run: bash packaging/macos/build-app.sh "dist/macos/publish-$ARCH" "$VERSION" "$ARCH" "dist/macos/$ARCH"
+      - name: Launch test
+        run: |
+          # Test the zip users download: unpack it, check the signature survived, start the game.
+          work="$(mktemp -d)"
+          ditto -x -k "dist/macos/$ARCH/DeskArcade-$VERSION-macos-$ARCH.zip" "$work"
+          app="$work/DeskArcade.app"
+          codesign --verify --deep --strict --verbose=2 "$app"
+          exe="$app/Contents/MacOS/DeskArcade"
+          log="$RUNNER_TEMP/deskarcade-$ARCH.log"
+
+          collect_logs() {
+            cat "$log" || true
+            for crash in "$HOME/.config/DeskArcade-ci/crash.log" "$HOME/Library/Application Support/DeskArcade-ci/crash.log"; do
+              if [ -f "$crash" ]; then
+                cat "$crash"
+                cp "$crash" "$RUNNER_TEMP/deskarcade-$ARCH-crash.log"
+              fi
+            done
+          }
+
+          # --profile ci: own lock, signal channel and settings. --demo: the game plays itself.
+          "$exe" --profile ci --demo > "$log" 2>&1 &
+          pid=$!
+          sleep 15
+          if ! kill -0 "$pid" 2>/dev/null; then
+            rc=0; wait "$pid" || rc=$?
+            echo "::error::Desk Arcade exited within 15 seconds (exit code $rc)"
+            collect_logs
+            exit 1
+          fi
+
+          "$exe" --profile ci --signal quit
+          for _ in $(seq 40); do
+            kill -0 "$pid" 2>/dev/null || break
+            sleep 0.5
+          done
+          if kill -0 "$pid" 2>/dev/null; then
+            echo "::error::Desk Arcade was still running 20 seconds after --signal quit"
+            kill -9 "$pid"
+            collect_logs
+            exit 1
+          fi
+          rc=0; wait "$pid" || rc=$?
+          if [ "$rc" -ne 0 ]; then
+            echo "::error::Desk Arcade quit with exit code $rc"
+            collect_logs
+            exit 1
+          fi
+          echo "Desk Arcade ran for 15 seconds and quit cleanly"
+      - name: Upload launch logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-${{ matrix.arch }}-launch-logs
+          path: ${{ runner.temp }}/deskarcade-*.log
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-${{ matrix.arch }}
+          path: dist/macos/${{ matrix.arch }}/DeskArcade-*.zip
+          if-no-files-found: error
+
   release:
     name: Publish release
     if: github.event_name == 'push'
-    needs: [version, ubuntu, windows]
+    needs: [version, linux, windows, macos]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -125,16 +281,33 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ needs.version.outputs.version }}
+          WINDOWS_SIGNED: ${{ needs.windows.outputs.signed }}
         run: |
           ls -l packages
+          if [ "$WINDOWS_SIGNED" = "true" ]; then
+            windows_note="The Windows installers are code-signed."
+          else
+            windows_note="The Windows installers are not code-signed, so SmartScreen may ask you to confirm (More info → Run anyway)."
+          fi
           cat > notes.md <<EOF_NOTES
           | Platform | Download |
           |---|---|
           | Windows 10/11 (x64), needs the [.NET 10 Runtime](https://dotnet.microsoft.com/download/dotnet/10.0) | \`DeskArcade-Setup-$VERSION.exe\` |
           | Windows 10/11 (x64), runtime bundled | \`DeskArcade-Setup-$VERSION-standalone.exe\` |
+          | Windows 10/11 on ARM (arm64), runtime bundled | \`DeskArcade-Setup-$VERSION-arm64.exe\` |
           | Ubuntu 22.04 / 24.04 (x64) | \`deskarcade_${VERSION}_amd64.deb\` — \`sudo apt install ./deskarcade_${VERSION}_amd64.deb\` |
+          | Ubuntu 22.04 / 24.04 (arm64) | \`deskarcade_${VERSION}_arm64.deb\` — \`sudo apt install ./deskarcade_${VERSION}_arm64.deb\` |
+          | Other Linux (x86_64), portable | \`DeskArcade-$VERSION-x86_64.AppImage\` — \`chmod +x\` it and run it |
+          | Other Linux (aarch64), portable | \`DeskArcade-$VERSION-aarch64.AppImage\` — \`chmod +x\` it and run it |
+          | macOS 14+ (Apple silicon) | \`DeskArcade-$VERSION-macos-arm64.zip\` |
+          | macOS 14+ (Intel) | \`DeskArcade-$VERSION-macos-x64.zip\` |
 
-          Both packages upgrade an existing install in place; settings and high scores are kept.
+          The installers and .deb packages upgrade an existing install in place; settings and high scores are kept.
+          $windows_note
+
+          **macOS:** the app is not notarized. Unzip it, move DeskArcade.app to Applications, then right-click it and choose **Open** the first time (on macOS 15 and later: open it once, then **System Settings → Privacy & Security → Open Anyway**). It has no Dock icon; use its menu bar icon.
+
+          **AppImage:** the AppImages need no libfuse2. If one doesn't start where FUSE is unavailable, run it with \`--appimage-extract-and-run\`.
           EOF_NOTES
           gh release create "$GITHUB_REF_NAME" packages/* \
             --title "Desk Arcade $VERSION" \

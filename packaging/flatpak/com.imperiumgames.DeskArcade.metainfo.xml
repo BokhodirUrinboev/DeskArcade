@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- AppStream metadata for the Flatpak. Add a <release> entry for every published version. -->
+<component type="desktop-application">
+  <id>com.imperiumgames.DeskArcade</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+
+  <name>Desk Arcade</name>
+  <summary>Mini-games that play on top of your desktop</summary>
+  <developer id="com.imperiumgames">
+    <name>Imperium Games</name>
+  </developer>
+
+  <description>
+    <p>
+      Desk Arcade plays small games in a transparent overlay on top of your windows, so you can shoot
+      hoops while a build, a deploy or an AI agent is working and still see everything underneath.
+    </p>
+    <ul>
+      <li>Nine games: hoops, archery, keepy-uppy, mini golf, bug squash, can knockdown, brick breaker, bubble pop and air hockey</li>
+      <li>Clicks outside the game objects pass straight through to your windows</li>
+      <li>The overlay never takes keyboard focus</li>
+      <li>Balls and arrows land on the tops of open windows</li>
+      <li>Rendering stops when nothing moves, so it is idle when idle</li>
+    </ul>
+    <p>
+      Desk Arcade runs as an X11 application, through XWayland on Wayland sessions. On Wayland, window-top
+      bouncing only sees X11 windows and the global shortcuts must be added as custom shortcuts.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">com.imperiumgames.DeskArcade.desktop</launchable>
+  <url type="homepage">https://github.com/BokhodirUrinboev/DeskArcade</url>
+  <url type="bugtracker">https://github.com/BokhodirUrinboev/DeskArcade/issues</url>
+
+  <categories>
+    <category>Game</category>
+    <category>ArcadeGame</category>
+  </categories>
+  <keywords>
+    <keyword>overlay</keyword>
+    <keyword>basketball</keyword>
+    <keyword>archery</keyword>
+  </keywords>
+
+  <provides>
+    <binary>deskarcade</binary>
+  </provides>
+  <requires>
+    <display_length compare="ge">768</display_length>
+  </requires>
+  <recommends>
+    <control>pointing</control>
+  </recommends>
+
+  <content_rating type="oars-1.1"/>
+
+  <releases>
+    <release version="1.2.2" date="2026-09-15"/>
+  </releases>
+</component>

@@ -2,8 +2,8 @@
 
 Desk Arcade is released under the [MIT License](LICENSE). It is built on the open-source components
 listed below. Each component is the property of its respective authors and is used under the license
-shown. This file covers everything redistributed in the Windows installer, the standalone Windows
-build and the Ubuntu `.deb` package.
+shown. This file covers everything redistributed in the Windows installers, the Ubuntu `.deb`
+packages, the AppImages, the Flatpak build and the macOS app bundle.
 
 Desk Arcade does not bundle any fonts, images, audio files or other third-party media. All sounds
 are synthesized at runtime, all artwork is drawn in code, and text uses fonts already installed on
@@ -13,17 +13,20 @@ the system.
 
 | Component | Version | License | Shipped in | Project |
 |---|---|---|---|---|
-| Avalonia UI (`Avalonia`, `Avalonia.Desktop`, `Avalonia.Themes.Simple` and the platform packages they bring in: `Avalonia.Skia`, `Avalonia.Win32`, `Avalonia.X11`, `Avalonia.FreeDesktop`, `Avalonia.Native`, `Avalonia.Remote.Protocol`) | 11.3.9 | MIT | All builds | <https://github.com/AvaloniaUI/Avalonia> |
+| Avalonia UI (`Avalonia`, `Avalonia.Desktop`, `Avalonia.Themes.Simple` and the platform packages they bring in: `Avalonia.Skia`, `Avalonia.Win32`, `Avalonia.X11`, `Avalonia.FreeDesktop`, `Avalonia.Native`, `Avalonia.Remote.Protocol`) | 11.3.22 | MIT | All builds | <https://github.com/AvaloniaUI/Avalonia> |
 | Avalonia.Angle.Windows.Natives (ANGLE) | 2.1.25547.20250602 | BSD-3-Clause | Windows | <https://github.com/AvaloniaUI/angle> |
 | SkiaSharp | 2.88.9 | MIT | All builds | <https://github.com/mono/SkiaSharp> |
 | Skia (native library inside SkiaSharp) | — | BSD-3-Clause | All builds | <https://skia.org> |
 | HarfBuzzSharp | 8.3.1.1 | MIT | All builds | <https://github.com/mono/SkiaSharp> |
 | HarfBuzz (native library inside HarfBuzzSharp) | 8.3.1 | "Old MIT" | All builds | <https://github.com/harfbuzz/harfbuzz> |
 | MicroCom.Runtime | 0.11.0 | MIT | All builds | <https://github.com/kekekeks/MicroCom> |
-| Tmds.DBus.Protocol | 0.21.2 | MIT | All builds (used on Linux) | <https://github.com/tmds/Tmds.DBus> |
+| Tmds.DBus.Protocol | 0.21.3 | MIT | All builds (Linux tray, and global shortcuts on Wayland) | <https://github.com/tmds/Tmds.DBus> |
+| [AppImage type2 runtime](https://github.com/AppImage/type2-runtime) | 20251108 | MIT | Inside the `.AppImage` files only | <https://github.com/AppImage/type2-runtime> |
 | .NET Runtime | 10.0 | MIT | Ubuntu `.deb` and standalone Windows builds | <https://github.com/dotnet/runtime> |
 
-`Avalonia.BuildServices` (MIT) is used only while compiling and is not redistributed.
+`Avalonia.BuildServices` (MIT) is used only while compiling and is not redistributed. The unit tests use
+[xUnit.net](https://github.com/xunit/xunit) (Apache-2.0) and Microsoft.NET.Test.Sdk (MIT); both are
+test-only and ship in no package.
 
 ### Used at runtime, not redistributed
 
@@ -34,6 +37,9 @@ These are loaded from the operating system when present. Desk Arcade does not sh
 | Xlib / libXext (X.Org) | MIT/X11 | Overlay input shape, window list, global hotkeys on Linux |
 | libpulse (PulseAudio / PipeWire compatibility) | LGPL-2.1-or-later | Sound on Linux, loaded dynamically if installed |
 | Windows `user32`, `winmm` | Part of Windows | Overlay, hotkeys and sound on Windows |
+| macOS AppKit, CoreGraphics, CoreFoundation, Carbon, AudioToolbox | Part of macOS | Overlay, window list, hotkeys and sound on macOS |
+| xdg-desktop-portal | LGPL-2.1-or-later | Global shortcuts on Wayland, over D-Bus |
+| Flatpak runtime `org.freedesktop.Platform` 24.08 | Various, see the runtime | Only when running the Flatpak build |
 
 ### Build tools, not redistributed as libraries
 

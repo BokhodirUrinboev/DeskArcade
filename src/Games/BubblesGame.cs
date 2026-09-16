@@ -53,10 +53,12 @@ public sealed class BubblesGame : MiniGame
 
     public override HudInfo Hud => new(
         _score.ToString(),
-        !_active ? "Pop the bubble to start · smaller bubbles score more"
-            : _waveIn > 0 ? $"Wave {_wave} cleared!"
-            : $"Wave {_wave} · {SecondsLeft}s left · bubbles {_bubbles.Count}" + (_combo > 1 ? $" · combo ×{Math.Min(_combo, 3)}" : ""),
-        $"Best {Host.Settings.BestBubbles}");
+        !_active ? L.T("Pop the bubble to start · smaller bubbles score more")
+            : _waveIn > 0 ? L.F("Wave {0} cleared!", _wave)
+            : _combo > 1
+                ? L.F("Wave {0} · {1}s left · bubbles {2} · combo ×{3}", _wave, SecondsLeft, _bubbles.Count, Math.Min(_combo, 3))
+                : L.F("Wave {0} · {1}s left · bubbles {2}", _wave, SecondsLeft, _bubbles.Count),
+        L.F("Best {0}", Host.Settings.BestBubbles));
 
     // ------------------------------------------------------------------ game flow
 
@@ -87,7 +89,7 @@ public sealed class BubblesGame : MiniGame
         b.Starter = true;
         b.Sprite.Children.Add(Art.At(new TextBlock
         {
-            Text = "pop me", Width = Radius[3] * 2, TextAlignment = TextAlignment.Center,
+            Text = L.T("pop me"), Width = Radius[3] * 2, TextAlignment = TextAlignment.Center,
             FontFamily = Fx.Font, FontSize = 13, FontWeight = FontWeight.Bold, Foreground = Brushes.White,
         }, -Radius[3], -9));
     }
@@ -119,8 +121,9 @@ public sealed class BubblesGame : MiniGame
             SpawnBubble(sizes[i], p, new Vec2(i % 2 == 0 ? HSpeed : -HSpeed, 0));
         }
         _timeLeft = WaveSeconds(wave);
+        Host.Stats.Max("bubbles.wave", wave);
         _shownSecond = -1;
-        Host.Fx.Popup(new Vec2(a.Center.X, a.Top + a.Height * 0.3), $"WAVE {wave}", Colors.White, 36, 1.2);
+        Host.Fx.Popup(new Vec2(a.Center.X, a.Top + a.Height * 0.3), L.F("WAVE {0}", wave), Colors.White, 36, 1.2);
         Host.HudChanged();
     }
 
@@ -151,6 +154,7 @@ public sealed class BubblesGame : MiniGame
         Host.Fx.Burst(b.Pos, new[] { tint, Colors.White }, 8 + b.Size * 4, 200 + b.Size * 60, 300, 5, 0.5);
         Host.Sound.Play("pop", 0.7, 1.5 - b.Size * 0.2);
         if (!scored) return;
+        Host.Stats.Add("bubbles.popped");
 
         _combo = _time - _lastPop < ComboWindow ? _combo + 1 : 1;
         _lastPop = _time;
@@ -176,7 +180,7 @@ public sealed class BubblesGame : MiniGame
         AddScore(bonus);
         var a = Host.Arena;
         var at = new Vec2(a.Center.X, a.Top + a.Height * 0.3);
-        Host.Fx.Popup(at, "WAVE CLEAR!", Gold, 40, 1.6, $"+{bonus} time bonus");
+        Host.Fx.Popup(at, L.T("WAVE CLEAR!"), Gold, 40, 1.6, L.F("+{0} time bonus", bonus));
         Host.Fx.Burst(at, Tints, 36, 500, 700, 7, 1.0);
         Host.Sound.Play("fire", 0.8);
         _waveIn = 1.4;
@@ -189,7 +193,7 @@ public sealed class BubblesGame : MiniGame
         foreach (var b in _bubbles.ToArray()) Pop(b, false);
         var a = Host.Arena;
         var at = new Vec2(a.Center.X, a.Top + a.Height * 0.3);
-        Host.Fx.Popup(at, _beatBest ? "NEW BEST!" : "TIME!", _beatBest ? Gold : Colors.White, 38, 2.4, $"{_score} points · wave {_wave}");
+        Host.Fx.Popup(at, _beatBest ? L.T("NEW BEST!") : L.T("TIME!"), _beatBest ? Gold : Colors.White, 38, 2.4, L.F("{0} points · wave {1}", _score, _wave));
         if (_beatBest) Host.Fx.Burst(at, Tints, 40, 520, 700, 7, 1.1);
         Host.Sound.Play(_beatBest ? "best" : "buzzer", _beatBest ? 0.8 : 0.4);
         _starterIn = 2.2;

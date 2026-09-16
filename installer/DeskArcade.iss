@@ -20,10 +20,28 @@
   #define MyAppVersion GetVersionNumbersString(SourceDir + "\" + MyAppExeName)
 #endif
 
-#ifdef SelfContained
-  #define Suffix "-standalone"
+; Target architecture: /DArch=x64 (default) or /DArch=arm64. One script builds every variant:
+;   x64                  DeskArcade-Setup-<version>.exe             needs the .NET runtime
+;   x64  /DSelfContained DeskArcade-Setup-<version>-standalone.exe  runtime bundled
+;   arm64 /DSelfContained DeskArcade-Setup-<version>-arm64.exe      runtime bundled (required)
+; All variants share the AppId, so x64 and ARM64 builds upgrade each other in place.
+#ifndef Arch
+  #define Arch "x64"
+#endif
+
+#if Arch == "arm64"
+  #ifndef SelfContained
+    #error The ARM64 installer bundles the .NET runtime: compile it with /DSelfContained
+  #endif
+  #define Suffix "-arm64"
+#elif Arch == "x64"
+  #ifdef SelfContained
+    #define Suffix "-standalone"
+  #else
+    #define Suffix ""
+  #endif
 #else
-  #define Suffix ""
+  #error Arch must be x64 or arm64
 #endif
 
 [Setup]
@@ -53,12 +71,22 @@ Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
 MinVersion=10.0
-#if Ver >= EncodeVer(6, 3, 0)
+#if Arch == "arm64"
+ArchitecturesAllowed=arm64
+ArchitecturesInstallIn64BitMode=arm64
+#elif Ver >= EncodeVer(6, 3, 0)
 ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 #else
 ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
+#endif
+#ifdef Sign
+; Code signing (build-installer.ps1 -SignCertThumbprint passes /DSign and /Sdeskarcade=<signtool command>).
+; Inno Setup signs Setup itself and the uninstaller it embeds; signing Setup after the build could not
+; reach unins000.exe, which Setup writes on the user's machine.
+SignTool=deskarcade
+SignedUninstaller=yes
 #endif
 CloseApplications=yes
 RestartApplications=no

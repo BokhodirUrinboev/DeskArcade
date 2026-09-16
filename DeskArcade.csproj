@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
-    <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win-x64;win-arm64;linux-x64;linux-arm64;osx-x64;osx-arm64</RuntimeIdentifiers>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -17,7 +17,7 @@
 
     <!-- Single source of truth for the app + installer/package version. Bump it, rebuild the
          installer (Windows) or .deb (Ubuntu), and the new package upgrades any existing install. -->
-    <Version>1.2.2</Version>
+    <Version>1.3.0</Version>
     <Product>Desk Arcade</Product>
     <Description>Desktop overlay mini-games</Description>
     <Company>Imperium Games</Company>
@@ -26,13 +26,25 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="11.3.9" />
-    <PackageReference Include="Avalonia.Desktop" Version="11.3.9" />
-    <PackageReference Include="Avalonia.Themes.Simple" Version="11.3.9" />
+    <PackageReference Include="Avalonia" Version="11.3.22" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.22" />
+    <PackageReference Include="Avalonia.Themes.Simple" Version="11.3.22" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- D-Bus client for the XDG GlobalShortcuts portal on Wayland (Platform/Linux/GlobalShortcutsPortal.cs).
+         Avalonia already depends on it; referenced explicitly because our code uses it directly. -->
+    <PackageReference Include="Tmds.DBus.Protocol" Version="0.21.3" />
   </ItemGroup>
 
   <ItemGroup>
     <AvaloniaResource Include="assets\DeskArcade.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- the unit tests are their own project -->
+    <Compile Remove="tests/**" />
+    <None Remove="tests/**" />
   </ItemGroup>
 
 </Project>

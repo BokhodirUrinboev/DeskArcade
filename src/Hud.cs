@@ -49,6 +49,8 @@ public sealed class Hud : Border
     ClaudeStatus _status;
     bool _blinkOn;
     int _flashes;
+    DateTime? _claudeSince;
+    TimeSpan? _waited;
     bool _expanded, _pressed, _dragging;
     Vec2 _pressAt, _dragOffset;
 
@@ -79,7 +81,7 @@ public sealed class Hud : Border
                 Width = 34, Height = 28, CornerRadius = new CornerRadius(8), Margin = new Thickness(0, 0, 4, 4),
                 Background = Brushes.Transparent, Cursor = new Cursor(StandardCursorType.Hand), Child = IconHost(game, 34, 28),
             };
-            ToolTip.SetTip(tab, game.Title);
+            ToolTip.SetTip(tab, L.T(game.Title));
             string id = game.Id;
             tab.PointerPressed += (_, e) =>
             {
@@ -187,7 +189,9 @@ public sealed class Hud : Border
     {
         foreach (var (key, tab) in _tabs)
             tab.Background = key == id ? Art.Brush(70, 255, 255, 255) : Brushes.Transparent;
-        _title.Text = title.ToUpperInvariant();
+        _title.Text = L.T(title).ToUpperInvariant();
+        foreach (var (key, tab) in _tabs) ToolTip.SetTip(tab, L.T(_games[key].Title));
+        UpdateClaudeText();
 
         _pillIcon.Children.Clear();
         if (_games.TryGetValue(id, out var game))
@@ -208,24 +212,46 @@ public sealed class Hud : Border
         _pillBest.Text = "★ " + (words.Length > 0 ? words[^1] : "");
     }
 
-    public void SetClaude(ClaudeStatus status)
+    /// <param name="since">When Claude started working (shows a running timer).</param>
+    /// <param name="waited">How long the finished task took (shown on "done").</param>
+    public void SetClaude(ClaudeStatus status, DateTime? since = null, TimeSpan? waited = null)
     {
         _status = status;
+        _claudeSince = since;
+        _waited = waited;
         _flashes = status is ClaudeStatus.Done or ClaudeStatus.Attention ? 8 : 0;
-        (string text, string dot, string bg) = status switch
+        (string dot, string bg) = status switch
         {
-            ClaudeStatus.Working => ("Claude working", "#FFB020", "#3A2E12"),
-            ClaudeStatus.Done => ("Claude done", "#3DDC84", "#113A24"),
-            ClaudeStatus.Attention => ("Claude needs you", "#FF5C5C", "#3F1616"),
-            _ => ("", "#888888", "#222222"),
+            ClaudeStatus.Working => ("#FFB020", "#3A2E12"),
+            ClaudeStatus.Done => ("#3DDC84", "#113A24"),
+            ClaudeStatus.Attention => ("#FF5C5C", "#3F1616"),
+            _ => ("#888888", "#222222"),
         };
         _chip.IsVisible = _pillDot.IsVisible = status != ClaudeStatus.Unknown;
-        _chipText.Text = text;
         _chipDot.Fill = _pillDot.Fill = Art.Brush(dot);
         _chip.Background = Art.Brush(bg);
         _chip.Opacity = _pillDot.Opacity = 1;
+        UpdateClaudeText();
+    }
+
+    void UpdateClaudeText()
+    {
+        string text = _status switch
+        {
+            ClaudeStatus.Working when _claudeSince is DateTime since => L.F("Claude working · {0}", FormatWait(DateTime.UtcNow - since)),
+            ClaudeStatus.Working => L.T("Claude working"),
+            ClaudeStatus.Done when _waited is TimeSpan w && w.TotalSeconds >= 5 => L.F("Claude done after {0}", FormatWait(w)),
+            ClaudeStatus.Done => L.T("Claude done"),
+            ClaudeStatus.Attention => L.T("Claude needs you"),
+            _ => "",
+        };
+        _chipText.Text = text;
         ToolTip.SetTip(_pillDot, text);
     }
+
+    /// <summary>"4:05" or "1:02:03".</summary>
+    public static string FormatWait(TimeSpan t) =>
+        t.TotalHours >= 1 ? $"{(int)t.TotalHours}:{t.Minutes:00}:{t.Seconds:00}" : $"{(int)t.TotalMinutes}:{t.Seconds:00}";
 
     /// <summary>Called on a slow timer: pulses the status without needing a render loop.</summary>
     public void Blink()
@@ -234,6 +260,7 @@ public sealed class Hud : Border
         if (_status == ClaudeStatus.Working)
         {
             _chipDot.Opacity = _pillDot.Opacity = _blinkOn ? 1 : 0.35;
+            if (_claudeSince != null) UpdateClaudeText();
         }
         else if (_flashes > 0)
         {

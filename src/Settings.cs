@@ -11,12 +11,22 @@ public sealed class Settings
     public double Volume { get; set; } = 0.6;
     public bool Platforms { get; set; } = true;
     public bool ClaudeNotify { get; set; } = true;
+    /// <summary>Show the overlay when Claude starts working.</summary>
+    public bool ClaudeAutoShow { get; set; }
+    /// <summary>Hide the overlay when Claude finishes or needs you.</summary>
+    public bool ClaudeAutoHide { get; set; }
+    /// <summary>"auto" (follow the system), "en", "uz" or "ru".</summary>
+    public string Language { get; set; } = "auto";
+    public bool CheckForUpdates { get; set; } = true;
+    public DateTime? LastUpdateCheck { get; set; }
     public string? MonitorName { get; set; }
 
     public double? HoopX { get; set; }
     public double? HoopY { get; set; }
     public double? BowX { get; set; }
     public double? BowY { get; set; }
+    public double? PlinkoX { get; set; }
+    public double? PlinkoY { get; set; }
     public double? HudX { get; set; }
     public double? HudY { get; set; }
 
@@ -71,7 +81,7 @@ public sealed class Settings
 
     public void ResetPositions()
     {
-        HoopX = HoopY = BowX = BowY = HudX = HudY = null;
+        HoopX = HoopY = BowX = BowY = HudX = HudY = PlinkoX = PlinkoY = null;
     }
 
     public void ResetScores()

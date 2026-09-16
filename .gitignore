@@ -33,8 +33,9 @@ coverage*/
 *.tmp
 ~$*
 
-# --- personal Claude Code settings ---
+# --- personal Claude Code settings and agent worktrees ---
 .claude/settings.local.json
+.claude/worktrees/
 
 # --- OS junk ---
 Thumbs.db

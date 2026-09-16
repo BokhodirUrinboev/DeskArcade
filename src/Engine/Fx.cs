@@ -37,7 +37,7 @@ public sealed class Fx
     readonly Dictionary<Color, IBrush> _brushes = new();
 
     /// <summary>Segoe UI on Windows, Ubuntu/Cantarell/Noto on Linux.</summary>
-    public static readonly FontFamily Font = new("Segoe UI, Ubuntu, Cantarell, Noto Sans, DejaVu Sans");
+    public static readonly FontFamily Font = new("Segoe UI, SF Pro Text, Helvetica Neue, Ubuntu, Cantarell, Noto Sans, DejaVu Sans");
 
     public Canvas Layer { get; } = new() { IsHitTestVisible = false };
 

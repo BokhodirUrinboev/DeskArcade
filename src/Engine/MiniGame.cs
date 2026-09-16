@@ -16,6 +16,8 @@ public interface IGameHost
     Sound Sound { get; }
     Fx Fx { get; }
     Settings Settings { get; }
+    /// <summary>Counters and achievements. Report events like Stats.Add("hoops.baskets") or Stats.Max("hoops.streak", n).</summary>
+    Stats Stats { get; }
     /// <summary>Live mouse position in overlay DIPs.</summary>
     Vec2 Pointer { get; }
     /// <summary>Area the HUD occupies, so games can avoid spawning things under it.</summary>
