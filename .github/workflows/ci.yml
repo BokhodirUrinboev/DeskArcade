@@ -44,12 +44,8 @@ jobs:
       - name: Build
         run: dotnet build DeskArcade.csproj -c Release -r linux-x64
 
-      # ---------------------------------------------------------------------------------------
-      # Tests: there is no test project yet. When one is added, run it here, for example:
-      #
-      # - name: Test
-      #   run: dotnet test tests/DeskArcade.Tests/DeskArcade.Tests.csproj -c Release
-      # ---------------------------------------------------------------------------------------
+      - name: Test
+        run: dotnet test tests/DeskArcade.Tests/DeskArcade.Tests.csproj -c Release
 
       - name: Package .deb
         run: bash packaging/linux/build.sh

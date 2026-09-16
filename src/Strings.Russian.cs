@@ -226,6 +226,17 @@ public static partial class Strings
         ["wider block"] = "блок шире",
         ["Height {0}"] = "Высота {0}",
 
+        // ---- Slingshot
+        ["Slingshot"] = "Рогатка",
+        ["drag back from the slingshot and let go — knock the tower down"] = "оттяните рогатку и отпустите — свалите башню",
+        ["Tower {0} · stones {1} · blocks {2}"] = "Башня {0} · камней {1} · блоков {2}",
+        ["Game over · pull the stone to play again"] = "Игра окончена · оттяните камень, чтобы сыграть снова",
+        ["+{0} · spare stones {1}"] = "+{0} · осталось камней {1}",
+        ["next tower"] = "следующая башня",
+        ["Tower collapsed"] = "Башня рухнула",
+        ["building a new one"] = "строится новая",
+        ["{0} points · tower {1}"] = "очков: {0} · башня {1}",
+
         // ---- Desktop Pet
         ["Desktop Pet"] = "Питомец",
         ["click the pet to pet it — drag to carry and throw it"] = "нажмите на питомца, чтобы погладить — перетащите, чтобы нести и бросить",

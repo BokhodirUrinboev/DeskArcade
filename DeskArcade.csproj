@@ -17,7 +17,7 @@
 
     <!-- Single source of truth for the app + installer/package version. Bump it, rebuild the
          installer (Windows) or .deb (Ubuntu), and the new package upgrades any existing install. -->
-    <Version>1.2.2</Version>
+    <Version>1.3.0</Version>
     <Product>Desk Arcade</Product>
     <Description>Desktop overlay mini-games</Description>
     <Company>Imperium Games</Company>

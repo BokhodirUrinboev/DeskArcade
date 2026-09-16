@@ -226,6 +226,17 @@ public static partial class Strings
         ["wider block"] = "kengroq blok",
         ["Height {0}"] = "Balandlik {0}",
 
+        // ---- Slingshot
+        ["Slingshot"] = "Sopqon",
+        ["drag back from the slingshot and let go — knock the tower down"] = "sopqondan orqaga torting va qo'yib yuboring — minorani yiqiting",
+        ["Tower {0} · stones {1} · blocks {2}"] = "Minora {0} · toshlar {1} · bloklar {2}",
+        ["Game over · pull the stone to play again"] = "O'yin tugadi · qayta o'ynash uchun toshni torting",
+        ["+{0} · spare stones {1}"] = "+{0} · ortiqcha toshlar {1}",
+        ["next tower"] = "keyingi minora",
+        ["Tower collapsed"] = "Minora quladi",
+        ["building a new one"] = "yangisi qurilmoqda",
+        ["{0} points · tower {1}"] = "{0} ochko · minora {1}",
+
         // ---- Desktop Pet
         ["Desktop Pet"] = "Uy hayvoni",
         ["click the pet to pet it — drag to carry and throw it"] = "erkalash uchun hayvonchani bosing — ko'tarib otish uchun torting",
