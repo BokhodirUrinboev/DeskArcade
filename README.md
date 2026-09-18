@@ -5,7 +5,7 @@ deploy or Claude Code is working, and still see everything underneath.
 
 **Platforms:** Windows 10/11 (x64, ARM64) · Ubuntu 22.04/24.04 (amd64, arm64) · other Linux via AppImage
 or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE) &nbsp;·&nbsp;
-**Version:** 1.4.0
+**Version:** 1.4.1
 
 ---
 
@@ -77,13 +77,13 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 **Play over LAN** in the tray menu: one of you picks **Host a game** and the other picks **Join a game**
 (the first game found) or **Find games / join by address…** (a list of everyone hosting, plus a box for an
 IP address when the network blocks broadcasts; the host's tray shows its address). No server or account is
-involved: everything goes over UDP port 47820 on your local network. When the host switches games, the
-guest follows.
+involved: everything goes over UDP port 47820 on your local network. The host picks the game: the guest
+joins straight into it and follows whenever the host switches.
 
 | Game | Together |
 |---|---|
 | Air Hockey | Your co-worker's mallet replaces the CPU; each of you defends the left goal on your own screen |
-| Hoops | H-O-R-S-E: make a shot and the other player has to make it from the same spot, or take a letter |
+| Hoops | H-O-R-S-E: make a shot and the other player has to make it from the same spot, or take a letter. Each of you sees the other's ball fly as a faded ghost ball |
 | Checkers, Chess, Connect Four, Tic-tac-toe | Turns over the network; the guest sees the board from their side |
 | Sea Battle | Each fleet stays on its own PC; only shots and hits cross the network |
 | Bubble Pop, Whack-a-Bug | Race: start a round and theirs starts too; you see their live score and who won |
