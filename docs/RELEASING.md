@@ -13,6 +13,7 @@ signing, and the manual steps for winget and Flathub. The workflows are
 - [Building packages locally](#building-packages-locally)
 - [Windows code signing](#windows-code-signing)
 - [winget](#winget)
+- [Homebrew and Scoop](#homebrew-and-scoop)
 - [Flatpak and Flathub](#flatpak-and-flathub)
 - [AppImage](#appimage)
 - [macOS](#macos)
@@ -42,8 +43,10 @@ the csproj. It builds and uploads every package as workflow artifacts but publis
 
 **CI** (`ci.yml`) runs on pull requests, pushes to `main` and on demand. It builds for Windows x64 and
 macOS arm64, builds, packages and install-checks the amd64 `.deb` on Ubuntu, and lints the workflows
-with actionlint (including shellcheck on `run:` scripts). A new push to a pull request cancels that PR's
-older run. When a test project exists, enable the `dotnet test` step marked in the Ubuntu job.
+with actionlint (including shellcheck on `run:` scripts). The Ubuntu job also runs the unit tests, and the
+**smoke** job starts the published app on `windows-11-arm`, `ubuntu-24.04-arm` (under Xvfb) and
+`macos-14` runners, opens the stats window and quits it through `--signal` (`tests/smoke.sh`). A new push
+to a pull request cancels that PR's older run.
 
 ## Artifacts
 
@@ -163,6 +166,29 @@ Alternatively, [wingetcreate](https://github.com/microsoft/winget-create) does t
 for you: `wingetcreate submit --token <GitHub PAT> dist\winget\X.Y.Z`. Once the package is accepted,
 later versions can use `wingetcreate update ImperiumGames.DeskArcade --version X.Y.Z --urls <x64 url>
 <arm64 url> --submit`.
+
+## Homebrew and Scoop
+
+`packaging/homebrew/deskarcade.rb` (a cask for the macOS zips) and `packaging/scoop/deskarcade.json` (the
+Inno Setup installers, which Scoop unpacks without running them) are stamped for the current release.
+For a new release:
+
+```powershell
+# Downloads the macOS zips and Windows installers, fills in version, URLs and SHA256,
+# and writes dist\homebrew\deskarcade.rb and dist\scoop\deskarcade.json
+.\packaging\Update-PackageManifests.ps1 -Version 1.4.0
+```
+
+Copy the stamped files back over the templates so the repository always holds the current release.
+
+**Publishing** (not done yet):
+
+- **Homebrew:** a tap is the quick route: create `BokhodirUrinboev/homebrew-tap`, put the cask in
+  `Casks/deskarcade.rb`, and users run `brew install --cask bokhodirurinboev/tap/deskarcade`. homebrew/cask
+  itself wants a notarized app, which the unsigned build isn't yet.
+- **Scoop:** a bucket repository (`BokhodirUrinboev/scoop-bucket` with the JSON in `bucket/`); users run
+  `scoop bucket add deskarcade https://github.com/BokhodirUrinboev/scoop-bucket` and
+  `scoop install deskarcade/deskarcade`. `checkver` and `autoupdate` let Scoop's tooling follow new releases.
 
 ## Flatpak and Flathub
 

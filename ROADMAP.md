@@ -4,79 +4,76 @@
 the next desk**: two copies of Desk Arcade on the same local network find each other and share a game. No
 server and no account are involved.
 
-Work happens on `feature/roadmap-1.4`, one small step at a time. Each item says how it was verified.
+Work happens on `feature/roadmap-1.4`. Each item says how it was verified; the last section lists what this
+machine could not check. "Demo" means two copies on one PC (`--profile`) playing by themselves (`--demo`).
 
 ## Multiplayer over the local network
 
-How it works: one player **hosts** and the other **joins** from the tray (**Play over LAN**). The joiner
-broadcasts on UDP port 47820 and the first host that answers is paired with them. The host runs the game
-and the guest sends only its own input. Positions are sent as fractions of the screen, so the two screens
-can be different sizes. The guest's view is mirrored, so each player sees themselves on the left.
+How it works: one player **hosts** and the other **joins** from the tray (**Play over LAN**). Messages are
+short UDP datagrams on port 47820. Real-time games (Air Hockey) have the host simulate and the guest send
+its input; turn-based games number their moves and re-send them until the other side confirms, so a lost
+packet never puts the two screens out of step. Positions travel as fractions of the screen, so the screens
+may differ in size.
 
-- [x] **LAN link.** UDP discovery, pairing, heartbeat and a disconnect after 3 s of silence
-  (`src/Net/LanLink.cs`). Host, join and leave are in the tray and on `--signal lan-host|lan-join|lan-leave`.
-  *Verified: two `--profile` copies on one machine paired, and the guest switched to the host's game.*
-- [x] **Air Hockey 1-vs-1.** The other player's mallet replaces the CPU. The host runs the physics and
-  sends the puck, mallets and score about 60 times a second. Grabbing your mallet after a match starts
-  a rematch. *Verified: 45 s demo match between two local copies; the guest's goal was scored in the
-  host's simulation and counted in the guest's stats. Not yet tried between two real PCs or by two people.*
-- [ ] **Hoops H-O-R-S-E.** Turn-based: you take a shot, then your co-worker has to make the same shot. Only
-  shot results and turns cross the network, so lag doesn't matter.
-- [x] **Checkers (draughts).** A new game, against the CPU or over the LAN. English rules: forced
-  captures, multi-jumps, a man crowned on the far row, and a draw after 40 moves each with no capture
-  and no man moving. The rules live in `Draughts.cs`, free of UI, and the CPU searches 4 plies ahead.
-  The host keeps the real board and sends it every 0.4 s; the guest re-sends its move until the host's
-  board includes it, so a lost packet can't put the boards out of step. *Verified: 6 rule tests; a full
-  LAN demo game between two local copies ended in a win on the guest's side; a demo game against the
-  CPU. Not yet played by two people.*
-- [x] **Board game base.** `BoardGame.cs` holds the board, input, CPU turn and LAN sync shared by
-  Checkers and Chess; each game only supplies its rules (`IBoardRules`) and how its pieces look.
-- [x] **Chess.** Castling, en passant, promotion (always to a queen), check, mate, stalemate, the 50-move
-  rule and bare-minor-piece draws; threefold repetition isn't tracked. The CPU searches 3 plies plus
-  captures. *Verified: perft matches the published counts from the start (depth 3), Kiwipete (depth 3)
-  and an en-passant endgame (depth 4); fool's mate, promotion and CPU tests; a full LAN demo game
-  between two local copies; the pieces checked on screen.*
-- [ ] **Sea Battle (Battleship).** Each player places a fleet on a hidden 10×10 grid, then you take
-  turns firing at the other grid; hits, misses and sunk ships cross the link, never the fleet itself.
-  Against the CPU it hunts around its hits.
-- [ ] **Connect Four / Tic-tac-toe.** Cheap extras once the turn-based framework exists.
-- [ ] **Lobby.** Pick which host to join when several are on the network, show the other player's
-  name, and add a chat-free set of emotes ("gg", "one more?").
-- [ ] **Race modes.** Both players play the same Bubble Pop or Whack-a-Bug round at once, with a live
-  score for each.
-- [ ] **Tests.** The message format and a host/guest round trip over loopback.
+- [x] **LAN link.** Discovery, pairing, heartbeat, a 3 s timeout, and the guest following the host's game
+  switches (`src/Net/LanLink.cs`). *Verified: loopback unit tests (pairing, messages, emotes, leaving); every
+  demo below.*
+- [x] **Air Hockey 1-vs-1.** *Verified: 45 s demo; the guest's goal counted in the host's simulation.*
+- [x] **Hoops H-O-R-S-E.** Each player shoots on their own screen; only results and the spot to match cross
+  the link. *Verified: `HorseMatch` rule tests; 90 s demo with turns passing both ways.*
+- [x] **Checkers (draughts).** English rules, forced captures, multi-jumps, a draw after 40 quiet moves each.
+  *Verified: 6 rule tests; a full demo game.*
+- [x] **Chess.** Castling, en passant, promotion (always a queen), check, mate, stalemate, 50-move rule;
+  threefold repetition isn't tracked. *Verified: perft matches the published counts from the start
+  (depth 3), Kiwipete (depth 3) and an en-passant endgame (depth 4); a full demo game.*
+- [x] **Connect Four and Tic-tac-toe.** On the shared `BoardGame`, now any size and with "place a piece"
+  moves. *Verified: rule and CPU tests; checked on screen.*
+- [x] **Sea Battle.** Hidden fleets that never touch; a hit shoots again; the CPU hunts around its hits.
+  *Verified: fleet and CPU tests; CPU and demo games to a win; checked on screen.*
+- [x] **Lobby.** **Find games / join by address…** lists every host with its player and game, joins by IP
+  where broadcasts are blocked, and the host's tray shows its address; emotes ("gg", "One more?"…).
+  *Verified: loopback tests; the lobby listed a hosting copy on screen.*
+- [x] **Race modes.** Bubble Pop and Whack-a-Bug: starting a round starts the rival's, both see the live
+  score, and each side's n-th round is compared. *Verified: demo race produced a result.*
+- [x] **Achievements.** One per board game, Sea Battle, and "Office rival" for any LAN win.
 
 ## Fix known gaps
 
-- [x] **AppImage paths.** Autostart and the Claude hook config use `$APPIMAGE` (the AppImage file), not
-  the temporary mount (`Program.LaunchPath`). *Verified: unit test; not yet run inside a real AppImage.*
-- [ ] **Real-hardware smoke tests in CI.** `windows-11-arm`, `ubuntu-24.04-arm` and `macos-14` runners
-  start the app, send `--signal stats` and quit it with `--signal quit`, which clears most of the 1.3
-  "Not verified here" table.
-  *Written: the `smoke` job in `ci.yml` runs `tests/smoke.sh`, which passes locally on Windows x64, and
-  actionlint is clean. Not ticked until it has run on the GitHub runners.*
+- [x] **AppImage paths.** Autostart and the Claude hook config use `$APPIMAGE`, not the temporary mount
+  (`Program.LaunchPath`). *Verified: unit test; not yet run inside a real AppImage.*
+- [x] **Real-hardware smoke tests in CI.** The `smoke` job runs `tests/smoke.sh` (start in demo mode, open
+  the stats window, quit over `--signal`) on `windows-11-arm`, `ubuntu-24.04-arm` and `macos-14`.
+  *Verified: passes locally on Windows x64; actionlint is clean; see "Not verified here".*
 
 ## Distribution
 
-- [ ] **winget and Flathub.** Submit the manifests (winget already passes `winget validate`; the Flatpak
-  manifest builds).
-- [ ] **Homebrew cask** for macOS, and possibly **Scoop** for Windows.
-- [ ] **Install updates.** The update checker only offers a download; let it download and run the
-  installer.
+- [x] **Homebrew cask and Scoop manifest.** `packaging/homebrew`, `packaging/scoop`, stamped by
+  `packaging/Update-PackageManifests.ps1`. *Verified: stamped from the real 1.3.0 release files.*
+- [x] **Install updates.** Windows installs download the matching installer, check GitHub's SHA-256 digest and
+  run it silently; the installer restarts the game. Other platforms open the download page. *Verified:
+  unit test for the installer name; GitHub reports the digests; the install itself needs a newer release.*
+- [ ] **Submissions: winget, Flathub, a Homebrew tap, a Scoop bucket.** Everything is prepared (see
+  docs/RELEASING.md); submitting needs your GitHub account and, for Flathub, an app-id review.
 
 ## Features
 
-- [ ] **Rebindable shortcuts.** Ctrl+Alt+G/N/B can clash with other apps, especially on Wayland.
-- [ ] **More Claude Code integration.** Pause the game or show a notice when Claude needs permission, and
-  a session summary ("played 4 min while Claude worked 12 min").
-- [ ] **Daily challenge and streaks,** built on the stats and achievements.
-- [ ] **More pets** (a dog, a duck), reusing most of `PetGame.cs`.
-- [ ] **Accessibility.** Colour-blind-safe palettes and a reduced-motion setting.
-- [ ] **Board game achievements** for Checkers and Chess.
+- [x] **Rebindable shortcuts.** **Tray → Shortcuts…**: the modifier keys and a letter per action. Windows
+  applies them at once; X11, the Wayland portal and macOS from the next start. *Verified: unit tests; the
+  window on screen; builds for Linux and macOS.*
+- [x] **More Claude Code integration.** "Pause the game when Claude finishes or needs you" (a click resumes),
+  and the done notice sums up the session. *Verified: on screen ("Claude worked 0:09, you played 0:09").*
+- [x] **Daily challenge and streaks.** In the tray and the stats window; two achievements. *Verified: unit
+  tests (streaks, every challenge counts something the games record).*
+- [x] **More pets.** A dog and a duck, picked in **tray → Pet**. *Verified: on screen.*
+- [x] **Accessibility.** Reduce motion; colour-blind friendly colours (plus a shape cue in Connect Four).
+  *Verified: unit test for the colour mapping.*
 
-## Known limits
+## Not verified here
 
-- Firewalls: the first time you host, Windows asks whether to allow Desk Arcade on private networks.
-  Joining needs UDP port 47820 open on the host's machine.
-- Office networks that block broadcast (client isolation, some Wi-Fi) will need "join by IP", which is
-  planned with the lobby.
+| What | Needs |
+|---|---|
+| LAN games between two real PCs, played by two people; office networks that block broadcast | Two PCs on one network |
+| The smoke job on the ARM64 and Apple Silicon runners | A push to GitHub |
+| Rebinding shortcuts on X11, Wayland and macOS | Those desktops |
+| The silent in-place update | A release newer than the installed version |
+| AppImage autostart with `$APPIMAGE` | A Linux desktop |
