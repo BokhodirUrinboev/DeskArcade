@@ -271,10 +271,104 @@ public class DraughtsTests
         for (int i = 0; i < DeskArcade.Games.Draughts.DrawPlies; i++)
         {
             Assert.False(d.IsDraw);
-            d.Apply(d.LegalMoves()[0]); // the two kings wander without ever meeting
+            // wander without ever offering a capture
+            var quiet = d.LegalMoves().First(m =>
+            {
+                var next = d.Clone();
+                next.Apply(m);
+                return next.LegalMoves().All(r => { var c = next.Clone(); return c.Apply(r).Count == 0; });
+            });
+            d.Apply(quiet);
         }
         Assert.True(d.IsDraw);
         Assert.Equal(d.Quiet, DeskArcade.Games.Draughts.Decode(d.Encode())!.Quiet);
+    }
+
+    [Fact]
+    public void MenCaptureBackwardsButOnlyStepForwards()
+    {
+        var d = Empty();
+        d.Board[35] = 1;   // white man, row 4 col 3
+        d.Board[44] = -1;  // black man behind it, row 5 col 4
+        Assert.Equal(new[] { 35, 53 }, Assert.Single(d.LegalMoves()));
+
+        var quiet = Empty();
+        quiet.Board[35] = 1;
+        Assert.Equal(new[] { 26, 28 }, quiet.LegalMoves().Select(m => m[1]).OrderBy(x => x)); // forward only
+    }
+
+    [Fact]
+    public void KingsFlyAlongTheDiagonal()
+    {
+        var d = Empty();
+        d.Board[56] = 2; // row 7 col 0: the long diagonal is free
+        var moves = d.LegalMoves();
+        Assert.Equal(7, moves.Count);
+        Assert.Contains(moves, m => m.SequenceEqual(new[] { 56, 7 }));
+    }
+
+    [Fact]
+    public void AKingCapturesFromAfarAndChoosesWhereToLand()
+    {
+        var d = Empty();
+        d.Board[56] = 2;   // white king
+        d.Board[35] = -1;  // black man three squares up the diagonal
+        var moves = d.LegalMoves();
+        Assert.Equal(new[] { 7, 14, 21, 28 }, moves.Select(m => m[1]).OrderBy(x => x));
+        var captured = d.Apply(new[] { 56, 14 });
+        Assert.Equal(new[] { 35 }, captured);
+        Assert.Equal(2, d.Board[14]);
+    }
+
+    [Fact]
+    public void AKingMustLandWhereItCanGoOnCapturing()
+    {
+        var d = Empty();
+        d.Board[56] = 2;   // white king
+        d.Board[35] = -1;  // first victim
+        d.Board[12] = -1;  // reachable only after landing on row 2 col 5
+        Assert.Equal(new[] { 56, 21, 3 }, Assert.Single(d.LegalMoves()));
+    }
+
+    [Fact]
+    public void AManCrownedMidCaptureCarriesOnAsAKing()
+    {
+        var d = Empty();
+        d.Board[17] = 1;   // white man, row 2 col 1
+        d.Board[10] = -1;  // jumped onto the far row...
+        d.Board[21] = -1;  // ...then taken from afar, like a king
+        var moves = d.LegalMoves();
+        Assert.NotEmpty(moves);
+        Assert.All(moves, m => Assert.Equal(new[] { 17, 3 }, m.Take(2)));
+        Assert.All(moves, m => Assert.Equal(3, m.Length));
+        var captured = d.Apply(moves[0]);
+        Assert.Equal(2, captured.Count);
+        Assert.Equal(2, d.Board[moves[0][^1]]); // a king now
+    }
+
+    [Fact]
+    public void TheComputerAnswersQuicklyInAKingEndgame()
+    {
+        var d = Empty();
+        foreach (int sq in new[] { 56, 58, 60, 62 }) d.Board[sq] = 2;  // four white kings on the back row
+        foreach (int sq in new[] { 1, 3, 5, 7 }) d.Board[sq] = -2;      // four black kings on the top row
+        var clock = System.Diagnostics.Stopwatch.StartNew();
+        var m = d.BestMove(new Random(1));
+        Assert.True(d.IsLegal(m));
+        Assert.True(clock.Elapsed < TimeSpan.FromSeconds(2), $"took {clock.Elapsed.TotalSeconds:0.0}s");
+    }
+
+    [Fact]
+    public void ThePlayerChoosesAmongCapturesNotTheLongest()
+    {
+        var d = Empty();
+        d.Board[42] = 1;   // white man, row 5 col 2
+        d.Board[33] = -1;  // a single capture to the left
+        d.Board[35] = -1;  // or a double to the right
+        d.Board[21] = -1;
+        var moves = d.LegalMoves();
+        Assert.Contains(moves, m => m.SequenceEqual(new[] { 42, 24 }));
+        Assert.Contains(moves, m => m.SequenceEqual(new[] { 42, 28, 14 }));
     }
 
     [Fact]
