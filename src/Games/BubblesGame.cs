@@ -172,6 +172,7 @@ public sealed class BubblesGame : MiniGame
         int mult = Math.Min(_combo, 3);
         int pts = Points[b.Size] * mult;
         AddScore(pts);
+        Host.ShareAction(b.Pos, pts);
         Host.Fx.Popup(b.Pos - new Vec2(0, Radius[b.Size] + 10), mult > 1 ? $"+{pts} ×{mult}" : $"+{pts}", tint, 22 + b.Size * 3, 0.8);
 
         if (b.Size > 0)

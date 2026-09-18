@@ -481,6 +481,7 @@ public class SeaBattleTests
     }
 }
 
+[Collection("lan")] // every LAN test binds UDP port 47820, so they take turns
 public class LanLinkTests
 {
     static bool WaitFor(Func<bool> condition, int ms = 5000)

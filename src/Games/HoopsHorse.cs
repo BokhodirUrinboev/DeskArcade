@@ -26,7 +26,7 @@ public sealed partial class HoopsGame
     };
     readonly TextBlock _spotLabel = new() { FontFamily = Fx.Font, FontSize = 14, FontWeight = FontWeight.Bold, Foreground = Art.Brush("#FFD166"), IsVisible = false, IsHitTestVisible = false };
 
-    readonly Sprite _rivalBall = Art.Basketball(BallR);
+    Sprite _rivalBall = ThemedBall();
     readonly TextBlock _rivalLabel = new()
     {
         FontFamily = Fx.Font, FontSize = 13, FontWeight = FontWeight.Bold, Foreground = Brushes.White, IsHitTestVisible = false,

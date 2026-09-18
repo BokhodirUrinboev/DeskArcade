@@ -12,9 +12,10 @@ namespace DeskArcade.Games;
 
 /// <summary>
 /// Mini golf across the desktop: drag back from the ball to putt along the taskbar and window tops
-/// into the cup. Nine holes a round; each hole starts where the last one was sunk.
+/// into the cup. Nine holes a round; each hole starts where the last one was sunk. Over the LAN it is
+/// match play against the other player, stroke by stroke (see GolfDuel.cs).
 /// </summary>
-public sealed class GolfGame : MiniGame
+public sealed partial class GolfGame : MiniGame
 {
     const double R = 11, Step = 1.0 / 240, Reach = 34;
     const double MaxPull = 170, MinPull = 12, MaxSpeed = 1750, SinkSpeed = 430, CupHalf = 14;
@@ -24,7 +25,7 @@ public sealed class GolfGame : MiniGame
     static readonly Color[] Confetti = { Gold, Color.FromRgb(6, 214, 160), Color.FromRgb(239, 71, 111), Colors.White };
 
     readonly BallBody _ball = new(R) { Gravity = 1800, Restitution = 0.32, WallRestitution = 0.5, AirDrag = 0.05, RollFriction = 0.85 };
-    readonly Sprite _ballSprite = MakeBall(R);
+    Sprite _ballSprite = MakeBall(R);
     readonly Sprite _flag = new();
     readonly Path _cloth = new() { Fill = Art.Brush("#E63946") };
     readonly Sprite _ring = new() { IsHitTestVisible = false };
@@ -66,11 +67,22 @@ public sealed class GolfGame : MiniGame
         Layer.Children.Add(_ring);
         Layer.Children.Add(_guide);
         Layer.Children.Add(_ballSprite);
+        DuelSetup();
         UpdateCloth(0);
     }
 
     public override string Id => "golf";
     public override string Title => "Mini Golf";
+    public override bool SupportsLan => true;
+
+    public override void ThemeChanged()
+    {
+        int at = Layer.Children.IndexOf(_ballSprite);
+        var ball = MakeBall(R);
+        ball.Set(_ball.Pos, _ball.Angle);
+        Layer.Children[at] = ball;
+        _ballSprite = ball;
+    }
 
     public override Sprite CreateIcon()
     {
@@ -81,7 +93,7 @@ public sealed class GolfGame : MiniGame
         return s;
     }
 
-    public override HudInfo Hud => new(
+    public override HudInfo Hud => DuelOn ? DuelHud : new(
         _roundStrokes.ToString(),
         _roundOver
             ? L.F("Round done · {0} vs par · putt to play again", Rel(_roundStrokes - _parDone))
@@ -110,6 +122,7 @@ public sealed class GolfGame : MiniGame
             if (_ball.Pos.X < a.Left || _ball.Pos.X > a.Right || _ball.Pos.Y > a.Bottom) _ball.Place(new Vec2(a.Left + a.Width * 0.15, a.Bottom - R));
             if (_cup.X < a.Left || _cup.X > a.Right || _cup.Y > a.Bottom + 1) PlaceCup();
         }
+        DuelCheckSession();
         Draw();
         Changed();
     }
@@ -193,6 +206,7 @@ public sealed class GolfGame : MiniGame
     public override bool PointerDown(Vec2 p, bool right)
     {
         if ((p - _ball.Pos).Length > Reach || !BallReady) return false;
+        if (!DuelMayPutt()) return false;
         if (_roundOver) NewRound();
         _aiming = true;
         _pull = default;
@@ -217,12 +231,13 @@ public sealed class GolfGame : MiniGame
         _strokes++;
         _roundStrokes++;
         Host.Sound.Play("kick", 0.45 + 0.4 * Math.Min(1, speed / MaxSpeed), 1.9);
+        DuelPutted();
         Changed();
     }
 
     public override void Summon(Vec2 p)
     {
-        if (_sinking) return;
+        if (_sinking || DuelOn && !_match.MyTurn) return;
         var a = Host.Arena;
         _ball.Place(new Vec2(Clamp(p.X, a.Left + R, a.Right - R), Clamp(p.Y, a.Top + R, a.Bottom - R)));
         if (_roundOver) return;
@@ -264,7 +279,8 @@ public sealed class GolfGame : MiniGame
 
         if (busy) UpdateCloth(_time);
         Draw();
-        return busy;
+        DuelUpdate(dt);
+        return busy || DuelOn;
     }
 
     void SimStep(double h)
@@ -314,6 +330,7 @@ public sealed class GolfGame : MiniGame
 
     void HoleComplete()
     {
+        DuelStrokeDone(sunk: true);
         int diff = _strokes - _par;
         _parDone += _par;
         Host.Stats.Add("golf.holes");
@@ -424,9 +441,10 @@ public sealed class GolfGame : MiniGame
         var s = new Sprite { IsHitTestVisible = false };
         s.Children.Insert(0, Art.Circle(1.5, 3, r, Art.Brush(55, 0, 0, 0)));
         var body = new RadialGradientBrush { GradientOrigin = new RelativePoint(0.35, 0.3, RelativeUnit.Relative) };
-        body.GradientStops.Add(new GradientStop(Colors.White, 0));
-        body.GradientStops.Add(new GradientStop(Color.FromRgb(0xE3, 0xE6, 0xEA), 0.7));
-        body.GradientStops.Add(new GradientStop(Color.FromRgb(0xAE, 0xB4, 0xBC), 1));
+        var c = Themes.Current.GolfBall;
+        body.GradientStops.Add(new GradientStop(Art.Blend(c, Colors.White, 0.6), 0));
+        body.GradientStops.Add(new GradientStop(Art.Blend(c, Color.FromRgb(0xE3, 0xE6, 0xEA), 0.3), 0.7));
+        body.GradientStops.Add(new GradientStop(Art.Blend(c, Color.FromRgb(0x80, 0x86, 0x8E), 0.45), 1));
         s.Rotor.Children.Add(Art.Circle(0, 0, r, body, Art.Brush("#8A9099"), 1));
         foreach (var (x, y) in new[] { (-4.0, -3.0), (3.0, -5.0), (5.0, 2.0), (-2.0, 4.0), (0.5, -0.5), (-6.0, 2.0) })
             s.Rotor.Children.Add(Art.Circle(x * r / 11, y * r / 11, r * 0.09, Art.Brush(70, 90, 100, 110)));
@@ -436,6 +454,9 @@ public sealed class GolfGame : MiniGame
     public override void DemoTick()
     {
         if (!BallReady || _aiming) return;
+        if (DuelOn && !_match.Over && !_match.MyTurn) return;
+        if (DuelOn && _match.Over && _rematchAsked) return;
+        if (!DuelMayPutt()) return;
         if (_roundOver) NewRound();
         if (Math.Abs(_ball.Pos.Y + R - _cup.Y) < 4)
         {

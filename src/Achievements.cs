@@ -20,6 +20,7 @@ public static class Achievements
         new("archery-bullseye", "archery", "Bullseye", "Hit 10 bullseyes", "archery.bullseyes", 10),
         new("archery-balloons", "archery", "Party pooper", "Pop 50 balloons", "archery.balloons", 50),
         new("archery-round", "archery", "Sharpshooter", "Score 80 points in one round", "archery.round", 80),
+        new("archery-duel", "archery", "Duelist", "Win an Archery match over the LAN", "archery.duelwins", 1),
 
         new("juggle-25", "juggle", "Keepy-uppy pro", "Score 25 points in one run", "juggle.run", 25),
         new("juggle-stars", "juggle", "Star catcher", "Catch 20 stars", "juggle.stars", 20),
@@ -27,6 +28,7 @@ public static class Achievements
         new("golf-ace", "golf", "Hole in one", "Sink a hole in one", "golf.aces", 1),
         new("golf-holes", "golf", "Course regular", "Finish 50 holes", "golf.holes", 50),
         new("golf-under", "golf", "Under par", "Finish a round under par", "golf.underpar", 1),
+        new("golf-duel", "golf", "Match play", "Win a Mini Golf match over the LAN", "golf.duelwins", 1),
 
         new("bugs-200", "bugs", "Exterminator", "Squash 200 bugs", "bugs.squashed", 200),
         new("bugs-combo", "bugs", "Combo breaker", "Reach a ×4 combo", "bugs.combo", 4),
@@ -44,6 +46,10 @@ public static class Achievements
         new("hockey-win", "hockey", "First win", "Beat the CPU", "hockey.wins", 1),
         new("hockey-goals", "hockey", "Sniper", "Score 50 goals", "hockey.goals", 50),
         new("hockey-champion", "hockey", "Champion", "Beat CPU level 5", "hockey.level", 6),
+        new("hockey-series", "hockey", "Series winner", "Win a best-of-3 series over the LAN", "hockey.series", 1),
+
+        new("pong-win", "pong", "Rally master", "Win a game of Pong", "pong.wins", 1),
+        new("pong-level", "pong", "Paddle legend", "Beat the Pong CPU at level 5", "pong.level", 6),
 
         new("pet-friend", "pet", "Best friends", "Pet your desktop pet 50 times", "pet.pets", 50),
         new("pet-taxi", "pet", "Taxi", "Carry your pet 10 times", "pet.carries", 10),

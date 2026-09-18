@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -30,6 +31,7 @@ public sealed class LanLink : IDisposable
     public const int Port = 47820;
     const string Magic = "DA1";
     const double TimeoutSeconds = 3, PingSeconds = 0.5, HelloSeconds = 0.7, GameSeconds = 1;
+    const int MaxInbox = 2000; // while the overlay is hidden nothing drains the inbox: keep only the latest
 
     readonly ConcurrentQueue<string> _inbox = new();
     readonly object _gate = new();
@@ -53,6 +55,14 @@ public sealed class LanLink : IDisposable
     public event Action<int>? EmoteReceived;
     /// <summary>Raised on the guest when the host switches to another game.</summary>
     public event Action<string>? GameChanged;
+    /// <summary>
+    /// Raised when the peer reports something it did, so it can be drawn as a ghost marker: where (as
+    /// fractions of the peer's arena) and how many points it scored (0 for a miss, negative for a penalty).
+    /// </summary>
+    public event Action<double, double, int>? ActionReceived;
+
+    /// <summary>Counts connections, so games can tell a new session from the one they already set up.</summary>
+    public int Session { get; private set; }
 
     /// <summary>Short messages players can send each other. Only the index crosses the network.</summary>
     public static readonly string[] Emotes = { "gg", "One more?", "Nice shot!", "Your move!", "Ha!" };
@@ -132,6 +142,10 @@ public sealed class LanLink : IDisposable
     }
 
     public void SendEmote(int index) => Send($"em|{index}");
+
+    /// <summary>Tells the peer about a click, pop or whack at (<paramref name="x"/>, <paramref name="y"/>), fractions of our arena.</summary>
+    public void SendAction(double x, double y, int points) =>
+        Send(string.Create(CultureInfo.InvariantCulture, $"ga|{x:0.####}|{y:0.####}|{points}"));
 
     /// <summary>
     /// Host: the game the session is for. A connected guest is told at once; a guest that joins later
@@ -244,10 +258,19 @@ public sealed class LanLink : IDisposable
             // first guest wins; the same guest re-sending hello (lost welcome) is answered again
             if (_peer == null || _peer.Equals(from))
             {
+                // the guest we are playing with timed out on its side and joined again: it starts its games
+                // fresh, so this is a new session here too, or the two sides' duels and races fall out of step
+                bool rejoined = State == LanState.Connected && _peer != null;
                 lock (_gate) _peer = from;
                 PeerName = body;
                 TrySend(udp, from, $"welcome|{GameId}|{MyName}");
                 Heard();
+                if (rejoined)
+                {
+                    Session++;
+                    while (_inbox.TryDequeue(out _)) { }
+                    StateChanged?.Invoke();
+                }
             }
             else TrySend(udp, from, "busy|");
             return;
@@ -279,18 +302,29 @@ public sealed class LanLink : IDisposable
             GameChanged?.Invoke(body);
             return;
         }
+        if (kind == "ga")
+        {
+            var f = body.Split('|');
+            if (f.Length == 3 && double.TryParse(f[0], NumberStyles.Float, CultureInfo.InvariantCulture, out double x) &&
+                double.TryParse(f[1], NumberStyles.Float, CultureInfo.InvariantCulture, out double y) && int.TryParse(f[2], out int pts) &&
+                x is >= 0 and <= 1 && y is >= 0 and <= 1)
+                ActionReceived?.Invoke(x, y, pts);
+            return;
+        }
         if (kind == "em")
         {
             if (int.TryParse(body, out int emote) && emote >= 0 && emote < Emotes.Length) EmoteReceived?.Invoke(emote);
             return;
         }
         _inbox.Enqueue(msg);
+        while (_inbox.Count > MaxInbox) _inbox.TryDequeue(out _);
         MessageArrived?.Invoke();
     }
 
     void Heard()
     {
         _lastHeard = DateTime.UtcNow;
+        if (State != LanState.Connected) Session++;
         SetState(LanState.Connected);
     }
 

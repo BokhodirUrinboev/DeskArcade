@@ -21,10 +21,15 @@ public sealed class Stats
         public Dictionary<string, long> Counters { get; set; } = new();
         public Dictionary<string, double> Seconds { get; set; } = new();
         public Dictionary<string, DateTime> Unlocked { get; set; } = new();
+        /// <summary>The local date (yyyy-MM-dd) that <see cref="Today"/> counts.</summary>
+        public string? Day { get; set; }
+        /// <summary>The same counters for today only, for the office leaderboard.</summary>
+        public Dictionary<string, long> Today { get; set; } = new();
     }
 
     Data _data = new();
     bool _dirty;
+    double _msCarry; // fractions of a millisecond of play not yet added to "play.ms"
     string _path = "";
 
     Stats()
@@ -72,11 +77,33 @@ public sealed class Stats
 
     public long Get(string counter) => _data.Counters.TryGetValue(counter, out long v) ? v : 0;
 
+    /// <summary>Overridable for tests: the local date that "today" means.</summary>
+    public Func<DateTime> Clock { get; set; } = () => DateTime.Now;
+
+    static string DayOf(DateTime t) => t.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+
+    /// <summary>Today's value of a counter: what was added today, or the best value reached today.</summary>
+    public long Today(string counter)
+    {
+        RollDay();
+        return _data.Today.TryGetValue(counter, out long v) ? v : 0;
+    }
+
+    void RollDay()
+    {
+        string day = DayOf(Clock());
+        if (_data.Day == day) return;
+        _data.Day = day;
+        _data.Today.Clear();
+        _dirty = true;
+    }
+
     /// <summary>Adds to a running total, e.g. baskets scored.</summary>
     public void Add(string counter, long amount = 1)
     {
         if (amount <= 0) return;
         _data.Counters[counter] = Get(counter) + amount;
+        _data.Today[counter] = Today(counter) + amount;
         _dirty = true;
         Check(counter);
         CounterChanged?.Invoke(counter);
@@ -85,6 +112,11 @@ public sealed class Stats
     /// <summary>Keeps the highest value seen, e.g. a best streak or a best score.</summary>
     public void Max(string counter, long value)
     {
+        if (value > Today(counter))
+        {
+            _data.Today[counter] = value;
+            _dirty = true;
+        }
         if (value <= Get(counter)) return;
         _data.Counters[counter] = value;
         _dirty = true;
@@ -101,6 +133,10 @@ public sealed class Stats
         if (seconds <= 0) return;
         double before = SecondsPlayed(gameId);
         _data.Seconds[gameId] = before + seconds;
+        _msCarry += seconds * 1000;
+        long whole = (long)_msCarry;
+        _msCarry -= whole;
+        _data.Today["play.ms"] = Today("play.ms") + whole;
         _dirty = true;
         Max("play.minutes", (long)(TotalSeconds / 60));
         if (before < 30 && before + seconds >= 30) Max("play.games", _data.Seconds.Count(kv => kv.Value >= 30));

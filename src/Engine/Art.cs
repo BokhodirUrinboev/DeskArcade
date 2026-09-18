@@ -117,20 +117,23 @@ public static class Art
         Width = r * 0.7, Height = r * 0.42, Fill = Brush(alpha, 255, 255, 255), RenderTransform = new RotateTransform(-30),
     }, -r * 0.62, -r * 0.62);
 
-    public static Sprite Basketball(double r)
+    /// <summary>A basketball; <paramref name="color"/> and <paramref name="seam"/> default to the classic orange and brown.</summary>
+    public static Sprite Basketball(double r, Color? color = null, Color? seam = null)
     {
+        var body = color ?? Color.FromRgb(0xEE, 0x7A, 0x1C);
+        var line = seam ?? Color.Parse("#3A1805");
         var s = new Sprite();
         s.Children.Insert(0, Circle(2, 4, r, Brush(60, 0, 0, 0))); // soft shadow
         s.Rotor.Children.Add(Circle(0, 0, r,
-            Radial(0.35, 0.3, (Color.FromRgb(0xFF, 0xB8, 0x62), 0), (Color.FromRgb(0xEE, 0x7A, 0x1C), 0.5), (Color.FromRgb(0xA9, 0x45, 0x0B), 1)),
-            Brush("#5A2505"), 1.5));
+            Radial(0.35, 0.3, (Blend(body, Colors.White, 0.35), 0), (body, 0.5), (Blend(body, Colors.Black, 0.3), 1)),
+            Brush(Blend(line, body, 0.25)), 1.5));
 
         double k = r * 0.72;
         var seams = PathOf(
             $"M0,{F(-r)} L0,{F(r)} M{F(-r)},0 L{F(r)},0 " +
             $"M{F(-k)},{F(-k)} Q{F(-r * 0.22)},0 {F(-k)},{F(k)} " +
             $"M{F(k)},{F(-k)} Q{F(r * 0.22)},0 {F(k)},{F(k)}",
-            null, Brush("#3A1805"), Math.Max(1.2, r * 0.075));
+            null, Brush(line), Math.Max(1.2, r * 0.075));
         seams.Clip = new EllipseGeometry(new Rect(-r + 0.5, -r + 0.5, r * 2 - 1, r * 2 - 1));
         s.Rotor.Children.Add(seams);
 

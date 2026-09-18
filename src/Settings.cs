@@ -46,7 +46,15 @@ public sealed class Settings
     public bool FirstRun { get; set; } = true;
     public bool ReducedMotion { get; set; }
     public bool ColorBlind { get; set; }
-    /// <summary>The desktop pet: "cat", "dog" or "duck".</summary>
+    /// <summary>Colours for mallets, paddles and balls: a theme id from <see cref="Engine.Themes"/>, or "seasonal".</summary>
+    public string Theme { get; set; } = "classic";
+    /// <summary>Remind the player to take a break after this many minutes of play; 0 turns it off.</summary>
+    public int BreakMinutes { get; set; }
+    /// <summary>When Claude finishes while you were playing, say "back to work" instead of "your turn".</summary>
+    public bool BackToWork { get; set; }
+    /// <summary>Post today's scores to the office leaderboard on the local network (opt-in: it sends the user name).</summary>
+    public bool ShareLeaderboard { get; set; }
+    /// <summary>The desktop pet: "cat", "dog", "duck", "bunny" or "penguin".</summary>
     public string PetKind { get; set; } = "cat";
     /// <summary>A <see cref="DeskArcade.ShortcutModifiers"/> name and three letters, for show/hide, next game and bring to cursor.</summary>
     public string ShortcutModifiers { get; set; } = "CtrlAlt";
