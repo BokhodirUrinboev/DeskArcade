@@ -52,6 +52,7 @@ jobs:
       - name: Check the package installs
         run: |
           version="$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' DeskArcade.csproj | head -n1)"
+          sudo apt-get update # the runner image's package lists go stale; dependencies then 404
           sudo apt-get install -y "./dist-linux/deskarcade_${version}_amd64.deb"
           test -x /usr/bin/deskarcade
           dpkg -s deskarcade | grep -Fx "Version: $version"
