@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SignPath artifact configuration "installers": round 2 of the release workflow.
+     The GitHub artifact holds the Inno Setup installers, DeskArcade-Setup-<version>[-standalone|-arm64].exe. -->
+<artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
+  <zip-file>
+    <pe-file path="DeskArcade-Setup-*.exe" min-matches="1" max-matches="unbounded">
+      <authenticode-sign />
+    </pe-file>
+  </zip-file>
+</artifact-configuration>

@@ -120,8 +120,11 @@ jobs:
     name: Windows installers
     needs: version
     runs-on: windows-latest
+    permissions:
+      contents: read
+      actions: read # SignPath downloads the unsigned artifacts through the Actions API
     outputs:
-      signed: ${{ steps.cert.outputs.enabled }}
+      signed: ${{ steps.signing.outputs.enabled }}
     env:
       VERSION: ${{ needs.version.outputs.version }}
     steps:
@@ -135,42 +138,102 @@ jobs:
           if (-not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe")) {
             choco install innosetup --no-progress -y
           }
-      # Signing is optional: without both secrets this step only reports that the build is unsigned,
-      # SIGN_THUMBPRINT below stays empty and the build scripts skip signtool.
-      - name: Import code-signing certificate
-        id: cert
-        shell: pwsh
+      # Signing goes through SignPath (free for open source via the SignPath Foundation). It runs only for
+      # release tags, and only once the SIGNPATH_API_TOKEN secret and the SIGNPATH_ORGANIZATION_ID
+      # variable exist; otherwise the build is unsigned. See docs/RELEASING.md.
+      - name: Check for SignPath
+        id: signing
+        shell: bash
         env:
-          WINDOWS_CERTIFICATE_PFX_BASE64: ${{ secrets.WINDOWS_CERTIFICATE_PFX_BASE64 }}
-          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
-        run: ./packaging/windows/Import-SigningCertificate.ps1
-      # With a thumbprint, build.ps1 signs DeskArcade.exe right after publishing (before Inno Setup packs
-      # it) and Inno Setup's SignTool directive signs Setup and its uninstaller. See docs/RELEASING.md.
-      - name: Build installer (needs .NET runtime)
+          EVENT_NAME: ${{ github.event_name }}
+          SIGNPATH_API_TOKEN: ${{ secrets.SIGNPATH_API_TOKEN }}
+          SIGNPATH_ORGANIZATION_ID: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+        run: |
+          if [ "$EVENT_NAME" = "push" ] && [ -n "$SIGNPATH_API_TOKEN" ] && [ -n "$SIGNPATH_ORGANIZATION_ID" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "SignPath is not set up, or this is not a release tag: building unsigned."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Publish DeskArcade.exe (x64, x64 standalone, ARM64)
         shell: pwsh
-        env:
-          SIGN_THUMBPRINT: ${{ steps.cert.outputs.thumbprint }}
-        run: .\build-installer.ps1 -Version $env:VERSION -SignCertThumbprint $env:SIGN_THUMBPRINT
-      - name: Build standalone installer (runtime bundled)
+        run: |
+          .\build.ps1 -Version $env:VERSION -OutDir dist\x64
+          .\build.ps1 -SelfContained -Version $env:VERSION -OutDir dist\x64-standalone
+          .\build.ps1 -Arch arm64 -SelfContained -Version $env:VERSION -OutDir dist\arm64
+
+      # Round 1: sign the app exe before Inno Setup packs it, so the installed DeskArcade.exe is signed.
+      - name: Upload the unsigned exes for signing
+        id: unsigned-app
+        if: steps.signing.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-app
+          path: dist/*/DeskArcade.exe
+          if-no-files-found: error
+          retention-days: 1
+      - name: Sign the exes (SignPath)
+        if: steps.signing.outputs.enabled == 'true'
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG || 'DeskArcade' }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG || 'release-signing' }}
+          artifact-configuration-slug: app
+          github-artifact-id: ${{ steps.unsigned-app.outputs.artifact-id }}
+          wait-for-completion: true
+          # release signing waits for a person to approve the request in SignPath
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: signed/app
+      - name: Use the signed exes
+        if: steps.signing.outputs.enabled == 'true'
         shell: pwsh
-        env:
-          SIGN_THUMBPRINT: ${{ steps.cert.outputs.thumbprint }}
-        run: .\build-installer.ps1 -SelfContained -Version $env:VERSION -SignCertThumbprint $env:SIGN_THUMBPRINT
-      - name: Build ARM64 installer (runtime bundled, cross-compiled)
+        run: Copy-Item signed/app/* dist -Recurse -Force
+
+      - name: Build installers
         shell: pwsh
-        env:
-          SIGN_THUMBPRINT: ${{ steps.cert.outputs.thumbprint }}
-        run: .\build-installer.ps1 -Arch arm64 -Version $env:VERSION -SignCertThumbprint $env:SIGN_THUMBPRINT
+        run: |
+          .\build-installer.ps1 -SkipPublish -SourceDir dist\x64 -Version $env:VERSION
+          .\build-installer.ps1 -SkipPublish -SourceDir dist\x64-standalone -SelfContained -Version $env:VERSION
+          .\build-installer.ps1 -SkipPublish -SourceDir dist\arm64 -Arch arm64 -Version $env:VERSION
+
+      # Round 2: sign the finished installers.
+      - name: Upload the unsigned installers for signing
+        id: unsigned-installers
+        if: steps.signing.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-installers
+          path: installer/Output/DeskArcade-Setup-*.exe
+          if-no-files-found: error
+          retention-days: 1
+      - name: Sign the installers (SignPath)
+        if: steps.signing.outputs.enabled == 'true'
+        uses: signpath/github-action-submit-signing-request@v1
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG || 'DeskArcade' }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG || 'release-signing' }}
+          artifact-configuration-slug: installers
+          github-artifact-id: ${{ steps.unsigned-installers.outputs.artifact-id }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: signed/installers
+      - name: Use the signed installers
+        if: steps.signing.outputs.enabled == 'true'
+        shell: pwsh
+        run: Copy-Item signed/installers/* installer/Output -Force
       - name: Verify signatures
-        if: steps.cert.outputs.enabled == 'true'
+        if: steps.signing.outputs.enabled == 'true'
         shell: pwsh
         run: |
           $signtool = Get-ChildItem "${env:ProgramFiles(x86)}\Windows Kits\10\bin\10.*\x64\signtool.exe" |
             Sort-Object { [version]$_.Directory.Parent.Name } -Descending | Select-Object -First 1 -ExpandProperty FullName
-          # dist\DeskArcade.exe is the ARM64 exe from the last build; the others are inside the installers.
-          foreach ($file in @(Get-ChildItem installer/Output/DeskArcade-Setup-*.exe) + @(Get-Item dist/DeskArcade.exe)) {
+          foreach ($file in @(Get-ChildItem installer/Output/DeskArcade-Setup-*.exe) + @(Get-ChildItem dist/*/DeskArcade.exe)) {
             & $signtool verify /pa /tw $file.FullName
-            if ($LASTEXITCODE -ne 0) { throw "Signature check failed: $($file.Name)" }
+            if ($LASTEXITCODE -ne 0) { throw "Signature check failed: $($file.FullName)" }
           }
       - uses: actions/upload-artifact@v4
         with:
@@ -274,8 +337,19 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+      # Only the finished packages: the unsigned-* artifacts from the signing rounds stay behind.
       - uses: actions/download-artifact@v4
         with:
+          pattern: linux-*
+          path: packages
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows
+          path: packages
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: macos-*
           path: packages
           merge-multiple: true
       - name: Create GitHub release
@@ -286,7 +360,7 @@ jobs:
         run: |
           ls -l packages
           if [ "$WINDOWS_SIGNED" = "true" ]; then
-            windows_note="The Windows installers are code-signed."
+            windows_note="The Windows installers are code-signed (free code signing provided by SignPath.io, certificate by SignPath Foundation)."
           else
             windows_note="The Windows installers are not code-signed, so SmartScreen may ask you to confirm (More info → Run anyway)."
           fi
