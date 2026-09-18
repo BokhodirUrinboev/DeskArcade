@@ -19,7 +19,7 @@ can be different sizes. The guest's view is mirrored, so each player sees themse
 - [x] **Air Hockey 1-vs-1.** The other player's mallet replaces the CPU. The host runs the physics and
   sends the puck, mallets and score about 60 times a second. Grabbing your mallet after a match starts
   a rematch. *Verified: 45 s demo match between two local copies; the guest's goal was scored in the
-  host's simulation and counted on both. Not yet tried between two real PCs or by two people.*
+  host's simulation and counted in the guest's stats. Not yet tried between two real PCs or by two people.*
 - [ ] **Hoops H-O-R-S-E.** Turn-based: you take a shot, then your co-worker has to make the same shot. Only
   shot results and turns cross the network, so lag doesn't matter.
 - [ ] **Checkers (draughts).** A new board game, with the board drawn on the desktop and moves sent
