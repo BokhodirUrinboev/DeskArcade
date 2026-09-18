@@ -34,6 +34,9 @@ public sealed class Stats
     /// <summary>Raised once when an achievement unlocks.</summary>
     public event Action<Achievement>? Unlocked;
 
+    /// <summary>Raised after any counter changes (e.g. for the daily challenge).</summary>
+    public event Action<string>? CounterChanged;
+
     static string DefaultPath => Path.Combine(Settings.DataDirectory, "stats.json");
 
     /// <param name="path">Where stats.json lives; by default next to settings.json.</param>
@@ -76,6 +79,7 @@ public sealed class Stats
         _data.Counters[counter] = Get(counter) + amount;
         _dirty = true;
         Check(counter);
+        CounterChanged?.Invoke(counter);
     }
 
     /// <summary>Keeps the highest value seen, e.g. a best streak or a best score.</summary>

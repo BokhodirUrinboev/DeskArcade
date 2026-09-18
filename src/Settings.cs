@@ -48,6 +48,13 @@ public sealed class Settings
     public string ShortcutModifiers { get; set; } = "CtrlAlt";
     public string ShortcutKeys { get; set; } = "GNB";
 
+    // daily challenge (see Daily)
+    public string? DailyDate { get; set; }
+    public long DailyBase { get; set; }
+    public bool DailyDone { get; set; }
+    public string? DailyLastDone { get; set; }
+    public int DailyStreak { get; set; }
+
     /// <summary>%APPDATA%\DeskArcade on Windows, ~/.config/DeskArcade on Linux (suffixed for --profile runs).</summary>
     public static string DataDirectory
     {

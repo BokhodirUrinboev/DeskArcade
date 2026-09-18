@@ -69,5 +69,7 @@ public static class Achievements
         new("tictactoe-win", "tictactoe", "Three in a row", "Win a game of Tic-tac-toe", "tictactoe.wins", 1),
         new("seabattle-win", "seabattle", "Admiral", "Win a game of Sea Battle", "seabattle.wins", 1),
         new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),
+        new("daily-first", "general", "Daily player", "Finish a daily challenge", "daily.done", 1),
+        new("daily-week", "general", "Seven in a row", "Finish the daily challenge 7 days in a row", "daily.streak", 7),
     };
 }

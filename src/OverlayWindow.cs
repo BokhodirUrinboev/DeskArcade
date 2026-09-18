@@ -68,6 +68,7 @@ public sealed class OverlayWindow : Window, IGameHost
     public Fx Fx { get; } = new();
     public Platforms Platforms { get; } = new();
     public LanLink Lan { get; } = new();
+    public Daily Daily { get; }
     public Rect Arena { get; private set; }
     public Vec2 Pointer { get; private set; }
     public Rect HudBounds => _hud?.Area ?? default;
@@ -118,6 +119,19 @@ public sealed class OverlayWindow : Window, IGameHost
 
         L.Apply(Settings.Language);
         Stats.Unlocked += OnAchievement;
+        Daily = new Daily(Settings, Stats);
+        Stats.CounterChanged += counter =>
+        {
+            if (counter != Daily.For(Daily.Today).Counter || !Daily.Check(Daily.Today)) return;
+            SaveSettings();
+            int streak = Daily.Streak(Daily.Today);
+            Dispatcher.UIThread.Post(() =>
+            {
+                Sound.Play("best", 0.8);
+                Notice(L.T("Daily challenge done!"), streak > 1 ? L.F("{0} days in a row", streak) : L.T("come back tomorrow for a new one"), Color.FromRgb(255, 209, 102));
+                _tray?.Refresh();
+            });
+        };
         _platform = DesktopPlatform.Create();
         Sound = new Sound(_platform) { Enabled = Settings.Sound, Volume = Settings.Volume };
         Platforms.Enabled = Settings.Platforms;
@@ -678,6 +692,22 @@ public sealed class OverlayWindow : Window, IGameHost
     public void OpenLobby() => LobbyWindow.ShowFor(this);
 
     public void OpenShortcuts() => ShortcutsWindow.ShowFor(this);
+
+    /// <summary>"Today: Make 15 baskets in Hoops (4/15) · streak 2", for the tray and the stats window.</summary>
+    public string DailyLine
+    {
+        get
+        {
+            var day = Daily.Today;
+            var c = Daily.Current(day);
+            string text = L.F("Today: {0} ({1}/{2})", L.F(c.Text, c.Target), Daily.Progress(day), c.Target);
+            if (Daily.Done(day)) text += " ✓";
+            int streak = Daily.Streak(day);
+            return streak > 0 ? L.F("{0} · streak {1}", text, streak) : text;
+        }
+    }
+
+    public void PlayDaily() => SwitchGame(Daily.For(Daily.Today).GameId);
 
     /// <summary>Saves and registers new shortcuts; returns a line for the Shortcuts window to show.</summary>
     public string ApplyShortcuts(HotkeySet keys)

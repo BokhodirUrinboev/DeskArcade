@@ -125,7 +125,7 @@ public class TranslationCoverageTests
     static readonly Regex Call = new(@"L\.[TF]\(\s*""((?:[^""\\]|\\.)*)""");
     static readonly Regex Title = new(@"override string Title => ""((?:[^""\\]|\\.)*)""");
 
-    static string RepoRoot()
+    internal static string RepoRoot()
     {
         var dir = new DirectoryInfo(AppContext.BaseDirectory);
         while (dir != null && !File.Exists(Path.Combine(dir.FullName, "DeskArcade.csproj"))) dir = dir.Parent;
@@ -146,6 +146,7 @@ public class TranslationCoverageTests
             yield return a.Title;
             yield return a.Description;
         }
+        foreach (var c in Daily.Pool) yield return c.Text;
     }
 
     // strings made only of numbers, placeholders and symbols ("+{0}") need no translation
@@ -587,5 +588,36 @@ public class HotkeySetTests
         Assert.Equal("CTRL+ALT+SHIFT+q", set.PortalTrigger(DeskArcade.Platform.HotkeyAction.ToggleOverlay));
         Assert.EndsWith("Shift+E", set.Label(DeskArcade.Platform.HotkeyAction.Summon));
         Assert.Equal("CTRL+ALT+g", DeskArcade.HotkeySet.Default.PortalTrigger(DeskArcade.Platform.HotkeyAction.ToggleOverlay));
+    }
+}
+
+public class DailyTests
+{
+    [Fact]
+    public void EveryChallengeCountsSomethingTheGamesRecord()
+    {
+        var sources = string.Concat(Directory.GetFiles(Path.Combine(TranslationCoverageTests.RepoRoot(), "src", "Games"), "*.cs").Select(File.ReadAllText));
+        // either spelled out, or built from the game id as the board games do (Id + ".captures")
+        Assert.All(Daily.Pool, c => Assert.True(
+            sources.Contains($"\"{c.Counter}\"") || sources.Contains($"Id + \".{c.Counter.Split('.')[1]}\""), c.Counter));
+    }
+
+    [Fact]
+    public void FinishingOnConsecutiveDaysBuildsAStreak()
+    {
+        var stats = Stats.Load(Path.Combine(Path.GetTempPath(), $"da-daily-{Guid.NewGuid():N}.json"));
+        var settings = new Settings();
+        var daily = new Daily(settings, stats);
+        var day = new DateOnly(2026, 9, 18);
+        for (int i = 0; i < 3; i++, day = day.AddDays(1))
+        {
+            var c = daily.Current(day);
+            Assert.False(daily.Check(day));
+            stats.Add(c.Counter, c.Target);
+            Assert.True(daily.Check(day));
+            Assert.False(daily.Check(day)); // only once a day
+            Assert.Equal(i + 1, daily.Streak(day));
+        }
+        Assert.Equal(0, daily.Streak(day.AddDays(1))); // a missed day ends it
     }
 }

@@ -44,6 +44,9 @@ public sealed class Tray : IDisposable
         menu.Add(Item(L.T("Next game") + "   (" + Shortcuts.Label(HotkeyAction.NextGame) + ")", () => _w.NextGame()));
         menu.Add(Item(L.T("Bring to cursor") + "   (" + Shortcuts.Label(HotkeyAction.Summon) + ")", () => _w.SummonToCursor()));
         menu.Add(Item(L.T("Stats & achievements…"), () => _w.OpenStats()));
+        var daily = Item(_w.DailyLine, () => _w.PlayDaily());
+        _refreshers.Add(() => daily.Header = _w.DailyLine);
+        menu.Add(daily);
 
         var lan = new NativeMenu();
         var status = new NativeMenuItem(_w.LanStatus) { IsEnabled = false };
