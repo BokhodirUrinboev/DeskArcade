@@ -29,8 +29,13 @@ can be different sizes. The guest's view is mirrored, so each player sees themse
   board includes it, so a lost packet can't put the boards out of step. *Verified: 6 rule tests; a full
   LAN demo game between two local copies ended in a win on the guest's side; a demo game against the
   CPU. Not yet played by two people.*
-- [ ] **Chess.** Uses the same board and turn system as Checkers, with full legal-move checking
-  (castling, en passant, promotion, check and mate).
+- [x] **Board game base.** `BoardGame.cs` holds the board, input, CPU turn and LAN sync shared by
+  Checkers and Chess; each game only supplies its rules (`IBoardRules`) and how its pieces look.
+- [x] **Chess.** Castling, en passant, promotion (always to a queen), check, mate, stalemate, the 50-move
+  rule and bare-minor-piece draws; threefold repetition isn't tracked. The CPU searches 3 plies plus
+  captures. *Verified: perft matches the published counts from the start (depth 3), Kiwipete (depth 3)
+  and an en-passant endgame (depth 4); fool's mate, promotion and CPU tests; a full LAN demo game
+  between two local copies; the pieces checked on screen.*
 - [ ] **Connect Four / Tic-tac-toe.** Cheap extras once the turn-based framework exists.
 - [ ] **Lobby.** Pick which host to join when several are on the network, show the other player's
   name, and add a chat-free set of emotes ("gg", "one more?").
@@ -38,14 +43,31 @@ can be different sizes. The guest's view is mirrored, so each player sees themse
   score for each.
 - [ ] **Tests.** The message format and a host/guest round trip over loopback.
 
-## Carried over from 1.3
+## Fix known gaps
 
 - [ ] **AppImage paths.** Use `$APPIMAGE` for autostart and the Claude hook config, not the temporary
   mount.
 - [ ] **Real-hardware smoke tests in CI.** `windows-11-arm`, `ubuntu-24.04-arm` and `macos-14` runners
-  start the app and quit it with `--signal`.
-- [ ] **Rebindable shortcuts.**
-- [ ] **Submissions.** winget and Flathub.
+  start the app, send `--signal stats` and quit it with `--signal quit`, which clears most of the 1.3
+  "Not verified here" table.
+
+## Distribution
+
+- [ ] **winget and Flathub.** Submit the manifests (winget already passes `winget validate`; the Flatpak
+  manifest builds).
+- [ ] **Homebrew cask** for macOS, and possibly **Scoop** for Windows.
+- [ ] **Install updates.** The update checker only offers a download; let it download and run the
+  installer.
+
+## Features
+
+- [ ] **Rebindable shortcuts.** Ctrl+Alt+G/N/B can clash with other apps, especially on Wayland.
+- [ ] **More Claude Code integration.** Pause the game or show a notice when Claude needs permission, and
+  a session summary ("played 4 min while Claude worked 12 min").
+- [ ] **Daily challenge and streaks,** built on the stats and achievements.
+- [ ] **More pets** (a dog, a duck), reusing most of `PetGame.cs`.
+- [ ] **Accessibility.** Colour-blind-safe palettes and a reduced-motion setting.
+- [ ] **Board game achievements** for Checkers and Chess.
 
 ## Known limits
 

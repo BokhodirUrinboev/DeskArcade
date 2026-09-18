@@ -155,6 +155,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new TowerGame(this));
         _games.Add(new SlingshotGame(this));
         _games.Add(new CheckersGame(this));
+        _games.Add(new ChessGame(this));
         _games.Add(new PetGame(this));
 
         _hud = new Hud(_games);
@@ -457,6 +458,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "bubbles" => L.T("click a bubble to split it — clear them all in time"),
         "hockey" => L.T("drag your mallet and score in the right-hand goal"),
         "checkers" => L.T("click a piece, then the square it should move to"),
+        "chess" => L.T("click a piece, then the square it should move to"),
         "clay" => L.T("click the trap machine, then shoot the clays at the top of their arc"),
         "slingshot" => L.T("drag back from the slingshot and let go — knock the tower down"),
         "pet" => L.T("click the pet to pet it — drag to carry and throw it"),

@@ -36,7 +36,7 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 - **Window tops are platforms.** Balls, bugs, pets and towers sit on the top edges of your windows and
   ride along when you drag one. You can turn this off in the tray menu.
 - **Idle means idle.** When nothing is moving, rendering stops and CPU use drops to almost zero.
-- **16 games, 39 achievements**, play-time stats, and English, Uzbek and Russian text.
+- **17 games, 39 achievements**, play-time stats, and English, Uzbek and Russian text.
 - **No assets to download.** Every sound is synthesized and all artwork is drawn in code.
 
 ## Games
@@ -58,6 +58,7 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 | 🗼 **Tower Stack** | Click the sliding block to drop it on the tower. The overhang is cut off, so the tower narrows; a perfect drop keeps the full width, and three in a row widen it. Miss completely and the game ends. |
 | 🪨 **Slingshot** | Pull the stone back and let go to knock a tower of blocks off a window top. 3 stones a tower, 10 points a block, 50 for each spare stone. Clear the tower for a bigger one. |
 | ♟️ **Checkers** | Click one of your pieces, then the square it should move to (for a multi-jump, the last square). Captures are compulsory and a piece reaching the far row is crowned. Play the CPU, or a co-worker over the LAN. Right-drag the board to move it. |
+| ♞ **Chess** | Click a piece, then its square. Full rules: castling, en passant, check, mate, stalemate and the 50-move rule; pawns always promote to a queen. Play the CPU or a co-worker over the LAN. Right-drag the board to move it. |
 | 🐱 **Desktop Pet** | Not a game: a cat that walks along your taskbar and window tops, follows the cursor, jumps between windows and sleeps when left alone. Click to pet it, drag to carry and throw it. |
 
 > **Brick Breaker note:** while a ball is in play, a strip along the bottom of the screen takes the
@@ -67,7 +68,7 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 
 **Play over LAN** in the tray menu: one of you picks **Host a game** and the other picks **Join a game**. No
 server or account is involved: the joiner finds the host on the local network (UDP port 47820). Two-player
-games: **Air Hockey** (your co-worker's mallet replaces the CPU) and **Checkers**. Each of you plays from
+games: **Air Hockey** (your co-worker's mallet replaces the CPU), **Checkers** and **Chess**. Each of you plays from
 your own side of the screen.
 Windows asks once whether to allow Desk Arcade on private networks; say yes on the hosting PC.
 

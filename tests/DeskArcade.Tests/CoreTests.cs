@@ -295,3 +295,78 @@ public class DraughtsTests
         Assert.True(d.IsLegal(m));
     }
 }
+
+public class ChessRulesTests
+{
+    /// <summary>Builds a position from the piece-placement part of a FEN string.</summary>
+    static DeskArcade.Games.ChessRules Fen(string placement, bool white, int castle, int ep = -1)
+    {
+        var board = new System.Text.StringBuilder();
+        foreach (char ch in placement)
+            if (char.IsDigit(ch)) board.Append('.', ch - '0');
+            else if (ch != '/') board.Append(ch);
+        return DeskArcade.Games.ChessRules.Decode($"{board}|{(white ? "w" : "b")}|{castle}|{ep}|0|0")!;
+    }
+
+    static long Perft(DeskArcade.Games.ChessRules c, int depth)
+    {
+        if (depth == 0) return 1;
+        long n = 0;
+        foreach (var m in c.LegalMoves())
+        {
+            var next = c.Clone();
+            next.Apply(m);
+            n += Perft(next, depth - 1);
+        }
+        return n;
+    }
+
+    [Theory]
+    [InlineData(1, 20)]
+    [InlineData(2, 400)]
+    [InlineData(3, 8902)]
+    public void PerftFromTheStart(int depth, long nodes) => Assert.Equal(nodes, Perft(DeskArcade.Games.ChessRules.New(), depth));
+
+    [Theory]
+    [InlineData(1, 48)]
+    [InlineData(2, 2039)]
+    [InlineData(3, 97862)]
+    public void PerftKiwipeteCoversCastlingAndEnPassant(int depth, long nodes) =>
+        Assert.Equal(nodes, Perft(Fen("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R", true, 15), depth));
+
+    [Theory]
+    [InlineData(1, 14)]
+    [InlineData(2, 191)]
+    [InlineData(3, 2812)]
+    [InlineData(4, 43238)]
+    public void PerftEndgameCoversEnPassantPins(int depth, long nodes) =>
+        Assert.Equal(nodes, Perft(Fen("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8", true, 0), depth));
+
+    [Fact]
+    public void FoolsMateIsAWinForBlack()
+    {
+        var c = DeskArcade.Games.ChessRules.New();
+        foreach (var (from, to) in new[] { ("f2", "f3"), ("e7", "e5"), ("g2", "g4"), ("d8", "h4") })
+            c.Apply(new[] { DeskArcade.Games.ChessRules.Sq(from), DeskArcade.Games.ChessRules.Sq(to) });
+        Assert.Equal(-1, c.Result);
+        Assert.Equal(DeskArcade.Games.ChessRules.Sq("e1"), c.Alert);
+    }
+
+    [Fact]
+    public void PawnPromotesToAQueenAndEncodingRoundTrips()
+    {
+        var c = Fen("8/P6k/8/8/8/8/8/K7", true, 0);
+        c.Apply(new[] { DeskArcade.Games.ChessRules.Sq("a7"), DeskArcade.Games.ChessRules.Sq("a8") });
+        Assert.Equal(DeskArcade.Games.ChessRules.Queen, c.Board[0]);
+        Assert.Equal(c.Encode(), DeskArcade.Games.ChessRules.Decode(c.Encode())!.Encode());
+    }
+
+    [Fact]
+    public void BareKingsAreADrawAndTheCpuTakesAFreeQueen()
+    {
+        Assert.Equal(2, Fen("8/8/8/4k3/8/8/8/K7", true, 0).Result);
+        var c = Fen("4k3/8/8/3q4/8/8/8/3RK3", true, 0);
+        for (int seed = 0; seed < 5; seed++)
+            Assert.Equal(DeskArcade.Games.ChessRules.Sq("d5"), c.BestMove(new Random(seed))[1]);
+    }
+}

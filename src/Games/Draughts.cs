@@ -13,10 +13,10 @@ namespace DeskArcade.Games;
 /// row crowns a man and ends the move. A side with no legal move loses. Forty moves each with no
 /// capture and no man moving is a draw.
 /// </summary>
-public sealed class Draughts
+public sealed class Draughts : IBoardRules
 {
     /// <summary>0 empty, ±1 man, ±2 king; the sign is the side.</summary>
-    public readonly sbyte[] Board = new sbyte[64];
+    public sbyte[] Board { get; } = new sbyte[64];
     public int Turn { get; private set; } = 1;
     public int Ply { get; private set; }
     /// <summary>Plies since the last capture or man move; <see cref="DrawPlies"/> of them is a draw.</summary>
@@ -43,6 +43,10 @@ public sealed class Draughts
 
     /// <summary>+1 or −1 once the side to move is stuck, else 0.</summary>
     public int Winner => LegalMoves().Count == 0 ? -Turn : 0;
+
+    public int Result => Winner is int w and not 0 ? w : IsDraw ? 2 : 0;
+
+    public int Alert => -1;
 
     /// <summary>Every legal move for the side to move, each as a path: [from, landing, landing...].</summary>
     public List<int[]> LegalMoves()
@@ -135,7 +139,9 @@ public sealed class Draughts
     // ------------------------------------------------------------------ computer player
 
     /// <summary>A short look-ahead on material, with a little randomness among equal moves.</summary>
-    public int[] BestMove(Random rng, int depth = 4)
+    public int[] BestMove(Random rng) => BestMove(rng, 4);
+
+    public int[] BestMove(Random rng, int depth)
     {
         var moves = LegalMoves();
         double best = double.NegativeInfinity;
