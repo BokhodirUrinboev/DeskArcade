@@ -392,3 +392,52 @@ public class LaunchPathTests
         }
     }
 }
+
+public class LineRulesTests
+{
+    static void Play(DeskArcade.Games.LineRules g, params int[] squares)
+    {
+        foreach (int sq in squares) g.Apply(new[] { sq });
+    }
+
+    [Fact]
+    public void TicTacToeDetectsARowAndAFullBoard()
+    {
+        var g = DeskArcade.Games.LineRules.TicTacToe();
+        Play(g, 0, 3, 1, 4, 2);
+        Assert.Equal(1, g.Result);
+        Assert.Empty(g.LegalMoves());
+
+        var draw = DeskArcade.Games.LineRules.TicTacToe();
+        Play(draw, 0, 1, 2, 4, 3, 5, 7, 6, 8);
+        Assert.Equal(2, draw.Result);
+    }
+
+    [Fact]
+    public void ConnectFourDropsToTheBottomAndBlocksAThreat()
+    {
+        var g = DeskArcade.Games.LineRules.ConnectFour();
+        Assert.Equal(7, g.LegalMoves().Count);
+        Assert.All(g.LegalMoves(), m => Assert.Equal(5, m[0] / 7)); // bottom row
+        Play(g, 35, 28, 36, 29, 37); // red: a1 b1 c1 on the bottom row, yellow stacked on a and b
+        var block = g.BestMove(new Random(1)); // yellow must take d1
+        Assert.Equal(38, block[0]);
+    }
+
+    [Fact]
+    public void TheCpuTakesAWinningSquare()
+    {
+        var g = new DeskArcade.Games.LineRules(3, 3, 3, false); // no blunders
+        Play(g, 0, 3, 1, 4);
+        Assert.Equal(2, g.BestMove(new Random(2))[0]);
+    }
+
+    [Fact]
+    public void EncodeRoundTrips()
+    {
+        var g = DeskArcade.Games.LineRules.ConnectFour();
+        Play(g, 38, 31);
+        var back = DeskArcade.Games.LineRules.Decode(g.Encode(), DeskArcade.Games.LineRules.ConnectFour())!;
+        Assert.Equal(g.Encode(), back.Encode());
+    }
+}

@@ -10,7 +10,10 @@ using DeskArcade.Net;
 
 namespace DeskArcade.Games;
 
-/// <summary>The rules of an 8×8 turn-based game, free of UI. Side +1 sits at the bottom (rows 6–7) and moves first.</summary>
+/// <summary>
+/// The rules of a turn-based grid game, free of UI. Squares are numbered row-major from the top-left.
+/// Side +1 sits at the bottom and moves first.
+/// </summary>
 public interface IBoardRules
 {
     /// <summary>0 empty; the sign is the side, the size is the piece kind.</summary>
@@ -21,7 +24,7 @@ public interface IBoardRules
     int Result { get; }
     /// <summary>A square to mark in red (a king in check), or −1.</summary>
     int Alert { get; }
-    /// <summary>Each legal move as a path of squares: [from, to] or [from, landing, landing...].</summary>
+    /// <summary>Each legal move as a path of squares: [from, to], [from, landing, landing...], or [square] to place a piece.</summary>
     List<int[]> LegalMoves();
     /// <summary>Plays a legal move; returns the squares of captured pieces.</summary>
     List<int> Apply(int[] move);
@@ -33,7 +36,8 @@ public interface IBoardRules
 
 /// <summary>
 /// A board floating over the desktop, played against the computer or a co-worker over the LAN. Click a
-/// piece, then the square it should land on; right-drag moves the board. Over the LAN the host keeps the
+/// piece, then the square it should land on (or, in placement games, just the square); right-drag moves
+/// the board. Over the LAN the host keeps the
 /// real board and sends it every <see cref="SyncEvery"/> seconds; the guest re-sends its move until the
 /// host's board includes it, so a lost packet never puts the boards out of step. The guest sees the board
 /// turned around, with its own side (−1) at the bottom.
@@ -47,12 +51,12 @@ public abstract class BoardGame : MiniGame
     readonly Canvas _marks = new() { IsHitTestVisible = false };
     readonly Canvas _pieces = new() { IsHitTestVisible = false };
     readonly Border _frame = new() { CornerRadius = new CornerRadius(6), Background = Art.Brush(230, 60, 40, 28), IsHitTestVisible = false };
-    readonly Rectangle[] _cells = new Rectangle[64];
+    readonly Rectangle[] _cells;
 
     IBoardRules _game;
     Vec2 _origin, _dragOffset;
     double _cpuIn = -1, _syncT;
-    int _selected = -1, _gameNo, _lastFrom = -1, _lastTo = -1;
+    int _selected = -1, _gameNo, _lastFrom = -1, _lastTo = -1, _myWins, _theirWins;
     int[]? _pending; // guest: our move, re-sent until the host's board contains it
     bool _placed, _dragging, _over, _demo, _wasLan;
 
@@ -61,9 +65,10 @@ public abstract class BoardGame : MiniGame
         _game = NewRules();
         Layer.Children.Add(_frame);
         var squares = new Canvas { IsHitTestVisible = false };
-        for (int i = 0; i < 64; i++)
+        _cells = new Rectangle[Cols * Rows];
+        for (int i = 0; i < _cells.Length; i++)
         {
-            _cells[i] = new Rectangle { Fill = Art.Brush((i / 8 + i % 8) % 2 == 1 ? dark : light) };
+            _cells[i] = new Rectangle { Fill = Art.Brush((i / Cols + i % Cols) % 2 == 1 ? dark : light) };
             squares.Children.Add(_cells[i]);
         }
         Layer.Children.Add(squares);
@@ -79,6 +84,21 @@ public abstract class BoardGame : MiniGame
     protected abstract void DrawPiece(Canvas into, sbyte piece, Vec2 c, double cell);
     /// <summary>Why the game ended in a draw, for the popup.</summary>
     protected abstract string DrawReason(IBoardRules game);
+    /// <summary>Adds the visuals for an empty square (e.g. a hole in a Connect Four frame).</summary>
+    protected virtual void DrawEmpty(Canvas into, Vec2 c, double cell) { }
+    /// <summary>The move a click on <paramref name="sq"/> makes in a placement game, if any.</summary>
+    protected virtual int[]? PlacementAt(int sq, List<int[]> moves) => moves.FirstOrDefault(m => m.Length == 1 && m[0] == sq);
+
+    protected virtual int Cols => 8;
+    protected virtual int Rows => 8;
+    /// <summary>Largest board edge in DIPs.</summary>
+    protected virtual double MaxSize => 520;
+    /// <summary>Whether the guest sees the board turned around (not for games with gravity).</summary>
+    protected virtual bool FlipForGuest => true;
+    /// <summary>Scoreboard text: pieces left by default; placement games show games won this session.</summary>
+    protected virtual string Score => $"{_game.Count(Me)}–{_game.Count(-Me)}";
+    protected string SessionScore => $"{_myWins}–{_theirWins}";
+    protected virtual string YourMove => L.T("Your move · click a piece, then where it goes · right-drag moves the board");
 
     protected double Cell { get; private set; }
     protected IBoardRules Game => _game;
@@ -89,9 +109,9 @@ public abstract class BoardGame : MiniGame
     string Rival => LanOn ? Host.Lan.PeerName : L.T("CPU");
 
     public override HudInfo Hud => new(
-        $"{_game.Count(Me)}–{_game.Count(-Me)}",
+        Score,
         _over ? L.T("Game over · click the board for a rematch")
-            : MyTurn ? L.T("Your move · click a piece, then where it goes · right-drag moves the board")
+            : MyTurn ? YourMove
             : L.F("{0} is thinking…", Rival),
         L.F("Wins {0}", Host.Stats.Get(Id + ".wins")));
 
@@ -100,17 +120,18 @@ public abstract class BoardGame : MiniGame
     public override void Layout()
     {
         var a = Host.Arena;
-        Cell = Math.Floor(Math.Min(Math.Min(a.Height * 0.7, a.Width * 0.5), 520) / 8);
-        double size = Cell * 8;
+        Cell = Math.Floor(Math.Min(Math.Min(a.Height * 0.7 / Rows, a.Width * 0.5 / Cols), MaxSize / Math.Max(Cols, Rows)));
+        double w = Cell * Cols, h = Cell * Rows;
         if (!_placed)
         {
             _placed = true;
-            _origin = new Vec2(a.Center.X - size / 2, a.Center.Y - size / 2);
+            _origin = new Vec2(a.Center.X - w / 2, a.Center.Y - h / 2);
         }
-        _origin = new Vec2(Clamp(_origin.X, a.Left + 10, a.Right - size - 10), Clamp(_origin.Y, a.Top + 10, a.Bottom - size - 10));
+        _origin = new Vec2(Clamp(_origin.X, a.Left + 10, a.Right - w - 10), Clamp(_origin.Y, a.Top + 10, a.Bottom - h - 10));
         if (LanOn != _wasLan)
         {
             _wasLan = LanOn;
+            _myWins = _theirWins = 0;
             NewGame();
         }
         Draw();
@@ -129,20 +150,20 @@ public abstract class BoardGame : MiniGame
         AfterMove();
     }
 
-    Rect BoardRect => new(_origin.X, _origin.Y, Cell * 8, Cell * 8);
+    Rect BoardRect => new(_origin.X, _origin.Y, Cell * Cols, Cell * Rows);
 
-    int View(int sq) => IsGuest ? 63 - sq : sq;
+    int View(int sq) => IsGuest && FlipForGuest ? Cols * Rows - 1 - sq : sq;
 
     protected Vec2 Center(int sq)
     {
         int v = View(sq);
-        return new Vec2(_origin.X + (v % 8 + 0.5) * Cell, _origin.Y + (v / 8 + 0.5) * Cell);
+        return new Vec2(_origin.X + (v % Cols + 0.5) * Cell, _origin.Y + (v / Cols + 0.5) * Cell);
     }
 
     int SquareAt(Vec2 p)
     {
         int c = (int)Math.Floor((p.X - _origin.X) / Cell), r = (int)Math.Floor((p.Y - _origin.Y) / Cell);
-        return r is >= 0 and < 8 && c is >= 0 and < 8 ? View(r * 8 + c) : -1;
+        return r >= 0 && r < Rows && c >= 0 && c < Cols ? View(r * Cols + c) : -1;
     }
 
     // ------------------------------------------------------------------ input
@@ -166,7 +187,9 @@ public abstract class BoardGame : MiniGame
         int sq = SquareAt(p);
         if (sq < 0 || !MyTurn || _pending != null) return false;
         var moves = _game.LegalMoves();
-        if (_selected >= 0 && moves.FirstOrDefault(m => m[0] == _selected && m[^1] == sq) is int[] move)
+        if (PlacementAt(sq, moves) is int[] place)
+            Play(place);
+        else if (_selected >= 0 && moves.FirstOrDefault(m => m[0] == _selected && m[^1] == sq) is int[] move)
             Play(move);
         else if (moves.Any(m => m[0] == sq))
         {
@@ -246,6 +269,7 @@ public abstract class BoardGame : MiniGame
         }
         else if (result == Me)
         {
+            _myWins++;
             Host.Stats.Add(Id + ".wins");
             if (LanOn) Host.Stats.Add(Id + ".lanwins");
             Host.Fx.Popup(at, L.T("YOU WIN!"), Gold, 42, 2.6, L.F("vs {0}", Rival));
@@ -254,6 +278,7 @@ public abstract class BoardGame : MiniGame
         }
         else
         {
+            _theirWins++;
             Host.Fx.Popup(at, L.F("{0} WINS", Rival), Colors.White, 38, 2.4, L.T("click the board for a rematch"));
             Host.Sound.Play("buzzer", 0.45);
         }
@@ -343,7 +368,7 @@ public abstract class BoardGame : MiniGame
         Canvas.SetTop(_frame, b.Top - 8);
         _frame.Width = b.Width + 16;
         _frame.Height = b.Height + 16;
-        for (int sq = 0; sq < 64; sq++)
+        for (int sq = 0; sq < _cells.Length; sq++)
         {
             var c = Center(sq);
             _cells[sq].Width = _cells[sq].Height = Cell;
@@ -368,13 +393,14 @@ public abstract class BoardGame : MiniGame
                 }
             }
             else
-                foreach (int from in moves.Select(m => m[0]).Distinct())
+                foreach (int from in moves.Where(m => m.Length > 1).Select(m => m[0]).Distinct())
                     _marks.Children.Add(Box(from, null, Art.Brush(120, 255, 209, 102)));
         }
 
         _pieces.Children.Clear();
-        for (int sq = 0; sq < 64; sq++)
+        for (int sq = 0; sq < _cells.Length; sq++)
             if (_game.Board[sq] != 0) DrawPiece(_pieces, _game.Board[sq], Center(sq), Cell);
+            else DrawEmpty(_pieces, Center(sq), Cell);
     }
 
     Rectangle Box(int sq, IBrush? fill, IBrush? stroke)
