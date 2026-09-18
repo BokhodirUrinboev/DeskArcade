@@ -13,10 +13,11 @@ namespace DeskArcade.Games;
 /// touches a shot; only results cross the link. The setter shoots from anywhere: make it and the other
 /// player must make the same shot (from the marked spot), or take a letter; miss it and the other player
 /// sets. Spell H-O-R-S-E and you lose. Shot events are numbered and re-sent until acknowledged.
+/// Each side also streams its moving ball, relative to the rim, so the rival's shot shows as a ghost ball.
 /// </summary>
 public sealed partial class HoopsGame
 {
-    const double SpotRadius = 90, ShotTimeout = 4, HorseResend = 0.4;
+    const double SpotRadius = 90, ShotTimeout = 4, HorseResend = 0.4, BallSendEvery = 1.0 / 30, RivalFade = 1.5;
 
     readonly Ellipse _spotRing = new()
     {
@@ -25,7 +26,15 @@ public sealed partial class HoopsGame
     };
     readonly TextBlock _spotLabel = new() { FontFamily = Fx.Font, FontSize = 14, FontWeight = FontWeight.Bold, Foreground = Art.Brush("#FFD166"), IsVisible = false, IsHitTestVisible = false };
 
+    readonly Sprite _rivalBall = Art.Basketball(BallR);
+    readonly TextBlock _rivalLabel = new()
+    {
+        FontFamily = Fx.Font, FontSize = 13, FontWeight = FontWeight.Bold, Foreground = Brushes.White, IsHitTestVisible = false,
+    };
+
     HorseMatch _horse = new(true);
+    double _ballSendT, _rivalSeenT = RivalFade;
+    bool _ballWasMoving;
     bool _wasHorse, _shotOpen, _shotCounts;
     Vec2 _spotN; // the shot to match: offset from the rim as fractions of the arena, x measured away from the board
     double _shotT, _hResendT;
@@ -40,6 +49,10 @@ public sealed partial class HoopsGame
     {
         Layer.Children.Add(_spotRing);
         Layer.Children.Add(_spotLabel);
+        _rivalBall.IsHitTestVisible = false;
+        _rivalBall.IsVisible = _rivalLabel.IsVisible = false;
+        Layer.Children.Add(_rivalBall);
+        Layer.Children.Add(_rivalLabel);
     }
 
     HudInfo HorseHud => new(
@@ -135,12 +148,22 @@ public sealed partial class HoopsGame
 
     void HorseUpdate(double dt)
     {
-        if (!HorseOn) return;
+        if (!HorseOn)
+        {
+            _rivalBall.IsVisible = _rivalLabel.IsVisible = false;
+            return;
+        }
+        SendBall(dt);
         if (_shotOpen && ((_shotT += dt) > ShotTimeout || _shotT > 0.5 && (_ball.Asleep || _ball.Grounded))) CloseShot(false);
 
         while (Host.Lan.TryReceive(out var msg))
         {
             var f = msg.Split('|');
+            if (f[0] == "hb" && f.Length == 4)
+            {
+                ShowRivalBall(P(f[1]), P(f[2]), P(f[3]));
+                continue;
+            }
             if (f.Length < 2 || !int.TryParse(f[1], out int game)) continue;
             if (f[0] == "hn" && game > _hGame)
             {
@@ -155,8 +178,7 @@ public sealed partial class HoopsGame
                 if (seq == _hApplied + 1)
                 {
                     _hApplied = seq;
-                    var spot = new Vec2(double.Parse(f[5], System.Globalization.CultureInfo.InvariantCulture),
-                        double.Parse(f[6], System.Globalization.CultureInfo.InvariantCulture));
+                    var spot = new Vec2(P(f[5]), P(f[6]));
                     Apply(byMe: false, f[4] == "1", spot);
                 }
                 if (seq <= _hApplied) Host.Lan.Send($"ha|{_hGame}|{seq}");
@@ -167,6 +189,49 @@ public sealed partial class HoopsGame
             _hResendT = 0;
             Host.Lan.Send(_hPending);
         }
+        FadeRivalBall(dt);
+    }
+
+    static string N(double v) => v.ToString("0.####", System.Globalization.CultureInfo.InvariantCulture);
+
+    static double P(string s) =>
+        double.TryParse(s, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double v) ? v : 0;
+
+    /// <summary>
+    /// Streams our ball while it is held or moving ("hb|x|y|angle"), as an offset from the rim in
+    /// fractions of the arena with x measured away from the board, so it lands right on any screen.
+    /// </summary>
+    void SendBall(double dt)
+    {
+        bool moving = _holding || !_ball.Asleep;
+        if (!moving && !_ballWasMoving) return;
+        if ((_ballSendT += dt) < BallSendEvery && moving) return;
+        _ballSendT = 0;
+        _ballWasMoving = moving; // one last message once it stops, so the ghost settles where the ball did
+        var a = Host.Arena;
+        var c = RimCenter;
+        Host.Lan.Send($"hb|{N((c.X - _ball.Pos.X) * _dir / a.Width)}|{N((_ball.Pos.Y - c.Y) / a.Height)}|{N(_ball.Angle * _dir)}");
+    }
+
+    void ShowRivalBall(double nx, double ny, double angle)
+    {
+        var a = Host.Arena;
+        var c = RimCenter;
+        var at = new Vec2(c.X - _dir * nx * a.Width, c.Y + ny * a.Height);
+        _rivalBall.Set(at, angle * _dir);
+        _rivalLabel.Text = Host.Lan.PeerName;
+        Canvas.SetLeft(_rivalLabel, at.X - BallR);
+        Canvas.SetTop(_rivalLabel, at.Y - BallR - 20);
+        _rivalSeenT = 0;
+    }
+
+    /// <summary>The rival's ball stays up while it moves and fades once their updates stop.</summary>
+    void FadeRivalBall(double dt)
+    {
+        _rivalSeenT += dt;
+        bool shown = _rivalSeenT < RivalFade;
+        _rivalBall.IsVisible = _rivalLabel.IsVisible = shown;
+        if (shown) _rivalBall.Opacity = _rivalLabel.Opacity = 0.6 * Math.Min(1, (RivalFade - _rivalSeenT) / 0.5);
     }
 
     /// <summary>Our shot is decided: send it to the rival and apply it here.</summary>
@@ -177,8 +242,7 @@ public sealed partial class HoopsGame
         var a = Host.Arena;
         var spot = new Vec2((RimCenter.X - _releasePos.X) * _dir / a.Width, (_releasePos.Y - RimCenter.Y) / a.Height);
         _hSent++;
-        string F(double v) => v.ToString("0.####", System.Globalization.CultureInfo.InvariantCulture);
-        _hPending = $"hr|{_hGame}|{_hSent}|{(Matching ? "m" : "s")}|{(made ? 1 : 0)}|{F(spot.X)}|{F(spot.Y)}";
+        _hPending = $"hr|{_hGame}|{_hSent}|{(Matching ? "m" : "s")}|{(made ? 1 : 0)}|{N(spot.X)}|{N(spot.Y)}";
         Host.Lan.Send(_hPending);
         _hResendT = 0;
         Apply(byMe: true, made, spot);
@@ -194,6 +258,9 @@ public sealed partial class HoopsGame
             _spotN = spot;
             if (!byMe) Host.Fx.Popup(RimCenter + new Vec2(0, 90), L.F("{0} made it — your turn to match", Host.Lan.PeerName), Color.FromRgb(255, 209, 102), 22, 1.8);
         }
+        else if (setting && !byMe)
+            Host.Fx.Popup(RimCenter + new Vec2(0, 90), L.F("{0} missed — your turn to set", Host.Lan.PeerName), Color.FromRgb(200, 210, 225), 22, 1.8);
+        if (!byMe && made) Host.Sound.Play("swish", 0.6);
         if (letter != 0)
         {
             int letters = letter > 0 ? _horse.MyLetters : _horse.TheirLetters;

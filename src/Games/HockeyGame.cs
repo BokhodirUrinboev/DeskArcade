@@ -49,7 +49,7 @@ public sealed class HockeyGame : MiniGame
 
     Vec2 _puck, _puckVel, _me, _meVel, _cpu, _cpuVel, _grabOffset;
     int _myGoals, _cpuGoals, _level = 1, _serveSide = -1;
-    double _time, _acc, _serveIn = -1, _stuckT, _puckAge, _aimCpu, _aimMe;
+    double _time, _acc, _serveIn = -1, _stuckT, _puckAge, _aimCpu, _aimMe, _cpuBackOff;
     bool _placed, _holding, _matchOver, _demo, _puckOnCpuSide;
 
     // LAN: the rival's mallet as last reported by the guest, in host-normalized coordinates
@@ -282,10 +282,13 @@ public sealed class HockeyGame : MiniGame
         Vec2 meTo = _holding ? ClampSide(Host.Pointer + _grabOffset, false)
             : _demo && !_matchOver ? MoveToward(_me, ClampSide(AiTarget(_me, false), false), CpuSpeed * dt)
             : _me;
-        Vec2 cpuTarget = _matchOver || _serveIn > 0 ? new Vec2(Host.Arena.Right - HomeInset, Host.Arena.Center.Y) : AiTarget(_cpu, true);
+        if (_cpuBackOff > 0) _cpuBackOff -= dt;
+        Vec2 cpuTarget = _matchOver || _serveIn > 0 || _cpuBackOff > 0 ? new Vec2(Host.Arena.Right - HomeInset, Host.Arena.Center.Y) : AiTarget(_cpu, true);
         Vec2 cpuTo = IsLanHost
             ? _remoteSeen ? ClampSide(FromNorm(_remoteN), true) : _cpu
             : MoveToward(_cpu, ClampSide(cpuTarget, true), CpuSpeed * dt);
+        meTo = KeepOffPinnedPuck(meTo, false);
+        cpuTo = KeepOffPinnedPuck(cpuTo, true);
 
         if (dt > 0)
         {
@@ -305,8 +308,8 @@ public sealed class HockeyGame : MiniGame
             _cpu = cpuFrom + (cpuTo - cpuFrom) * k;
             if (_serveIn <= 0) SimStep(Step);
         }
-        _me = meTo;
-        _cpu = cpuTo;
+        _me = meTo = KeepOffPinnedPuck(meTo, false);
+        _cpu = cpuTo = KeepOffPinnedPuck(cpuTo, true);
 
         bool busy = _holding || _demo || (cpuTo - cpuFrom).Length > 0.05 || _puckVel.Length > 0 || _serveIn > 0 || _puckAge < 0.3;
         if (_serveIn > 0 && (_serveIn -= dt) <= 0)
@@ -437,6 +440,24 @@ public sealed class HockeyGame : MiniGame
         return (mallet - behind).Length < 24 ? _puck + dir * 60 : behind;
     }
 
+    /// <summary>
+    /// A puck pressed against an edge can't be pushed any further, so a mallet driven into it stops at
+    /// contact instead of sliding over it. Without this a mallet parked in a corner swallows the puck.
+    /// </summary>
+    Vec2 KeepOffPinnedPuck(Vec2 m, bool cpu)
+    {
+        if (!_puckSprite.IsVisible) return m;
+        var a = Host.Arena;
+        bool inMouth = _puck.Y > GoalTop && _puck.Y < GoalBottom;
+        bool pinned = _puck.Y <= a.Top + PuckR + 1 || _puck.Y >= a.Bottom - PuckR - 1 ||
+                      !inMouth && (_puck.X <= a.Left + PuckR + 1 || _puck.X >= a.Right - PuckR - 1);
+        Vec2 d = m - _puck;
+        double min = PuckR + MalletR;
+        if (!pinned || d.Length >= min) return m;
+        Vec2 n = d.Length < 1e-6 ? (new Vec2(a.Center.X, a.Center.Y) - _puck).Normalized() : d / d.Length;
+        return ClampSide(_puck + n * min, cpu);
+    }
+
     /// <summary>A puck parked out of reach (e.g. in a corner) drifts back toward the middle.</summary>
     void UnstickPuck(double dt)
     {
@@ -450,8 +471,11 @@ public sealed class HockeyGame : MiniGame
                         _puck.X < a.Left + MalletR * 1.4 || _puck.X > a.Right - MalletR * 1.4;
         bool cpuSide = _puck.X > a.Center.X;
         if (!cornered && (!cpuSide || LanOn)) return; // a human rival can reach the puck on their side
-        if ((_stuckT += dt) < 3) return;
+        // the CPU leaning on a cornered puck frees it quickly; anything else gets a few seconds to play it
+        bool cpuPinning = cornered && cpuSide && !LanOn && (_cpu - _puck).Length < PuckR + MalletR + 8;
+        if ((_stuckT += dt) < (cpuPinning ? 0.8 : 3)) return;
         _stuckT = 0;
+        if (cpuSide && !LanOn) _cpuBackOff = 1.0; // step aside so the puck can come out
         _puckVel = (new Vec2(a.Center.X, a.Center.Y) - _puck).Normalized() * 420;
     }
 
@@ -539,6 +563,7 @@ public sealed class HockeyGame : MiniGame
                 Host.HudChanged();
             }
         }
+        _me = KeepOffPinnedPuck(_me, false);
         _puckAge = 1;
         Draw();
         return true;

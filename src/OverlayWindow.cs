@@ -520,6 +520,12 @@ public sealed class OverlayWindow : Window, IGameHost
     {
         var next = _games.FirstOrDefault(g => g.Id == id) ?? _games[0];
         if (next == Current) return;
+        if (Lan.Connected && Lan.Role == LanRole.Guest && next.Id != Lan.GameId)
+        {
+            // the host picks the game; a guest switching on its own would leave the two screens out of step
+            Notice(L.T("The host picks the game"), L.F("{0} is hosting", Lan.PeerName), Color.FromRgb(170, 180, 195));
+            return;
+        }
         _captured = false;
         Current?.Deactivate();
         _gameLayer.Children.Clear();
@@ -529,7 +535,7 @@ public sealed class OverlayWindow : Window, IGameHost
 
         Settings.Game = next.Id;
         SaveSettings();
-        if (Lan.Connected && Lan.Role == LanRole.Host) Lan.SendGame(next.Id); // the guest follows
+        if (Lan.Role == LanRole.Host) Lan.SendGame(next.Id); // the guest follows, or joins into this game
         _race.Reset();
         _hud.SetGame(next.Id, next.Title);
         HudChanged();

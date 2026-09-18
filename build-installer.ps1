@@ -3,6 +3,9 @@
 #   .\build-installer.ps1 -SelfContained    bundles the runtime, runs on any 64-bit Windows 10/11
 #   .\build-installer.ps1 -Arch arm64       Windows on ARM installer (always bundles the runtime)
 #   .\build-installer.ps1 -Version 1.2.0    override the version from DeskArcade.csproj
+#   .\build-installer.ps1 -SkipPublish -SourceDir dist\x64
+#                                           pack a DeskArcade.exe that is already published (and signed)
+#                                           instead of publishing one; the release workflow does this
 #   .\build-installer.ps1 -SignCertThumbprint <sha1>
 #                                           sign DeskArcade.exe, Setup and the uninstaller with that
 #                                           certificate from Cert:\CurrentUser\My (see docs/RELEASING.md)
@@ -14,6 +17,8 @@ param(
     [switch]$SelfContained,
     [string]$Version,
     [ValidateSet('x64', 'arm64')][string]$Arch = 'x64',
+    [string]$SourceDir = 'dist',
+    [switch]$SkipPublish,
     [string]$SignCertThumbprint,
     [string]$TimestampUrl = 'http://timestamp.digicert.com'
 )
@@ -37,9 +42,14 @@ $iscc = @(
 ) | Where-Object { $_ -and (Test-Path $_) } | Select-Object -First 1
 if (-not $iscc) { throw "Inno Setup 6 not found. Install it with: winget install JRSoftware.InnoSetup" }
 
-& .\build.ps1 -SelfContained:$SelfContained -Version $Version -Arch $Arch -SignCertThumbprint $SignCertThumbprint -TimestampUrl $TimestampUrl
+if (-not $SkipPublish) {
+    & .\build.ps1 -SelfContained:$SelfContained -Version $Version -Arch $Arch -OutDir $SourceDir -SignCertThumbprint $SignCertThumbprint -TimestampUrl $TimestampUrl
+}
+$exe = Join-Path $SourceDir 'DeskArcade.exe'
+if (-not (Test-Path $exe)) { throw "$exe not found" }
 
-$defines = @("/DMyAppVersion=$Version", "/DArch=$Arch")
+# Absolute, because Inno Setup resolves relative paths against installer\
+$defines = @("/DMyAppVersion=$Version", "/DArch=$Arch", "/DSourceDir=$((Resolve-Path $SourceDir).Path)")
 if ($SelfContained) { $defines += '/DSelfContained' }
 if ($SignCertThumbprint) {
     $signtool = (Get-Command signtool.exe -ErrorAction SilentlyContinue).Source

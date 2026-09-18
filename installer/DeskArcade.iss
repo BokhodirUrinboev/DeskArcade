@@ -14,7 +14,10 @@
 ; Must match the mutex name in src/Program.cs
 #define AppMutex       "DeskArcade.SingleInstance.v1"
 #define DotNetMajor    "10"
-#define SourceDir      "..\dist"
+; build-installer.ps1 passes /DSourceDir when the exe was published elsewhere (the release workflow does)
+#ifndef SourceDir
+  #define SourceDir    "..\dist"
+#endif
 
 #ifndef MyAppVersion
   #define MyAppVersion GetVersionNumbersString(SourceDir + "\" + MyAppExeName)

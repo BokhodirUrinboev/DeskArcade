@@ -32,11 +32,11 @@ The **Release** workflow then runs:
 |---|---|---|
 | Check version | ubuntu-latest | Refuses a tag that is not `vX.Y.Z` or does not match `<Version>` in the csproj |
 | Linux amd64 / arm64 | ubuntu-22.04 | Publishes `linux-x64` / `linux-arm64` (arm64 is cross-compiled), builds the `.deb` and the AppImage. amd64: installs the `.deb` and runs both packages with `--signal quit`. arm64: checks the package metadata and that the binaries are aarch64 |
-| Windows installers | windows-latest | Imports the signing certificate if the secrets exist, then builds the x64, x64 standalone and ARM64 installers, and verifies the signatures when signing |
+| Windows installers | windows-latest | Publishes the x64, x64 standalone and ARM64 exes and builds their installers. On release tags with SignPath set up, it has SignPath sign the exes before packing and the installers afterwards, then verifies the signatures (see [Windows code signing](#windows-code-signing)) |
 | macOS arm64 / x64 | macos-latest / macos-15-intel | Publishes `osx-arm64` / `osx-x64`, builds `DeskArcade.app`, zips it, then unzips the zip and launch-tests the app (see [macOS](#macos)) |
 | Publish release | ubuntu-latest | Only for tag pushes, and only if every build succeeded: creates the GitHub Release with a download table and generated notes |
 
-Only the publish job has `contents: write`; everything else is read-only.
+Only the publish job has `contents: write`; everything else is read-only. The Windows job also has `actions: read`, so SignPath can download the artifacts it signs.
 
 **Dry run:** run the Release workflow by hand (Actions → Release → Run workflow) with the version from
 the csproj. It builds and uploads every package as workflow artifacts but publishes nothing.
@@ -91,46 +91,65 @@ side with the old one.
 
 ## Windows code signing
 
-Signing is optional. The Windows job signs only when both repository secrets exist (Settings → Secrets
-and variables → Actions):
+Windows releases are signed through [SignPath.io](https://signpath.io) with a certificate from the
+[SignPath Foundation](https://signpath.org), which signs open-source projects for free. The signature
+names **SignPath Foundation** as the publisher. The private key never leaves SignPath, so there is no
+`.pfx` to store in GitHub: the workflow uploads the unsigned files, SignPath signs them once a request
+is approved, and the workflow downloads the signed files.
 
-| Secret | Value |
-|---|---|
-| `WINDOWS_CERTIFICATE_PFX_BASE64` | The code-signing certificate and private key as a `.pfx`, base64-encoded |
-| `WINDOWS_CERTIFICATE_PASSWORD` | The `.pfx` password |
+### One-time setup
 
-To encode the `.pfx`:
+1. **Apply** at [signpath.org/apply](https://signpath.org/apply) (the Foundation, `.org`) with the
+   GitHub repository. Don't sign up or start a trial on signpath.io (`.io`): that is the paid
+   commercial product. Once the Foundation approves the project, it sets up a free open-source
+   subscription on signpath.io for you, with no trial and no payment details. The
+   Foundation needs a public OSI-licensed repository (MIT here), release builds from GitHub Actions, and
+   the [code signing policy](../README.md#code-signing-policy) in the README.
+2. **After approval**, in the SignPath web app:
+   - Install the SignPath GitHub App on the repository and add GitHub as a trusted build system for the
+     project, so SignPath signs only artifacts built by this repository's workflows.
+   - Create the project (slug `DeskArcade`) and two artifact configurations, pasting in the files from
+     [`.signpath/artifact-configurations/`](../.signpath/artifact-configurations/): slug `app`
+     (`app.xml`) and slug `installers` (`installers.xml`).
+   - The signing policy the Foundation sets up is normally `release-signing`, with you as approver.
+   - Create a CI user, add it as a submitter on the signing policy, and copy its API token.
+3. **In GitHub** (Settings → Secrets and variables → Actions):
 
-```powershell
-[Convert]::ToBase64String([IO.File]::ReadAllBytes("DeskArcade.pfx")) | Set-Clipboard
-```
+| Kind | Name | Value |
+|---|---|---|
+| Secret | `SIGNPATH_API_TOKEN` | The CI user's API token |
+| Variable | `SIGNPATH_ORGANIZATION_ID` | The organization ID from SignPath |
+| Variable | `SIGNPATH_PROJECT_SLUG` | Optional; defaults to `DeskArcade` |
+| Variable | `SIGNPATH_SIGNING_POLICY_SLUG` | Optional; defaults to `release-signing` |
 
-or `base64 -w0 DeskArcade.pfx` on Linux. Without the secrets the build runs unsigned: the import step
-logs that it is skipping signing, and the release notes warn that SmartScreen may ask users to confirm.
+Until the secret and the organization variable exist, releases are built unsigned and the release notes
+say that SmartScreen may ask users to confirm. Manual `workflow_dispatch` builds are never signed.
 
-**What happens when signing:**
+### What happens on a release tag
 
-1. `packaging/windows/Import-SigningCertificate.ps1` imports the `.pfx` from memory (it is never written
-   to disk) into `Cert:\CurrentUser\My` and outputs its thumbprint.
-2. `build.ps1` signs `DeskArcade.exe` with `signtool` (SHA-256, RFC 3161 timestamp from
-   `http://timestamp.digicert.com`) straight after `dotnet publish`, before Inno Setup packs it, so the
-   installed exe is signed.
-3. `build-installer.ps1` compiles the `.iss` with `/DSign` and a `deskarcade` sign tool
-   (`/Sdeskarcade=signtool sign /sha1 <thumbprint> …`). Inno Setup's `SignTool` directive signs Setup
-   and, through `SignedUninstaller=yes`, the uninstaller.
-4. The workflow checks every installer and the exe with `signtool verify /pa`.
+1. `build.ps1` publishes the three exes into `dist\x64`, `dist\x64-standalone` and `dist\arm64`.
+2. **Round 1:** they are uploaded as the `unsigned-app` artifact and submitted to SignPath with the
+   `app` configuration. The job waits (up to an hour) until you approve the request in SignPath, then
+   copies the signed exes back over the unsigned ones.
+3. `build-installer.ps1 -SkipPublish -SourceDir …` packs the signed exes into the three installers.
+4. **Round 2:** the installers go to SignPath the same way (`unsigned-installers`, configuration
+   `installers`).
+5. The job checks every exe and installer with `signtool verify /pa`, and the release job publishes only
+   the signed `windows` artifact. The `unsigned-*` artifacts expire after a day.
 
-**Why Inno Setup's SignTool directive rather than signing Setup after the build:** Inno Setup does not
-ship `unins000.exe` as a file. Setup writes it on the user's machine from a copy of its own code, so
-signing only the finished `DeskArcade-Setup-*.exe` would leave the uninstaller unsigned, and nothing can
-sign it later. With the directive, Inno Setup signs the uninstaller while compiling, embeds it, and
-signs Setup last. The app exe is outside Inno Setup's reach as a signing target unless it is signed
-before packing, so it is signed right after publishing.
+So each release asks for **two approvals** in SignPath (you also get an email for each).
 
-To sign a local build, import the certificate into your user store and run
-`.\build-installer.ps1 -SignCertThumbprint <thumbprint>`. A certificate that lives on a hardware token
-or in a cloud HSM (for example Azure Trusted Signing) cannot be exported as a `.pfx`; that would need a
-different import step, but the signing commands stay the same.
+**The uninstaller is not signed.** Inno Setup doesn't ship `unins000.exe` as a file: Setup writes it on
+the user's machine from its own code, and can sign it only while compiling, through its `SignTool`
+directive, which needs a local certificate. SignPath signs remotely, so it can't be plugged in there.
+Windows doesn't check the uninstaller with SmartScreen (it is never downloaded), so in practice this
+doesn't show up for users.
+
+### Signing a local build
+
+With your own certificate in `Cert:\CurrentUser\My`, run
+`.\build-installer.ps1 -SignCertThumbprint <thumbprint>`: `build.ps1` signs the exe after publishing and
+Inno Setup's `SignTool` directive signs Setup and the uninstaller.
 
 ## winget
 

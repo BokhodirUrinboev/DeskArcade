@@ -23,6 +23,8 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 - [Building from source](#building-from-source)
 - [Project structure](#project-structure)
 - [Troubleshooting](#troubleshooting)
+- [Code signing policy](#code-signing-policy)
+- [Privacy](#privacy)
 - [Third-party software](#third-party-software)
 - [License](#license)
 
@@ -299,6 +301,32 @@ The UI is built with [Avalonia](https://avaloniaui.net/), so the games contain n
 | Shortcuts do nothing on Ubuntu | On Wayland, allow them when the portal asks, or set up custom shortcuts as described above. |
 | No sound on Ubuntu | Install `libpulse0`. It works with PulseAudio and PipeWire. |
 | The game crashed | Details are in `crash.log` in the settings folder. |
+
+## Code signing policy
+
+Free code signing provided by [SignPath.io](https://signpath.io), certificate by
+[SignPath Foundation](https://signpath.org).
+
+Windows releases (`DeskArcade.exe` and the `DeskArcade-Setup-*.exe` installers) are built by GitHub
+Actions from this repository and signed only after a maintainer approves each signing request.
+
+| Role | Who |
+|---|---|
+| Committers and reviewers | [Bokhodir Urinboev](https://github.com/BokhodirUrinboev) |
+| Approvers | [Bokhodir Urinboev](https://github.com/BokhodirUrinboev) |
+
+## Privacy
+
+Desk Arcade does not transfer any information to other networked systems unless you ask it to, with one
+exception you can switch off:
+
+- **Update check:** once a day it asks GitHub (`api.github.com`) for the latest release of this
+  repository. The request carries nothing but the app version. Turn it off with **Check for updates
+  automatically** in the tray menu.
+- **LAN play:** only when you host or join a game does it talk to other computers on your local network
+  (UDP port 47820). It sends your user name and the game moves, and nothing leaves the local network.
+
+There is no account, no telemetry and no analytics. Settings, scores and stats stay on your computer.
 
 ## Third-party software
 
