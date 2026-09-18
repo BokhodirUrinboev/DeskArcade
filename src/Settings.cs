@@ -15,6 +15,8 @@ public sealed class Settings
     public bool ClaudeAutoShow { get; set; }
     /// <summary>Hide the overlay when Claude finishes or needs you.</summary>
     public bool ClaudeAutoHide { get; set; }
+    /// <summary>Freeze the current game when Claude finishes or needs you; a click on the game resumes it.</summary>
+    public bool ClaudePause { get; set; }
     /// <summary>"auto" (follow the system), "en", "uz" or "ru".</summary>
     public string Language { get; set; } = "auto";
     public bool CheckForUpdates { get; set; } = true;

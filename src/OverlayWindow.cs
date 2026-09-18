@@ -56,6 +56,8 @@ public sealed class OverlayWindow : Window, IGameHost
     Vec2 _eventPointer;
     UpdateInfo? _update;
     DateTime? _claudeSince;
+    double _playedWhileClaude; // seconds of play since Claude started working, for the summary
+    bool _paused;
     bool _checkingUpdates;
     double _lastAchievementAt = -10;
     int _achievementRow;
@@ -357,6 +359,11 @@ public sealed class OverlayWindow : Window, IGameHost
     void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (e.Handled || Current == null || _captured) return;
+        if (_paused)
+        {
+            Resume();
+            return; // the click only wakes the game
+        }
         var point = e.GetCurrentPoint(_root);
         bool right = point.Properties.IsRightButtonPressed;
         if (!right && !point.Properties.IsLeftButtonPressed) return;
@@ -439,10 +446,14 @@ public sealed class OverlayWindow : Window, IGameHost
 
         UpdatePointer();
         bool busy = _captured || HudBusy;
-        if (Current != null)
+        if (Current != null && !_paused)
         {
             bool playing = Current.Update(dt) || _captured;
-            if (playing) Stats.AddTime(Current.Id, dt); // only time spent actually playing
+            if (playing)
+            {
+                Stats.AddTime(Current.Id, dt); // only time spent actually playing
+                if (_claudeSince != null) _playedWhileClaude += dt;
+            }
             busy |= playing;
         }
         busy |= Fx.Update(dt);
@@ -740,9 +751,22 @@ public sealed class OverlayWindow : Window, IGameHost
         Wake();
     }
 
+    void Resume()
+    {
+        if (!_paused) return;
+        _paused = false;
+        Fx.Popup(new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.3), L.T("Resumed"), Color.FromRgb(61, 220, 132), 30, 1.0);
+        Wake();
+    }
+
     void ClaudeWorking()
     {
-        if (_hud.Status != ClaudeStatus.Working) _claudeSince = DateTime.UtcNow;
+        if (_hud.Status != ClaudeStatus.Working)
+        {
+            _claudeSince = DateTime.UtcNow;
+            _playedWhileClaude = 0;
+        }
+        Resume();
         _hud.SetClaude(ClaudeStatus.Working, _claudeSince);
         if (Settings.ClaudeAutoShow && !IsVisible) SetOverlayVisible(true);
     }
@@ -757,8 +781,17 @@ public sealed class OverlayWindow : Window, IGameHost
         {
             Sound.Play(sound, 0.9);
             string sub = status == ClaudeStatus.Done ? L.T("your turn!") : L.T("check the terminal");
-            if (waited is TimeSpan w && w.TotalSeconds >= 5) sub = L.F("{0} · waited {1}", sub, Hud.FormatWait(w));
+            if (waited is TimeSpan w && w.TotalSeconds >= 5)
+                sub = _playedWhileClaude >= 5
+                    ? L.F("{0} · Claude worked {1}, you played {2}", sub, Hud.FormatWait(w), Hud.FormatWait(TimeSpan.FromSeconds(_playedWhileClaude)))
+                    : L.F("{0} · waited {1}", sub, Hud.FormatWait(w));
             Notice(title, sub, color);
+        }
+        if (Settings.ClaudePause && IsVisible && !_paused && Current != null)
+        {
+            _paused = true;
+            _captured = false;
+            Fx.Popup(new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.42), L.T("PAUSED"), Colors.White, 34, 3.0, L.T("click the game to resume"));
         }
         if (Settings.ClaudeAutoHide && IsVisible)
         {
