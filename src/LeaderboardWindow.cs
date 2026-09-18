@@ -89,7 +89,6 @@ public sealed class LeaderboardWindow : Window
         }
 
         var entries = _overlay.BoardEntries();
-        string me = LanLink.MyName;
         _status.Text = entries.Count > 1
             ? L.F("{0} players sharing today · updates every 20 seconds", entries.Count)
             : L.T("Only you so far. Co-workers show up here once they share their scores too.");
@@ -99,10 +98,10 @@ public sealed class LeaderboardWindow : Window
             if (ranked.Count == 0) continue;
             _board.Children.Add(Text(L.T(title), 15, "#FFD166", FontWeight.Bold));
             int place = 0;
-            foreach (var (name, score) in ranked.Take(ShowTop))
+            foreach (var (id, name, score) in ranked.Take(ShowTop))
             {
                 place++;
-                bool mine = name == me;
+                bool mine = id == OfficeBoard.InstanceId;
                 var row = new Grid { ColumnDefinitions = new ColumnDefinitions("28,*,Auto") };
                 row.Children.Add(Text($"{place}.", 13, "#AAB3C0"));
                 var who = Text(mine ? L.F("{0} (you)", name) : name, 13, mine ? "#4DA3FF" : "#FFFFFF", mine ? FontWeight.Bold : FontWeight.Normal);

@@ -145,7 +145,11 @@ public sealed class HockeyGame : MiniGame
         }
         _t.Me = _t.ClampSide(_t.Me, false);
         _t.Cpu = _t.ClampSide(_t.Cpu, true);
-        if (!Host.Arena.Deflate(PuckR).Contains(_t.Puck.ToPoint())) _t.PlacePuck(_serveSide);
+        if (!Host.Arena.Deflate(PuckR).Contains(_t.Puck.ToPoint()))
+        {
+            _t.PlacePuck(_serveSide);
+            _puckAge = 0;
+        }
         DrawTable();
         Draw();
         Host.HudChanged();
@@ -171,6 +175,7 @@ public sealed class HockeyGame : MiniGame
 
     void Goal(bool playerScored)
     {
+        if (_matchOver) return; // nothing counts between matches
         var a = Host.Arena;
         var mouth = new Vec2(playerScored ? a.Right - 40 : a.Left + 40, Clamp(_t.Puck.Y, _t.GoalTop, _t.GoalBottom));
         if (playerScored)
@@ -308,7 +313,7 @@ public sealed class HockeyGame : MiniGame
         {
             _serveIn = -1;
             _t.PlacePuck(_matchOver ? 0 : _serveSide);
-            _t.PuckInPlay = true;
+            _t.PuckInPlay = !_matchOver; // after the last goal the puck waits in the middle for the rematch
             _puckSprite.IsVisible = true;
             _puckAge = 0;
         }
@@ -379,7 +384,7 @@ public sealed class HockeyGame : MiniGame
         string? last = null;
         while (Host.Lan.TryReceive(out var msg))
             if (msg.StartsWith("s|", StringComparison.Ordinal)) last = msg;
-        if (last?.Split('|') is { Length: >= 11 } f)
+        if (last?.Split('|') is { Length: >= 9 } f) // 1.4 hosts send no series fields
         {
             Vec2 puck = FromNorm(Mirror(new Vec2(P(f[1]), P(f[2]))));
             _t.PuckVel = (puck - _t.Puck) / Math.Max(dt, 1e-3); // only the demo AI reads it
@@ -388,7 +393,7 @@ public sealed class HockeyGame : MiniGame
             _t.Cpu = FromNorm(Mirror(new Vec2(P(f[4]), P(f[5]))));
             int rival = (int)P(f[6]), mine = (int)P(f[7]);
             bool over = f[8] == "1";
-            int seriesRival = (int)P(f[9]), seriesMine = (int)P(f[10]);
+            int seriesRival = f.Length >= 11 ? (int)P(f[9]) : 0, seriesMine = f.Length >= 11 ? (int)P(f[10]) : 0;
             var a = Host.Arena;
             if (mine > _myGoals) Host.Stats.Add("hockey.goals");
             if (mine > _myGoals || rival > _cpuGoals)

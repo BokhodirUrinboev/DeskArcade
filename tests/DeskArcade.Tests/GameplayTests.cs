@@ -364,19 +364,21 @@ public class OfficeBoardTests
         var scores = OfficeBoard.Scores(c => c switch { "hockey.wins" => 2, "hockey.lanwins" => 1, "play.ms" => 185_000, "hoops.streak" => 7, _ => 0 });
         Assert.Equal(3, scores["hockey"]);
         Assert.Equal(3, scores["minutes"]);
-        var entry = new BoardEntry("al|ice,=", "2026-09-18", scores);
+        var entry = new BoardEntry("a1b2", "al|ice,=", "2026-09-18", scores);
 
         var back = OfficeBoard.Decode(OfficeBoard.Encode(entry));
         Assert.NotNull(back);
         Assert.Equal("alice", back!.Name); // separators are stripped from names
+        Assert.Equal("a1b2", back.Id);
         Assert.Equal("2026-09-18", back.Day);
         Assert.Equal(7, back.Scores["streak"]);
         Assert.False(back.Scores.ContainsKey("pong")); // zeros aren't sent
 
-        Assert.Null(OfficeBoard.Decode("DA1|lb|bob|not-a-date|streak=3"));
-        Assert.Null(OfficeBoard.Decode("XX1|lb|bob|2026-09-18|streak=3"));
-        Assert.Null(OfficeBoard.Decode("DA1|lb||2026-09-18|streak=3"));
-        var odd = OfficeBoard.Decode("DA1|lb|bob|2026-09-18|streak=-4,baskets=abc,tower=99999999999999")!;
+        Assert.Null(OfficeBoard.Decode("DA1|lb|x1|bob|not-a-date|streak=3"));
+        Assert.Null(OfficeBoard.Decode("XX1|lb|x1|bob|2026-09-18|streak=3"));
+        Assert.Null(OfficeBoard.Decode("DA1|lb|x1||2026-09-18|streak=3"));
+        Assert.Null(OfficeBoard.Decode("DA1|lb|bob|2026-09-18|streak=3")); // no id
+        var odd = OfficeBoard.Decode("DA1|lb|x1|bob|2026-09-18|streak=-4,baskets=abc,tower=99999999999999")!;
         Assert.False(odd.Scores.ContainsKey("streak"));
         Assert.False(odd.Scores.ContainsKey("baskets"));
         Assert.Equal(1_000_000_000, odd.Scores["tower"]);
@@ -387,11 +389,11 @@ public class OfficeBoardTests
     {
         var entries = new[]
         {
-            new BoardEntry("carol", "d", new Dictionary<string, long> { ["streak"] = 5 }),
-            new BoardEntry("alice", "d", new Dictionary<string, long> { ["streak"] = 9 }),
-            new BoardEntry("bob", "d", new Dictionary<string, long> { ["streak"] = 5 }),
-            new BoardEntry("dave", "d", new Dictionary<string, long>()),
+            new BoardEntry("c", "carol", "d", new Dictionary<string, long> { ["streak"] = 5 }),
+            new BoardEntry("a", "alice", "d", new Dictionary<string, long> { ["streak"] = 9 }),
+            new BoardEntry("b", "bob", "d", new Dictionary<string, long> { ["streak"] = 5 }),
+            new BoardEntry("d", "dave", "d", new Dictionary<string, long>()),
         };
-        Assert.Equal(new[] { ("alice", 9L), ("bob", 5L), ("carol", 5L) }, OfficeBoard.Rank(entries, "streak"));
+        Assert.Equal(new[] { ("a", "alice", 9L), ("b", "bob", 5L), ("c", "carol", 5L) }, OfficeBoard.Rank(entries, "streak"));
     }
 }

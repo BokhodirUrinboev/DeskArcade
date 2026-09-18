@@ -8,8 +8,9 @@ namespace DeskArcade.Games;
 
 /// <summary>
 /// Mini Golf match play over the LAN (<see cref="GolfMatch"/>). Each player putts on their own course and
-/// they take turns stroke by stroke. Finished strokes travel as reliable events ("st|hole|strokes|sunk|par"
-/// and "nm" for a new match, through a <see cref="DuelChannel"/>); the moving ball streams as
+/// they take turns stroke by stroke. Finished strokes travel as reliable events ("st|hole|strokes|sunk|par",
+/// "nm" when the host starts a new match and "rq" when the guest asks for one, through a
+/// <see cref="DuelChannel"/>); the moving ball streams as
 /// "gdg|x|y|angle", its offset from the cup in fractions of the arena, and shows up as a ghost ball
 /// around the other player's own cup.
 /// </summary>
@@ -22,7 +23,7 @@ public sealed partial class GolfGame
     Ghost _rivalBall = null!;
     GolfMatch _match = new(true);
     int _session = -1;
-    bool _strokeOpen, _ghostWasMoving;
+    bool _strokeOpen, _ghostWasMoving, _rematchAsked;
     double _ghostT;
 
     bool DuelOn => Host.Lan.Connected;
@@ -37,7 +38,7 @@ public sealed partial class GolfGame
 
     HudInfo DuelHud => new(
         $"{_match.MyHoles}–{_match.TheirHoles}",
-        _match.Over ? L.T("Match over · putt to play again")
+        _match.Over ? (DuelHost ? L.T("Match over · putt to play again") : L.F("Match over · putt to ask {0} for a rematch", Rival))
             : _match.MyTurn ? L.F("Hole {0}/{1} vs {2} · your putt", _match.Hole, GolfMatch.Holes, Rival)
             : _match.MySunk ? L.F("Hole {0}/{1} · you're in · {2} is still putting", _match.Hole, GolfMatch.Holes, Rival)
             : L.F("Hole {0}/{1} · {2} is putting", _match.Hole, GolfMatch.Holes, Rival),
@@ -57,10 +58,12 @@ public sealed partial class GolfGame
     void NewDuelMatch()
     {
         _match = new GolfMatch(iStartOddHoles: Host.Lan.Role != LanRole.Guest);
-        _strokeOpen = false;
+        _strokeOpen = _rematchAsked = false;
         if (_placed) NewRound();
         Changed();
     }
+
+    bool DuelHost => Host.Lan.Role != LanRole.Guest;
 
     /// <summary>False (with a hint) when it isn't this player's putt.</summary>
     bool DuelMayPutt()
@@ -68,8 +71,19 @@ public sealed partial class GolfGame
         if (!DuelOn) return true;
         if (_match.Over)
         {
-            NewDuelMatch();
-            _duel.Send("nm");
+            // only the host starts a match, so two "new match" messages can never cross
+            if (DuelHost)
+            {
+                NewDuelMatch();
+                _duel.Send("nm");
+            }
+            else
+            {
+                if (!_rematchAsked) _duel.Send("rq");
+                _rematchAsked = true;
+                Host.Fx.Popup(_ball.Pos - new Vec2(0, 44), L.F("asked {0} for a rematch", Rival), Colors.White, 20, 1.2);
+                return false;
+            }
         }
         if (_match.MyTurn) return true;
         Host.Fx.Popup(_ball.Pos - new Vec2(0, 44), _match.MySunk ? L.T("you're in · wait for the next hole") : L.F("{0}'s putt", Rival),
@@ -79,10 +93,14 @@ public sealed partial class GolfGame
 
     void DuelPutted() => _strokeOpen = DuelOn;
 
-    /// <summary>Our stroke is decided (the ball stopped, or dropped): apply it here and send it.</summary>
+    /// <summary>
+    /// Our stroke is decided (the ball stopped, or dropped): apply it here and send it. A ball that drops in
+    /// with no stroke open (a penalty drop, or a window moving under it) is reported all the same, so the
+    /// match never loses a sunk ball.
+    /// </summary>
     void DuelStrokeDone(bool sunk)
     {
-        if (!DuelOn || !_strokeOpen) return;
+        if (!DuelOn || !_strokeOpen && !sunk) return;
         _strokeOpen = false;
         int hole = _match.Hole;
         _duel.Send(string.Create(CultureInfo.InvariantCulture, $"st|{hole}|{_strokes}|{(sunk ? 1 : 0)}|{_par}"));
@@ -96,7 +114,11 @@ public sealed partial class GolfGame
             _rivalBall.Hide();
             return;
         }
-        if (_strokeOpen && BallReady) DuelStrokeDone(false);
+        if (_strokeOpen && BallReady)
+        {
+            _ball.Place(_ball.Pos); // stop it here, so a ball still creeping can't drop in after the stroke was sent
+            DuelStrokeDone(false);
+        }
         SendGhost(dt);
 
         _delivered.Clear();
@@ -110,6 +132,11 @@ public sealed partial class GolfGame
         {
             var f = body.Split('|');
             if (f[0] == "nm") NewDuelMatch();
+            else if (f[0] == "rq" && DuelHost && _match.Over)
+            {
+                NewDuelMatch();
+                _duel.Send("nm");
+            }
             else if (f[0] == "st" && f.Length == 5 && (int)P(f[1]) == _match.Hole)
                 ApplyStroke(byMe: false, (int)P(f[2]), f[3] == "1", (int)P(f[4]));
         }

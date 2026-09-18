@@ -69,7 +69,7 @@ public sealed class OverlayWindow : Window, IGameHost
     public Platforms Platforms { get; } = new();
     public LanLink Lan { get; } = new();
     OfficeBoard _board = null!;
-    BoardEntry _boardEntry = new("", "", new Dictionary<string, long>());
+    BoardEntry _boardEntry = new(OfficeBoard.InstanceId, "", "", new Dictionary<string, long>());
     readonly DispatcherTimer _boardTimer = new() { Interval = TimeSpan.FromSeconds(5) };
     double _playStreak, _lastPlayed; // seconds of play since the last break reminder; clock time of the last played frame
     public Daily Daily { get; }
@@ -976,7 +976,7 @@ public sealed class OverlayWindow : Window, IGameHost
     }
 
     /// <summary>Snapshots today's scores on the UI thread; the board shares the snapshot from its own thread.</summary>
-    void RefreshBoardEntry() => _boardEntry = new BoardEntry(LanLink.MyName, DateTime.Now.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
+    void RefreshBoardEntry() => _boardEntry = new BoardEntry(OfficeBoard.InstanceId, LanLink.MyName, DateTime.Now.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
         OfficeBoard.Scores(Stats.Today));
 
     public void SetBreakMinutes(int minutes)

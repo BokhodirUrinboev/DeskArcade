@@ -515,6 +515,7 @@ public static partial class Strings
         ["Match over · grab your paddle for a rematch"] = "Матч окончен · возьмите ракетку для реванша",
         ["Match over · pull the bow for a rematch"] = "Матч окончен · натяните лук для реванша",
         ["Match over · pull the bow to ask {0} for a rematch"] = "Матч окончен · натяните лук, чтобы предложить {0} реванш",
+        ["Match over · putt to ask {0} for a rematch"] = "Матч окончен · ударьте, чтобы предложить {0} реванш",
         ["Match over · putt to play again"] = "Матч окончен · ударьте, чтобы сыграть ещё",
         ["Match play"] = "Матчевая игра",
         ["Minutes played"] = "Минут в игре",

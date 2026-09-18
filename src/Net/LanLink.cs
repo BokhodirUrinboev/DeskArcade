@@ -31,6 +31,7 @@ public sealed class LanLink : IDisposable
     public const int Port = 47820;
     const string Magic = "DA1";
     const double TimeoutSeconds = 3, PingSeconds = 0.5, HelloSeconds = 0.7, GameSeconds = 1;
+    const int MaxInbox = 2000; // while the overlay is hidden nothing drains the inbox: keep only the latest
 
     readonly ConcurrentQueue<string> _inbox = new();
     readonly object _gate = new();
@@ -257,10 +258,19 @@ public sealed class LanLink : IDisposable
             // first guest wins; the same guest re-sending hello (lost welcome) is answered again
             if (_peer == null || _peer.Equals(from))
             {
+                // the guest we are playing with timed out on its side and joined again: it starts its games
+                // fresh, so this is a new session here too, or the two sides' duels and races fall out of step
+                bool rejoined = State == LanState.Connected && _peer != null;
                 lock (_gate) _peer = from;
                 PeerName = body;
                 TrySend(udp, from, $"welcome|{GameId}|{MyName}");
                 Heard();
+                if (rejoined)
+                {
+                    Session++;
+                    while (_inbox.TryDequeue(out _)) { }
+                    StateChanged?.Invoke();
+                }
             }
             else TrySend(udp, from, "busy|");
             return;
@@ -307,6 +317,7 @@ public sealed class LanLink : IDisposable
             return;
         }
         _inbox.Enqueue(msg);
+        while (_inbox.Count > MaxInbox) _inbox.TryDequeue(out _);
         MessageArrived?.Invoke();
     }
 

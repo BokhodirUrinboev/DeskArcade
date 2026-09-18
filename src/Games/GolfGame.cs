@@ -455,6 +455,7 @@ public sealed partial class GolfGame : MiniGame
     {
         if (!BallReady || _aiming) return;
         if (DuelOn && !_match.Over && !_match.MyTurn) return;
+        if (DuelOn && _match.Over && _rematchAsked) return;
         if (!DuelMayPutt()) return;
         if (_roundOver) NewRound();
         if (Math.Abs(_ball.Pos.Y + R - _cup.Y) < 4)

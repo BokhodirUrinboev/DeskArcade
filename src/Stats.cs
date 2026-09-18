@@ -29,6 +29,7 @@ public sealed class Stats
 
     Data _data = new();
     bool _dirty;
+    double _msCarry; // fractions of a millisecond of play not yet added to "play.ms"
     string _path = "";
 
     Stats()
@@ -132,8 +133,10 @@ public sealed class Stats
         if (seconds <= 0) return;
         double before = SecondsPlayed(gameId);
         _data.Seconds[gameId] = before + seconds;
-        long todayMs = Today("play.ms") + (long)(seconds * 1000);
-        _data.Today["play.ms"] = todayMs;
+        _msCarry += seconds * 1000;
+        long whole = (long)_msCarry;
+        _msCarry -= whole;
+        _data.Today["play.ms"] = Today("play.ms") + whole;
         _dirty = true;
         Max("play.minutes", (long)(TotalSeconds / 60));
         if (before < 30 && before + seconds >= 30) Max("play.games", _data.Seconds.Count(kv => kv.Value >= 30));

@@ -515,6 +515,7 @@ public static partial class Strings
         ["Match over · grab your paddle for a rematch"] = "O'yin tugadi · qayta o'ynash uchun raketkani ushlang",
         ["Match over · pull the bow for a rematch"] = "O'yin tugadi · qayta o'ynash uchun kamonni torting",
         ["Match over · pull the bow to ask {0} for a rematch"] = "O'yin tugadi · {0}dan revansh so'rash uchun kamonni torting",
+        ["Match over · putt to ask {0} for a rematch"] = "O'yin tugadi · {0}dan revansh so'rash uchun uring",
         ["Match over · putt to play again"] = "O'yin tugadi · yana o'ynash uchun uring",
         ["Match play"] = "Match play",
         ["Minutes played"] = "O'ynalgan daqiqalar",

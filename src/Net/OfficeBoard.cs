@@ -10,21 +10,28 @@ using System.Threading.Tasks;
 
 namespace DeskArcade.Net;
 
-/// <summary>One player's line on the office leaderboard: their name and today's scores.</summary>
-public sealed record BoardEntry(string Name, string Day, IReadOnlyDictionary<string, long> Scores);
+/// <summary>
+/// One player's line on the office leaderboard: the sending copy's random id (so two people with the same
+/// user name stay apart), their name and today's scores.
+/// </summary>
+public sealed record BoardEntry(string Id, string Name, string Day, IReadOnlyDictionary<string, long> Scores);
 
 /// <summary>
 /// The office leaderboard: while sharing is on, every running copy broadcasts its player's name and today's
 /// scores on UDP port <see cref="Port"/> every <see cref="ShareSeconds"/> seconds, and collects everyone
 /// else's. Nothing leaves the local network, and nothing is sent while sharing is off. It is separate from
 /// the two-player <see cref="LanLink"/>, so it works whether or not anyone is playing together.
-/// Wire format: "DA1|lb|name|yyyy-MM-dd|key=value,key=value" and "DA1|lbq" (asks everyone to share now).
+/// Wire format: "DA1|lb|id|name|yyyy-MM-dd|key=value,key=value" and "DA1|lbq" (asks everyone to share now).
 /// </summary>
 public sealed class OfficeBoard : IDisposable
 {
     public const int Port = 47821;
     const string Magic = "DA1";
     const double ShareSeconds = 20, ForgetSeconds = 90;
+    const int MaxOthers = 200; // however many packets arrive, the list stays small
+
+    /// <summary>This copy's id on the board: random per run, so it identifies no one.</summary>
+    public static readonly string InstanceId = Guid.NewGuid().ToString("N")[..12];
 
     /// <summary>The scores on the board, in display order: the counter(s) behind each category.</summary>
     public static readonly (string Key, string Title, string[] Counters)[] Categories =
@@ -90,14 +97,18 @@ public sealed class OfficeBoard : IDisposable
         var list = new List<BoardEntry> { _mine() };
         lock (_gate)
         {
-            var now = DateTime.UtcNow;
-            foreach (var (key, (entry, seen)) in _others.ToList())
-            {
-                if ((now - seen).TotalSeconds > ForgetSeconds) _others.Remove(key);
-                else if (entry.Day == day && entry.Name != list[0].Name) list.Add(entry);
-            }
+            Forget();
+            list.AddRange(_others.Values.Select(o => o.Entry).Where(e => e.Day == day && e.Id != list[0].Id));
         }
         return list;
+    }
+
+    /// <summary>Drops players not heard from lately. Call with the lock held.</summary>
+    void Forget()
+    {
+        var now = DateTime.UtcNow;
+        foreach (var (key, (_, seen)) in _others.ToList())
+            if ((now - seen).TotalSeconds > ForgetSeconds) _others.Remove(key);
     }
 
     /// <summary>Today's scores for every category, from a counter reader such as <c>Stats.Today</c>.</summary>
@@ -105,31 +116,31 @@ public sealed class OfficeBoard : IDisposable
         Categories.ToDictionary(c => c.Key, c => c.Key == "minutes" ? today("play.ms") / 60000 : c.Counters.Sum(today));
 
     /// <summary>Ranks everyone on one category, best first, leaving out zeros.</summary>
-    public static List<(string Name, long Score)> Rank(IEnumerable<BoardEntry> entries, string key) =>
-        entries.Select(e => (e.Name, Score: e.Scores.TryGetValue(key, out long v) ? v : 0))
+    public static List<(string Id, string Name, long Score)> Rank(IEnumerable<BoardEntry> entries, string key) =>
+        entries.Select(e => (e.Id, e.Name, Score: e.Scores.TryGetValue(key, out long v) ? v : 0))
             .Where(r => r.Score > 0)
             .OrderByDescending(r => r.Score).ThenBy(r => r.Name, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
     public static string Encode(BoardEntry e) =>
-        $"{Magic}|lb|{Clean(e.Name)}|{e.Day}|" + string.Join(",", e.Scores.Where(kv => kv.Value > 0).Select(kv => $"{Clean(kv.Key)}={kv.Value}"));
+        $"{Magic}|lb|{Clean(e.Id)}|{Clean(e.Name)}|{e.Day}|" + string.Join(",", e.Scores.Where(kv => kv.Value > 0).Select(kv => $"{Clean(kv.Key)}={kv.Value}"));
 
     static string Clean(string s) => new(s.Where(c => c is not ('|' or ',' or '=') && !char.IsControl(c)).Take(40).ToArray());
 
     public static BoardEntry? Decode(string text)
     {
         var f = text.Split('|');
-        if (f.Length != 5 || f[0] != Magic || f[1] != "lb" || f[2].Length == 0 ||
-            !DateTime.TryParseExact(f[3], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+        if (f.Length != 6 || f[0] != Magic || f[1] != "lb" || f[2].Length == 0 || f[3].Length == 0 ||
+            !DateTime.TryParseExact(f[4], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
             return null;
         var scores = new Dictionary<string, long>();
-        foreach (var pair in f[4].Split(',', StringSplitOptions.RemoveEmptyEntries).Take(32))
+        foreach (var pair in f[5].Split(',', StringSplitOptions.RemoveEmptyEntries).Take(32))
         {
             var kv = pair.Split('=');
             if (kv.Length == 2 && kv[0].Length > 0 && long.TryParse(kv[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out long v) && v > 0)
                 scores[kv[0]] = Math.Min(v, 1_000_000_000);
         }
-        return new BoardEntry(f[2], f[3], scores);
+        return new BoardEntry(f[2], f[3], f[4], scores);
     }
 
     async Task ReceiveLoop(UdpClient udp, CancellationToken ct)
@@ -150,7 +161,12 @@ public sealed class OfficeBoard : IDisposable
                 continue;
             }
             if (Decode(text) is not BoardEntry entry) continue;
-            lock (_gate) _others[entry.Name + "@" + r.RemoteEndPoint.Address] = (entry, DateTime.UtcNow);
+            lock (_gate)
+            {
+                Forget();
+                if (_others.Count >= MaxOthers && !_others.ContainsKey(entry.Id)) continue;
+                _others[entry.Id] = (entry, DateTime.UtcNow);
+            }
             Changed?.Invoke();
         }
     }
