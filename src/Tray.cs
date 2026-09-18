@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
+using DeskArcade.Platform;
 
 namespace DeskArcade;
 
@@ -40,8 +41,8 @@ public sealed class Tray : IDisposable
             games.Add(Radio(L.T(g.Title), () => _w.SwitchGame(id), () => _w.Current?.Id == id));
         }
         menu.Add(new NativeMenuItem(L.T("Game")) { Menu = games });
-        menu.Add(Item(L.T("Next game") + "   (" + Shortcuts.Label('N') + ")", () => _w.NextGame()));
-        menu.Add(Item(L.T("Bring to cursor") + "   (" + Shortcuts.Label('B') + ")", () => _w.SummonToCursor()));
+        menu.Add(Item(L.T("Next game") + "   (" + Shortcuts.Label(HotkeyAction.NextGame) + ")", () => _w.NextGame()));
+        menu.Add(Item(L.T("Bring to cursor") + "   (" + Shortcuts.Label(HotkeyAction.Summon) + ")", () => _w.SummonToCursor()));
         menu.Add(Item(L.T("Stats & achievements…"), () => _w.OpenStats()));
 
         var lan = new NativeMenu();
@@ -65,7 +66,7 @@ public sealed class Tray : IDisposable
         menu.Add(new NativeMenuItem(L.T("Play over LAN")) { Menu = lan });
         menu.Add(new NativeMenuItemSeparator());
 
-        menu.Add(Check(L.T("Show overlay") + "   (" + Shortcuts.Label('G') + ")", () => _w.ToggleOverlay(), () => _w.OverlayVisible));
+        menu.Add(Check(L.T("Show overlay") + "   (" + Shortcuts.Label(HotkeyAction.ToggleOverlay) + ")", () => _w.ToggleOverlay(), () => _w.OverlayVisible));
         menu.Add(Check(L.T("Bounce on window tops"), () => Toggle(s => s.Platforms = !s.Platforms), () => _w.Settings.Platforms));
         menu.Add(Check(L.T("Sound"), () => Toggle(s => s.Sound = !s.Sound), () => _w.Settings.Sound));
 
@@ -87,6 +88,7 @@ public sealed class Tray : IDisposable
         claude.Add(Item(L.T("Copy Claude Code hook config"), () => _w.CopyHookConfig()));
         menu.Add(new NativeMenuItem("Claude Code") { Menu = claude });
 
+        menu.Add(Item(L.T("Shortcuts…"), () => _w.OpenShortcuts()));
         menu.Add(Check(L.T("Start when I sign in"), () =>
         {
             _w.AutostartEnabled = !_w.AutostartEnabled;

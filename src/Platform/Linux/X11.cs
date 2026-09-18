@@ -15,6 +15,7 @@ internal static class X11
     public const int KeyPress = 2;
     public const int GrabModeAsync = 1;
     public const long InputHint = 1;
+    public const uint ShiftMask = 1 << 0;
     public const uint LockMask = 1 << 1;
     public const uint ControlMask = 1 << 2;
     public const uint Mod1Mask = 1 << 3; // Alt

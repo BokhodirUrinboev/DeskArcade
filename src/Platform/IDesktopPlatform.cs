@@ -47,8 +47,15 @@ public interface IDesktopPlatform : IDisposable
     /// <summary>Visible application windows other than ours, topmost first.</summary>
     void EnumerateWindows(List<NativeWindowInfo> result);
 
-    /// <summary>Ctrl+Alt+G / N / B (Control+Option on macOS). Returns false if global hotkeys are unavailable.</summary>
-    bool RegisterHotkeys(Action<HotkeyAction> onHotkey);
+    /// <summary>
+    /// Registers <paramref name="keys"/> (Ctrl+Alt+G / N / B by default; Control+Option on macOS). Returns false if
+    /// global hotkeys are unavailable or taken. Windows re-registers when called again; the other platforms keep the
+    /// first set until the next start (see <see cref="HotkeysApplyLive"/>).
+    /// </summary>
+    bool RegisterHotkeys(Action<HotkeyAction> onHotkey, HotkeySet keys);
+
+    /// <summary>Whether a second <see cref="RegisterHotkeys"/> call takes effect straight away.</summary>
+    bool HotkeysApplyLive => false;
 
     IAudioOutput? OpenAudio(int sampleRate);
 
@@ -75,7 +82,7 @@ public sealed class NullPlatform : IDesktopPlatform
     public void SetInputRegions(IReadOnlyList<HitShape> regions, bool captureActive) { }
     public bool TryGetCursor(out PixelPoint screenPoint) { screenPoint = default; return false; }
     public void EnumerateWindows(List<NativeWindowInfo> result) { }
-    public bool RegisterHotkeys(Action<HotkeyAction> onHotkey) => false;
+    public bool RegisterHotkeys(Action<HotkeyAction> onHotkey, HotkeySet keys) => false;
     public IAudioOutput? OpenAudio(int sampleRate) => null;
     public bool AutostartEnabled { get => false; set { } }
     public void Dispose() { }

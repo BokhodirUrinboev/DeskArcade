@@ -566,3 +566,26 @@ public class HorseMatchTests
         Assert.Equal(0, m.MyLetters + m.TheirLetters);
     }
 }
+
+public class HotkeySetTests
+{
+    [Fact]
+    public void InvalidSettingsFallBackToTheDefaults()
+    {
+        Assert.Equal(DeskArcade.HotkeySet.Default, DeskArcade.HotkeySet.From(null, null));
+        Assert.Equal("GNB", DeskArcade.HotkeySet.From("CtrlShift", "GGB").Keys); // letters must differ
+        Assert.Equal("GNB", DeskArcade.HotkeySet.From("CtrlShift", "G1B").Keys);
+        var set = DeskArcade.HotkeySet.From("CtrlShift", "xyz");
+        Assert.Equal(DeskArcade.ShortcutModifiers.CtrlShift, set.Modifiers);
+        Assert.Equal('Y', set.Key(DeskArcade.Platform.HotkeyAction.NextGame));
+    }
+
+    [Fact]
+    public void LabelsAndPortalTriggersFollowTheModifiers()
+    {
+        var set = new DeskArcade.HotkeySet(DeskArcade.ShortcutModifiers.CtrlAltShift, "QWE");
+        Assert.Equal("CTRL+ALT+SHIFT+q", set.PortalTrigger(DeskArcade.Platform.HotkeyAction.ToggleOverlay));
+        Assert.EndsWith("Shift+E", set.Label(DeskArcade.Platform.HotkeyAction.Summon));
+        Assert.Equal("CTRL+ALT+g", DeskArcade.HotkeySet.Default.PortalTrigger(DeskArcade.Platform.HotkeyAction.ToggleOverlay));
+    }
+}

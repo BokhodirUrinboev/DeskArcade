@@ -20,9 +20,12 @@ internal static class Carbon
     public const uint ControlKey = 1 << 12;
 
     // kVK_ANSI_* virtual key codes: physical key positions on an ANSI (US) keyboard
-    public const uint KeyG = 0x05;
-    public const uint KeyN = 0x2D;
-    public const uint KeyB = 0x0B;
+    public const uint ShiftKey = 1 << 9;
+
+    /// <summary>The ANSI virtual key code (kVK_ANSI_*) of a letter; they follow the keyboard layout, not the alphabet.</summary>
+    public static uint KeyCode(char letter) => "ASDFHGZXCV?BQWERYT?????????????OU?IP?LJ?K????NM".IndexOf(char.ToUpperInvariant(letter)) is int i and >= 0
+        ? (uint)i
+        : 0x05; // G
 
     [StructLayout(LayoutKind.Sequential)]
     public struct EventTypeSpec

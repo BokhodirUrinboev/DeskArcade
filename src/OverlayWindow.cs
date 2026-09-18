@@ -210,7 +210,8 @@ public sealed class OverlayWindow : Window, IGameHost
             Sound.Play("best", 0.35, 1.5);
             Notice(L.T(LanLink.Emotes[i]), L.F("from {0}", Lan.PeerName), Color.FromRgb(255, 209, 102));
         });
-        _platform.RegisterHotkeys(OnHotkey);
+        Shortcuts.Current = HotkeySet.From(Settings.ShortcutModifiers, Settings.ShortcutKeys);
+        _platform.RegisterHotkeys(OnHotkey, Shortcuts.Current);
         _platformTimer.Start();
         _blinkTimer.Start();
         _hudHoverTimer.Start();
@@ -225,7 +226,7 @@ public sealed class OverlayWindow : Window, IGameHost
             DispatcherTimer.RunOnce(() =>
             {
                 Fx.Popup(new Vec2(Arena.Left + Arena.Width / 2, Arena.Top + Arena.Height * 0.45), L.T("Welcome to Desk Arcade"),
-                    Color.FromRgb(255, 209, 102), 34, 6, L.F("click the scoreboard to pick a game · {0} show/hide · {1} next game", Shortcuts.Label('G'), Shortcuts.Label('N')));
+                    Color.FromRgb(255, 209, 102), 34, 6, L.F("click the scoreboard to pick a game · {0} show/hide · {1} next game", Shortcuts.Label(HotkeyAction.ToggleOverlay), Shortcuts.Label(HotkeyAction.NextGame)));
                 Wake();
             }, TimeSpan.FromSeconds(2.2));
         }
@@ -645,6 +646,7 @@ public sealed class OverlayWindow : Window, IGameHost
             case "lan-join": JoinLan(); break;
             case "lan-leave": LeaveLan(); break;
             case "lan-find": OpenLobby(); break;
+            case "shortcuts": OpenShortcuts(); break;
             case "quit": Quit(); break;
         }
     }
@@ -663,6 +665,22 @@ public sealed class OverlayWindow : Window, IGameHost
     public void JoinLan(System.Net.IPEndPoint? address = null) => Lan.Join(address);
 
     public void OpenLobby() => LobbyWindow.ShowFor(this);
+
+    public void OpenShortcuts() => ShortcutsWindow.ShowFor(this);
+
+    /// <summary>Saves and registers new shortcuts; returns a line for the Shortcuts window to show.</summary>
+    public string ApplyShortcuts(HotkeySet keys)
+    {
+        Settings.ShortcutModifiers = keys.Modifiers.ToString();
+        Settings.ShortcutKeys = keys.Keys;
+        SaveSettings();
+        string saved = string.Join(" · ", Enum.GetValues<HotkeyAction>().Select(keys.Label));
+        if (!_platform.HotkeysApplyLive) return L.F("Saved: {0}. They take effect the next time Desk Arcade starts.", saved);
+        Shortcuts.Current = keys;
+        _tray?.Rebuild();
+        if (_platform.RegisterHotkeys(OnHotkey, keys)) return L.F("Saved: {0}", saved);
+        return L.F("Saved, but another app already uses one of these ({0}). Try other letters or keys.", saved);
+    }
 
     public void SendEmote(int index)
     {

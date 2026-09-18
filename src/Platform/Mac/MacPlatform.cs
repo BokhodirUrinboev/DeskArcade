@@ -252,7 +252,7 @@ public sealed class MacPlatform : IDesktopPlatform
     /// Control+Option+G/N/B through Carbon RegisterEventHotKey. The handler runs on the main thread, which the
     /// Avalonia.Native event loop pumps; no Accessibility or Input Monitoring permission is involved.
     /// </summary>
-    public bool RegisterHotkeys(Action<HotkeyAction> onHotkey)
+    public bool RegisterHotkeys(Action<HotkeyAction> onHotkey, HotkeySet keys)
     {
         _onHotkey = onHotkey;
         if (_hotkeyHandler != IntPtr.Zero) return _hotkeysRegistered;
@@ -272,12 +272,12 @@ public sealed class MacPlatform : IDesktopPlatform
                 return false;
             _hotkeyHandler = handlerRef;
 
-            uint[] keys = { Carbon.KeyG, Carbon.KeyN, Carbon.KeyB }; // order matches HotkeyAction
+            uint mods = (keys.Ctrl ? Carbon.ControlKey : 0) | (keys.Alt ? Carbon.OptionKey : 0) | (keys.Shift ? Carbon.ShiftKey : 0);
             bool ok = true;
-            for (int i = 0; i < keys.Length; i++)
+            for (int i = 0; i < _hotkeyRefs.Length; i++) // order matches HotkeyAction
             {
                 var id = new Carbon.EventHotKeyID { Signature = HotkeySignature, Id = (uint)i + 1 };
-                ok &= Carbon.RegisterEventHotKey(keys[i], Carbon.ControlKey | Carbon.OptionKey, id, target, 0, out _hotkeyRefs[i]) == Carbon.NoErr;
+                ok &= Carbon.RegisterEventHotKey(Carbon.KeyCode(keys.Key((HotkeyAction)i)), mods, id, target, 0, out _hotkeyRefs[i]) == Carbon.NoErr;
             }
             _hotkeysRegistered = ok;
             return ok;
