@@ -40,19 +40,24 @@ $utf8 = New-Object System.Text.UTF8Encoding $false
 $cask = Get-Content -Raw (Join-Path $PSScriptRoot 'homebrew\deskarcade.rb')
 $old = [regex]::Match($cask, 'version "([^"]+)"').Groups[1].Value
 $cask = $cask.Replace("version `"$old`"", "version `"$Version`"")
-$cask = [regex]::Replace($cask, 'arm:\s+"[^"]+"', "arm:   `"$(Get-AssetHash "DeskArcade-$Version-macos-arm64.zip")`"")
-$cask = [regex]::Replace($cask, 'intel: "[^"]+"', "intel: `"$(Get-AssetHash "DeskArcade-$Version-macos-x64.zip")`"")
+# only the 64-hex digests: "arch arm: "arm64", intel: "x64"" uses the same keys
+$cask = [regex]::Replace($cask, 'arm:\s+"[0-9a-f]{64}"', "arm:   `"$(Get-AssetHash "DeskArcade-$Version-macos-arm64.zip")`"")
+$cask = [regex]::Replace($cask, 'intel: "[0-9a-f]{64}"', "intel: `"$(Get-AssetHash "DeskArcade-$Version-macos-x64.zip")`"")
 New-Item -ItemType Directory -Force (Join-Path $OutDir 'homebrew') | Out-Null
 [IO.File]::WriteAllText((Join-Path $OutDir 'homebrew\deskarcade.rb'), $cask, $utf8)
 
 # Scoop: the Inno Setup installers, which Scoop unpacks without running them.
-$scoop = Get-Content -Raw (Join-Path $PSScriptRoot 'scoop\deskarcade.json') | ConvertFrom-Json
-$scoop.version = $Version
-$scoop.architecture.'64bit'.url = "$base/DeskArcade-Setup-$Version-standalone.exe"
-$scoop.architecture.'64bit'.hash = Get-AssetHash "DeskArcade-Setup-$Version-standalone.exe"
-$scoop.architecture.arm64.url = "$base/DeskArcade-Setup-$Version-arm64.exe"
-$scoop.architecture.arm64.hash = Get-AssetHash "DeskArcade-Setup-$Version-arm64.exe"
+# Edited as text, not through ConvertTo-Json, which would reflow the whole file in Windows PowerShell.
+$scoop = Get-Content -Raw (Join-Path $PSScriptRoot 'scoop\deskarcade.json')
+$old = [regex]::Match($scoop, '"version": "([^"]+)"').Groups[1].Value
+$scoop = $scoop.Replace("`"version`": `"$old`"", "`"version`": `"$Version`"")
+$scoop = $scoop.Replace("download/v$old/DeskArcade-Setup-$old-", "download/v$Version/DeskArcade-Setup-$Version-")
+foreach ($arch in @(@('64bit', 'standalone'), @('arm64', 'arm64'))) {
+    $hash = Get-AssetHash "DeskArcade-Setup-$Version-$($arch[1]).exe"
+    $scoop = [regex]::Replace($scoop, "(`"$($arch[0])`": \{\s*`"url`": `"[^`"]+`",\s*`"hash`": `")[0-9a-f]{64}", "`${1}$hash")
+}
+if ($scoop -notmatch "`"version`": `"$([regex]::Escape($Version))`"") { throw 'Could not stamp the Scoop manifest' }
 New-Item -ItemType Directory -Force (Join-Path $OutDir 'scoop') | Out-Null
-[IO.File]::WriteAllText((Join-Path $OutDir 'scoop\deskarcade.json'), ($scoop | ConvertTo-Json -Depth 10), $utf8)
+[IO.File]::WriteAllText((Join-Path $OutDir 'scoop\deskarcade.json'), $scoop, $utf8)
 
 Write-Host "Wrote $(Join-Path $OutDir 'homebrew\deskarcade.rb') and $(Join-Path $OutDir 'scoop\deskarcade.json')"
