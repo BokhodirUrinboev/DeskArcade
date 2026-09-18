@@ -43,6 +43,16 @@ public sealed class Tray : IDisposable
         menu.Add(Item(L.T("Next game") + "   (" + Shortcuts.Label('N') + ")", () => _w.NextGame()));
         menu.Add(Item(L.T("Bring to cursor") + "   (" + Shortcuts.Label('B') + ")", () => _w.SummonToCursor()));
         menu.Add(Item(L.T("Stats & achievements…"), () => _w.OpenStats()));
+
+        var lan = new NativeMenu();
+        var status = new NativeMenuItem(_w.LanStatus) { IsEnabled = false };
+        _refreshers.Add(() => status.Header = _w.LanStatus);
+        lan.Add(status);
+        lan.Add(new NativeMenuItemSeparator());
+        lan.Add(Item(L.T("Host a game"), () => _w.HostLan()));
+        lan.Add(Item(L.T("Join a game"), () => _w.JoinLan()));
+        lan.Add(Item(L.T("Leave"), () => _w.LeaveLan()));
+        menu.Add(new NativeMenuItem(L.T("Play over LAN")) { Menu = lan });
         menu.Add(new NativeMenuItemSeparator());
 
         menu.Add(Check(L.T("Show overlay") + "   (" + Shortcuts.Label('G') + ")", () => _w.ToggleOverlay(), () => _w.OverlayVisible));

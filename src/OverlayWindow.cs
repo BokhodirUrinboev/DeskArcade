@@ -13,6 +13,7 @@ using Avalonia.Platform;
 using Avalonia.Threading;
 using DeskArcade.Engine;
 using DeskArcade.Games;
+using DeskArcade.Net;
 using DeskArcade.Platform;
 
 namespace DeskArcade;
@@ -58,6 +59,7 @@ public sealed class OverlayWindow : Window, IGameHost
     public Sound Sound { get; }
     public Fx Fx { get; } = new();
     public Platforms Platforms { get; } = new();
+    public LanLink Lan { get; } = new();
     public Rect Arena { get; private set; }
     public Vec2 Pointer { get; private set; }
     public Rect HudBounds => _hud?.Area ?? default;
@@ -187,6 +189,8 @@ public sealed class OverlayWindow : Window, IGameHost
         _tray = new Tray(this, Icon);
 
         Ipc.StartServer(msg => Dispatcher.UIThread.Post(() => OnSignal(msg)), _cts.Token);
+        Lan.StateChanged += () => Dispatcher.UIThread.Post(OnLanStateChanged);
+        Lan.MessageArrived += () => Dispatcher.UIThread.Post(Wake);
         _platform.RegisterHotkeys(OnHotkey);
         _platformTimer.Start();
         _blinkTimer.Start();
@@ -613,8 +617,50 @@ public sealed class OverlayWindow : Window, IGameHost
             case "summon": SummonToCursor(); break;
             case "expand": _hud.Expand(); break;
             case "stats": OpenStats(); break;
+            case "lan-host": HostLan(); break;
+            case "lan-join": JoinLan(); break;
+            case "lan-leave": LeaveLan(); break;
             case "quit": Quit(); break;
         }
+    }
+
+    // ------------------------------------------------------------------ LAN multiplayer
+
+    /// <summary>Hosts the current game, or Air Hockey if the current one is single-player only.</summary>
+    public void HostLan()
+    {
+        if (Current?.SupportsLan != true) SwitchGame(_games.First(g => g.SupportsLan).Id);
+        Lan.Host(Current!.Id);
+        if (Lan.State == LanState.Off)
+            Notice(L.T("Can't host"), L.F("UDP port {0} is in use", LanLink.Port), Color.FromRgb(255, 107, 107));
+    }
+
+    public void JoinLan() => Lan.Join();
+
+    public void LeaveLan() => Lan.Stop();
+
+    public string LanStatus => Lan.State switch
+    {
+        LanState.Waiting when Lan.Role == LanRole.Host => L.T("Waiting for a player to join…"),
+        LanState.Waiting => L.T("Looking for a host…"),
+        LanState.Connected => L.F("Playing with {0}", Lan.PeerName),
+        _ => L.T("Not connected"),
+    };
+
+    void OnLanStateChanged()
+    {
+        if (Lan.Connected)
+        {
+            if (Lan.Role == LanRole.Guest) SwitchGame(Lan.GameId);
+            SetOverlayVisible(true);
+            Notice(L.T("Connected"), L.F("Playing with {0}", Lan.PeerName), Color.FromRgb(61, 220, 132));
+        }
+        else if (Lan.State == LanState.Waiting && Lan.Role == LanRole.Host)
+            Notice(L.T("Hosting"), L.T("Waiting for a player to join…"), Color.FromRgb(77, 163, 255));
+        Current?.Layout();
+        HudChanged();
+        _tray?.Refresh();
+        Wake();
     }
 
     void ClaudeWorking()
@@ -718,6 +764,7 @@ public sealed class OverlayWindow : Window, IGameHost
     {
         if (_quitting) return;
         _quitting = true;
+        Lan.Stop();
         SaveSettings();
         _cts.Cancel();
         _loopOn = false;

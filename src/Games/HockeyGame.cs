@@ -1,17 +1,22 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using DeskArcade.Engine;
+using DeskArcade.Net;
 
 namespace DeskArcade.Games;
 
 /// <summary>
 /// Air Hockey against the computer. Your whole screen is the table: the puck bounces off every edge,
 /// except the goal mouths cut into the left (yours) and right (the CPU's) sides. First to 7 wins.
+/// Over the LAN the other player's mallet replaces the CPU: the host runs the physics and sends the
+/// state; the guest sends only its mallet and draws the host's state mirrored, so both play from the left.
+/// Positions cross the wire as fractions of the host's arena, so the screens may differ in size.
 /// </summary>
 public sealed class HockeyGame : MiniGame
 {
@@ -47,6 +52,12 @@ public sealed class HockeyGame : MiniGame
     double _time, _acc, _serveIn = -1, _stuckT, _puckAge, _aimCpu, _aimMe;
     bool _placed, _holding, _matchOver, _demo, _puckOnCpuSide;
 
+    // LAN: the rival's mallet as last reported by the guest, in host-normalized coordinates
+    const double SendEvery = 1.0 / 60;
+    Vec2 _remoteN;
+    bool _remoteSeen, _wasLan;
+    double _sendT;
+
     public HockeyGame(IGameHost host) : base(host)
     {
         _scorePanel = new Border
@@ -72,6 +83,12 @@ public sealed class HockeyGame : MiniGame
 
     public override string Id => "hockey";
     public override string Title => "Air Hockey";
+    public override bool SupportsLan => true;
+
+    bool LanOn => Host.Lan.Connected;
+    bool IsGuest => LanOn && Host.Lan.Role == LanRole.Guest;
+    bool IsLanHost => LanOn && Host.Lan.Role == LanRole.Host;
+    string Rival => LanOn ? Host.Lan.PeerName : L.T("CPU");
 
     public override Sprite CreateIcon()
     {
@@ -84,7 +101,9 @@ public sealed class HockeyGame : MiniGame
 
     public override HudInfo Hud => new(
         $"{_myGoals}–{_cpuGoals}",
-        _matchOver ? L.T("Match over · grab your mallet for a rematch") : L.F("First to {0} · CPU level {1} · drag your blue mallet", WinGoals, _level),
+        _matchOver ? L.T("Match over · grab your mallet for a rematch")
+            : LanOn ? L.F("First to {0} · vs {1} over LAN · drag your blue mallet", WinGoals, Host.Lan.PeerName)
+            : L.F("First to {0} · CPU level {1} · drag your blue mallet", WinGoals, _level),
         L.F("Wins {0}", Host.Settings.HockeyWins));
 
     double GoalTop => Host.Arena.Center.Y - Host.Arena.Height * GoalFraction / 2;
@@ -102,6 +121,12 @@ public sealed class HockeyGame : MiniGame
             _placed = true;
             _me = new Vec2(a.Left + HomeInset, a.Center.Y);
             _cpu = new Vec2(a.Right - HomeInset, a.Center.Y);
+            NewMatch();
+        }
+        if (LanOn != _wasLan)
+        {
+            _wasLan = LanOn; // a LAN match starts fresh, and so does the CPU match after it
+            _remoteSeen = false;
             NewMatch();
         }
         _me = ClampSide(_me, false);
@@ -142,10 +167,7 @@ public sealed class HockeyGame : MiniGame
             Host.Stats.Add("hockey.goals");
         }
         else _cpuGoals++;
-        Host.Fx.Burst(mouth, playerScored ? new[] { Blue, Gold, Colors.White } : new[] { Red, Colors.White }, 30, 480, 500, 6, 0.8);
-        Host.Fx.Popup(mouth + new Vec2(playerScored ? -90 : 90, -60), L.T("GOAL!"), playerScored ? Gold : Red, 38, 1.3,
-            playerScored ? L.T("you score") : L.T("CPU scores"));
-        Host.Sound.Play(playerScored ? "score" : "buzzer", playerScored ? 0.8 : 0.35);
+        GoalFx(playerScored, mouth);
 
         _puckVel = default;
         _serveSide = playerScored ? 1 : -1; // whoever conceded gets the puck
@@ -156,13 +178,22 @@ public sealed class HockeyGame : MiniGame
         Host.HudChanged();
     }
 
+    void GoalFx(bool playerScored, Vec2 mouth)
+    {
+        Host.Fx.Burst(mouth, playerScored ? new[] { Blue, Gold, Colors.White } : new[] { Red, Colors.White }, 30, 480, 500, 6, 0.8);
+        Host.Fx.Popup(mouth + new Vec2(playerScored ? -90 : 90, -60), L.T("GOAL!"), playerScored ? Gold : Red, 38, 1.3,
+            playerScored ? L.T("you score") : LanOn ? L.F("{0} scores", Rival) : L.T("CPU scores"));
+        Host.Sound.Play(playerScored ? "score" : "buzzer", playerScored ? 0.8 : 0.35);
+    }
+
     void MatchOver()
     {
         _matchOver = true;
         bool won = _myGoals > _cpuGoals;
         var a = Host.Arena;
         var at = new Vec2(a.Center.X, a.Top + a.Height * 0.3);
-        if (won)
+        if (LanOn) LanMatchOverFx(won, at);
+        else if (won)
         {
             Host.Settings.HockeyWins++;
             _level++;
@@ -180,6 +211,22 @@ public sealed class HockeyGame : MiniGame
         }
     }
 
+    void LanMatchOverFx(bool won, Vec2 at)
+    {
+        if (won)
+        {
+            Host.Stats.Add("hockey.lanwins");
+            Host.Fx.Popup(at, L.T("YOU WIN!"), Gold, 42, 2.6, L.F("{0}–{1} vs {2}", _myGoals, _cpuGoals, Rival));
+            Host.Fx.Burst(at, Confetti, 44, 540, 700, 7, 1.1);
+            Host.Sound.Play("best", 0.8);
+        }
+        else
+        {
+            Host.Fx.Popup(at, L.F("{0} WINS", Rival), Colors.White, 38, 2.4, L.F("{0}–{1} · grab your mallet for a rematch", _myGoals, _cpuGoals));
+            Host.Sound.Play("buzzer", 0.45);
+        }
+    }
+
     // ------------------------------------------------------------------ input
 
     public override void CollectHitShapes(List<HitShape> into) => into.Add(HitShape.Circle(_me, Reach));
@@ -187,7 +234,11 @@ public sealed class HockeyGame : MiniGame
     public override bool PointerDown(Vec2 p, bool right)
     {
         if ((p - _me).Length > Reach) return false;
-        if (_matchOver) NewMatch();
+        if (_matchOver)
+        {
+            if (IsGuest) Host.Lan.Send("r|"); // the host restarts the match
+            else NewMatch();
+        }
         _holding = true;
         _grabOffset = _me - p;
         return true;
@@ -217,6 +268,8 @@ public sealed class HockeyGame : MiniGame
     public override bool Update(double dt)
     {
         _time += dt;
+        if (IsGuest) return GuestUpdate(dt);
+        if (IsLanHost) ReadGuest();
         bool cpuSide = _puck.X > Host.Arena.Center.X;
         if (cpuSide != _puckOnCpuSide)
         {
@@ -229,13 +282,16 @@ public sealed class HockeyGame : MiniGame
             : _demo && !_matchOver ? MoveToward(_me, ClampSide(AiTarget(_me, false), false), CpuSpeed * dt)
             : _me;
         Vec2 cpuTarget = _matchOver || _serveIn > 0 ? new Vec2(Host.Arena.Right - HomeInset, Host.Arena.Center.Y) : AiTarget(_cpu, true);
-        Vec2 cpuTo = MoveToward(_cpu, ClampSide(cpuTarget, true), CpuSpeed * dt);
+        Vec2 cpuTo = IsLanHost
+            ? _remoteSeen ? ClampSide(FromNorm(_remoteN), true) : _cpu
+            : MoveToward(_cpu, ClampSide(cpuTarget, true), CpuSpeed * dt);
 
         if (dt > 0)
         {
             _meVel = (meTo - meFrom) / dt;
             if (_meVel.Length > 4000) _meVel *= 4000 / _meVel.Length;
             _cpuVel = (cpuTo - cpuFrom) / dt;
+            if (_cpuVel.Length > 4000) _cpuVel *= 4000 / _cpuVel.Length;
         }
 
         _acc += dt;
@@ -261,7 +317,8 @@ public sealed class HockeyGame : MiniGame
         UnstickPuck(dt);
         _puckAge += dt;
         Draw();
-        return busy;
+        if (IsLanHost) SendState(dt);
+        return busy || LanOn;
     }
 
     void SimStep(double h)
@@ -391,10 +448,99 @@ public sealed class HockeyGame : MiniGame
         bool cornered = _puck.Y < a.Top + MalletR * 1.4 || _puck.Y > a.Bottom - MalletR * 1.4 ||
                         _puck.X < a.Left + MalletR * 1.4 || _puck.X > a.Right - MalletR * 1.4;
         bool cpuSide = _puck.X > a.Center.X;
-        if (!cornered && !cpuSide) return;
+        if (!cornered && (!cpuSide || LanOn)) return; // a human rival can reach the puck on their side
         if ((_stuckT += dt) < 3) return;
         _stuckT = 0;
         _puckVel = (new Vec2(a.Center.X, a.Center.Y) - _puck).Normalized() * 420;
+    }
+
+    // ------------------------------------------------------------------ LAN
+
+    Vec2 ToNorm(Vec2 p)
+    {
+        var a = Host.Arena;
+        return new Vec2((p.X - a.Left) / a.Width, (p.Y - a.Top) / a.Height);
+    }
+
+    Vec2 FromNorm(Vec2 n)
+    {
+        var a = Host.Arena;
+        return new Vec2(a.Left + n.X * a.Width, a.Top + n.Y * a.Height);
+    }
+
+    static Vec2 Mirror(Vec2 n) => new(1 - n.X, n.Y);
+
+    static string F(double v) => v.ToString("0.#####", CultureInfo.InvariantCulture);
+
+    static double P(string s) => double.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out double v) ? v : 0;
+
+    /// <summary>Host: take the guest's mallet ("m|x|y") and rematch requests ("r|").</summary>
+    void ReadGuest()
+    {
+        while (Host.Lan.TryReceive(out var msg))
+        {
+            var f = msg.Split('|');
+            if (f[0] == "m" && f.Length >= 3)
+            {
+                _remoteN = new Vec2(P(f[1]), P(f[2]));
+                _remoteSeen = true;
+            }
+            else if (f[0] == "r" && _matchOver) NewMatch();
+        }
+    }
+
+    /// <summary>Host: "s|puckX|puckY|puckShown|malletX|malletY|hostGoals|guestGoals|over".</summary>
+    void SendState(double dt)
+    {
+        if ((_sendT += dt) < SendEvery) return;
+        _sendT = 0;
+        Vec2 puck = ToNorm(_puck), me = ToNorm(_me);
+        Host.Lan.Send($"s|{F(puck.X)}|{F(puck.Y)}|{(_puckSprite.IsVisible ? 1 : 0)}|{F(me.X)}|{F(me.Y)}|{_myGoals}|{_cpuGoals}|{(_matchOver ? 1 : 0)}");
+    }
+
+    /// <summary>Guest: move our mallet locally, send it, and draw the host's latest state mirrored.</summary>
+    bool GuestUpdate(double dt)
+    {
+        _me = _holding ? ClampSide(Host.Pointer + _grabOffset, false)
+            : _demo && !_matchOver ? MoveToward(_me, ClampSide(AiTarget(_me, false), false), CpuSpeed * dt)
+            : _me;
+        if ((_sendT += dt) >= SendEvery)
+        {
+            _sendT = 0;
+            Vec2 n = Mirror(ToNorm(_me));
+            Host.Lan.Send($"m|{F(n.X)}|{F(n.Y)}");
+        }
+
+        string? last = null;
+        while (Host.Lan.TryReceive(out var msg))
+            if (msg.StartsWith("s|", StringComparison.Ordinal)) last = msg;
+        if (last?.Split('|') is { Length: >= 9 } f)
+        {
+            Vec2 puck = FromNorm(Mirror(new Vec2(P(f[1]), P(f[2]))));
+            _puckVel = (puck - _puck) / Math.Max(dt, 1e-3); // only the demo AI reads it
+            _puck = puck;
+            _puckSprite.IsVisible = f[3] == "1";
+            _cpu = FromNorm(Mirror(new Vec2(P(f[4]), P(f[5]))));
+            int rival = (int)P(f[6]), mine = (int)P(f[7]);
+            bool over = f[8] == "1";
+            var a = Host.Arena;
+            if (mine > _myGoals) Host.Stats.Add("hockey.goals");
+            if (mine > _myGoals || rival > _cpuGoals)
+                GoalFx(mine > _myGoals, new Vec2(mine > _myGoals ? a.Right - 40 : a.Left + 40, Clamp(_puck.Y, GoalTop, GoalBottom)));
+            bool changed = mine != _myGoals || rival != _cpuGoals || over != _matchOver;
+            _myGoals = mine;
+            _cpuGoals = rival;
+            if (over && !_matchOver) LanMatchOverFx(mine > rival, new Vec2(a.Center.X, a.Top + a.Height * 0.3));
+            _matchOver = over;
+            if (changed)
+            {
+                UpdateScoreText();
+                Host.HudChanged();
+            }
+        }
+        _puckAge = 1;
+        Draw();
+        return true;
     }
 
     static Vec2 MoveToward(Vec2 from, Vec2 to, double maxStep)
@@ -435,7 +581,9 @@ public sealed class HockeyGame : MiniGame
         _cpuSprite.Set(_cpu);
     }
 
-    void UpdateScoreText() => _scoreText.Text = L.F("YOU  {0} : {1}  CPU", _myGoals, _cpuGoals);
+    void UpdateScoreText() => _scoreText.Text = LanOn
+        ? L.F("YOU  {0} : {1}  {2}", _myGoals, _cpuGoals, Rival.ToUpperInvariant())
+        : L.F("YOU  {0} : {1}  CPU", _myGoals, _cpuGoals);
 
     void PlayThrottled(string name, double vol, double pitch = 1)
     {

@@ -62,6 +62,13 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 > **Brick Breaker note:** while a ball is in play, a strip along the bottom of the screen takes the
 > mouse so the paddle can follow it. It goes away as soon as the ball is lost or you switch games.
 
+## Play with a co-worker
+
+**Play over LAN** in the tray menu: one of you picks **Host a game** and the other picks **Join a game**. No
+server or account is involved: the joiner finds the host on the local network (UDP port 47820). Air Hockey
+is the first two-player game: your co-worker's mallet replaces the CPU, and each of you plays from the left.
+Windows asks once whether to allow Desk Arcade on private networks; say yes on the hosting PC.
+
 ## Scoreboard, stats and achievements
 
 The scoreboard is a small pill showing the game icon, score and best. **Click it** to open the full
