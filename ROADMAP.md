@@ -36,6 +36,9 @@ can be different sizes. The guest's view is mirrored, so each player sees themse
   captures. *Verified: perft matches the published counts from the start (depth 3), Kiwipete (depth 3)
   and an en-passant endgame (depth 4); fool's mate, promotion and CPU tests; a full LAN demo game
   between two local copies; the pieces checked on screen.*
+- [ ] **Sea Battle (Battleship).** Each player places a fleet on a hidden 10×10 grid, then you take
+  turns firing at the other grid; hits, misses and sunk ships cross the link, never the fleet itself.
+  Against the CPU it hunts around its hits.
 - [ ] **Connect Four / Tic-tac-toe.** Cheap extras once the turn-based framework exists.
 - [ ] **Lobby.** Pick which host to join when several are on the network, show the other player's
   name, and add a chat-free set of emotes ("gg", "one more?").
