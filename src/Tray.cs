@@ -41,6 +41,10 @@ public sealed class Tray : IDisposable
             games.Add(Radio(L.T(g.Title), () => _w.SwitchGame(id), () => _w.Current?.Id == id));
         }
         menu.Add(new NativeMenuItem(L.T("Game")) { Menu = games });
+        var pets = new NativeMenu();
+        foreach (var (kind, name) in new[] { ("cat", L.T("Cat")), ("dog", L.T("Dog")), ("duck", L.T("Duck")) })
+            pets.Add(Radio(name, () => _w.SetPet(kind), () => _w.Settings.PetKind == kind));
+        menu.Add(new NativeMenuItem(L.T("Pet")) { Menu = pets });
         menu.Add(Item(L.T("Next game") + "   (" + Shortcuts.Label(HotkeyAction.NextGame) + ")", () => _w.NextGame()));
         menu.Add(Item(L.T("Bring to cursor") + "   (" + Shortcuts.Label(HotkeyAction.Summon) + ")", () => _w.SummonToCursor()));
         menu.Add(Item(L.T("Stats & achievements…"), () => _w.OpenStats()));

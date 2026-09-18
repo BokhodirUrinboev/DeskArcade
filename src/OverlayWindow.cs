@@ -709,6 +709,16 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public void PlayDaily() => SwitchGame(Daily.For(Daily.Today).GameId);
 
+    public void SetPet(string kind)
+    {
+        Settings.PetKind = kind;
+        SaveSettings();
+        foreach (var pet in _games.OfType<PetGame>()) pet.Rebuild();
+        _hud.SetGame(Current!.Id, Current.Title); // the scoreboard icon too
+        SwitchGame("pet");
+        _tray?.Refresh();
+    }
+
     /// <summary>Saves and registers new shortcuts; returns a line for the Shortcuts window to show.</summary>
     public string ApplyShortcuts(HotkeySet keys)
     {
