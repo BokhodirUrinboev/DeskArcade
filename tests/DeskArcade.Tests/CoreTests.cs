@@ -441,3 +441,41 @@ public class LineRulesTests
         Assert.Equal(g.Encode(), back.Encode());
     }
 }
+
+public class SeaBattleTests
+{
+    [Fact]
+    public void RandomFleetsHaveEveryShipInALineAndNoShipsTouch()
+    {
+        for (int seed = 0; seed < 50; seed++)
+        {
+            var fleet = DeskArcade.Games.SeaFleet.Random(new Random(seed));
+            Assert.Equal(DeskArcade.Games.SeaFleet.Sizes.OrderBy(s => s), fleet.Ships.Select(s => s.Length).OrderBy(s => s));
+            foreach (var ship in fleet.Ships)
+                Assert.True(ship.All(c => c / 10 == ship[0] / 10) || ship.All(c => c % 10 == ship[0] % 10));
+            for (int i = 0; i < fleet.Ships.Count; i++)
+                for (int j = i + 1; j < fleet.Ships.Count; j++)
+                    Assert.DoesNotContain(fleet.Ships[i], a => fleet.Ships[j].Any(b => Math.Abs(a / 10 - b / 10) <= 1 && Math.Abs(a % 10 - b % 10) <= 1));
+        }
+    }
+
+    [Fact]
+    public void SinkingEveryShipWinsAndTheCpuFinishesAWoundedShip()
+    {
+        var fleet = DeskArcade.Games.SeaFleet.Random(new Random(7));
+        var chart = new sbyte[100];
+        var last = default(DeskArcade.Games.ShotResult);
+        int shots = 0;
+        while (!fleet.AllSunk)
+        {
+            int sq = DeskArcade.Games.SeaChart.NextShot(chart, new Random(shots));
+            Assert.Equal(DeskArcade.Games.SeaChart.Unknown, chart[sq]); // never fires twice at a square
+            last = fleet.Shoot(sq);
+            DeskArcade.Games.SeaChart.Record(chart, sq, last);
+            shots++;
+        }
+        Assert.Equal(DeskArcade.Games.ShotKind.Win, last.Kind);
+        Assert.True(shots < 90, $"took {shots} shots");
+        Assert.Equal(fleet.Encode(), DeskArcade.Games.SeaFleet.Decode(fleet.Encode())!.Encode());
+    }
+}

@@ -158,6 +158,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new ChessGame(this));
         _games.Add(new ConnectFourGame(this));
         _games.Add(new TicTacToeGame(this));
+        _games.Add(new SeaBattleGame(this));
         _games.Add(new PetGame(this));
 
         _hud = new Hud(_games);
@@ -463,6 +464,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "chess" => L.T("click a piece, then the square it should move to"),
         "connect4" => L.T("click a column to drop a disc — four in a row wins"),
         "tictactoe" => L.T("click a square — three in a row wins"),
+        "seabattle" => L.T("click the enemy grid to start, then fire — a hit shoots again"),
         "clay" => L.T("click the trap machine, then shoot the clays at the top of their arc"),
         "slingshot" => L.T("drag back from the slingshot and let go — knock the tower down"),
         "pet" => L.T("click the pet to pet it — drag to carry and throw it"),
