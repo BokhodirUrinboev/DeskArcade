@@ -82,6 +82,11 @@ public sealed class Tray : IDisposable
             volume.Add(Radio($"{(int)(level * 100)}%", () => _w.SetVolume(level), () => Math.Abs(_w.Settings.Volume - level) < 0.126));
         menu.Add(new NativeMenuItem(L.T("Volume")) { Menu = volume });
 
+        var access = new NativeMenu();
+        access.Add(Check(L.T("Reduce motion"), () => Toggle(s => s.ReducedMotion = !s.ReducedMotion), () => _w.Settings.ReducedMotion));
+        access.Add(Check(L.T("Colour-blind friendly colours"), () => Toggle(s => s.ColorBlind = !s.ColorBlind), () => _w.Settings.ColorBlind));
+        menu.Add(new NativeMenuItem(L.T("Accessibility")) { Menu = access });
+
         var language = new NativeMenu();
         foreach (var (code, name) in L.Languages)
             language.Add(Radio(code == "auto" ? L.T(name) : name, () => _w.SetLanguage(code), () => _w.Settings.Language == code));

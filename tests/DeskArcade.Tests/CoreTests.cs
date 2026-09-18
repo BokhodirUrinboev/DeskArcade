@@ -621,3 +621,28 @@ public class DailyTests
         Assert.Equal(0, daily.Streak(day.AddDays(1))); // a missed day ends it
     }
 }
+
+public class AccessibilityTests
+{
+    [Fact]
+    public void ColourBlindModeSwapsGreensAndRedsOnly()
+    {
+        var green = Avalonia.Media.Color.FromRgb(61, 220, 132);
+        var red = Avalonia.Media.Color.FromRgb(255, 92, 108);
+        var gold = Avalonia.Media.Color.FromRgb(255, 209, 102);
+        Art.ColorBlind = false;
+        Assert.Equal(green, Art.Safe(green));
+        Art.ColorBlind = true;
+        try
+        {
+            Assert.Equal(Avalonia.Media.Color.FromRgb(86, 180, 233), Art.Safe(green));
+            Assert.Equal(Avalonia.Media.Color.FromRgb(213, 94, 0), Art.Safe(red));
+            Assert.Equal(gold, Art.Safe(gold));
+            Assert.Equal(Avalonia.Media.Colors.White, Art.Safe(Avalonia.Media.Colors.White));
+        }
+        finally
+        {
+            Art.ColorBlind = false;
+        }
+    }
+}

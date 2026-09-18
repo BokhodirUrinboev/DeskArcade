@@ -109,8 +109,9 @@ public sealed class ConnectFourGame : BoardGame
 
     protected override void DrawPiece(Canvas into, sbyte piece, Vec2 c, double cell)
     {
-        var color = piece > 0 ? Red : Yellow;
+        var color = piece > 0 ? Art.Safe(Red) : Yellow;
         into.Children.Add(Art.Circle(c.X, c.Y, cell * 0.38, Art.Brush(color), Art.Brush(Art.Blend(color, Colors.Black, 0.35)), 2));
         into.Children.Add(Art.Circle(c.X, c.Y, cell * 0.25, null, Art.Brush(Art.Blend(color, Colors.Black, 0.2)), 1.5));
+        if (Art.ColorBlind && piece < 0) into.Children.Add(Art.Circle(c.X, c.Y, cell * 0.1, Art.Brush("#3A2A00"))); // a shape cue too
     }
 }

@@ -135,6 +135,8 @@ public sealed class OverlayWindow : Window, IGameHost
         _platform = DesktopPlatform.Create();
         Sound = new Sound(_platform) { Enabled = Settings.Sound, Volume = Settings.Volume };
         Platforms.Enabled = Settings.Platforms;
+        Fx.ReducedMotion = Settings.ReducedMotion;
+        Engine.Art.ColorBlind = Settings.ColorBlind;
 
         _platformTimer.Tick += (_, _) => RefreshPlatforms();
         _blinkTimer.Tick += (_, _) => _hud?.Blink();
@@ -580,6 +582,13 @@ public sealed class OverlayWindow : Window, IGameHost
         Sound.Enabled = Settings.Sound;
         Sound.Volume = Settings.Volume;
         Platforms.Enabled = Settings.Platforms;
+        Fx.ReducedMotion = Settings.ReducedMotion;
+        if (Engine.Art.ColorBlind != Settings.ColorBlind)
+        {
+            Engine.Art.ColorBlind = Settings.ColorBlind;
+            Current?.Layout(); // redraw pieces in the new colours
+            _hud.SetClaude(_hud.Status, _claudeSince);
+        }
         RefreshPlatforms();
         SaveSettings();
         _tray?.Refresh();

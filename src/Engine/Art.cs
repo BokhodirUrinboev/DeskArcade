@@ -56,6 +56,25 @@ public class Sprite : Canvas
 
 public static class Art
 {
+    /// <summary>Colour-blind mode: <see cref="Safe"/> swaps greens for sky blue and reds for vermillion (Okabe–Ito).</summary>
+    public static bool ColorBlind { get; set; }
+
+    /// <summary>
+    /// A colour that stays distinct with red–green colour blindness when <see cref="ColorBlind"/> is on:
+    /// greens become sky blue, reds vermillion; everything else is unchanged.
+    /// </summary>
+    public static Color Safe(Color c)
+    {
+        if (!ColorBlind) return c;
+        double r = c.R / 255.0, g = c.G / 255.0, b = c.B / 255.0;
+        double max = Math.Max(r, Math.Max(g, b)), min = Math.Min(r, Math.Min(g, b)), d = max - min;
+        if (d < 0.25 || max < 0.25) return c; // greys and dark colours keep their look
+        double hue = max == r ? 60 * (((g - b) / d + 6) % 6) : max == g ? 60 * ((b - r) / d + 2) : 60 * ((r - g) / d + 4);
+        if (hue is >= 80 and <= 170) return Color.FromArgb(c.A, 86, 180, 233);      // green → sky blue
+        if (hue is < 15 or > 340) return Color.FromArgb(c.A, 213, 94, 0);           // red → vermillion
+        return c;
+    }
+
     public static IBrush Brush(byte a, byte r, byte g, byte b) => new ImmutableSolidColorBrush(Color.FromArgb(a, r, g, b));
     public static IBrush Brush(string hex) => new ImmutableSolidColorBrush(Color.Parse(hex));
     public static IBrush Brush(Color c) => new ImmutableSolidColorBrush(c);

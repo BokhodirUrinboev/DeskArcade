@@ -44,6 +44,8 @@ public sealed class Settings
     public int BestBubbles { get; set; }
     public int HockeyWins { get; set; }
     public bool FirstRun { get; set; } = true;
+    public bool ReducedMotion { get; set; }
+    public bool ColorBlind { get; set; }
     /// <summary>The desktop pet: "cat", "dog" or "duck".</summary>
     public string PetKind { get; set; } = "cat";
     /// <summary>A <see cref="DeskArcade.ShortcutModifiers"/> name and three letters, for show/hide, next game and bring to cursor.</summary>

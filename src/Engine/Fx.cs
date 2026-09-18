@@ -41,12 +41,16 @@ public sealed class Fx
 
     public Canvas Layer { get; } = new() { IsHitTestVisible = false };
 
+    /// <summary>Reduced motion: no particle bursts or trails, and popups appear in place without bouncing or drifting.</summary>
+    public static bool ReducedMotion { get; set; }
+
     /// <summary>Visible area; popups are kept inside it.</summary>
     public Rect Bounds { get; set; } = new(0, 0, 1920, 1080);
 
     public void Popup(Vec2 p, string text, Color color, double size = 30, double life = 1.2, string? sub = null)
     {
         var panel = new StackPanel { IsHitTestVisible = false };
+        color = Art.Safe(color);
         panel.Children.Add(Outlined(text, color, size));
         if (sub != null) panel.Children.Add(Outlined(sub, Colors.White, size * 0.45));
 
@@ -98,6 +102,8 @@ public sealed class Fx
 
     public void Spawn(Vec2 p, Vec2 v, Color c, double size, double life, double gravity)
     {
+        if (ReducedMotion) return;
+        c = Art.Safe(c);
         if (_parts.Count >= MaxParticles) return;
         Particle part;
         if (_pool.Count > 0)
@@ -140,10 +146,10 @@ public sealed class Fx
                 _pops.RemoveAt(i);
                 continue;
             }
-            double scale = 0.4 + 0.6 * EaseOutBack(Math.Min(1, pop.Age / 0.15));
+            double scale = ReducedMotion ? 1 : 0.4 + 0.6 * EaseOutBack(Math.Min(1, pop.Age / 0.15));
             pop.Sc.ScaleX = pop.Sc.ScaleY = scale;
             pop.Tr.X = pop.P.X;
-            pop.Tr.Y = pop.P.Y - 60 * EaseOut(k);
+            pop.Tr.Y = ReducedMotion ? pop.P.Y : pop.P.Y - 60 * EaseOut(k);
             pop.El.Opacity = k < 0.7 ? 1 : 1 - (k - 0.7) / 0.3;
         }
 
