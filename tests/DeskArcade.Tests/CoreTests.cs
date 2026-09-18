@@ -217,3 +217,81 @@ public class PlatformsTests
         Assert.Equal(-20, d.Y, 3);
     }
 }
+
+public class DraughtsTests
+{
+    static DeskArcade.Games.Draughts Empty(int turn = 1)
+    {
+        var d = DeskArcade.Games.Draughts.Decode(new string('.', 64) + (turn > 0 ? "|w|0" : "|b|0"))!;
+        return d;
+    }
+
+    [Fact]
+    public void OpeningHasSevenMovesAndTwelvePiecesEach()
+    {
+        var d = DeskArcade.Games.Draughts.New();
+        Assert.Equal(12, d.Count(1));
+        Assert.Equal(12, d.Count(-1));
+        Assert.Equal(7, d.LegalMoves().Count);
+    }
+
+    [Fact]
+    public void CaptureIsCompulsoryAndChains()
+    {
+        var d = Empty();
+        d.Board[7 * 8 + 0] = 1;   // white man at a1-ish corner (row 7, col 0)
+        d.Board[6 * 8 + 1] = -1;  // black man to jump
+        d.Board[4 * 8 + 3] = -1;  // and a second one after landing on row 5, col 2
+        d.Board[7 * 8 + 6] = 1;   // another white man with a quiet move available
+        var moves = d.LegalMoves();
+        var only = Assert.Single(moves);
+        Assert.Equal(new[] { 56, 42, 28 }, only);
+        var captured = d.Apply(only);
+        Assert.Equal(2, captured.Count);
+        Assert.Equal(0, d.Count(-1));
+        Assert.Equal(1, d.Winner); // black has nothing left to move
+    }
+
+    [Fact]
+    public void ManIsCrownedOnTheFarRow()
+    {
+        var d = Empty();
+        d.Board[1 * 8 + 2] = 1;
+        d.Apply(new[] { 10, 1 });
+        Assert.Equal(2, d.Board[1]);
+    }
+
+    [Fact]
+    public void KingsShufflingIsADraw()
+    {
+        var d = Empty();
+        d.Board[63 - 7] = 2;   // white king, row 7 col 0
+        d.Board[1] = -2;       // black king, row 0 col 1
+        for (int i = 0; i < DeskArcade.Games.Draughts.DrawPlies; i++)
+        {
+            Assert.False(d.IsDraw);
+            d.Apply(d.LegalMoves()[0]); // the two kings wander without ever meeting
+        }
+        Assert.True(d.IsDraw);
+        Assert.Equal(d.Quiet, DeskArcade.Games.Draughts.Decode(d.Encode())!.Quiet);
+    }
+
+    [Fact]
+    public void EncodeRoundTrips()
+    {
+        var d = DeskArcade.Games.Draughts.New();
+        d.Apply(d.LegalMoves()[0]);
+        var back = DeskArcade.Games.Draughts.Decode(d.Encode())!;
+        Assert.Equal(d.Encode(), back.Encode());
+        Assert.Equal(-1, back.Turn);
+        Assert.Equal(1, back.Ply);
+    }
+
+    [Fact]
+    public void ComputerPlaysALegalMove()
+    {
+        var d = DeskArcade.Games.Draughts.New();
+        var m = d.BestMove(new Random(1));
+        Assert.True(d.IsLegal(m));
+    }
+}

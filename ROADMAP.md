@@ -22,8 +22,13 @@ can be different sizes. The guest's view is mirrored, so each player sees themse
   host's simulation and counted in the guest's stats. Not yet tried between two real PCs or by two people.*
 - [ ] **Hoops H-O-R-S-E.** Turn-based: you take a shot, then your co-worker has to make the same shot. Only
   shot results and turns cross the network, so lag doesn't matter.
-- [ ] **Checkers (draughts).** A new board game, with the board drawn on the desktop and moves sent
-  over the link. Turn-based, forced captures, and a piece becomes a king on the far row.
+- [x] **Checkers (draughts).** A new game, against the CPU or over the LAN. English rules: forced
+  captures, multi-jumps, a man crowned on the far row, and a draw after 40 moves each with no capture
+  and no man moving. The rules live in `Draughts.cs`, free of UI, and the CPU searches 4 plies ahead.
+  The host keeps the real board and sends it every 0.4 s; the guest re-sends its move until the host's
+  board includes it, so a lost packet can't put the boards out of step. *Verified: 6 rule tests; a full
+  LAN demo game between two local copies ended in a win on the guest's side; a demo game against the
+  CPU. Not yet played by two people.*
 - [ ] **Chess.** Uses the same board and turn system as Checkers, with full legal-move checking
   (castling, en passant, promotion, check and mate).
 - [ ] **Connect Four / Tic-tac-toe.** Cheap extras once the turn-based framework exists.
