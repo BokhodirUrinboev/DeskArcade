@@ -195,6 +195,9 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new ConnectFourGame(this));
         _games.Add(new TicTacToeGame(this));
         _games.Add(new SeaBattleGame(this));
+        var durak = new DurakGame(this);
+        durak.SetupRequested += () => DurakRoomWindow.ShowFor(this, durak);
+        _games.Add(durak);
         _games.Add(new PetGame(this));
 
         _hud = new Hud(_games);
@@ -523,6 +526,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "connect4" => L.T("click a column to drop a disc — four in a row wins"),
         "tictactoe" => L.T("click a square — three in a row wins"),
         "seabattle" => L.T("click the enemy grid to start, then fire — a hit shoots again"),
+        "durak" => L.T("play the computer, or set up a room for up to four co-workers"),
         "clay" => L.T("click the trap machine, then shoot the clays at the top of their arc"),
         "slingshot" => L.T("drag back from the slingshot and let go — knock the tower down"),
         "pet" => L.T("click the pet to pet it — drag to carry and throw it"),
@@ -704,7 +708,35 @@ public sealed class OverlayWindow : Window, IGameHost
             case "lan-find": OpenLobby(); break;
             case "shortcuts": OpenShortcuts(); break;
             case "quit": Quit(); break;
+            case "durak-rooms": OpenDurakRooms(); break;
+            default: DurakSignal(msg); break;
         }
+    }
+
+    /// <summary>
+    /// Scriptable Durak rooms, for tests and shortcuts: "durak-solo:N" (N computer players),
+    /// "durak-host[:code]", "durak-join:code" and "durak-start:N" (N seats in all).
+    /// </summary>
+    void DurakSignal(string msg)
+    {
+        if (_games.OfType<DurakGame>().FirstOrDefault() is not { } durak) return;
+        int colon = msg.IndexOf(':');
+        string verb = colon < 0 ? msg : msg[..colon], arg = colon < 0 ? "" : msg[(colon + 1)..];
+        int.TryParse(arg, out int n);
+        switch (verb)
+        {
+            case "durak-solo": durak.StartSolo(Math.Clamp(n, 1, 3)); break;
+            case "durak-host":
+                durak.HostRoom();
+                if (arg.Length > 0) durak.Room.Host(Net.RoomLink.CleanCode(arg));
+                break;
+            case "durak-join": durak.JoinRoom(arg, null); break;
+            case "durak-start": durak.StartRoom(Math.Clamp(n, 2, Net.RoomLink.MaxSeats)); break;
+            case "durak-leave": durak.LeaveRoom(); break;
+            default: return;
+        }
+        SetOverlayVisible(true);
+        SwitchGame(durak.Id);
     }
 
     // ------------------------------------------------------------------ LAN multiplayer
@@ -721,6 +753,11 @@ public sealed class OverlayWindow : Window, IGameHost
     public void JoinLan(System.Net.IPEndPoint? address = null) => Lan.Join(address);
 
     public void OpenLobby() => LobbyWindow.ShowFor(this);
+
+    public void OpenDurakRooms()
+    {
+        if (_games.OfType<DurakGame>().FirstOrDefault() is { } durak) DurakRoomWindow.ShowFor(this, durak);
+    }
 
     public void OpenShortcuts() => ShortcutsWindow.ShowFor(this);
 

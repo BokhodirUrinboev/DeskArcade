@@ -11,7 +11,7 @@ namespace DeskArcade.Games;
 /// is the side. Covers castling, en passant, promotion (always to a queen), check, mate, stalemate, the
 /// 50-move rule and bare-minor-piece draws. Threefold repetition is not tracked.
 /// </summary>
-public sealed class ChessRules : IBoardRules
+public sealed class ChessRules : IBoardRules, ILeveledRules
 {
     public const int Pawn = 1, Knight = 2, Bishop = 3, Rook = 4, Queen = 5, King = 6;
     const int WhiteShort = 1, WhiteLong = 2, BlackShort = 4, BlackLong = 8;

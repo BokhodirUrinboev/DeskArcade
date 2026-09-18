@@ -53,6 +53,7 @@ public static class Achievements
 
         new("pet-friend", "pet", "Best friends", "Pet your desktop pet 50 times", "pet.pets", 50),
         new("pet-taxi", "pet", "Taxi", "Carry your pet 10 times", "pet.carries", 10),
+        new("pet-tricks", "pet", "Show-off", "Watch your pet do 25 tricks", "pet.tricks", 25),
 
         new("tower-15", "tower", "Skyscraper", "Build a tower 15 blocks high", "tower.height", 15),
         new("tower-perfect", "tower", "Perfectionist", "Make 10 perfect drops", "tower.perfect", 10),
@@ -74,6 +75,8 @@ public static class Achievements
         new("connect4-win", "connect4", "Four in a row", "Win a game of Connect Four", "connect4.wins", 1),
         new("tictactoe-win", "tictactoe", "Three in a row", "Win a game of Tic-tac-toe", "tictactoe.wins", 1),
         new("seabattle-win", "seabattle", "Admiral", "Win a game of Sea Battle", "seabattle.wins", 1),
+        new("durak-win", "durak", "Not the fool", "Get rid of your cards before someone else in Durak", "durak.wins", 1),
+        new("durak-ten", "durak", "Card shark", "Escape being the durak 10 times", "durak.wins", 10),
         new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),
         new("daily-first", "general", "Daily player", "Finish a daily challenge", "daily.done", 1),
         new("daily-week", "general", "Seven in a row", "Finish the daily challenge 7 days in a row", "daily.streak", 7),

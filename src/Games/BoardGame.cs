@@ -34,6 +34,12 @@ public interface IBoardRules
     string Encode();
 }
 
+/// <summary>Rules whose computer player can look further ahead or less far, for the CPU levels.</summary>
+public interface ILeveledRules
+{
+    int[] BestMove(Random rng, int depth);
+}
+
 /// <summary>
 /// A board floating over the desktop, played against the computer or a co-worker over the LAN. Click a
 /// piece, then the square it should land on (or, in placement games, just the square); right-drag moves
@@ -45,6 +51,9 @@ public interface IBoardRules
 public abstract class BoardGame : MiniGame
 {
     const double CpuDelay = 0.6, SyncEvery = 0.4;
+    /// <summary>How often the CPU plays a random move instead of its best one, per level (Easy … Expert).</summary>
+    static readonly double[] Blunders = { 0.45, 0.2, 0.05, 0 };
+    public static readonly string[] LevelNames = { "Easy", "Medium", "Hard", "Expert" };
 
     protected static readonly Color Gold = Color.FromRgb(255, 209, 102);
 
@@ -59,6 +68,7 @@ public abstract class BoardGame : MiniGame
     int _selected = -1, _gameNo, _lastFrom = -1, _lastTo = -1, _myWins, _theirWins;
     readonly List<int> _via = new(); // landings clicked so far, when several capture routes start alike
     int[]? _pending; // guest: our move, re-sent until the host's board contains it
+    int _lossStreak;
     bool _placed, _dragging, _over, _demo, _wasLan;
 
     protected BoardGame(IGameHost host, Color light, Color dark) : base(host)
@@ -100,6 +110,33 @@ public abstract class BoardGame : MiniGame
     protected virtual string Score => $"{_game.Count(Me)}–{_game.Count(-Me)}";
     protected string SessionScore => $"{_myWins}–{_theirWins}";
     protected virtual string YourMove => L.T("Your move · click a piece, then where it goes · right-drag moves the board");
+    /// <summary>
+    /// How far the CPU looks ahead at each level (Easy, Medium, Hard, Expert), for games that have levels;
+    /// null keeps the game's own fixed strength. Easy starts every new player off gently.
+    /// </summary>
+    protected virtual int[]? LevelDepths => null;
+
+    /// <summary>The CPU level, 1 (Easy) to 4 (Expert); it goes up when you win and down when you keep losing.</summary>
+    public int Level
+    {
+        get => Math.Clamp(Host.Settings.BoardLevels.TryGetValue(Id, out int l) ? l : 1, 1, LevelNames.Length);
+        set
+        {
+            Host.Settings.BoardLevels[Id] = Math.Clamp(value, 1, LevelNames.Length);
+            Host.SaveSettings();
+            Host.HudChanged();
+        }
+    }
+
+    public bool HasLevels => LevelDepths != null;
+
+    int[] CpuMove()
+    {
+        if (LevelDepths is not { } depths || _game is not ILeveledRules rules) return _game.BestMove(Rng);
+        var moves = _game.LegalMoves();
+        if (Rng.NextDouble() < Blunders[Level - 1]) return moves[Rng.Next(moves.Count)];
+        return rules.BestMove(Rng, depths[Level - 1]);
+    }
 
     protected double Cell { get; private set; }
     protected IBoardRules Game => _game;
@@ -114,7 +151,8 @@ public abstract class BoardGame : MiniGame
         _over ? L.T("Game over · click the board for a rematch")
             : MyTurn ? YourMove
             : L.F("{0} is thinking…", Rival),
-        L.F("Wins {0}", Host.Stats.Get(Id + ".wins")));
+        HasLevels && !LanOn ? L.F("Wins {0} · CPU {1}", Host.Stats.Get(Id + ".wins"), L.T(LevelNames[Level - 1]))
+            : L.F("Wins {0}", Host.Stats.Get(Id + ".wins")));
 
     // ------------------------------------------------------------------ layout
 
@@ -324,14 +362,31 @@ public abstract class BoardGame : MiniGame
                 Host.Stats.Add(Id + ".lanwins");
                 Host.Stats.Add("lan.wins");
             }
-            Host.Fx.Popup(at, L.T("YOU WIN!"), Gold, 42, 2.6, L.F("vs {0}", Rival));
+            string sub = L.F("vs {0}", Rival);
+            if (HasLevels && !LanOn)
+            {
+                _lossStreak = 0;
+                if (Level < LevelNames.Length)
+                {
+                    Level++;
+                    sub = L.F("the CPU moves up to {0}", L.T(LevelNames[Level - 1]));
+                }
+            }
+            Host.Fx.Popup(at, L.T("YOU WIN!"), Gold, 42, 2.6, sub);
             Host.Fx.Burst(at, new[] { Gold, Colors.White, Color.FromRgb(214, 64, 69) }, 44, 540, 700, 7, 1.1);
             Host.Sound.Play("best", 0.8);
         }
         else
         {
             _theirWins++;
-            Host.Fx.Popup(at, L.F("{0} WINS", Rival), Colors.White, 38, 2.4, L.T("click the board for a rematch"));
+            string sub = L.T("click the board for a rematch");
+            if (HasLevels && !LanOn && ++_lossStreak >= 2 && Level > 1)
+            {
+                _lossStreak = 0;
+                Level--;
+                sub = L.F("the CPU goes easier: {0} · click the board for a rematch", L.T(LevelNames[Level - 1]));
+            }
+            Host.Fx.Popup(at, L.F("{0} WINS", Rival), Colors.White, 38, 2.4, sub);
             Host.Sound.Play("buzzer", 0.45);
         }
     }
@@ -347,7 +402,7 @@ public abstract class BoardGame : MiniGame
         else if (_cpuIn > 0 && (_cpuIn -= dt) <= 0)
         {
             _cpuIn = -1;
-            if (!_over && _game.Turn != Me) PlayAny(_game.BestMove(Rng));
+            if (!_over && _game.Turn != Me) PlayAny(CpuMove());
         }
         if (_demo && MyTurn && _pending == null && _cpuIn < 0) Play(_game.BestMove(Rng));
         return _dragging || _cpuIn > 0 || LanOn;

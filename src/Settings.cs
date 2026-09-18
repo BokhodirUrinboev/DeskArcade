@@ -48,6 +48,8 @@ public sealed class Settings
     public bool ColorBlind { get; set; }
     /// <summary>Colours for mallets, paddles and balls: a theme id from <see cref="Engine.Themes"/>, or "seasonal".</summary>
     public string Theme { get; set; } = "classic";
+    /// <summary>CPU level per board game id (1 Easy … 4 Expert); a game not listed starts at Easy.</summary>
+    public System.Collections.Generic.Dictionary<string, int> BoardLevels { get; set; } = new();
     /// <summary>Remind the player to take a break after this many minutes of play; 0 turns it off.</summary>
     public int BreakMinutes { get; set; }
     /// <summary>When Claude finishes while you were playing, say "back to work" instead of "your turn".</summary>

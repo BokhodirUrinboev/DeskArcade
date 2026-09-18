@@ -21,7 +21,7 @@ namespace DeskArcade.Games;
 /// </list>
 /// A side with no legal move loses. Fifteen moves each with no capture and no man moving is a draw.
 /// </summary>
-public sealed class Draughts : IBoardRules
+public sealed class Draughts : IBoardRules, ILeveledRules
 {
     /// <summary>0 empty, ±1 man, ±2 king; the sign is the side.</summary>
     public sbyte[] Board { get; } = new sbyte[64];

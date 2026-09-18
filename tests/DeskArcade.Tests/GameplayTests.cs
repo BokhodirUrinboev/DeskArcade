@@ -397,3 +397,196 @@ public class OfficeBoardTests
         Assert.Equal(new[] { ("a", "alice", 9L), ("b", "bob", 5L), ("c", "carol", 5L) }, OfficeBoard.Rank(entries, "streak"));
     }
 }
+
+public class DurakRulesTests
+{
+    static int C(int suit, int rank) => DurakRules.Card(suit, rank);
+
+    /// <summary>Plays computer turns for every seat until the game ends; returns the number of actions.</summary>
+    static int PlayOut(DurakRules g, int maxActions = 5000)
+    {
+        int actions = 0;
+        while (!g.Over && actions < maxActions)
+        {
+            bool acted = false;
+            // the defender answers first, then attackers in seat order, like a real table
+            foreach (int seat in new[] { g.Defender }.Concat(Enumerable.Range(0, g.Players)))
+            {
+                if (g.CpuAction(seat) is not { } a) continue;
+                Assert.True(g.Act(seat, a.Kind, a.Card, a.Index), $"CPU action {a.Kind} by seat {seat} was refused");
+                acted = true;
+                actions++;
+                break;
+            }
+            Assert.True(acted, "nobody could act but the game isn't over");
+            int cards = g.Hands.Sum(h => h.Count) + g.Deck.Count + g.Table.Sum(p => p.Beaten ? 2 : 1) + g.Discarded;
+            Assert.Equal(DurakRules.DeckSize, cards);
+        }
+        return actions;
+    }
+
+    [Theory]
+    [InlineData(2)]
+    [InlineData(3)]
+    [InlineData(4)]
+    [InlineData(6)]
+    public void ComputerPlayersFinishAGameWithEveryCardAccountedFor(int players)
+    {
+        for (int seed = 0; seed < 25; seed++)
+        {
+            var g = new DurakRules(players, new Random(seed));
+            Assert.All(g.Hands, h => Assert.Equal(DurakRules.HandSize, h.Count));
+            Assert.Equal(DurakRules.DeckSize - players * DurakRules.HandSize, g.Deck.Count);
+            PlayOut(g);
+            Assert.True(g.Over, $"seed {seed} didn't finish");
+            Assert.True(g.Durak == -1 || g.Hands[g.Durak].Count > 0);
+        }
+    }
+
+    [Fact]
+    public void TheLowestTrumpLeadsAndTheNextPlayerDefends()
+    {
+        var g = new DurakRules(4, new Random(7));
+        int lowest = Enumerable.Range(0, 4)
+            .SelectMany(p => g.Hands[p].Where(c => DurakRules.Suit(c) == g.TrumpSuit).Select(c => (p, r: DurakRules.Rank(c))))
+            .OrderBy(t => t.r).Select(t => t.p).DefaultIfEmpty(0).First();
+        Assert.Equal(lowest, g.Attacker);
+        Assert.Equal((lowest + 1) % 4, g.Defender);
+        Assert.Equal(5, g.Limit); // the first bout takes at most five cards
+    }
+
+    [Fact]
+    public void CardsBeatByHigherSameSuitOrByTrump()
+    {
+        var g = new DurakRules(2, new Random(1));
+        int t = g.TrumpSuit, plain = (t + 1) % 4;
+        Assert.True(g.Beats(C(plain, 10), C(plain, 7)));
+        Assert.False(g.Beats(C(plain, 7), C(plain, 10)));
+        Assert.True(g.Beats(C(t, 6), C(plain, 14)));      // any trump beats a plain card
+        Assert.False(g.Beats(C(plain, 14), C(t, 6)));     // no plain card beats a trump
+        Assert.True(g.Beats(C(t, 9), C(t, 7)));
+        Assert.False(g.Beats(C((t + 2) % 4, 14), C(plain, 6))); // another plain suit never beats
+    }
+
+    [Fact]
+    public void OnlyRanksOnTheTableMayBeThrownInAndOnlyTheAttackerLeads()
+    {
+        var g = new DurakRules(3, new Random(3));
+        int a = g.Attacker, d = g.Defender, other = 3 - a - d;
+        Assert.DoesNotContain(g.Hands[other], c => g.CanAttack(other, c)); // nobody but the attacker opens
+        Assert.DoesNotContain(g.Hands[d], c => g.CanAttack(d, c));         // the defender never attacks
+        int lead = g.Hands[a][0];
+        Assert.True(g.Attack(a, lead));
+        foreach (int c in g.Hands[other])
+            Assert.Equal(DurakRules.Rank(c) == DurakRules.Rank(lead), g.CanAttack(other, c));
+    }
+
+    [Fact]
+    public void TakingGivesTheDefenderTheTableAndSkipsTheirAttack()
+    {
+        var g = new DurakRules(3, new Random(5));
+        int a = g.Attacker, d = g.Defender;
+        int before = g.Hands[d].Count;
+        Assert.True(g.Attack(a, g.Hands[a][0]));
+        Assert.True(g.Take(d));
+        foreach (int s in Enumerable.Range(0, 3).Where(s => s != d)) g.Pass(s);
+        Assert.True(g.Hands[d].Count >= before + 1);
+        Assert.Empty(g.Table);
+        Assert.Equal((d + 1) % 3, g.Attacker); // the defender who took doesn't attack next
+    }
+
+    [Fact]
+    public void ABeatenBoutGoesToTheDiscardsAndTheDefenderAttacksNext()
+    {
+        for (int seed = 0; seed < 200; seed++)
+        {
+            var g = new DurakRules(2, new Random(seed));
+            int a = g.Attacker, d = g.Defender;
+            int lead = g.Hands[a].OrderBy(DurakRules.Rank).First(c => DurakRules.Suit(c) != g.TrumpSuit || true);
+            g.Attack(a, lead);
+            int answer = g.Hands[d].FirstOrDefault(c => g.Beats(c, lead), -1);
+            if (answer < 0) continue;
+            Assert.True(g.Defend(d, 0, answer));
+            Assert.True(g.Pass(a));
+            Assert.Equal(2, g.Discarded);
+            Assert.Equal(d, g.Attacker);
+            Assert.All(g.Hands, h => Assert.Equal(DurakRules.HandSize, h.Count)); // both drew back up to six
+            return;
+        }
+        Assert.Fail("no seed let the defender beat the first card");
+    }
+}
+
+[Collection("room")]
+public class RoomLinkTests
+{
+    static bool WaitFor(Func<bool> condition, int ms = 6000)
+    {
+        var until = DateTime.UtcNow.AddMilliseconds(ms);
+        while (DateTime.UtcNow < until)
+        {
+            if (condition()) return true;
+            System.Threading.Thread.Sleep(20);
+        }
+        return condition();
+    }
+
+    [Fact]
+    public async System.Threading.Tasks.Task ThreeGuestsJoinByCodeAFourthIsTurnedAwayAndMessagesFlowBothWays()
+    {
+        using var host = new RoomLink { MyName = "host" };
+        host.Host("TEST");
+        Assert.Equal(RoomState.Hosting, host.State);
+
+        var found = await RoomLink.FindRooms(TimeSpan.FromSeconds(0.8));
+        var room = Assert.Single(found, r => r.Code == "TEST");
+        Assert.True(room.Open);
+        Assert.Equal(1, room.Players);
+
+        var guests = Enumerable.Range(1, 3).Select(i => new RoomLink { MyName = $"guest{i}" }).ToList();
+        try
+        {
+            foreach (var g in guests)
+            {
+                g.Join("test"); // codes are case-insensitive
+                Assert.True(WaitFor(() => g.State == RoomState.Joined), $"{g.MyName} never joined: {g.State} {g.Refusal}; host seats {string.Join(",", host.Seats().Select(s => s.Seat + ":" + s.Name))}");
+            }
+            Assert.Equal(new[] { 0, 1, 2, 3 }, host.Seats().Select(s => s.Seat));
+            Assert.True(WaitFor(() => guests[0].Seats().Count == 4), "the roster didn't reach the guests");
+            Assert.Equal("guest3", guests[0].Seats()[3].Name);
+
+            using var extra = new RoomLink { MyName = "late" };
+            extra.Join("TEST");
+            Assert.True(WaitFor(() => extra.State == RoomState.Lost));
+            Assert.Equal("full", extra.Refusal);
+
+            guests[1].SendToHost("da|1|attack|5|-1");
+            (int Seat, string Body) got = default;
+            Assert.True(WaitFor(() => host.TryReceive(out got)));
+            Assert.Equal((2, "da|1|attack|5|-1"), got);
+
+            host.SendTo(3, "ds|{\"x\":1}|more");
+            Assert.True(WaitFor(() => guests[2].TryReceive(out got)));
+            Assert.Equal((0, "ds|{\"x\":1}|more"), got);
+            Assert.False(guests[0].TryReceive(out _)); // only the addressed guest gets it
+
+            guests[0].Stop();
+            Assert.True(WaitFor(() => host.Seats().All(s => s.Seat != 1)), "the host didn't notice the guest leave");
+        }
+        finally
+        {
+            foreach (var g in guests) g.Dispose();
+        }
+    }
+
+    [Fact]
+    public void AWrongCodeFindsNoRoom()
+    {
+        using var host = new RoomLink();
+        host.Host("ABCD");
+        using var guest = new RoomLink();
+        guest.Join("ZZZZ");
+        Assert.True(WaitFor(() => guest.State == RoomState.Lost, 12000));
+        Assert.Equal("notfound", guest.Refusal);
+    }
+}

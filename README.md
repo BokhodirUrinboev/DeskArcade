@@ -39,7 +39,7 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 - **Window tops are platforms.** Balls, bugs, pets and towers sit on the top edges of your windows and
   ride along when you drag one. You can turn this off in the tray menu.
 - **Idle means idle.** When nothing is moving, rendering stops and CPU use drops to almost zero.
-- **21 games, 53 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
+- **22 games, 56 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
 - **Play with the person at the next desk** over the local network: Air Hockey (best of 3), Pong,
   H-O-R-S-E, Mini Golf and Archery duels, board games, Sea Battle and score races. You see what the other
   player does: their ball, arrow or puck, and a marker wherever they pop, whack or stack.
@@ -66,12 +66,13 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 | 🎲 **Plinko** | Click the strip at the top of the board to drop a disc through the pegs. Slots score 10 to 250, and the gold middle slot is the jackpot. Ten discs a round. Right-drag the board's header to move it. |
 | 🗼 **Tower Stack** | Click the sliding block to drop it on the tower. The overhang is cut off, so the tower narrows; a perfect drop keeps the full width, and three in a row widen it. Miss completely and the game ends. |
 | 🪨 **Slingshot** | Pull the stone back and let go to knock a tower of blocks off a window top. 3 stones a tower, 10 points a block, 50 for each spare stone. Clear the tower for a bigger one. |
-| ♟️ **Checkers** | Russian rules (shashki). Click one of your pieces, then the square it should move to (for a multi-jump, the last square; if several routes end there, click each landing in turn). Men move forward but capture backward too; kings fly any distance along a diagonal. Capturing is compulsory, but you choose which capture. A man that reaches the far row in the middle of a capture is crowned and carries on capturing as a king. Play the CPU, or a co-worker over the LAN. Right-drag the board to move it. |
-| ♞ **Chess** | Click a piece, then its square. Full rules: castling, en passant, check, mate, stalemate and the 50-move rule; pawns always promote to a queen. Play the CPU or a co-worker over the LAN. Right-drag the board to move it. |
+| ♟️ **Checkers** | Russian rules (shashki). Click one of your pieces, then the square it should move to (for a multi-jump, the last square; if several routes end there, click each landing in turn). Men move forward but capture backward too; kings fly any distance along a diagonal. Capturing is compulsory, but you choose which capture. A man that reaches the far row in the middle of a capture is crowned and carries on capturing as a king. Play the CPU (it starts on Easy and gets stronger as you win; **tray → CPU difficulty** sets it), or a co-worker over the LAN. Right-drag the board to move it. |
+| ♞ **Chess** | Click a piece, then its square. Full rules: castling, en passant, check, mate, stalemate and the 50-move rule; pawns always promote to a queen. Play the CPU (Easy, Medium, Hard or Expert: it starts on Easy, moves up a level each time you win and back down if you lose twice running) or a co-worker over the LAN. Right-drag the board to move it. |
 | 🔴 **Connect Four** | Click a column to drop a disc; four in a row (across, down or diagonal) wins. Play the CPU or a co-worker. |
 | ❌ **Tic-tac-toe** | Click a square; three in a row wins. The CPU is good but slips now and then. |
 | 🚢 **Sea Battle** | Your fleet is on the left, the enemy's waters on the right. Click your grid to shuffle your ships, the enemy grid to start, then fire. A hit shoots again; sink all five ships to win. Against the CPU or a co-worker. |
-| 🐱 **Desktop Pet** | Not a game: a cat (or a dog, duck, bunny, penguin or fox: **tray → Pet**) that walks along your taskbar and window tops, follows the cursor, jumps between windows and sleeps when left alone. Click to pet it, drag to carry and throw it. |
+| 🃏 **Durak** | The Russian card game (podkidnoy), for 2–4 players: against 1–3 computer players, or co-workers in a room you create (see below). Click a card to attack, throw in or beat a card (click a table card first to pick which one); **Take** gives up the bout, **Done** ends your throwing in. The last player holding cards is the durak. |
+| 🐱 **Desktop Pet** | Not a game: a cat (or a dog, duck, bunny, penguin or fox: **tray → Pet**) that walks along your taskbar and window tops, follows the cursor, jumps between windows and sleeps when left alone. Click to pet it, drag to carry and throw it, **right-click for its trick**. Each animal has its own voice (meow, bark, quack, squeak, honk, yip) and trick: the cat stretches, the dog chases its tail, the duck flaps, the bunny does a twisting hop, the penguin belly-slides and the fox pounces. |
 
 > **Brick Breaker note:** while a ball is in play, a strip along the bottom of the screen takes the
 > mouse so the paddle can follow it. It goes away as soon as the ball is lost or you switch games.
@@ -95,6 +96,12 @@ joins straight into it and follows whenever the host switches.
 | Sea Battle | Each fleet stays on its own PC; only shots and hits cross the network |
 | Bubble Pop, Whack-a-Bug, Tower Stack | Race: start a round and theirs starts too. You see their live score, a red ring wherever they pop, whack or stack, and who won |
 
+**Durak rooms** are separate from the two-player link, for up to four people: **tray → Play over LAN → Durak
+with co-workers…** (or the button on the Durak table). One player clicks **Create a room** and reads out the
+four-letter code; the others pick the room from the list or type the code (plus the host's IP address if
+the network blocks broadcasts). The host chooses 2, 3 or 4 seats and starts; computer players fill the empty
+seats and take over for anyone who drops out. Several rooms can run on one network. Rooms use UDP port 47822.
+
 **Send** in the same menu pops a quick emote ("gg", "One more?"…) up on the other screen. Windows asks
 once whether to allow Desk Arcade on private networks; say yes on both PCs.
 
@@ -107,7 +114,7 @@ board with a tab for every game; it shrinks back shortly after the mouse leaves.
 with your progress; click it to jump to the game. Finish it on consecutive days to build a streak.
 
 **Stats & achievements** in the tray menu (or `DeskArcade --signal stats`) opens a window with time
-played and best score per game, and all 53 achievements with their progress. Stats live in
+played and best score per game, and all 56 achievements with their progress. Stats live in
 `stats.json` next to your settings and can be reset from the tray.
 
 **Office leaderboard:** **tray → Office leaderboard** shows today's best hoops streak, baskets, Air Hockey
@@ -125,7 +132,7 @@ broadcasts your user name and today's scores on UDP port 47821 every 20 seconds,
 | Click the scoreboard | Open the game tabs |
 | Drag the scoreboard | Move it |
 | Tray icon, left-click | Show or hide |
-| Tray icon menu | Game, pet, theme, break reminder, office leaderboard, volume, language, Claude Code options, updates, stats, monitor, reset, exit |
+| Tray icon menu | Game, pet, CPU difficulty, theme, break reminder, office leaderboard, volume, language, Claude Code options, updates, stats, monitor, reset, exit |
 
 On macOS the shortcuts are **Control+Option+G/N/B**. **Tray → Shortcuts…** changes the modifier keys and the
 letters (Windows applies them at once; Linux and macOS from the next start).
@@ -145,6 +152,7 @@ Every action is also available from the command line, which is useful for custom
 ```
 DeskArcade --signal toggle|next|summon|show|hide|expand|stats|shortcuts|quit
 DeskArcade --signal lan-host|lan-join|lan-find|lan-leave
+DeskArcade --signal durak-rooms|durak-solo:2|durak-host:abcd|durak-join:abcd|durak-start:4|durak-leave
 ```
 
 ## Language
@@ -286,8 +294,8 @@ Releases are built and published by GitHub Actions when a `vX.Y.Z` tag is pushed
 | Path | Contents |
 |---|---|
 | `src/Engine` | Lightweight game engine: `Vec2`, ball physics, window-top platforms, sprites, effects, themes, the rival's ghost ball, `MiniGame` |
-| `src/Games` | One class per game; `BoardGame` is shared by the grid games. Rules and physics without UI (`Draughts`, `ChessRules`, `LineRules`, `SeaBattle`, `HockeyTable`, `PongTable`, `GolfMatch`, `ArcheryMatch`) are unit-tested |
-| `src/Net` | `LanLink`: pairing and messages between two copies on the local network; `DuelChannel`: reliable, ordered events for turn-based duels; `OfficeBoard`: the opt-in leaderboard |
+| `src/Games` | One class per game; `BoardGame` is shared by the grid games. Rules and physics without UI (`Draughts`, `ChessRules`, `LineRules`, `SeaBattle`, `HockeyTable`, `PongTable`, `GolfMatch`, `ArcheryMatch`, `DurakRules`) are unit-tested |
+| `src/Net` | `LanLink`: pairing and messages between two copies on the local network; `DuelChannel`: reliable, ordered events for turn-based duels; `OfficeBoard`: the opt-in leaderboard; `RoomLink`: rooms of up to four players by code, for Durak |
 | `src/RaceMode.cs`, `src/Daily.cs` | Score races over the LAN; the daily challenge |
 | `src/Platform` | The OS layer behind `IDesktopPlatform`, with `Windows`, `Linux` and `Mac` implementations |
 | `src/Loc.cs`, `src/Strings.*.cs` | Translation lookup and the Uzbek and Russian tables |
@@ -343,6 +351,8 @@ exception you can switch off:
   automatically** in the tray menu.
 - **LAN play:** only when you host or join a game does it talk to other computers on your local network
   (UDP port 47820). It sends your user name and the game moves, and nothing leaves the local network.
+- **Durak rooms:** only when you create or join a room does it talk to other computers on your local
+  network (UDP port 47822). It sends your user name and the game, and nothing leaves the local network.
 - **Office leaderboard:** off unless you turn it on. While it is on, it broadcasts your user name and
   today's scores to your local network (UDP port 47821) every 20 seconds, and nothing leaves the local
   network.

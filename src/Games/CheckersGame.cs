@@ -15,6 +15,8 @@ public sealed class CheckersGame : BoardGame
     public override string Id => "checkers";
     public override string Title => "Checkers";
 
+    protected override int[] LevelDepths => new[] { 1, 2, 4, 5 };
+
     public override Sprite CreateIcon()
     {
         var s = new Sprite();
