@@ -39,9 +39,12 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 - **Window tops are platforms.** Balls, bugs, pets and towers sit on the top edges of your windows and
   ride along when you drag one. You can turn this off in the tray menu.
 - **Idle means idle.** When nothing is moving, rendering stops and CPU use drops to almost zero.
-- **20 games, 47 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
-- **Play with the person at the next desk** over the local network: Air Hockey, H-O-R-S-E, board games,
-  Sea Battle and score races.
+- **21 games, 53 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
+- **Play with the person at the next desk** over the local network: Air Hockey (best of 3), Pong,
+  H-O-R-S-E, Mini Golf and Archery duels, board games, Sea Battle and score races. You see what the other
+  player does: their ball, arrow or puck, and a marker wherever they pop, whack or stack.
+- **Office leaderboard** (opt-in): today's best scores of everyone on the network who shares theirs.
+- **Themes** (including seasonal ones), a **break reminder**, and six desktop pets.
 - **No assets to download.** Every sound is synthesized and all artwork is drawn in code.
 
 ## Games
@@ -57,6 +60,7 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 | 🧱 **Brick Breaker** | Click the paddle to launch; while the ball is in play the paddle follows your mouse. The ball rebounds off the sides and top; the floor costs one of your 3 balls. Gold bricks are worth 10, steel bricks take two hits. |
 | 🫧 **Bubble Pop** | Click the "pop me" bubble to start. Clicking a bubble splits it in two, and the smallest pop. Smaller bubbles score more, quick pops build a combo up to ×3, and leftover seconds become bonus points. |
 | 🏒 **Air Hockey** | Drag your blue mallet on the left half and hit the puck into the right-hand goal while the CPU defends. The puck bounces off every other edge. First to 7 wins, and each win makes the CPU faster. |
+| 🏓 **Pong** | Pong on the edges of your screen: drag your paddle up and down the left edge and get the ball past the CPU's paddle on the right. Where the ball hits the paddle sets its angle, and every return speeds it up. First to 7; each win makes the CPU sharper. |
 | 🎯 **Clay Shooting** | Click the trap machine to start 15 pulls. Clays arc across the screen and bounce off the edges; click one to break it. Breaking two with one click is a DOUBLE, golden clays are worth 5, and a clay that lands is a miss. |
 | 🔨 **Whack-a-Bug** | Bugs peek out from behind your window tops, the taskbar and the screen edges for a moment. Whack them: 1 point, fast bugs 2, golden 5, combo up to ×3. Ladybugs are features again: −5. |
 | 🎲 **Plinko** | Click the strip at the top of the board to drop a disc through the pegs. Slots score 10 to 250, and the gold middle slot is the jackpot. Ten discs a round. Right-drag the board's header to move it. |
@@ -67,7 +71,7 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 | 🔴 **Connect Four** | Click a column to drop a disc; four in a row (across, down or diagonal) wins. Play the CPU or a co-worker. |
 | ❌ **Tic-tac-toe** | Click a square; three in a row wins. The CPU is good but slips now and then. |
 | 🚢 **Sea Battle** | Your fleet is on the left, the enemy's waters on the right. Click your grid to shuffle your ships, the enemy grid to start, then fire. A hit shoots again; sink all five ships to win. Against the CPU or a co-worker. |
-| 🐱 **Desktop Pet** | Not a game: a cat (or a dog, or a duck: **tray → Pet**) that walks along your taskbar and window tops, follows the cursor, jumps between windows and sleeps when left alone. Click to pet it, drag to carry and throw it. |
+| 🐱 **Desktop Pet** | Not a game: a cat (or a dog, duck, bunny, penguin or fox: **tray → Pet**) that walks along your taskbar and window tops, follows the cursor, jumps between windows and sleeps when left alone. Click to pet it, drag to carry and throw it. |
 
 > **Brick Breaker note:** while a ball is in play, a strip along the bottom of the screen takes the
 > mouse so the paddle can follow it. It goes away as soon as the ball is lost or you switch games.
@@ -82,11 +86,14 @@ joins straight into it and follows whenever the host switches.
 
 | Game | Together |
 |---|---|
-| Air Hockey | Your co-worker's mallet replaces the CPU; each of you defends the left goal on your own screen |
+| Air Hockey | Your co-worker's mallet replaces the CPU; each of you defends the left goal on your own screen. Matches form a best-of-3 series |
+| Pong | Your co-worker's paddle replaces the CPU's; each of you plays from the left edge |
 | Hoops | H-O-R-S-E: make a shot and the other player has to make it from the same spot, or take a letter. Each of you sees the other's ball fly as a faded ghost ball |
+| Mini Golf | Match play over 9 holes, taking turns stroke by stroke on your own courses. Their ball shows up as a ghost around your cup; a hole goes to the better score against par |
+| Archery | Take turns, one arrow each, ten apiece, in the same wind. Their arrow flies from your bow as a ghost |
 | Checkers, Chess, Connect Four, Tic-tac-toe | Turns over the network; the guest sees the board from their side |
 | Sea Battle | Each fleet stays on its own PC; only shots and hits cross the network |
-| Bubble Pop, Whack-a-Bug | Race: start a round and theirs starts too; you see their live score and who won |
+| Bubble Pop, Whack-a-Bug, Tower Stack | Race: start a round and theirs starts too. You see their live score, a red ring wherever they pop, whack or stack, and who won |
 
 **Send** in the same menu pops a quick emote ("gg", "One more?"…) up on the other screen. Windows asks
 once whether to allow Desk Arcade on private networks; say yes on both PCs.
@@ -100,8 +107,13 @@ board with a tab for every game; it shrinks back shortly after the mouse leaves.
 with your progress; click it to jump to the game. Finish it on consecutive days to build a streak.
 
 **Stats & achievements** in the tray menu (or `DeskArcade --signal stats`) opens a window with time
-played and best score per game, and all 47 achievements with their progress. Stats live in
+played and best score per game, and all 53 achievements with their progress. Stats live in
 `stats.json` next to your settings and can be reset from the tray.
+
+**Office leaderboard:** **tray → Office leaderboard** shows today's best hoops streak, baskets, Air Hockey
+and Pong wins, bugs squashed, tallest tower, LAN wins and minutes played for everyone on your network who
+shares their scores. Sharing is off until you turn it on (in that menu or the leaderboard window): it then
+broadcasts your user name and today's scores on UDP port 47821 every 20 seconds, and nothing else.
 
 ## Controls
 
@@ -113,10 +125,16 @@ played and best score per game, and all 47 achievements with their progress. Sta
 | Click the scoreboard | Open the game tabs |
 | Drag the scoreboard | Move it |
 | Tray icon, left-click | Show or hide |
-| Tray icon menu | Game, volume, language, Claude Code options, updates, stats, monitor, reset, exit |
+| Tray icon menu | Game, pet, theme, break reminder, office leaderboard, volume, language, Claude Code options, updates, stats, monitor, reset, exit |
 
 On macOS the shortcuts are **Control+Option+G/N/B**. **Tray → Shortcuts…** changes the modifier keys and the
 letters (Windows applies them at once; Linux and macOS from the next start).
+
+**Tray → Theme** recolours the mallets, paddles, puck and balls: Classic, Neon, Retro, Halloween, Winter,
+or **Seasonal** (Halloween in October, Winter in December and January, Classic the rest of the year).
+
+**Tray → Break reminder** nudges you after 15 to 60 minutes of play (five minutes away counts as a break),
+and can make the "Claude is done" notice say **back to work** when you were playing while Claude worked.
 
 **Tray → Accessibility** has **Reduce motion** (no particle bursts; popups appear in place) and
 **Colour-blind friendly colours** (greens become sky blue and reds vermillion, and Connect Four discs are
@@ -267,9 +285,9 @@ Releases are built and published by GitHub Actions when a `vX.Y.Z` tag is pushed
 
 | Path | Contents |
 |---|---|
-| `src/Engine` | Lightweight game engine: `Vec2`, ball physics, window-top platforms, sprites, effects, `MiniGame` |
-| `src/Games` | One class per game; `BoardGame` is shared by the grid games, whose rules (`Draughts`, `ChessRules`, `LineRules`, `SeaBattle`) have no UI |
-| `src/Net` | `LanLink`: pairing and messages between two copies on the local network |
+| `src/Engine` | Lightweight game engine: `Vec2`, ball physics, window-top platforms, sprites, effects, themes, the rival's ghost ball, `MiniGame` |
+| `src/Games` | One class per game; `BoardGame` is shared by the grid games. Rules and physics without UI (`Draughts`, `ChessRules`, `LineRules`, `SeaBattle`, `HockeyTable`, `PongTable`, `GolfMatch`, `ArcheryMatch`) are unit-tested |
+| `src/Net` | `LanLink`: pairing and messages between two copies on the local network; `DuelChannel`: reliable, ordered events for turn-based duels; `OfficeBoard`: the opt-in leaderboard |
 | `src/RaceMode.cs`, `src/Daily.cs` | Score races over the LAN; the daily challenge |
 | `src/Platform` | The OS layer behind `IDesktopPlatform`, with `Windows`, `Linux` and `Mac` implementations |
 | `src/Loc.cs`, `src/Strings.*.cs` | Translation lookup and the Uzbek and Russian tables |
@@ -325,6 +343,9 @@ exception you can switch off:
   automatically** in the tray menu.
 - **LAN play:** only when you host or join a game does it talk to other computers on your local network
   (UDP port 47820). It sends your user name and the game moves, and nothing leaves the local network.
+- **Office leaderboard:** off unless you turn it on. While it is on, it broadcasts your user name and
+  today's scores to your local network (UDP port 47821) every 20 seconds, and nothing leaves the local
+  network.
 
 There is no account, no telemetry and no analytics. Settings, scores and stats stay on your computer.
 

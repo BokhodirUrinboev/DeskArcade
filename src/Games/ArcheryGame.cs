@@ -10,8 +10,11 @@ using DeskArcade.Engine;
 
 namespace DeskArcade.Games;
 
-/// <summary>Pull back the bow, mind the wind, hit targets and balloons. 10 arrows per round.</summary>
-public sealed class ArcheryGame : MiniGame
+/// <summary>
+/// Pull back the bow, mind the wind, hit targets and balloons. 10 arrows per round. Over the LAN two
+/// players take turns, arrow by arrow (see ArcheryDuel.cs).
+/// </summary>
+public sealed partial class ArcheryGame : MiniGame
 {
     const double MaxPull = 150, MinPull = 18, ArrowLen = 84, Gravity = 980, Step = 1.0 / 240, GrabR = 80;
     const double TargetW = 40, TargetH = 130, BalloonR = 20;
@@ -113,10 +116,12 @@ public sealed class ArcheryGame : MiniGame
         Layer.Children.Add(_arrowLayer);
         Layer.Children.Add(_bow);
         Layer.Children.Add(_guideLayer);
+        DuelSetup();
     }
 
     public override string Id => "archery";
     public override string Title => "Archery";
+    public override bool SupportsLan => true;
 
     public override Sprite CreateIcon()
     {
@@ -128,7 +133,7 @@ public sealed class ArcheryGame : MiniGame
 
     string WindText => Math.Abs(_wind) < 15 ? L.T("calm") : (_wind > 0 ? "→ " : "← ") + (Math.Abs(_wind) / 60).ToString("0.0");
 
-    public override HudInfo Hud => new(
+    public override HudInfo Hud => DuelOn ? DuelHud : new(
         _roundScore.ToString(),
         _roundOver ? L.T("Round over · pull the bow to play again") : L.F("Round {0} · {1} arrows · wind {2}", _round, _arrowsLeft, WindText),
         L.F("Best round {0}", Host.Settings.BestArchery));
@@ -150,6 +155,7 @@ public sealed class ArcheryGame : MiniGame
         ClampBow();
         if (_round == 0) NewRound();
         else if (_targets.Any(t => !a.Contains(t.Pos.ToPoint()))) RespawnTargets();
+        DuelCheckSession();
         UpdateBowVisual();
         Changed();
     }
@@ -168,14 +174,15 @@ public sealed class ArcheryGame : MiniGame
         _face = _bowPos.X < a.Left + a.Width / 2 ? 1 : -1;
     }
 
-    void NewRound()
+    /// <param name="wind">The wind for this round; by default it picks one (calm in round 1, stronger later).</param>
+    void NewRound(double? wind = null)
     {
         _round++;
         _arrowsLeft = ArrowsPerRound;
         _roundScore = 0;
         _roundOver = false;
         _roundEndTimer = -1;
-        _wind = _round == 1 ? 0 : (Rng.NextDouble() * 2 - 1) * Math.Min(260, 60 + _round * 40);
+        _wind = wind ?? (_round == 1 ? 0 : (Rng.NextDouble() * 2 - 1) * Math.Min(260, 60 + _round * 40));
         for (int i = _arrows.Count - 1; i >= 0; i--)
             if (!_arrows[i].Flying) RemoveArrow(_arrows[i]);
         RespawnTargets();
@@ -196,6 +203,13 @@ public sealed class ArcheryGame : MiniGame
         _roundEndTimer = -1;
         var s = Host.Settings;
         Host.Stats.Max("archery.round", _roundScore);
+        if (DuelOn)
+        {
+            if (_roundScore > s.BestArchery) s.BestArchery = _roundScore;
+            Host.SaveSettings();
+            Changed(); // the duel announces the result once both players are done
+            return;
+        }
         bool best = _roundScore > s.BestArchery;
         var at = new Vec2(Host.Arena.Left + Host.Arena.Width / 2, Host.Arena.Top + Host.Arena.Height * 0.3);
         if (best)
@@ -276,6 +290,7 @@ public sealed class ArcheryGame : MiniGame
             _moveOffset = _bowPos - p;
             return true;
         }
+        if (!DuelMayShoot()) return false;
         if (_roundOver) NewRound();
         if (_arrowsLeft <= 0) return false;
         _pulling = true;
@@ -320,6 +335,7 @@ public sealed class ArcheryGame : MiniGame
 
     void Fire(Vec2 dir, double power)
     {
+        DuelFired();
         var ar = new Arrow { Sprite = MakeArrowSprite(), Tip = LaunchPoint(dir, power), Vel = dir * LaunchSpeed(power) };
         ar.Angle = Math.Atan2(dir.Y, dir.X) * 180 / Math.PI;
         ar.Sprite.Set(ar.Tip, ar.Angle);
@@ -373,7 +389,8 @@ public sealed class ArcheryGame : MiniGame
         if (_roundEndTimer >= 0 && (_roundEndTimer -= dt) < 0) EndRound();
 
         UpdateBowVisual();
-        return busy;
+        DuelUpdate(dt);
+        return busy || DuelOn;
     }
 
     void SimStep(double h)
@@ -712,6 +729,11 @@ public sealed class ArcheryGame : MiniGame
     public override void DemoTick()
     {
         if (_pulling || _arrows.Any(a => a.Flying) || _roundEndTimer >= 0) return;
+        if (DuelOn && (_match.Over || !_match.MyTurn || _shotOpen))
+        {
+            if (_match.Over && DuelHost) HostNewRound();
+            return;
+        }
         if (_roundOver) NewRound();
         var target = _targets.FirstOrDefault(t => double.IsNaN(t.LeaveIn) && t.Age > 0.3);
         if (target == null || _arrowsLeft <= 0) return;

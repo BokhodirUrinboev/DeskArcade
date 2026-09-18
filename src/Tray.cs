@@ -42,12 +42,19 @@ public sealed class Tray : IDisposable
         }
         menu.Add(new NativeMenuItem(L.T("Game")) { Menu = games });
         var pets = new NativeMenu();
-        foreach (var (kind, name) in new[] { ("cat", L.T("Cat")), ("dog", L.T("Dog")), ("duck", L.T("Duck")) })
+        foreach (var (kind, name) in new[]
+                 {
+                     ("cat", L.T("Cat")), ("dog", L.T("Dog")), ("duck", L.T("Duck")), ("bunny", L.T("Bunny")), ("penguin", L.T("Penguin")), ("fox", L.T("Fox")),
+                 })
             pets.Add(Radio(name, () => _w.SetPet(kind), () => _w.Settings.PetKind == kind));
         menu.Add(new NativeMenuItem(L.T("Pet")) { Menu = pets });
         menu.Add(Item(L.T("Next game") + "   (" + Shortcuts.Label(HotkeyAction.NextGame) + ")", () => _w.NextGame()));
         menu.Add(Item(L.T("Bring to cursor") + "   (" + Shortcuts.Label(HotkeyAction.Summon) + ")", () => _w.SummonToCursor()));
         menu.Add(Item(L.T("Stats & achievements…"), () => _w.OpenStats()));
+        var board = new NativeMenu();
+        board.Add(Item(L.T("Show the leaderboard…"), () => _w.OpenLeaderboard()));
+        board.Add(Check(L.T("Share my scores on the local network"), () => _w.SetShareLeaderboard(!_w.Settings.ShareLeaderboard), () => _w.Settings.ShareLeaderboard));
+        menu.Add(new NativeMenuItem(L.T("Office leaderboard")) { Menu = board });
         var daily = Item(_w.DailyLine, () => _w.PlayDaily());
         _refreshers.Add(() => daily.Header = _w.DailyLine);
         menu.Add(daily);
@@ -81,6 +88,18 @@ public sealed class Tray : IDisposable
         foreach (double level in VolumeLevels)
             volume.Add(Radio($"{(int)(level * 100)}%", () => _w.SetVolume(level), () => Math.Abs(_w.Settings.Volume - level) < 0.126));
         menu.Add(new NativeMenuItem(L.T("Volume")) { Menu = volume });
+
+        var themes = new NativeMenu();
+        foreach (var (id, name) in Engine.Themes.Choices)
+            themes.Add(Radio(L.T(name), () => _w.SetTheme(id), () => _w.Settings.Theme == id));
+        menu.Add(new NativeMenuItem(L.T("Theme")) { Menu = themes });
+
+        var breaks = new NativeMenu();
+        foreach (int minutes in new[] { 0, 15, 20, 30, 45, 60 })
+            breaks.Add(Radio(minutes == 0 ? L.T("Off") : L.F("After {0} minutes of play", minutes), () => _w.SetBreakMinutes(minutes), () => _w.Settings.BreakMinutes == minutes));
+        breaks.Add(new NativeMenuItemSeparator());
+        breaks.Add(Check(L.T("Say “back to work” when Claude is done"), () => Toggle(s => s.BackToWork = !s.BackToWork), () => _w.Settings.BackToWork));
+        menu.Add(new NativeMenuItem(L.T("Break reminder")) { Menu = breaks });
 
         var access = new NativeMenu();
         access.Add(Check(L.T("Reduce motion"), () => Toggle(s => s.ReducedMotion = !s.ReducedMotion), () => _w.Settings.ReducedMotion));

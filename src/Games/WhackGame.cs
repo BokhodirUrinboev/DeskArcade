@@ -338,6 +338,7 @@ public sealed class WhackGame : MiniGame
         {
             _score = Math.Max(0, _score - LadybugPenalty);
             _combo = 0;
+            Host.ShareAction(at, -LadybugPenalty);
             Host.Fx.Popup(popAt, L.F("−{0}", LadybugPenalty), Color.FromRgb(255, 110, 110), 28, 1.3, L.T("that was a feature!"));
             PlaySound("buzzer", 0.35, 1);
         }
@@ -348,6 +349,7 @@ public sealed class WhackGame : MiniGame
             int pts = (b.Kind == Kind.Golden ? 5 : b.Kind == Kind.Fast ? 2 : 1) * _combo;
             _score += pts;
             _hits++;
+            Host.ShareAction(at, pts);
             Host.Stats.Add("whack.hits");
             Host.Fx.Popup(popAt, _combo > 1 ? L.F("+{0} ×{1}", pts, _combo) : L.F("+{0}", pts),
                 b.Kind == Kind.Golden ? Gold : Colors.White, b.Kind == Kind.Golden ? 30 : 24, 0.9);

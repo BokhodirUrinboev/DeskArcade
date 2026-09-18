@@ -29,9 +29,18 @@ public sealed class Fx
         public double Age, Life, Size, Gravity;
     }
 
+    sealed class Ring
+    {
+        public required Ellipse El;
+        public required TranslateTransform Tr;
+        public Vec2 P;
+        public double Age, Life, From, To;
+    }
+
     const int MaxParticles = 160;
 
     readonly List<Pop> _pops = new();
+    readonly List<Ring> _rings = new();
     readonly List<Particle> _parts = new();
     readonly Stack<Particle> _pool = new();
     readonly Dictionary<Color, IBrush> _brushes = new();
@@ -66,6 +75,33 @@ public sealed class Fx
         p.X = Math.Clamp(p.X, Bounds.Left + halfW + 8, Math.Max(Bounds.Left + halfW + 8, Bounds.Right - halfW - 8));
         p.Y = Math.Max(p.Y, Bounds.Top + halfH + 8);
         _pops.Add(new Pop { El = panel, Tr = tr, Sc = sc, P = new Vec2(p.X - halfW, p.Y - halfH), Life = life });
+    }
+
+    /// <summary>
+    /// A ring that grows from <paramref name="from"/> to <paramref name="to"/> pixels across and fades out:
+    /// marks where something happened (the rival's clicks in a LAN race), without covering the game.
+    /// </summary>
+    public void Marker(Vec2 p, Color color, double from = 10, double to = 46, double life = 0.9)
+    {
+        var tr = new TranslateTransform();
+        var el = new Ellipse
+        {
+            Stroke = Art.Brush(Art.Safe(color)), StrokeThickness = 3, IsHitTestVisible = false,
+            RenderTransform = tr, RenderTransformOrigin = RelativePoint.TopLeft,
+        };
+        Layer.Children.Add(el);
+        var ring = new Ring { El = el, Tr = tr, P = p, Life = life, From = from, To = ReducedMotion ? from : to };
+        _rings.Add(ring);
+        Place(ring, 0);
+    }
+
+    static void Place(Ring ring, double k)
+    {
+        double d = ring.From + (ring.To - ring.From) * EaseOut(k);
+        ring.El.Width = ring.El.Height = d;
+        ring.Tr.X = ring.P.X - d / 2;
+        ring.Tr.Y = ring.P.Y - d / 2;
+        ring.El.Opacity = 0.9 * (1 - k);
     }
 
     static Grid Outlined(string text, Color color, double size)
@@ -171,11 +207,26 @@ public sealed class Fx
             part.El.Opacity = 1 - part.Age / part.Life;
         }
 
-        return _pops.Count > 0 || _parts.Count > 0;
+        for (int i = _rings.Count - 1; i >= 0; i--)
+        {
+            var ring = _rings[i];
+            ring.Age += dt;
+            if (ring.Age >= ring.Life)
+            {
+                Layer.Children.Remove(ring.El);
+                _rings.RemoveAt(i);
+                continue;
+            }
+            Place(ring, ring.Age / ring.Life);
+        }
+
+        return _pops.Count > 0 || _parts.Count > 0 || _rings.Count > 0;
     }
 
     public void Clear()
     {
+        foreach (var ring in _rings) Layer.Children.Remove(ring.El);
+        _rings.Clear();
         foreach (var pop in _pops) Layer.Children.Remove(pop.El);
         _pops.Clear();
         foreach (var part in _parts)

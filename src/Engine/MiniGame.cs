@@ -29,6 +29,11 @@ public interface IGameHost
     /// <summary>Round-based games report rounds, so race mode can start the rival's and compare scores.</summary>
     void RoundStarted();
     void RoundEnded(int score);
+    /// <summary>
+    /// Over the LAN, shows the other player a ghost marker where this player just clicked, popped or whacked
+    /// something (<paramref name="points"/>: what it scored, 0 for a miss, negative for a penalty).
+    /// </summary>
+    void ShareAction(Vec2 at, int points);
     void Wake();
     void SaveSettings();
 }
@@ -76,6 +81,9 @@ public abstract class MiniGame
 
     /// <summary>Bring the main object (ball, bow, ...) to the cursor.</summary>
     public abstract void Summon(Vec2 p);
+
+    /// <summary>Called when <see cref="Themes.Current"/> changes: redraw the themed pieces.</summary>
+    public virtual void ThemeChanged() { }
 
     /// <summary>Self-play step for --demo runs (smoke testing without touching the mouse).</summary>
     public virtual void DemoTick() { }

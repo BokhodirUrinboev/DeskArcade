@@ -62,7 +62,7 @@ public sealed class TowerGame : MiniGame
     Color _moveColor;
     int _height, _streak, _sinks, _seenGen = -1, _demoWait;
     long _bestAtStart;
-    bool _placed, _standing, _hasMover, _falling, _free, _demo;
+    bool _placed, _standing, _hasMover, _falling, _free, _demo, _roundOn;
 
     public TowerGame(IGameHost host) : base(host)
     {
@@ -76,6 +76,17 @@ public sealed class TowerGame : MiniGame
 
     public override string Id => "tower";
     public override string Title => "Tower Stack";
+
+    // LAN race: both players stack at once; the round's score is the height
+    public override bool SupportsLan => true;
+    public override (int Score, bool Active)? Race => (_height, _roundOn);
+
+    public override void StartRace()
+    {
+        if (_roundOn) return;
+        if (_phase == Phase.Over) NewGame();
+        Drop(); // the first drop is free, so starting it for the player costs nothing
+    }
 
     public override Sprite CreateIcon()
     {
@@ -125,7 +136,11 @@ public sealed class TowerGame : MiniGame
         if (_sinkT >= 0) FinishSink();
         if (!_falling) return;
         _falling = false; // pausing by switching games doesn't cost the block
-        if (_free) _phase = Phase.Ready;
+        if (_free)
+        {
+            _phase = Phase.Ready;
+            _roundOn = false; // switching games reset the race anyway
+        }
         _free = false;
     }
 
@@ -296,6 +311,11 @@ public sealed class TowerGame : MiniGame
         if (!_hasMover || _falling || _phase == Phase.Over || _blocks.Count == 0) return;
         _free = _phase == Phase.Ready; // the first block waits centred over the tower, so it isn't a skill drop
         _phase = Phase.Playing;
+        if (!_roundOn)
+        {
+            _roundOn = true;
+            Host.RoundStarted();
+        }
         _moveTop = HoverTopRel;
         _moveVy = 0;
         _falling = true;
@@ -331,6 +351,7 @@ public sealed class TowerGame : MiniGame
 
         _height++;
         AddBlock(x1, x2, top.Level + 1, _moveColor);
+        Host.ShareAction(new Vec2(_baseX + (x1 + x2) / 2, y), 1);
         Host.Stats.Max("tower.height", _height);
         Host.Stats.Max("tower.best", _height);
         PlayThrottled("thunk", 0.6, 1 + Math.Min(0.4, _height * 0.015));
@@ -371,6 +392,7 @@ public sealed class TowerGame : MiniGame
 
     void Miss(double side)
     {
+        Host.ShareAction(new Vec2(_baseX + _moveX, PlinthTop + _moveTop), 0);
         SpawnPiece(MakeBlock(_moveW, _moveColor), _moveW, BlockH, new Vec2(_baseX + _moveX, PlinthTop + _moveTop + BlockH / 2),
             new Vec2(side * 50, _moveVy * 0.7), side * 60, 1.5);
         _hasMover = false;
@@ -413,6 +435,11 @@ public sealed class TowerGame : MiniGame
     void GameOver()
     {
         _phase = Phase.Over;
+        if (_roundOn)
+        {
+            _roundOn = false;
+            Host.RoundEnded(_height);
+        }
         _streak = _demoWait = 0;
         _free = false;
         bool best = _height > _bestAtStart;

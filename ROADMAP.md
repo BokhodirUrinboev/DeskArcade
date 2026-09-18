@@ -1,79 +1,79 @@
-# Roadmap: Desk Arcade 1.4.0
+# Roadmap: Desk Arcade 1.5.0
 
-1.3.0 shipped on 2026-09-16 (its roadmap is in the git history). 1.4.0 is about **playing with the person at
-the next desk**: two copies of Desk Arcade on the same local network find each other and share a game. No
-server and no account are involved.
+1.4.0 shipped on 2026-09-18 and 1.4.1 fixed the Air Hockey corner trap and LAN game sync the same day (their
+roadmaps are in the git history). 1.5.0 is about **seeing what the other player does**: every LAN game now
+shows the rival's ball, arrow, puck or clicks, not just their score. It also adds Pong, an office leaderboard,
+themes, a break reminder and three more pets.
 
-Work happens on `feature/roadmap-1.4`. Each item says how it was verified; the last section lists what this
-machine could not check. "Demo" means two copies on one PC (`--profile`) playing by themselves (`--demo`).
+Work happens on `feature/roadmap-1.5`. Each item says how it was verified; the last sections list what this
+machine could not check and ideas for later. "Demo" means two copies on one PC (`--profile`) playing by
+themselves (`--demo`).
 
-## Multiplayer over the local network
+## See the other player
 
-How it works: one player **hosts** and the other **joins** from the tray (**Play over LAN**). Messages are
-short UDP datagrams on port 47820. Real-time games (Air Hockey) have the host simulate and the guest send
-its input; turn-based games number their moves and re-send them until the other side confirms, so a lost
-packet never puts the two screens out of step. Positions travel as fractions of the screen, so the screens
-may differ in size.
+- [x] **Ghost markers in the races.** Bubble Pop, Whack-a-Bug and Tower Stack send each pop, whack and drop
+  as a position on the screen (`ga|x|y|points`, handled by `LanLink` beside the game messages). The other
+  screen draws a red ring there, with the points. *Verified: loopback unit test; demo run on screen.*
+- [x] **Tower Stack race.** Starting a tower starts the rival's; the height is the score.
+  *Verified: demo run (both towers passed 20 blocks, the rival's height showed under the scoreboard).*
+- [x] **Mini Golf duel.** Match play over 9 holes, stroke by stroke on each player's own course; the ball
+  streams relative to the cup and shows as a ghost around the other player's cup. Rules in `GolfMatch`.
+  *Verified: unit tests for turns, waiting and scoring; demo run (holes decided, ghost balls on screen).*
+- [x] **Archery duel.** One arrow each, ten apiece, same wind (the host picks it); the arrow streams relative
+  to the bow and flies from the other player's bow as a ghost. Rules in `ArcheryMatch`.
+  *Verified: unit tests; demo run (two full matches, ghost arrows and "+10" popups on screen).*
+- [x] **Reliable duel events.** `DuelChannel` numbers events and re-sends them until acknowledged, so both
+  screens apply the same strokes and arrows in the same order. *Verified: unit tests with 30% and 60% loss.*
 
-- [x] **LAN link.** Discovery, pairing, heartbeat, a 3 s timeout, and the guest following the host's game
-  switches (`src/Net/LanLink.cs`). *Verified: loopback unit tests (pairing, messages, emotes, leaving); every
-  demo below.*
-- [x] **Air Hockey 1-vs-1.** *Verified: 45 s demo; the guest's goal counted in the host's simulation.*
-- [x] **Hoops H-O-R-S-E.** Each player shoots on their own screen; only results and the spot to match cross
-  the link. *Verified: `HorseMatch` rule tests; 90 s demo with turns passing both ways.*
-- [x] **Checkers (draughts).** English rules, forced captures, multi-jumps, a draw after 40 quiet moves each.
-  *Verified: 6 rule tests; a full demo game.*
-- [x] **Chess.** Castling, en passant, promotion (always a queen), check, mate, stalemate, 50-move rule;
-  threefold repetition isn't tracked. *Verified: perft matches the published counts from the start
-  (depth 3), Kiwipete (depth 3) and an en-passant endgame (depth 4); a full demo game.*
-- [x] **Connect Four and Tic-tac-toe.** On the shared `BoardGame`, now any size and with "place a piece"
-  moves. *Verified: rule and CPU tests; checked on screen.*
-- [x] **Sea Battle.** Hidden fleets that never touch; a hit shoots again; the CPU hunts around its hits.
-  *Verified: fleet and CPU tests; CPU and demo games to a win; checked on screen.*
-- [x] **Lobby.** **Find games / join by address…** lists every host with its player and game, joins by IP
-  where broadcasts are blocked, and the host's tray shows its address; emotes ("gg", "One more?"…).
-  *Verified: loopback tests; the lobby listed a hosting copy on screen.*
-- [x] **Race modes.** Bubble Pop and Whack-a-Bug: starting a round starts the rival's, both see the live
-  score, and each side's n-th round is compared. *Verified: demo race produced a result.*
-- [x] **Achievements.** One per board game, Sea Battle, and "Office rival" for any LAN win.
+## New games and modes
 
-## Fix known gaps
+- [x] **Pong.** Paddles on the left and right screen edges; the hit point sets the angle and every return
+  speeds the ball up. Against a CPU that gets sharper with each win, or a co-worker (host-run, like Air
+  Hockey). Physics in `PongTable`. *Verified: unit tests (returns, misses, wall prediction, CPU levels);
+  solo and LAN demo runs.*
+- [x] **Air Hockey best of 3.** LAN matches form a series; the scoreboard shows it and the series winner
+  gets a fanfare and an achievement. *Verified: LAN demo run (series shown on both screens).*
+- [x] **Air Hockey table without UI.** The physics moved to `HockeyTable`. *Verified: unit tests that the CPU
+  never covers a cornered puck and frees it within 4 seconds, a mallet stops at a pinned puck, and goals score.*
 
-- [x] **AppImage paths.** Autostart and the Claude hook config use `$APPIMAGE`, not the temporary mount
-  (`Program.LaunchPath`). *Verified: unit test; not yet run inside a real AppImage.*
-- [x] **Real-hardware smoke tests in CI.** The `smoke` job runs `tests/smoke.sh` (start in demo mode, open
-  the stats window, quit over `--signal`) on `windows-11-arm`, `ubuntu-24.04-arm` and `macos-14`.
-  *Verified: passes on all three runners (CI run 35307933851), so the ARM64 builds and the macOS app have
-  now actually run.*
+## Everyday use
 
-## Distribution
-
-- [x] **Homebrew cask and Scoop manifest.** `packaging/homebrew`, `packaging/scoop`, stamped by
-  `packaging/Update-PackageManifests.ps1`. *Verified: stamped from the real 1.3.0 release files.*
-- [x] **Install updates.** Windows installs download the matching installer, check GitHub's SHA-256 digest and
-  run it silently; the installer restarts the game. Other platforms open the download page. *Verified:
-  unit test for the installer name; GitHub reports the digests; the install itself needs a newer release.*
-- [ ] **Submissions: winget, Flathub, a Homebrew tap, a Scoop bucket.** Everything is prepared (see
-  docs/RELEASING.md); submitting needs your GitHub account and, for Flathub, an app-id review.
-
-## Features
-
-- [x] **Rebindable shortcuts.** **Tray → Shortcuts…**: the modifier keys and a letter per action. Windows
-  applies them at once; X11, the Wayland portal and macOS from the next start. *Verified: unit tests; the
-  window on screen; builds for Linux and macOS.*
-- [x] **More Claude Code integration.** "Pause the game when Claude finishes or needs you" (a click resumes),
-  and the done notice sums up the session. *Verified: on screen ("Claude worked 0:09, you played 0:09").*
-- [x] **Daily challenge and streaks.** In the tray and the stats window; two achievements. *Verified: unit
-  tests (streaks, every challenge counts something the games record).*
-- [x] **More pets.** A dog and a duck, picked in **tray → Pet**. *Verified: on screen.*
-- [x] **Accessibility.** Reduce motion; colour-blind friendly colours (plus a shape cue in Connect Four).
-  *Verified: unit test for the colour mapping.*
+- [x] **Office leaderboard** (opt-in). While sharing is on, each copy broadcasts the user name and today's
+  scores on UDP 47821 every 20 seconds; **tray → Office leaderboard** ranks everyone. Stats now keep
+  today's counters beside the all-time ones. *Verified: unit tests for the wire format, hostile input,
+  ranking and the day rollover; not yet seen with two PCs.*
+- [x] **Break reminder.** After 15–60 minutes of play (five minutes away resets it), and an optional
+  "Claude is done · back to work". *Verified: builds; not timed on screen.*
+- [x] **Themes.** Classic, Neon, Retro, Halloween, Winter and Seasonal recolour mallets, paddles, puck, the
+  basketball and the golf ball. *Verified: unit test for the seasonal calendar; the recolouring is not
+  checked on screen yet.*
+- [x] **More pets.** Bunny, penguin and fox. *Verified: builds; not checked on screen yet.*
+- [x] **Six achievements** for the series, Pong, and the golf and archery duels (53 in all).
 
 ## Not verified here
 
 | What | Needs |
 |---|---|
-| LAN games between two real PCs, played by two people; office networks that block broadcast | Two PCs on one network |
-| Rebinding shortcuts on X11, Wayland and macOS | Those desktops |
-| The silent in-place update | A release newer than the installed version |
-| AppImage autostart with `$APPIMAGE` | A Linux desktop |
+| Every LAN game between two real PCs, played by two people | Two PCs on one network |
+| The office leaderboard with more than one person | Two PCs with sharing on |
+| Themes and the new pets on screen, the break reminder firing | A few minutes of play |
+
+## Ideas for more mini games
+
+Games that suit the overlay: quick to start, played with the mouse (the overlay never takes the keyboard),
+and using the windows and taskbar as the playing field. LAN notes say how each could work over the network.
+
+| Idea | How it plays | LAN |
+|---|---|---|
+| **Paper Toss** | Flick a crumpled paper ball into a bin on a window top; a desk fan blows a different wind each throw | Race, or H-O-R-S-E-style turns |
+| **Curling** | Slide stones along the taskbar toward a target painted on the floor; knock the rival's stones away | Turns with ghost stones, like the golf duel |
+| **Darts** | A board on the screen; the aim wobbles while you hold, 501 counting down to a double | Turns, one dart each |
+| **Bowling** | Roll a ball along the taskbar at pins standing on a window top; 10 frames with spares and strikes | Frame by frame, pins shown as ghosts |
+| **Pool** | A table drawn over the screen, cue by dragging back from the white ball (Air Hockey's physics, with friction and pockets) | Turns; host runs the balls |
+| **Pinball** | Flippers in the bottom corners, bumpers on window tops, the taskbar as the drain | Score race |
+| **Window Tetris** | Blocks fall from the top and settle on window tops as well as the taskbar | Race; cleared lines send garbage to the rival |
+| **Fishing** | Cast into a pond along the taskbar and reel in with well-timed clicks; rare fish are worth more | Race for the biggest catch |
+| **Memory** | Pairs of cards laid over the screen; flip two at a time | Turns, both see every flipped card |
+| **Code Breaker** | Guess a hidden four-colour code from black and white pegs (Mastermind) | Each sets a code for the other |
+| **Asteroids** | Rocks drift and bounce around the closed box; steer a ship with the mouse and click to fire | Co-op: two ships, one field |
+| **Fetch** | Throw a ball for the desktop pet, which runs, jumps between windows and brings it back | — |

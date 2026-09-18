@@ -68,6 +68,10 @@ public sealed class OverlayWindow : Window, IGameHost
     public Fx Fx { get; } = new();
     public Platforms Platforms { get; } = new();
     public LanLink Lan { get; } = new();
+    OfficeBoard _board = null!;
+    BoardEntry _boardEntry = new("", "", new Dictionary<string, long>());
+    readonly DispatcherTimer _boardTimer = new() { Interval = TimeSpan.FromSeconds(5) };
+    double _playStreak, _lastPlayed; // seconds of play since the last break reminder; clock time of the last played frame
     public Daily Daily { get; }
     public Rect Arena { get; private set; }
     public Vec2 Pointer { get; private set; }
@@ -137,11 +141,18 @@ public sealed class OverlayWindow : Window, IGameHost
         Platforms.Enabled = Settings.Platforms;
         Fx.ReducedMotion = Settings.ReducedMotion;
         Engine.Art.ColorBlind = Settings.ColorBlind;
+        Themes.Apply(Settings.Theme, DateTime.Today);
+        _board = new OfficeBoard(() => _boardEntry);
+        _boardTimer.Tick += (_, _) => RefreshBoardEntry();
 
         _platformTimer.Tick += (_, _) => RefreshPlatforms();
         _blinkTimer.Tick += (_, _) => _hud?.Blink();
         _hudHoverTimer.Tick += (_, _) => CheckHudHover();
-        _statsTimer.Tick += (_, _) => Stats.Save();
+        _statsTimer.Tick += (_, _) =>
+        {
+            Stats.Save();
+            if (Themes.Apply(Settings.Theme, DateTime.Today)) OnThemeChanged(); // "seasonal" at the turn of a month
+        };
         _root.PointerPressed += OnPointerPressed;
         _root.PointerReleased += OnPointerReleased;
         _root.PointerMoved += (_, e) => _eventPointer = e.GetPosition(_root);
@@ -173,6 +184,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new BricksGame(this));
         _games.Add(new BubblesGame(this));
         _games.Add(new HockeyGame(this));
+        _games.Add(new PongGame(this));
         _games.Add(new ClayGame(this));
         _games.Add(new WhackGame(this));
         _games.Add(new PlinkoGame(this));
@@ -223,6 +235,7 @@ public sealed class OverlayWindow : Window, IGameHost
         Lan.StateChanged += () => Dispatcher.UIThread.Post(OnLanStateChanged);
         Lan.MessageArrived += () => Dispatcher.UIThread.Post(Wake);
         Lan.GameChanged += id => Dispatcher.UIThread.Post(() => SwitchGame(id));
+        Lan.ActionReceived += (x, y, pts) => Dispatcher.UIThread.Post(() => ShowRivalAction(x, y, pts));
         Lan.EmoteReceived += i => Dispatcher.UIThread.Post(() =>
         {
             Sound.Play("best", 0.35, 1.5);
@@ -234,6 +247,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _blinkTimer.Start();
         _hudHoverTimer.Start();
         _statsTimer.Start();
+        if (Settings.ShareLeaderboard) StartBoard();
         if (Settings.CheckForUpdates && (Settings.LastUpdateCheck is not DateTime lastCheck || DateTime.UtcNow - lastCheck > TimeSpan.FromHours(20)))
             DispatcherTimer.RunOnce(() => CheckForUpdates(manual: false), TimeSpan.FromSeconds(25));
 
@@ -469,6 +483,7 @@ public sealed class OverlayWindow : Window, IGameHost
             {
                 Stats.AddTime(Current.Id, dt); // only time spent actually playing
                 if (_claudeSince != null) _playedWhileClaude += dt;
+                CountTowardBreak(now, dt);
             }
             busy |= playing;
         }
@@ -502,6 +517,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "bricks" => L.T("click the paddle to launch — the mouse steers it"),
         "bubbles" => L.T("click a bubble to split it — clear them all in time"),
         "hockey" => L.T("drag your mallet and score in the right-hand goal"),
+        "pong" => L.T("drag your paddle up and down — get the ball past the right edge"),
         "checkers" => L.T("click a piece, then the square it should move to"),
         "chess" => L.T("click a piece, then the square it should move to"),
         "connect4" => L.T("click a column to drop a disc — four in a row wins"),
@@ -801,6 +817,24 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public void RoundEnded(int score) => _race.LocalEnd(score);
 
+    static readonly Color RivalColor = Color.FromRgb(255, 92, 108);
+
+    public void ShareAction(Vec2 at, int points)
+    {
+        if (!Lan.Connected || Arena.Width <= 0 || Arena.Height <= 0) return;
+        Lan.SendAction(Math.Clamp((at.X - Arena.Left) / Arena.Width, 0, 1), Math.Clamp((at.Y - Arena.Top) / Arena.Height, 0, 1), points);
+    }
+
+    /// <summary>The rival clicked, popped or whacked something: a ghost ring where they did, with what it scored.</summary>
+    void ShowRivalAction(double x, double y, int points)
+    {
+        if (!IsVisible || !Lan.Connected) return;
+        var at = new Vec2(Arena.Left + x * Arena.Width, Arena.Top + y * Arena.Height);
+        Fx.Marker(at, RivalColor);
+        if (points != 0) Fx.Popup(at - new Vec2(0, 30), points > 0 ? $"+{points}" : $"−{-points}", RivalColor, 18, 0.8);
+        Wake();
+    }
+
     public void SetRaceLabel(string? text)
     {
         _raceLabel.IsVisible = text != null;
@@ -860,13 +894,15 @@ public sealed class OverlayWindow : Window, IGameHost
     void ClaudeAlert(ClaudeStatus status, string sound, string title, Color color)
     {
         TimeSpan? waited = _claudeSince is DateTime since ? DateTime.UtcNow - since : null;
+        bool backToWork = status == ClaudeStatus.Done && Settings.BackToWork && _playedWhileClaude >= 5;
+        if (backToWork) title = L.T("Claude is done · back to work");
         _claudeSince = null;
         _hud.SetClaude(status, null, waited);
         if (status == ClaudeStatus.Done && IsVisible && Current != null) Stats.Add("claude.done");
         if (Settings.ClaudeNotify)
         {
             Sound.Play(sound, 0.9);
-            string sub = status == ClaudeStatus.Done ? L.T("your turn!") : L.T("check the terminal");
+            string sub = backToWork ? L.T("the game will still be here later") : status == ClaudeStatus.Done ? L.T("your turn!") : L.T("check the terminal");
             if (waited is TimeSpan w && w.TotalSeconds >= 5)
                 sub = _playedWhileClaude >= 5
                     ? L.F("{0} · Claude worked {1}, you played {2}", sub, Hud.FormatWait(w), Hud.FormatWait(TimeSpan.FromSeconds(_playedWhileClaude)))
@@ -907,6 +943,76 @@ public sealed class OverlayWindow : Window, IGameHost
     }
 
     public void OpenStats() => StatsWindow.ShowFor(this);
+
+    // ------------------------------------------------------------------ office leaderboard, breaks, themes
+
+    public void OpenLeaderboard() => LeaderboardWindow.ShowFor(this);
+
+    /// <summary>Everyone sharing today, this player first.</summary>
+    public List<BoardEntry> BoardEntries()
+    {
+        RefreshBoardEntry();
+        return _board.Entries(_boardEntry.Day);
+    }
+
+    public void SetShareLeaderboard(bool share)
+    {
+        Settings.ShareLeaderboard = share;
+        SaveSettings();
+        if (share) StartBoard();
+        else
+        {
+            _boardTimer.Stop();
+            _board.Stop();
+        }
+        _tray?.Refresh();
+    }
+
+    void StartBoard()
+    {
+        RefreshBoardEntry();
+        _board.Start();
+        _boardTimer.Start();
+    }
+
+    /// <summary>Snapshots today's scores on the UI thread; the board shares the snapshot from its own thread.</summary>
+    void RefreshBoardEntry() => _boardEntry = new BoardEntry(LanLink.MyName, DateTime.Now.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
+        OfficeBoard.Scores(Stats.Today));
+
+    public void SetBreakMinutes(int minutes)
+    {
+        Settings.BreakMinutes = minutes;
+        _playStreak = 0;
+        SaveSettings();
+        _tray?.Refresh();
+    }
+
+    /// <summary>Counts play toward the break reminder; five minutes without playing counts as a break.</summary>
+    void CountTowardBreak(double now, double dt)
+    {
+        if (now - _lastPlayed > 300) _playStreak = 0;
+        _lastPlayed = now;
+        if (Settings.BreakMinutes <= 0 || (_playStreak += dt) < Settings.BreakMinutes * 60) return;
+        _playStreak = 0;
+        Sound.Play("attention", 0.6);
+        Notice(L.F("You've played {0} minutes", Settings.BreakMinutes), L.T("time for a short break · stretch and look away from the screen"),
+            Color.FromRgb(120, 200, 255));
+    }
+
+    public void SetTheme(string id)
+    {
+        Settings.Theme = id;
+        SaveSettings();
+        if (Themes.Apply(id, DateTime.Today)) OnThemeChanged();
+        _tray?.Refresh();
+    }
+
+    void OnThemeChanged()
+    {
+        foreach (var game in _games) game.ThemeChanged();
+        Current?.Layout();
+        Wake();
+    }
 
     public void ResetStats()
     {
@@ -961,6 +1067,8 @@ public sealed class OverlayWindow : Window, IGameHost
         if (_quitting) return;
         _quitting = true;
         Lan.Stop();
+        _board.Stop();
+        _boardTimer.Stop();
         SaveSettings();
         _cts.Cancel();
         _loopOn = false;

@@ -23,7 +23,7 @@ public sealed partial class HoopsGame : MiniGame
     static readonly Color[] Flames = { Color.FromRgb(255, 214, 10), Color.FromRgb(255, 140, 20), Color.FromRgb(240, 60, 20) };
 
     readonly BallBody _ball = new(BallR) { Gravity = 2000, Restitution = 0.7 };
-    readonly Sprite _ballSprite = Art.Basketball(BallR);
+    Sprite _ballSprite = ThemedBall();
     readonly Canvas _back = new(), _front = new();
     readonly TranslateTransform _backTr = new(), _frontTr = new();
     readonly ScaleTransform _backSc = new(), _frontSc = new();
@@ -84,6 +84,24 @@ public sealed partial class HoopsGame : MiniGame
     public override string Title => "Hoops";
     public override bool SupportsLan => true;
     public override Sprite CreateIcon() => Art.Basketball(9);
+
+    static Sprite ThemedBall() => Art.Basketball(BallR, Themes.Current.Ball, Themes.Current.BallSeam);
+
+    public override void ThemeChanged()
+    {
+        _ballSprite = Swap(_ballSprite, ThemedBall());
+        _rivalBall = Swap(_rivalBall, ThemedBall());
+        _ballSprite.Set(_ball.Pos, _ball.Angle);
+    }
+
+    /// <summary>Puts <paramref name="next"/> where <paramref name="old"/> was in the layer; the game positions it on its next frame.</summary>
+    Sprite Swap(Sprite old, Sprite next)
+    {
+        next.IsHitTestVisible = old.IsHitTestVisible;
+        next.IsVisible = old.IsVisible;
+        Layer.Children[Layer.Children.IndexOf(old)] = next;
+        return next;
+    }
 
     public override HudInfo Hud => HorseOn ? HorseHud : new(
         _score.ToString(),
