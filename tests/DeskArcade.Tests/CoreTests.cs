@@ -533,3 +533,36 @@ public class LanLinkTests
         Assert.True(WaitFor(() => host.State == DeskArcade.Net.LanState.Waiting), "the host didn't notice the guest leave");
     }
 }
+
+public class HorseMatchTests
+{
+    [Fact]
+    public void AMissedMatchCostsALetterAndFiveLose()
+    {
+        var m = new DeskArcade.Games.HorseMatch(iSetFirst: true);
+        Assert.True(m.MyShot);
+        for (int i = 1; i <= 5; i++)
+        {
+            Assert.Equal(0, m.Apply(byMe: true, made: true));   // I set a shot and make it
+            Assert.False(m.MyShot);                              // they must match
+            Assert.Equal(-1, m.Apply(byMe: false, made: false)); // they miss: a letter
+            Assert.Equal(i, m.TheirLetters);
+        }
+        Assert.Equal(DeskArcade.Games.HorseMatch.Phase.Over, m.Now);
+        Assert.Equal(0, m.MyLetters);
+    }
+
+    [Fact]
+    public void AMissedSetPassesTheBallAndAMadeMatchCostsNothing()
+    {
+        var m = new DeskArcade.Games.HorseMatch(iSetFirst: true);
+        m.Apply(byMe: true, made: false);
+        Assert.False(m.SetterIsMe);
+        Assert.False(m.MyShot);
+        m.Apply(byMe: false, made: true);                      // they set
+        Assert.True(m.MyShot);                                  // I match
+        Assert.Equal(0, m.Apply(byMe: true, made: true));
+        Assert.False(m.MyShot);                                 // the setter sets again
+        Assert.Equal(0, m.MyLetters + m.TheirLetters);
+    }
+}

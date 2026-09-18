@@ -10,7 +10,7 @@ using DeskArcade.Engine;
 namespace DeskArcade.Games;
 
 /// <summary>Grab the basketball, flick it, sink it. Streaks set the ball on fire.</summary>
-public sealed class HoopsGame : MiniGame
+public sealed partial class HoopsGame : MiniGame
 {
     const double BallR = 26, RimLen = 112, BoardUp = 105, BoardDown = 25, NetDepth = 62, LipR = 4.5;
     const double Step = 1.0 / 240;
@@ -76,14 +76,16 @@ public sealed class HoopsGame : MiniGame
         Layer.Children.Add(_back);
         Layer.Children.Add(_ballSprite);
         Layer.Children.Add(_front);
+        HorseLayer();
         UpdateNet();
     }
 
     public override string Id => "hoops";
     public override string Title => "Hoops";
+    public override bool SupportsLan => true;
     public override Sprite CreateIcon() => Art.Basketball(9);
 
-    public override HudInfo Hud => new(
+    public override HudInfo Hud => HorseOn ? HorseHud : new(
         _score.ToString(),
         _streak >= 3 ? L.F("Streak {0} · ON FIRE ×2", _streak) : _streak > 0 ? L.F("Streak {0} · keep going!", _streak) : L.T("Drag the ball, flick it into the hoop"),
         L.F("Best streak {0}", Host.Settings.BestHoopsStreak));
@@ -98,6 +100,7 @@ public sealed class HoopsGame : MiniGame
         _boardX = Host.Settings.HoopX ?? a.Right - 70;
         _rimY = Host.Settings.HoopY ?? a.Top + a.Height * 0.4;
         ClampHoop();
+        HorseCheckSession();
         if (!_placed || _ball.Pos.X < a.Left || _ball.Pos.X > a.Right || _ball.Pos.Y > a.Bottom)
         {
             _ball.Place(new Vec2(a.Left + a.Width * 0.3, a.Bottom - BallR));
@@ -142,6 +145,7 @@ public sealed class HoopsGame : MiniGame
     {
         if ((p - _ball.Pos).Length <= BallR + 14)
         {
+            if (!HorseMayGrab()) return false;
             Grab(p);
             return true;
         }
@@ -199,6 +203,7 @@ public sealed class HoopsGame : MiniGame
         _ball.Spin = -v.X * 0.25;
         _releasePos = _ball.Pos;
         _throwLive = v.Length > 150;
+        if (_throwLive) HorseReleased(_releasePos);
         _scored = false;
         _touched = false;
         if (v.Length > 700) Host.Sound.Play("whoosh", Math.Min(1, v.Length / 3000) * 0.5);
@@ -295,7 +300,8 @@ public sealed class HoopsGame : MiniGame
 
         busy |= AnimateNet(dt);
         _ballSprite.Set(_ball.Pos, _ball.Angle);
-        return busy;
+        HorseUpdate(dt);
+        return busy || HorseOn;
     }
 
     void SimStep(double h)
@@ -341,6 +347,7 @@ public sealed class HoopsGame : MiniGame
     void Score()
     {
         _scored = true;
+        HorseScored();
         var c = RimCenter;
         double dist = (_releasePos - c).Length;
         bool dunk = dist < 190, three = !dunk && dist >= ThreeDist;
@@ -461,11 +468,15 @@ public sealed class HoopsGame : MiniGame
     public override void DemoTick()
     {
         if (_holding || (!_ball.Asleep && !_ball.Grounded)) return;
+        bool over = _horse.Now == HorseMatch.Phase.Over;
+        if (HorseOn && !over && (!MyShot || _shotOpen)) return;
+        if (HorseOn && over) HorseMayGrab(); // starts the rematch
         var a = Host.Arena;
         var r = Random.Shared;
         double fx = _dir < 0 ? 0.15 + r.NextDouble() * 0.35 : 0.5 + r.NextDouble() * 0.35;
-        var from = new Vec2(a.Left + a.Width * fx, a.Bottom - 250 - r.NextDouble() * 250);
+        var from = HorseOn && Matching ? SpotPosition() : new Vec2(a.Left + a.Width * fx, a.Bottom - 250 - r.NextDouble() * 250);
         var target = RimCenter + new Vec2(r.NextDouble() * 24 - 12, 0);
+        if (HorseOn && r.NextDouble() < 0.35) target.X += 90; // H-O-R-S-E demo: miss now and then so letters happen
         double T = 1.0 + r.NextDouble() * 0.25;
         var v = new Vec2((target.X - from.X) / T, (target.Y - from.Y - 0.5 * _ball.Gravity * T * T) / T) * 1.03;
         if (_throwLive && !_scored) BreakStreak();
