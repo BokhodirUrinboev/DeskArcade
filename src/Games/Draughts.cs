@@ -6,12 +6,20 @@ using System.Text;
 namespace DeskArcade.Games;
 
 /// <summary>
-/// English draughts (checkers) rules, free of any UI so they can be unit-tested and shared by both ends
-/// of a LAN game. Squares are 0..63, row-major from the top-left. Side +1 starts on rows 5–7 and moves up;
-/// side −1 starts on rows 0–2 and moves down. Men move and capture forward only; kings move one step in
-/// any diagonal direction. Captures are compulsory, a capture continues while it can, and reaching the far
-/// row crowns a man and ends the move. A side with no legal move loses. Forty moves each with no
-/// capture and no man moving is a draw.
+/// Russian draughts (shashki), free of any UI so they can be unit-tested and shared by both ends of a LAN
+/// game. Squares are 0..63, row-major from the top-left. Side +1 (white) starts on rows 5–7, moves up and
+/// moves first; side −1 starts on rows 0–2 and moves down.
+/// <list type="bullet">
+/// <item>Men step one square diagonally forward, but capture forward and backward.</item>
+/// <item>Kings fly: they move any distance along a free diagonal, and capture a piece at any distance,
+/// landing on any free square beyond it.</item>
+/// <item>Capturing is compulsory and a capture continues while it can, but among several captures the
+/// player may choose any (not necessarily the one that takes the most).</item>
+/// <item>A man that reaches the far row during a capture is crowned at once and goes on capturing as a king.</item>
+/// <item>Captured pieces are removed only after the move ("Turkish strike"): no piece can be jumped twice,
+/// and a captured piece still blocks the way.</item>
+/// </list>
+/// A side with no legal move loses. Fifteen moves each with no capture and no man moving is a draw.
 /// </summary>
 public sealed class Draughts : IBoardRules
 {
@@ -21,7 +29,7 @@ public sealed class Draughts : IBoardRules
     public int Ply { get; private set; }
     /// <summary>Plies since the last capture or man move; <see cref="DrawPlies"/> of them is a draw.</summary>
     public int Quiet { get; private set; }
-    public const int DrawPlies = 80;
+    public const int DrawPlies = 30;
     public bool IsDraw => Quiet >= DrawPlies;
 
     public static Draughts New()
@@ -59,30 +67,88 @@ public sealed class Draughts : IBoardRules
             if (Math.Sign(p) != Turn) continue;
             Jumps(sq, p, new List<int> { sq }, new HashSet<int>(), captures);
             if (captures.Count > 0) continue;
-            foreach (var (dr, dc) in Dirs(p))
-                if (At(sq, dr, dc) is int to && Board[to] == 0) steps.Add(new[] { sq, to });
+            foreach (var (dr, dc) in All)
+            {
+                if (Math.Abs(p) == 1 && dr != Forward(p)) continue; // men step forward only
+                for (int dist = 1; At(sq, dist * dr, dist * dc) is int to && Board[to] == 0; dist++)
+                {
+                    steps.Add(new[] { sq, to });
+                    if (Math.Abs(p) == 1) break; // a man steps one square; a king flies
+                }
+            }
         }
-        return captures.Count > 0 ? captures : steps;
+        return captures.Count > 0 ? captures.Distinct(PathComparer.Instance).ToList() : steps;
     }
 
+    /// <summary>
+    /// Extends a capture from <paramref name="from"/> in every possible way. <paramref name="taken"/> holds the
+    /// pieces already captured on this move: they stay on the board until the move ends, so they can't be
+    /// jumped again and still block the way.
+    /// </summary>
     void Jumps(int from, sbyte p, List<int> path, HashSet<int> taken, List<int[]> into)
     {
-        bool any = false;
-        foreach (var (dr, dc) in Dirs(p))
+        bool any = false, king = Math.Abs(p) == 2;
+        foreach (var (dr, dc) in All)
         {
-            if (At(from, dr, dc) is not int over || At(from, 2 * dr, 2 * dc) is not int to) continue;
-            if (Math.Sign(Board[over]) != -Math.Sign(p) || taken.Contains(over)) continue;
-            if (Board[to] != 0 && to != path[0]) continue;
+            // walk to the first piece on this diagonal (a man only looks at the next square)
+            int dist = 1;
+            int? over = null;
+            while (At(from, dist * dr, dist * dc) is int sq)
+            {
+                if (!IsEmpty(sq, path[0], taken))
+                {
+                    over = sq;
+                    break;
+                }
+                if (!king) break;
+                dist++;
+            }
+            if (over is not int victim || taken.Contains(victim) || Math.Sign(Board[victim]) != -Math.Sign(p)) continue;
+
+            // land on the free square behind it; a king may land on any of the free squares behind it, but if
+            // it can go on capturing from some of them, it must land on one of those
+            var landings = new List<int>();
+            for (int beyond = dist + 1; At(from, beyond * dr, beyond * dc) is int to && IsEmpty(to, path[0], taken); beyond++)
+            {
+                landings.Add(to);
+                if (!king) break;
+            }
+            if (landings.Count == 0) continue;
             any = true;
-            path.Add(to);
-            taken.Add(over);
-            if (Math.Abs(p) == 1 && CrownRow(to, p)) into.Add(path.ToArray()); // crowning ends the move
-            else Jumps(to, p, path, taken, into);
-            path.RemoveAt(path.Count - 1);
-            taken.Remove(over);
+            taken.Add(victim);
+            if (king && landings.Count > 1)
+            {
+                var onward = landings.Where(to => CanCapture(to, p, path[0], taken)).ToList();
+                if (onward.Count > 0) landings = onward;
+            }
+            foreach (int to in landings)
+            {
+                path.Add(to);
+                // a man reaching the far row is crowned there and goes on capturing as a king
+                sbyte next = !king && CrownRow(to, p) ? (sbyte)(2 * p) : p;
+                Jumps(to, next, path, taken, into);
+                path.RemoveAt(path.Count - 1);
+            }
+            taken.Remove(victim);
         }
         if (!any && path.Count > 1) into.Add(path.ToArray());
     }
+
+    /// <summary>Whether a king of <paramref name="p"/>'s side standing on <paramref name="from"/> could capture something next.</summary>
+    bool CanCapture(int from, sbyte p, int start, HashSet<int> taken)
+    {
+        foreach (var (dr, dc) in All)
+        {
+            int dist = 1;
+            while (At(from, dist * dr, dist * dc) is int sq && IsEmpty(sq, start, taken)) dist++;
+            if (At(from, dist * dr, dist * dc) is not int victim || taken.Contains(victim) || Math.Sign(Board[victim]) != -Math.Sign(p)) continue;
+            if (At(from, (dist + 1) * dr, (dist + 1) * dc) is int land && IsEmpty(land, start, taken)) return true;
+        }
+        return false;
+    }
+
+    /// <summary>Free for the moving piece: empty, or the square it started from. A captured piece is not free.</summary>
+    bool IsEmpty(int sq, int start, HashSet<int> taken) => !taken.Contains(sq) && (Board[sq] == 0 || sq == start);
 
     /// <summary>True if <paramref name="path"/> is one of <see cref="LegalMoves"/>.</summary>
     public bool IsLegal(int[] path) => LegalMoves().Any(m => m.SequenceEqual(path));
@@ -92,21 +158,21 @@ public sealed class Draughts : IBoardRules
     {
         var captured = new List<int>();
         sbyte p = Board[path[0]];
+        int side = Math.Sign(p);
         Board[path[0]] = 0;
+        bool crowned = false;
         for (int i = 1; i < path.Length; i++)
         {
             int a = path[i - 1], b = path[i];
-            if (Math.Abs(a / 8 - b / 8) == 2)
-            {
-                int over = (a + b) / 2;
-                Board[over] = 0;
-                captured.Add(over);
-            }
+            int dr = Math.Sign(b / 8 - a / 8), dc = Math.Sign(b % 8 - a % 8);
+            for (int sq = a + dr * 8 + dc; sq != b; sq += dr * 8 + dc)
+                if (Math.Sign(Board[sq]) == -side && !captured.Contains(sq)) captured.Add(sq);
+            crowned |= Math.Abs(p) == 1 && CrownRow(b, p);
         }
-        int end = path[^1];
+        foreach (int sq in captured) Board[sq] = 0; // Turkish strike: everything taken leaves together
         Quiet = captured.Count > 0 || Math.Abs(p) == 1 ? 0 : Quiet + 1;
-        if (Math.Abs(p) == 1 && CrownRow(end, p)) p = (sbyte)(2 * p);
-        Board[end] = p;
+        if (crowned) p = (sbyte)(2 * side);
+        Board[path[^1]] = p;
         Turn = -Turn;
         Ply++;
         return captured;
@@ -175,7 +241,7 @@ public sealed class Draughts : IBoardRules
         return alpha;
     }
 
-    /// <summary>Material from the side to move's point of view; men are worth a bit more as they advance.</summary>
+    /// <summary>Material from the side to move's point of view; men are worth a bit more as they advance, and a flying king is worth a lot.</summary>
     double Evaluate()
     {
         double s = 0;
@@ -184,7 +250,7 @@ public sealed class Draughts : IBoardRules
             sbyte p = Board[i];
             if (p == 0) continue;
             int side = Math.Sign(p);
-            double v = Math.Abs(p) == 2 ? 1.6 : 1 + 0.03 * (side > 0 ? 7 - i / 8 : i / 8);
+            double v = Math.Abs(p) == 2 ? 3 : 1 + 0.03 * (side > 0 ? 7 - i / 8 : i / 8);
             s += side == Turn ? v : -v;
         }
         return s;
@@ -192,9 +258,9 @@ public sealed class Draughts : IBoardRules
 
     // ------------------------------------------------------------------ geometry
 
-    static readonly (int, int)[] Up = { (-1, -1), (-1, 1) }, Down = { (1, -1), (1, 1) }, All = { (-1, -1), (-1, 1), (1, -1), (1, 1) };
+    static readonly (int, int)[] All = { (-1, -1), (-1, 1), (1, -1), (1, 1) };
 
-    static (int, int)[] Dirs(sbyte p) => Math.Abs(p) == 2 ? All : p > 0 ? Up : Down;
+    static int Forward(sbyte p) => p > 0 ? -1 : 1;
 
     static bool CrownRow(int sq, sbyte p) => p > 0 ? sq / 8 == 0 : sq / 8 == 7;
 
@@ -202,5 +268,13 @@ public sealed class Draughts : IBoardRules
     {
         int r = sq / 8 + dr, c = sq % 8 + dc;
         return r is >= 0 and < 8 && c is >= 0 and < 8 ? r * 8 + c : null;
+    }
+
+    /// <summary>Two capture routes through the same squares are the same move.</summary>
+    sealed class PathComparer : IEqualityComparer<int[]>
+    {
+        public static readonly PathComparer Instance = new();
+        public bool Equals(int[]? a, int[]? b) => a != null && b != null && a.SequenceEqual(b);
+        public int GetHashCode(int[] path) => path.Aggregate(17, (h, sq) => h * 31 + sq);
     }
 }

@@ -57,6 +57,7 @@ public abstract class BoardGame : MiniGame
     Vec2 _origin, _dragOffset;
     double _cpuIn = -1, _syncT;
     int _selected = -1, _gameNo, _lastFrom = -1, _lastTo = -1, _myWins, _theirWins;
+    readonly List<int> _via = new(); // landings clicked so far, when several capture routes start alike
     int[]? _pending; // guest: our move, re-sent until the host's board contains it
     bool _placed, _dragging, _over, _demo, _wasLan;
 
@@ -145,6 +146,7 @@ public abstract class BoardGame : MiniGame
         _gameNo++;
         _over = false;
         _selected = _lastFrom = _lastTo = -1;
+        _via.Clear();
         _pending = null;
         _cpuIn = -1;
         AfterMove();
@@ -189,15 +191,61 @@ public abstract class BoardGame : MiniGame
         var moves = _game.LegalMoves();
         if (PlacementAt(sq, moves) is int[] place)
             Play(place);
-        else if (_selected >= 0 && moves.FirstOrDefault(m => m[0] == _selected && m[^1] == sq) is int[] move)
-            Play(move);
+        else if (_selected >= 0 && ClickLanding(moves, sq)) { }
         else if (moves.Any(m => m[0] == sq))
         {
             _selected = sq;
+            _via.Clear();
             Host.Sound.Play("board", 0.25, 1.6);
         }
-        else _selected = -1;
+        else Deselect();
         Draw();
+        return false;
+    }
+
+    void Deselect()
+    {
+        _selected = -1;
+        _via.Clear();
+    }
+
+    /// <summary>The moves of the selected piece that pass through the landings clicked so far.</summary>
+    List<int[]> Routes(List<int[]> moves) =>
+        moves.Where(m => m[0] == _selected && m.Length > _via.Count && m.Skip(1).Take(_via.Count).SequenceEqual(_via)).ToList();
+
+    /// <summary>
+    /// A click on a square while a piece is selected. Clicking where a move ends plays it; when several
+    /// capture routes end there (flying kings in shashki), the player clicks the landings one by one and
+    /// each click narrows the choice. Returns false if the square isn't on any route.
+    /// </summary>
+    bool ClickLanding(List<int[]> moves, int sq)
+    {
+        var routes = Routes(moves);
+        if (_via.Count > 0 && sq == _via[^1] && routes.FirstOrDefault(m => m.Length == _via.Count + 1) is int[] stop)
+        {
+            Play(stop); // clicked the last landing again: the route that ends there
+            return true;
+        }
+        var onward = routes.Where(m => m.Length > _via.Count + 1).ToList();
+        var ending = onward.Where(m => m[^1] == sq).ToList();
+        var through = onward.Where(m => m[_via.Count + 1] == sq).ToList();
+        if (ending.Count == 1 && through.All(m => m == ending[0]))
+        {
+            Play(ending[0]);
+            return true;
+        }
+        if (through.Count > 0)
+        {
+            _via.Add(sq);
+            var left = Routes(moves);
+            if (left.Count == 1 && left[0].Length == _via.Count + 1) Play(left[0]);
+            return true;
+        }
+        if (ending.Count > 1)
+        {
+            Host.Fx.Popup(Center(sq) - new Vec2(0, Cell), L.T("several ways lead there · click each landing on the way"), Colors.White, 18, 1.8);
+            return true;
+        }
         return false;
     }
 
@@ -226,7 +274,7 @@ public abstract class BoardGame : MiniGame
     {
         bool mine = _game.Turn == Me;
         var captured = _game.Apply(move);
-        _selected = -1;
+        Deselect();
         _lastFrom = move[0];
         _lastTo = move[^1];
         MoveFx(captured.Count, mine);
@@ -356,7 +404,7 @@ public abstract class BoardGame : MiniGame
             _over = false;
         }
         _game = d;
-        _selected = -1;
+        Deselect();
         _lastFrom = int.TryParse(f[2], out int from) ? from : -1;
         _lastTo = int.TryParse(f[3], out int to) ? to : -1;
         if (advanced) MoveFx(before - d.Count(Me), false);
@@ -390,10 +438,16 @@ public abstract class BoardGame : MiniGame
             if (_selected >= 0)
             {
                 _marks.Children.Add(Box(_selected, null, Art.Brush(Gold)));
-                foreach (var m in moves.Where(m => m[0] == _selected))
+                foreach (int sq in _via) _marks.Children.Add(Box(sq, null, Art.Brush(Gold)));
+                foreach (var m in Routes(moves).Where(m => m.Length > _via.Count + 1))
                 {
                     var c = Center(m[^1]);
                     _marks.Children.Add(Art.Circle(c.X, c.Y, Cell * 0.16, Art.Brush(200, 255, 209, 102)));
+                    if (m.Length > _via.Count + 2) // a route with more landings: mark the next one too
+                    {
+                        var n = Center(m[_via.Count + 1]);
+                        _marks.Children.Add(Art.Circle(n.X, n.Y, Cell * 0.1, null, Art.Brush(200, 255, 209, 102), 2));
+                    }
                 }
             }
             else

@@ -5,7 +5,7 @@ using DeskArcade.Engine;
 
 namespace DeskArcade.Games;
 
-/// <summary>Checkers (English draughts, see <see cref="Draughts"/>) against the CPU or over the LAN.</summary>
+/// <summary>Checkers with Russian rules (shashki, see <see cref="Draughts"/>) against the CPU or over the LAN.</summary>
 public sealed class CheckersGame : BoardGame
 {
     static readonly Color White = Color.FromRgb(240, 240, 235), Red = Color.FromRgb(214, 64, 69);
@@ -27,7 +27,7 @@ public sealed class CheckersGame : BoardGame
 
     protected override IBoardRules? Decode(string text) => Draughts.Decode(text);
 
-    protected override string DrawReason(IBoardRules game) => L.T("40 moves without a capture");
+    protected override string DrawReason(IBoardRules game) => L.T("15 moves without a capture or a man moving");
 
     protected override void DrawPiece(Canvas into, sbyte piece, Vec2 c, double cell)
     {
