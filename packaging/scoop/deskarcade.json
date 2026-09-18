@@ -1,16 +1,16 @@
 {
-    "version": "1.3.0",
+    "version": "1.4.1",
     "description": "Mini-games that play on top of your desktop in a transparent overlay.",
     "homepage": "https://github.com/BokhodirUrinboev/DeskArcade",
     "license": "MIT",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/BokhodirUrinboev/DeskArcade/releases/download/v1.3.0/DeskArcade-Setup-1.3.0-standalone.exe",
-            "hash": "62cd0af2aff080a1cd93f0398fed4fe7d4662b0f85480700f3da2ad832815da0"
+            "url": "https://github.com/BokhodirUrinboev/DeskArcade/releases/download/v1.4.1/DeskArcade-Setup-1.4.1-standalone.exe",
+            "hash": "15a0d514dd3f01e012f450c5a6c338e3c299cbfcdf1315e8e11dc350d4927f02"
         },
         "arm64": {
-            "url": "https://github.com/BokhodirUrinboev/DeskArcade/releases/download/v1.3.0/DeskArcade-Setup-1.3.0-arm64.exe",
-            "hash": "29d3d80b5a27d695c46f6a67f6dfeb3aeb17d05ed7f68f18def5f1dac3d9eed2"
+            "url": "https://github.com/BokhodirUrinboev/DeskArcade/releases/download/v1.4.1/DeskArcade-Setup-1.4.1-arm64.exe",
+            "hash": "ed337cae7b39a1b09503b867217ff7d8a854d994a8e7fbadea35493a17f4c3f6"
         }
     },
     "innosetup": true,
