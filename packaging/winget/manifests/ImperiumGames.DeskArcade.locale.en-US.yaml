@@ -15,14 +15,19 @@ Copyright: Copyright (c) 2026 Imperium Games
 ShortDescription: Mini-games that play on top of your desktop in a transparent overlay.
 Description: |-
   Desk Arcade plays small games on top of your windows while a build, a deploy or Claude Code is working:
-  hoops, archery, keepy-uppy, mini golf, bug squash, can knockdown, brick breaker, bubble pop and air hockey.
+  hoops, archery, mini golf, air hockey, pong, tower stack, brick breaker, chess, sea battle and more, plus
+  a desktop pet. Play a co-worker over the local network and watch their shots as they happen.
   Clicks outside the game objects pass through to your windows, the overlay never takes keyboard focus,
   and balls land on the tops of open windows. Ctrl+Alt+G shows or hides it.
 Moniker: deskarcade
 Tags:
   - arcade
   - desktop
+  - desktop-pet
   - game
+  - lan
+  - minigames
+  - multiplayer
   - overlay
 ReleaseNotesUrl: https://github.com/BokhodirUrinboev/DeskArcade/releases/tag/v0.0.0
 ManifestType: defaultLocale
