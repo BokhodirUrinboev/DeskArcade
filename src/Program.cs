@@ -19,6 +19,16 @@ public static class Program
     /// </summary>
     public static string Profile { get; private set; } = "";
 
+    /// <summary>
+    /// The command that starts Desk Arcade again, for autostart and the Claude Code hooks: the AppImage file
+    /// itself (not its temporary /tmp/.mount_… directory, which is gone after exit), the installed launcher,
+    /// or this executable.
+    /// </summary>
+    public static string LaunchPath =>
+        Environment.GetEnvironmentVariable("APPIMAGE") is { Length: > 0 } appImage && File.Exists(appImage) ? appImage
+        : OperatingSystem.IsLinux() && File.Exists("/usr/bin/deskarcade") ? "/usr/bin/deskarcade"
+        : Environment.ProcessPath ?? "DeskArcade";
+
     public static string InstanceSuffix => Profile.Length == 0 ? "" : "." + Profile;
 
     [STAThread]

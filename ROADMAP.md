@@ -45,8 +45,8 @@ can be different sizes. The guest's view is mirrored, so each player sees themse
 
 ## Fix known gaps
 
-- [ ] **AppImage paths.** Use `$APPIMAGE` for autostart and the Claude hook config, not the temporary
-  mount.
+- [x] **AppImage paths.** Autostart and the Claude hook config use `$APPIMAGE` (the AppImage file), not
+  the temporary mount (`Program.LaunchPath`). *Verified: unit test; not yet run inside a real AppImage.*
 - [ ] **Real-hardware smoke tests in CI.** `windows-11-arm`, `ubuntu-24.04-arm` and `macos-14` runners
   start the app, send `--signal stats` and quit it with `--signal quit`, which clears most of the 1.3
   "Not verified here" table.

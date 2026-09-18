@@ -239,10 +239,11 @@ present on desktop Ubuntu). If an AppImage still doesn't start:
   `sudo apt install libfuse2t64` on 24.04. Don't install the `fuse` package on 22.04 or later: it
   replaces `fuse3` and can remove parts of the desktop.
 
-**Limitations:** the AppImage runs from a temporary mount, so **Start when I sign in** and **Copy Claude
-Code hook config** record a `/tmp/.mount_…` path that is gone after the game exits. Use the `.deb` for
-those, or edit the `Exec=` line in `~/.config/autostart/deskarcade.desktop` to point at the AppImage.
-The AppImage expects the X11, fontconfig and PulseAudio libraries that desktop distributions install.
+**Autostart and hooks:** the AppImage runs from a temporary mount, so **Start when I sign in** and **Copy
+Claude Code hook config** record the AppImage file itself (from `$APPIMAGE`), not the `/tmp/.mount_…`
+path. If you move the AppImage later, turn autostart off and on again and re-copy the hook config.
+
+**Limitations:** The AppImage expects the X11, fontconfig and PulseAudio libraries that desktop distributions install.
 
 ## macOS
 

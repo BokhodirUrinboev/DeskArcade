@@ -370,3 +370,25 @@ public class ChessRulesTests
             Assert.Equal(DeskArcade.Games.ChessRules.Sq("d5"), c.BestMove(new Random(seed))[1]);
     }
 }
+
+public class LaunchPathTests
+{
+    [Fact]
+    public void AnAppImageIsLaunchedByItsFileNotItsTemporaryMount()
+    {
+        string file = Path.GetTempFileName();
+        string? before = Environment.GetEnvironmentVariable("APPIMAGE");
+        try
+        {
+            Environment.SetEnvironmentVariable("APPIMAGE", file);
+            Assert.Equal(file, Program.LaunchPath);
+            Environment.SetEnvironmentVariable("APPIMAGE", file + ".gone"); // stale variable: fall back
+            Assert.NotEqual(file + ".gone", Program.LaunchPath);
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("APPIMAGE", before);
+            File.Delete(file);
+        }
+    }
+}

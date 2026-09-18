@@ -346,7 +346,7 @@ public sealed class X11Platform : IDesktopPlatform
                 if (File.Exists(AutostartFile)) File.Delete(AutostartFile);
                 return;
             }
-            string exe = File.Exists("/usr/bin/deskarcade") ? "/usr/bin/deskarcade" : Environment.ProcessPath ?? "deskarcade";
+            string exe = Program.LaunchPath;
             Directory.CreateDirectory(Path.GetDirectoryName(AutostartFile)!);
             File.WriteAllText(AutostartFile,
                 "[Desktop Entry]\nType=Application\nName=Desk Arcade\n" +

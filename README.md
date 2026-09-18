@@ -148,9 +148,8 @@ working area anyway, so nothing changes on screen.
 ### Other Linux distributions
 
 - **AppImage:** `chmod +x DeskArcade-<version>-x86_64.AppImage` and run it. Ubuntu 22.04+ needs
-  `libfuse2` (`sudo apt install libfuse2`), or run with `APPIMAGE_EXTRACT_AND_RUN=1`. In the AppImage,
-  "Start when I sign in" and the Claude Code hook config record the temporary mount path, so re-run
-  them after moving the file.
+  `libfuse2` (`sudo apt install libfuse2`), or run with `APPIMAGE_EXTRACT_AND_RUN=1`. "Start when I sign in"
+  and the Claude Code hook config record the AppImage file itself, so re-run them after moving the file.
 - **Flatpak:** a manifest is in [`packaging/flatpak/`](packaging/flatpak/) for building it yourself. It
   is not on Flathub.
 

@@ -569,9 +569,7 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public async void CopyHookConfig()
     {
-        string exe = OperatingSystem.IsLinux() && File.Exists("/usr/bin/deskarcade")
-            ? "/usr/bin/deskarcade"
-            : (Environment.ProcessPath ?? "DeskArcade").Replace('\\', '/');
+        string exe = Program.LaunchPath.Replace('\\', '/');
         string Cmd(string signal) => $"\\\"{exe}\\\" --signal {signal}";
         string json = $$"""
             {
