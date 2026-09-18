@@ -112,11 +112,11 @@ public sealed class Tray : IDisposable
 
         var update = Item(L.T("Check for updates"), () =>
         {
-            if (_w.AvailableUpdate is UpdateInfo u) UpdateChecker.OpenInBrowser(u.Url);
+            if (_w.AvailableUpdate != null) _w.InstallUpdate();
             else _w.CheckForUpdates(manual: true);
         });
         _refreshers.Add(() => update.Header = _w.AvailableUpdate is UpdateInfo u
-            ? L.F("Download version {0}…", u.Version.ToString(3))
+            ? UpdateChecker.CanInstall ? L.F("Install version {0}", u.Version.ToString(3)) : L.F("Download version {0}…", u.Version.ToString(3))
             : L.T("Check for updates"));
         menu.Add(update);
         menu.Add(Check(L.T("Check for updates automatically"), () => Toggle(s => s.CheckForUpdates = !s.CheckForUpdates), () => _w.Settings.CheckForUpdates));

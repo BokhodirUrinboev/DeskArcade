@@ -646,3 +646,13 @@ public class AccessibilityTests
         }
     }
 }
+
+public class InstallerNameTests
+{
+    [Fact]
+    public void TheInstallerNameMatchesTheReleaseAssets()
+    {
+        string name = UpdateChecker.InstallerName(new Version(1, 4, 0));
+        Assert.Matches(@"^DeskArcade-Setup-1\.4\.0(-arm64|-standalone)?\.exe$", name);
+    }
+}

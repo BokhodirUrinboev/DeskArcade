@@ -718,6 +718,37 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public void PlayDaily() => SwitchGame(Daily.For(Daily.Today).GameId);
 
+    /// <summary>
+    /// Windows installs: downloads the new installer and runs it silently. The installer asks this copy to
+    /// quit and starts the new version afterwards. Elsewhere, or if anything fails, opens the release page.
+    /// </summary>
+    public async void InstallUpdate()
+    {
+        if (_update is not UpdateInfo u) return;
+        if (!UpdateChecker.CanInstall)
+        {
+            UpdateChecker.OpenInBrowser(u.Url);
+            return;
+        }
+        SetOverlayVisible(true);
+        Notice(L.F("Downloading version {0}…", u.Version.ToString(3)), L.T("the game restarts when it is done"), Color.FromRgb(77, 163, 255));
+        string? installer = await UpdateChecker.DownloadInstallerAsync(u);
+        if (installer == null)
+        {
+            Notice(L.T("Couldn't download the update"), L.T("opening the download page instead"), Color.FromRgb(255, 107, 107));
+            UpdateChecker.OpenInBrowser(u.Url);
+            return;
+        }
+        try
+        {
+            Process.Start(new ProcessStartInfo(installer, "/SILENT /SUPPRESSMSGBOXES /NORESTART") { UseShellExecute = true });
+        }
+        catch
+        {
+            UpdateChecker.OpenInBrowser(u.Url); // e.g. the elevation prompt was declined
+        }
+    }
+
     public void SetPet(string kind)
     {
         Settings.PetKind = kind;
