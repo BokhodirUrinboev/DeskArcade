@@ -51,6 +51,8 @@ public sealed class LanLink : IDisposable
     public event Action? MessageArrived;
     /// <summary>Raised when the peer sends an emote (an index into <see cref="Emotes"/>).</summary>
     public event Action<int>? EmoteReceived;
+    /// <summary>Raised on the guest when the host switches to another game.</summary>
+    public event Action<string>? GameChanged;
 
     /// <summary>Short messages players can send each other. Only the index crosses the network.</summary>
     public static readonly string[] Emotes = { "gg", "One more?", "Nice shot!", "Your move!", "Ha!" };
@@ -130,6 +132,13 @@ public sealed class LanLink : IDisposable
     }
 
     public void SendEmote(int index) => Send($"em|{index}");
+
+    /// <summary>Host: tell the guest to switch to <paramref name="gameId"/> too.</summary>
+    public void SendGame(string gameId)
+    {
+        GameId = gameId;
+        Send($"gm|{gameId}");
+    }
 
     /// <summary>This PC's IPv4 addresses on the local network, for "join by address".</summary>
     public static string LocalAddresses()
@@ -258,6 +267,12 @@ public sealed class LanLink : IDisposable
         }
         _lastHeard = DateTime.UtcNow;
         if (kind == "ping") return;
+        if (kind == "gm" && Role == LanRole.Guest)
+        {
+            GameId = body;
+            GameChanged?.Invoke(body);
+            return;
+        }
         if (kind == "em")
         {
             if (int.TryParse(body, out int emote) && emote >= 0 && emote < Emotes.Length) EmoteReceived?.Invoke(emote);

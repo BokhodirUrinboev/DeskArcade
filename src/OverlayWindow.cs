@@ -44,6 +44,12 @@ public sealed class OverlayWindow : Window, IGameHost
     DispatcherTimer? _demoTimer;
 
     Hud _hud = null!;
+    RaceMode _race = null!;
+    readonly TextBlock _raceLabel = new()
+    {
+        FontFamily = Fx.Font, FontSize = 14, FontWeight = FontWeight.Bold, Foreground = Brushes.White, IsVisible = false, IsHitTestVisible = false,
+        Background = Engine.Art.Brush(200, 18, 20, 28), Padding = new Thickness(8, 3),
+    };
     Tray? _tray;
     bool _loopOn, _captured, _quitting, _pushedCapture;
     double _lastTick, _idle;
@@ -186,6 +192,8 @@ public sealed class OverlayWindow : Window, IGameHost
             Wake();
         };
         _hudLayer.Children.Add(_hud);
+        _hudLayer.Children.Add(_raceLabel);
+        _race = new RaceMode(this);
 
         PlaceWindow();
         UpdateArena();
@@ -196,6 +204,7 @@ public sealed class OverlayWindow : Window, IGameHost
         Ipc.StartServer(msg => Dispatcher.UIThread.Post(() => OnSignal(msg)), _cts.Token);
         Lan.StateChanged += () => Dispatcher.UIThread.Post(OnLanStateChanged);
         Lan.MessageArrived += () => Dispatcher.UIThread.Post(Wake);
+        Lan.GameChanged += id => Dispatcher.UIThread.Post(() => SwitchGame(id));
         Lan.EmoteReceived += i => Dispatcher.UIThread.Post(() =>
         {
             Sound.Play("best", 0.35, 1.5);
@@ -492,6 +501,8 @@ public sealed class OverlayWindow : Window, IGameHost
 
         Settings.Game = next.Id;
         SaveSettings();
+        if (Lan.Connected && Lan.Role == LanRole.Host) Lan.SendGame(next.Id); // the guest follows
+        _race.Reset();
         _hud.SetGame(next.Id, next.Title);
         HudChanged();
         _tray?.Refresh();
@@ -670,8 +681,33 @@ public sealed class OverlayWindow : Window, IGameHost
         _ => L.T("Not connected"),
     };
 
+    /// <summary>Race mode's line under the scoreboard (the rival's live score), or null to hide it.</summary>
+    public void RoundStarted() => _race.LocalStart();
+
+    public void RoundEnded(int score) => _race.LocalEnd(score);
+
+    public void SetRaceLabel(string? text)
+    {
+        _raceLabel.IsVisible = text != null;
+        if (text == null) return;
+        _raceLabel.Text = text;
+        var b = _hud.Area;
+        Canvas.SetLeft(_raceLabel, b.Left);
+        Canvas.SetTop(_raceLabel, b.Bottom + 6 < Arena.Bottom - 30 ? b.Bottom + 6 : b.Top - 30);
+    }
+
+    public void RaceResult(string title, string sub, Color color, bool won)
+    {
+        var at = new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.3);
+        Fx.Popup(at, title, color, 40, 2.6, sub);
+        if (won) Fx.Burst(at, new[] { color, Colors.White }, 40, 520, 650, 7, 1.0);
+        Sound.Play(won ? "best" : "buzzer", won ? 0.8 : 0.4);
+        Wake();
+    }
+
     void OnLanStateChanged()
     {
+        _race.Reset();
         if (Lan.Connected)
         {
             if (Lan.Role == LanRole.Guest) SwitchGame(Lan.GameId);

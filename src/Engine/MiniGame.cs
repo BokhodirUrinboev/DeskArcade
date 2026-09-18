@@ -26,6 +26,9 @@ public interface IGameHost
     /// <summary>Area the HUD occupies, so games can avoid spawning things under it.</summary>
     Rect HudBounds { get; }
     void HudChanged();
+    /// <summary>Round-based games report rounds, so race mode can start the rival's and compare scores.</summary>
+    void RoundStarted();
+    void RoundEnded(int score);
     void Wake();
     void SaveSettings();
 }
@@ -45,6 +48,12 @@ public abstract class MiniGame
 
     /// <summary>True if two players can share this game over <see cref="IGameHost.Lan"/>.</summary>
     public virtual bool SupportsLan => false;
+
+    /// <summary>Round-based games that can be raced over the LAN: the round's score and whether it's running.</summary>
+    public virtual (int Score, bool Active)? Race => null;
+
+    /// <summary>Race mode: start a round now, because the other player just started theirs.</summary>
+    public virtual void StartRace() { }
 
     /// <summary>A small (about 20 px) icon for the scoreboard, drawn around its origin. Called once per use.</summary>
     public abstract Sprite CreateIcon();
