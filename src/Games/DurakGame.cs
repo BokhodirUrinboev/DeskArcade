@@ -59,8 +59,10 @@ public sealed class DurakView
 /// <summary>
 /// Durak (see <see cref="DurakRules"/>) for 2–4 players: against computer players, or with co-workers in a
 /// room on the local network (<see cref="RoomLink"/>). The host of a room runs the game and sends each
-/// player only their own view ("ds|json"); players send their moves ("da|seq|kind|card|index") and re-send
-/// them until the host's view acknowledges them. Computer players fill empty seats and take over the seat
+/// player only their own view ("ds|json"); players send their moves ("da|seq|kind|card|index") in order and
+/// re-send them until the host's view acknowledges them; the host takes each player's moves strictly in
+/// sequence, so none is lost or applied twice. The host's game runs on its own timer, so it goes on for
+/// everyone even while the host's overlay is hidden or showing another game. Computer players fill empty seats and take over the seat
 /// of anyone who drops out. Room setup happens in <see cref="DurakRoomWindow"/>, since typing a room code
 /// needs a window that can take the keyboard.
 /// </summary>
@@ -85,8 +87,11 @@ public sealed class DurakGame : MiniGame
     bool[] _cpu = Array.Empty<bool>();
     int[] _seatOfGuest = Array.Empty<int>(); // host: room seat → game seat (−1: not playing)
     int[] _lastSeq = Array.Empty<int>();       // host: last action number handled per game seat
-    int _game, _target = -1, _pendingSeq, _drawnVersion = -1;
-    string? _pending;                          // guest: our action, re-sent until acknowledged
+    bool[] _dropped = Array.Empty<bool>();     // host: seats the computer took over after their player dropped out
+    readonly List<(int Seq, string Message)> _outbox = new(); // guest: our actions, re-sent until acknowledged
+    readonly Avalonia.Threading.DispatcherTimer _hostTimer = new() { Interval = TimeSpan.FromMilliseconds(100) };
+    readonly System.Diagnostics.Stopwatch _hostClock = new();
+    int _game, _target = -1, _nextSeq, _drawnVersion = -1;
     double _cpuT, _sendT, _resendT, _demoT;
     bool _announced, _demo;
     Rect _area;
@@ -96,6 +101,21 @@ public sealed class DurakGame : MiniGame
         Layer.Children.Add(_canvas);
         _room.Changed += () => Avalonia.Threading.Dispatcher.UIThread.Post(OnRoomChanged);
         _room.MessageArrived += () => Avalonia.Threading.Dispatcher.UIThread.Post(Host.Wake);
+        _hostTimer.Tick += (_, _) => HostTick();
+    }
+
+    /// <summary>The host's game loop: guests' moves, computer turns and views, whatever the overlay shows.</summary>
+    void HostTick()
+    {
+        double dt = _hostClock.Elapsed.TotalSeconds;
+        _hostClock.Restart();
+        if (_mode != Mode.Hosting || _rules == null)
+        {
+            _hostTimer.Stop();
+            return;
+        }
+        HostUpdate(Math.Min(dt, 0.5));
+        CpuTurns(Math.Min(dt, 0.5));
     }
 
     public override string Id => "durak";
@@ -146,15 +166,22 @@ public sealed class DurakGame : MiniGame
         _mode = Mode.Solo;
         _names = new[] { L.T("You") }.Concat(Enumerable.Range(1, cpus).Select(i => L.F("CPU {0}", i))).ToArray();
         _cpu = new[] { false }.Concat(Enumerable.Repeat(true, cpus)).ToArray();
+        _lastSeq = new int[_names.Length];
+        _dropped = new bool[_names.Length];
         NewDeal();
     }
 
-    public void HostRoom()
+    /// <summary>Opens a room with <paramref name="code"/>, or a random one.</summary>
+    public void HostRoom(string? code = null)
     {
         _rules = null;
         _view = null;
-        _mode = Mode.Hosting;
-        _room.Host();
+        _announced = false;
+        _room.Host(code);
+        _mode = _room.IsHost ? Mode.Hosting : Mode.Idle;
+        if (!_room.IsHost)
+            Host.Fx.Popup(new Vec2(_area.Center.X, _area.Top + 80), L.T("Couldn't open a room"), Colors.White, 24, 2.4,
+                L.F("UDP port {0} is in use", RoomLink.Port));
         Changed();
     }
 
@@ -162,7 +189,9 @@ public sealed class DurakGame : MiniGame
     {
         _rules = null;
         _view = null;
-        _pending = null;
+        _outbox.Clear();
+        _nextSeq = 0;
+        _announced = false;
         _mode = Mode.Guest;
         _room.Join(code, address);
         Changed();
@@ -180,7 +209,9 @@ public sealed class DurakGame : MiniGame
     /// <summary>Host: starts the game with everyone in the room, adding computer players up to <paramref name="players"/> seats.</summary>
     public void StartRoom(int players)
     {
-        if (_mode != Mode.Hosting) return;
+        if (_mode != Mode.Hosting || !_room.IsHost) return;
+        _room.Open = false; // close the room first, so nobody joins or leaves between the roster and the deal
+        foreach (var gone in _room.Seats().Where(s => !s.Connected && s.Seat > 0)) _room.Kick(gone.Seat);
         var seats = _room.Seats().Where(s => s.Connected).ToList();
         int humans = seats.Count;
         players = Math.Clamp(Math.Max(players, humans), 2, RoomLink.MaxSeats);
@@ -189,14 +220,19 @@ public sealed class DurakGame : MiniGame
         _cpu = Enumerable.Range(0, players).Select(i => i >= humans).ToArray();
         _seatOfGuest = Enumerable.Repeat(-1, RoomLink.MaxSeats).ToArray();
         for (int i = 0; i < seats.Count; i++) _seatOfGuest[seats[i].Seat] = i;
-        _room.Open = false;
+        _lastSeq = new int[players];
+        _dropped = new bool[players];
         NewDeal();
+        _hostClock.Restart();
+        _hostTimer.Start();
     }
 
     void NewDeal()
     {
         _rules = new DurakRules(_names.Length, Rng);
-        _lastSeq = new int[_names.Length];
+        // action numbers carry on across deals, so a late copy of a move from the last deal can't count in this one
+        if (_lastSeq.Length != _names.Length) _lastSeq = new int[_names.Length];
+        if (_dropped.Length != _names.Length) _dropped = new bool[_names.Length];
         _game++;
         _target = -1;
         _announced = false;
@@ -267,11 +303,13 @@ public sealed class DurakGame : MiniGame
         else Host.Fx.Popup(Host.Pointer - new Vec2(0, 40), L.T("not allowed right now"), Colors.White, 18, 1.0);
     }
 
+    /// <summary>Guest: queues a move; moves go out in order and are re-sent until the host's view acknowledges them.</summary>
     void SendAction(string kind, int card, int index)
     {
-        _pendingSeq = (_view?.Ack ?? 0) + 1;
-        _pending = string.Create(CultureInfo.InvariantCulture, $"da|{_pendingSeq}|{kind}|{card}|{index}");
-        _room.SendToHost(_pending);
+        _nextSeq = Math.Max(_nextSeq, _view?.Ack ?? 0) + 1;
+        var message = string.Create(CultureInfo.InvariantCulture, $"da|{_nextSeq}|{kind}|{card}|{index}");
+        _outbox.Add((_nextSeq, message));
+        _room.SendToHost(message);
         _resendT = 0;
         Host.Sound.Play("board", 0.35, 1.5);
     }
@@ -281,11 +319,16 @@ public sealed class DurakGame : MiniGame
     public override bool Update(double dt)
     {
         if (_mode == Mode.Guest) GuestUpdate(dt);
-        else if (_mode == Mode.Hosting) HostUpdate(dt);
-        if (_rules != null && _mode != Mode.Guest) CpuTurns(dt);
+        else if (_mode == Mode.Solo) CpuTurns(dt); // a room's host plays on its own timer (HostTick)
         if (_view != null && _view.Version != _drawnVersion) Draw();
         if (_view is { Over: true }) GameOverFx();
-        return _mode is Mode.Guest or Mode.Hosting || _rules is { Over: false };
+        // frames are needed only while something is due; arriving messages wake the overlay
+        return _mode switch
+        {
+            Mode.Solo => _rules is { Over: false } || _demo,
+            Mode.Guest => _room.State == RoomState.Joining || _outbox.Count > 0 || _demo && _room.State == RoomState.Joined,
+            _ => false,
+        };
     }
 
     void CpuTurns(double dt)
@@ -320,10 +363,14 @@ public sealed class DurakGame : MiniGame
         {
             if (_rules == null || msg.Seat >= _seatOfGuest.Length || _seatOfGuest[msg.Seat] is not (>= 0 and var seat)) continue;
             var f = msg.Body.Split('|');
-            if (f.Length != 5 || f[0] != "da" || !int.TryParse(f[1], out int seq) || seq <= _lastSeq[seat]) continue;
+            // moves are taken strictly in order: a repeat or one that jumped ahead waits for the re-send
+            if (f.Length != 5 || f[0] != "da" || !int.TryParse(f[1], out int seq) || seq != _lastSeq[seat] + 1 ||
+                !int.TryParse(f[3], NumberStyles.Integer, CultureInfo.InvariantCulture, out int card) ||
+                !int.TryParse(f[4], NumberStyles.Integer, CultureInfo.InvariantCulture, out int index))
+                continue;
             _lastSeq[seat] = seq; // handled, whether or not the rules accept it; the view tells the player
             if (f[2] == "again" && _rules.Over) NewDeal();
-            else if (_rules.Act(seat, f[2], int.Parse(f[3], CultureInfo.InvariantCulture), int.Parse(f[4], CultureInfo.InvariantCulture)))
+            else if (_rules.Act(seat, f[2], card, index))
             {
                 Host.Sound.Play("board", 0.4, 1.4);
                 _cpuT = CpuDelay;
@@ -332,17 +379,28 @@ public sealed class DurakGame : MiniGame
         }
         if (_rules == null) return;
 
-        // a player who dropped out is played by the computer from now on
-        foreach (var s in _room.Seats())
-            if (s.Seat < _seatOfGuest.Length && _seatOfGuest[s.Seat] is >= 0 and var g && !s.Connected && !_cpu[g])
+        // a player who dropped out is played by the computer until they come back
+        var seats = _room.Seats();
+        for (int roomSeat = 1; roomSeat < _seatOfGuest.Length; roomSeat++)
+        {
+            if (_seatOfGuest[roomSeat] is not (>= 0 and var g)) continue;
+            bool connected = seats.Any(s => s.Seat == roomSeat && s.Connected);
+            if (!connected && !_cpu[g])
             {
-                _cpu[g] = true;
+                _cpu[g] = _dropped[g] = true;
                 Host.Fx.Popup(new Vec2(_area.Center.X, _area.Top + 60), L.F("{0} left · the computer plays for them", _names[g]), Colors.White, 20, 2.0);
                 RefreshView();
             }
+            else if (connected && _dropped[g])
+            {
+                _cpu[g] = _dropped[g] = false;
+                Host.Fx.Popup(new Vec2(_area.Center.X, _area.Top + 60), L.F("{0} is back", _names[g]), Colors.White, 20, 2.0);
+                RefreshView();
+            }
+        }
         if ((_sendT += dt) < SendEvery) return;
         _sendT = 0;
-        foreach (var s in _room.Seats().Where(s => s.Seat > 0 && s.Connected))
+        foreach (var s in seats.Where(s => s.Seat > 0 && s.Connected))
             if (s.Seat < _seatOfGuest.Length && _seatOfGuest[s.Seat] is >= 0 and var g)
                 _room.SendTo(s.Seat, "ds|" + JsonSerializer.Serialize(DurakView.Of(_rules, g, _game, _names, _cpu, _lastSeq[g])));
     }
@@ -356,19 +414,20 @@ public sealed class DurakGame : MiniGame
             try { latest = JsonSerializer.Deserialize<DurakView>(msg.Body[3..]); }
             catch (JsonException) { }
         }
-        if (latest != null && (_view == null || latest.Game != _view.Game || latest.Version != _view.Version || latest.Ack != _view.Ack))
+        // UDP can deliver out of order: only ever move forward
+        if (latest != null && (_view == null || (latest.Game, latest.Version, latest.Ack).CompareTo((_view.Game, _view.Version, _view.Ack)) > 0))
         {
             if (_view != null && latest.Game != _view.Game) _announced = false;
             _view = latest;
             Changed();
         }
-        if (_pending != null && _view != null && _view.Ack >= _pendingSeq) _pending = null;
-        if (_pending != null && (_resendT += dt) >= ResendEvery)
+        if (_view != null) _outbox.RemoveAll(o => o.Seq <= _view.Ack);
+        if (_outbox.Count > 0 && (_resendT += dt) >= ResendEvery)
         {
             _resendT = 0;
-            _room.SendToHost(_pending);
+            foreach (var (_, message) in _outbox) _room.SendToHost(message);
         }
-        if (_demo && _pending == null && _view is { Over: false } v && (_demoT -= dt) <= 0)
+        if (_demo && _outbox.Count == 0 && _view is { Over: false } v && (_demoT -= dt) <= 0)
         {
             _demoT = CpuDelay;
             GuestDemo(v);
@@ -570,6 +629,11 @@ public sealed class DurakGame : MiniGame
         var a = _area;
         double y = a.Bottom - CardH - 70;
         Label(Status(), a.Center.X, y - 34, 15, Gold, center: true);
+        if (_mode == Mode.Guest && _room.State == RoomState.Lost)
+        {
+            Button(L.T("Leave the room"), a.Center.X, y, 200, LeaveRoom);
+            return;
+        }
         if (v.Over)
         {
             if (_mode != Mode.Guest || _room.State == RoomState.Joined) Button(L.T("New game"), a.Center.X - 110, y, 180, NewGameClicked);
@@ -582,7 +646,8 @@ public sealed class DurakGame : MiniGame
         }
         if (v.Out[v.Seat]) return;
         if (v.Seat == v.Defender && !v.Taking && v.Unbeaten > 0) Button(L.T("Take"), a.Right - 110, y + 40, 150, () => Do("take", -1, -1));
-        if (v.Seat != v.Defender && v.Table.Count > 0 && !v.Done[v.Seat]) Button(L.T("Done"), a.Right - 110, y + 40, 150, () => Do("pass", -1, -1));
+        if (v.Seat != v.Defender && v.Table.Count > 0 && !v.Done[v.Seat] && (v.Taking || v.Unbeaten == 0))
+            Button(L.T("Done"), a.Right - 110, y + 40, 150, () => Do("pass", -1, -1));
     }
 
     // ------------------------------------------------------------------ pieces

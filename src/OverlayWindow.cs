@@ -726,10 +726,7 @@ public sealed class OverlayWindow : Window, IGameHost
         switch (verb)
         {
             case "durak-solo": durak.StartSolo(Math.Clamp(n, 1, 3)); break;
-            case "durak-host":
-                durak.HostRoom();
-                if (arg.Length > 0) durak.Room.Host(Net.RoomLink.CleanCode(arg));
-                break;
+            case "durak-host": durak.HostRoom(arg.Length > 0 ? Net.RoomLink.CleanCode(arg) : null); break;
             case "durak-join": durak.JoinRoom(arg, null); break;
             case "durak-start": durak.StartRoom(Math.Clamp(n, 2, Net.RoomLink.MaxSeats)); break;
             case "durak-leave": durak.LeaveRoom(); break;

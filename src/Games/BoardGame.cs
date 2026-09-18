@@ -363,7 +363,7 @@ public abstract class BoardGame : MiniGame
                 Host.Stats.Add("lan.wins");
             }
             string sub = L.F("vs {0}", Rival);
-            if (HasLevels && !LanOn)
+            if (HasLevels && !LanOn && !_demo) // demo games don't move the player's level
             {
                 _lossStreak = 0;
                 if (Level < LevelNames.Length)
@@ -380,7 +380,7 @@ public abstract class BoardGame : MiniGame
         {
             _theirWins++;
             string sub = L.T("click the board for a rematch");
-            if (HasLevels && !LanOn && ++_lossStreak >= 2 && Level > 1)
+            if (HasLevels && !LanOn && !_demo && ++_lossStreak >= 2 && Level > 1)
             {
                 _lossStreak = 0;
                 Level--;

@@ -95,10 +95,11 @@ public sealed class RoomLink : IDisposable
     public void Host(string? code = null)
     {
         Stop();
+        UdpClient? udp = null;
         try
         {
-            var udp = new UdpClient(new IPEndPoint(IPAddress.Any, 0)) { EnableBroadcast = true };
             var listener = NewListener();
+            udp = new UdpClient(new IPEndPoint(IPAddress.Any, 0)) { EnableBroadcast = true };
             lock (_gate)
             {
                 _udp = udp;
@@ -111,6 +112,7 @@ public sealed class RoomLink : IDisposable
         }
         catch (SocketException)
         {
+            udp?.Dispose();
             Stop();
         }
     }
@@ -259,20 +261,20 @@ public sealed class RoomLink : IDisposable
             catch (OperationCanceledException) { return; }
             catch (ObjectDisposedException) { return; }
             catch (SocketException) { continue; }
-            if (r.Buffer.Length > 8192) continue;
+            if (r.Buffer.Length > 8192 || ct.IsCancellationRequested) continue;
             string text = Encoding.UTF8.GetString(r.Buffer);
             if (!text.StartsWith(Magic + "|", StringComparison.Ordinal)) continue;
-            try { Handle(r.RemoteEndPoint, text[(Magic.Length + 1)..]); }
+            try { Handle(r.RemoteEndPoint, text[(Magic.Length + 1)..], ct); }
             catch (Exception) { /* a malformed message is ignored */ }
         }
     }
 
-    void Handle(IPEndPoint from, string msg)
+    void Handle(IPEndPoint from, string msg, CancellationToken ct)
     {
         var f = msg.Split('|', 4);
         string kind = f[0];
         if (IsHost) HostHandle(from, kind, f);
-        else GuestHandle(from, kind, f);
+        else GuestHandle(from, kind, f, ct);
     }
 
     void HostHandle(IPEndPoint from, string kind, string[] f)
@@ -292,12 +294,14 @@ public sealed class RoomLink : IDisposable
             int seat = -1;
             string? refusal = null;
             string nonce = f[3];
+            var replyTo = from;
             lock (_gate)
             {
                 var known = _guests.FirstOrDefault(g => g.Value.Nonce == nonce);
                 if (known.Value != null)
                 {
-                    seat = known.Key; // a repeated join (a lost answer): same seat
+                    seat = known.Key; // a repeated join (a lost answer, or the loopback copy): same seat and address
+                    replyTo = known.Value.Address;
                     known.Value.Connected = true;
                     known.Value.Heard = DateTime.UtcNow;
                 }
@@ -309,7 +313,7 @@ public sealed class RoomLink : IDisposable
                     _guests[seat] = new Guest { Address = from, Name = Clean(f[2]), Nonce = nonce, Heard = DateTime.UtcNow };
                 }
             }
-            TrySend(udp, from, refusal == null ? $"rok|{Code}|{seat}" : $"rno|{Code}|{refusal}");
+            TrySend(udp, refusal == null ? replyTo : from, refusal == null ? $"rok|{Code}|{seat}" : $"rno|{Code}|{refusal}");
             if (refusal == null)
             {
                 SendRoster();
@@ -344,9 +348,9 @@ public sealed class RoomLink : IDisposable
         }
     }
 
-    void GuestHandle(IPEndPoint from, string kind, string[] f)
+    void GuestHandle(IPEndPoint from, string kind, string[] f, CancellationToken ct)
     {
-        if (f.Length < 2 || f[1] != Code) return;
+        if (f.Length < 2 || f[1] != Code || ct.IsCancellationRequested) return;
         if (State == RoomState.Joining)
         {
             if (_target != null && !from.Address.Equals(_target.Address)) return;
@@ -354,6 +358,7 @@ public sealed class RoomLink : IDisposable
             {
                 lock (_gate)
                 {
+                    if (ct.IsCancellationRequested) return; // stopped meanwhile
                     _host = from;
                     MySeat = seat;
                     _lastHeard = DateTime.UtcNow;
@@ -446,9 +451,11 @@ public sealed class RoomLink : IDisposable
                 case RoomState.Hosting:
                     bool dropped = false;
                     lock (_gate)
-                        foreach (var g in _guests.Values.Where(g => g.Connected && (now - g.Heard).TotalSeconds > TimeoutSeconds))
+                        foreach (var (seat, g) in _guests.Where(g => g.Value.Connected && (now - g.Value.Heard).TotalSeconds > TimeoutSeconds).ToList())
                         {
-                            g.Connected = false;
+                            // before the game, a silent guest frees the seat; during it, the game keeps the seat for them
+                            if (Open) _guests.Remove(seat);
+                            else g.Connected = false;
                             dropped = true;
                         }
                     if (dropped) RaiseChanged();
@@ -476,8 +483,11 @@ public sealed class RoomLink : IDisposable
 
     void SetState(RoomState s)
     {
-        if (State == s) return;
-        State = s;
+        lock (_gate)
+        {
+            if (State == s) return;
+            State = s;
+        }
         RaiseChanged();
     }
 

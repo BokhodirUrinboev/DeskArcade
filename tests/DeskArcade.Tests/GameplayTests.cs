@@ -496,6 +496,26 @@ public class DurakRulesTests
     }
 
     [Fact]
+    public void DoneOnlyCountsOnceTheDefenderHasAnsweredAndANewRankReopensThrowingIn()
+    {
+        for (int seed = 0; seed < 200; seed++)
+        {
+            var g = new DurakRules(2, new Random(seed));
+            int a = g.Attacker, d = g.Defender;
+            int lead = g.Hands[a][0];
+            g.Attack(a, lead);
+            Assert.False(g.Pass(a)); // the card is still unbeaten: "done" means nothing yet
+            int answer = g.Hands[d].FirstOrDefault(c => g.Beats(c, lead), -1);
+            if (answer < 0 || !g.Hands[a].Any(c => DurakRules.Rank(c) == DurakRules.Rank(answer))) continue;
+            Assert.True(g.Defend(d, 0, answer));
+            Assert.Single(g.Table); // the bout waits: the attacker holds the defense card's rank
+            Assert.Contains(g.Hands[a], c => g.CanAttack(a, c) && DurakRules.Rank(c) == DurakRules.Rank(answer));
+            return;
+        }
+        Assert.Fail("no seed gave the attacker a card of the defense's rank");
+    }
+
+    [Fact]
     public void ABeatenBoutGoesToTheDiscardsAndTheDefenderAttacksNext()
     {
         for (int seed = 0; seed < 200; seed++)

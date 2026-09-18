@@ -661,5 +661,7 @@ public static partial class Strings
         ["Medium"] = "Средне",
         ["Hard"] = "Сложно",
         ["Expert"] = "Эксперт",
+        ["Couldn't open a room"] = "Не удалось открыть комнату",
+        ["{0} is back"] = "{0} вернулся",
     };
 }

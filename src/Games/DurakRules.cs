@@ -133,6 +133,7 @@ public sealed class DurakRules
         if (pair.Beaten || !Hands[seat].Contains(card) || !Beats(card, pair.Attack)) return false;
         Hands[seat].Remove(card);
         pair.Defense = card;
+        Array.Clear(Done); // the defense puts a new rank on the table: everyone may throw it in
         Changed();
         AutoEnd();
         return true;
@@ -152,7 +153,8 @@ public sealed class DurakRules
     /// <summary>An attacker has nothing more to throw in this bout.</summary>
     public bool Pass(int seat)
     {
-        if (!IsAttacker(seat) || Table.Count == 0 || Done[seat]) return false;
+        // "done" only means something once the defender has answered everything (or is taking)
+        if (!IsAttacker(seat) || Table.Count == 0 || Done[seat] || !Taking && Unbeaten > 0) return false;
         Done[seat] = true;
         Changed();
         AutoEnd();

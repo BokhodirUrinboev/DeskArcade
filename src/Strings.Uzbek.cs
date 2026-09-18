@@ -661,5 +661,7 @@ public static partial class Strings
         ["Medium"] = "O'rta",
         ["Hard"] = "Qiyin",
         ["Expert"] = "Ekspert",
+        ["Couldn't open a room"] = "Xonani ochib bo'lmadi",
+        ["{0} is back"] = "{0} qaytdi",
     };
 }
