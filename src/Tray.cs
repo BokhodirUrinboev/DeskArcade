@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using DeskArcade.Platform;
@@ -67,6 +68,7 @@ public sealed class Tray : IDisposable
         lan.Add(Item(L.T("Host a game"), () => _w.HostLan()));
         lan.Add(Item(L.T("Join a game"), () => _w.JoinLan()));
         lan.Add(Item(L.T("Find games / join by address…"), () => _w.OpenLobby()));
+        lan.Add(Item(L.T("Durak with co-workers…"), () => _w.OpenDurakRooms()));
         var emotes = new NativeMenu();
         for (int i = 0; i < Net.LanLink.Emotes.Length; i++)
         {
@@ -88,6 +90,19 @@ public sealed class Tray : IDisposable
         foreach (double level in VolumeLevels)
             volume.Add(Radio($"{(int)(level * 100)}%", () => _w.SetVolume(level), () => Math.Abs(_w.Settings.Volume - level) < 0.126));
         menu.Add(new NativeMenuItem(L.T("Volume")) { Menu = volume });
+
+        var levels = new NativeMenu();
+        foreach (var boardGame in _w.Games.OfType<Games.BoardGame>().Where(g => g.HasLevels))
+        {
+            var sub = new NativeMenu();
+            for (int level = 1; level <= Games.BoardGame.LevelNames.Length; level++)
+            {
+                int l = level;
+                sub.Add(Radio(L.T(Games.BoardGame.LevelNames[l - 1]), () => { boardGame.Level = l; Refresh(); }, () => boardGame.Level == l));
+            }
+            levels.Add(new NativeMenuItem(L.T(boardGame.Title)) { Menu = sub });
+        }
+        menu.Add(new NativeMenuItem(L.T("CPU difficulty")) { Menu = levels });
 
         var themes = new NativeMenu();
         foreach (var (id, name) in Engine.Themes.Choices)

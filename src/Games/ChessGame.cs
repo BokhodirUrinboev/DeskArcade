@@ -17,6 +17,8 @@ public sealed class ChessGame : BoardGame
     public override string Id => "chess";
     public override string Title => "Chess";
 
+    protected override int[] LevelDepths => new[] { 1, 2, 3, 3 };
+
     public override Sprite CreateIcon()
     {
         var s = new Sprite();

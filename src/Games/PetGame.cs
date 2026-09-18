@@ -12,7 +12,8 @@ namespace DeskArcade.Games;
 
 /// <summary>
 /// Desktop Pet: a little cat-like blob that lives on the taskbar and the tops of your windows. It wanders,
-/// jumps between windows, naps when ignored and loves being petted. Click to pet it, drag to carry and throw it.
+/// jumps between windows, naps when ignored and loves being petted. Click to pet it, drag to carry and throw it,
+/// right-click for its trick. Each animal has its own voice and its own trick (see <see cref="TrickFor"/>).
 /// There is no score to chase, so it is built to sit perfectly still (zero CPU) most of the time.
 /// </summary>
 public sealed class PetGame : MiniGame
@@ -67,6 +68,8 @@ public sealed class PetGame : MiniGame
     double _lastStir, _sleptAt;
     bool _placed, _active, _pressed, _recheck, _decide, _hopAtEdge, _thrown, _demo;
     string _shownLine = "";
+    string _trick = "";
+    double _trickT, _trickLen, _trickAngle;
 
     public PetGame(IGameHost host) : base(host)
     {
@@ -84,6 +87,24 @@ public sealed class PetGame : MiniGame
     public static readonly string[] Kinds = { "cat", "dog", "duck", "bunny", "penguin", "fox" };
 
     string Kind => Array.IndexOf(Kinds, Host.Settings.PetKind) >= 0 ? Host.Settings.PetKind : "cat";
+
+    /// <summary>Each animal's voice, one of the synthesized clips in <see cref="Sound"/>.</summary>
+    static string VoiceOf(string kind) => kind switch
+    {
+        "dog" => "bark", "duck" => "quack", "bunny" => "squeak", "penguin" => "honk", "fox" => "yip", _ => "meow",
+    };
+
+    /// <summary>
+    /// Each animal's trick and how long it lasts: the cat stretches, the dog chases its tail, the duck
+    /// flaps, the bunny does a twisting hop (a binky), the penguin belly-slides and the fox crouches and pounces.
+    /// </summary>
+    public static (string Name, double Seconds) TrickFor(string kind) => kind switch
+    {
+        "dog" => ("spin", 0.9), "duck" => ("flap", 1.0), "bunny" => ("binky", 0.75), "penguin" => ("slide", 1.4), "fox" => ("pounce", 0.4),
+        _ => ("stretch", 1.4),
+    };
+
+    void Speak(double pitch = 1, double volume = 0.55) => PlayThrottled(VoiceOf(Kind), volume, pitch * (0.94 + Rng.NextDouble() * 0.12));
 
     /// <summary>Redraws the pet after the kind changes in the tray.</summary>
     public void Rebuild()
@@ -115,9 +136,10 @@ public sealed class PetGame : MiniGame
     {
         if (_mode == Mode.Sleep) return L.T("Sleeping · click to wake");
         if (_mode == Mode.Carried) return L.T("Wheee! · let go to throw");
+        if (_trick.Length > 0) return L.T("Showing off");
         if (_thrown) return L.T("Wheee!");
         if (Now - _lastStir > AttentionAfter) return L.T("Wants attention · click to pet");
-        return _hwnd != IntPtr.Zero ? L.T("Exploring the window tops") : L.T("Click to pet · drag to carry");
+        return _hwnd != IntPtr.Zero ? L.T("Exploring the window tops") : L.T("Click to pet · right-click for a trick · drag to carry");
     }
 
     void UpdateHud()
@@ -203,7 +225,8 @@ public sealed class PetGame : MiniGame
         }
 
         double roll = Rng.NextDouble();
-        if (roll < 0.35) StartWalk(Rng.NextDouble() < 0.5 ? -1 : 1, 2 + Rng.NextDouble() * 4);
+        if (roll < 0.08) Trick();
+        else if (roll < 0.35) StartWalk(Rng.NextDouble() < 0.5 ? -1 : 1, 2 + Rng.NextDouble() * 4);
         else if (roll < 0.6 && TryJumpUp()) { }
         else if (roll < 0.75 && _hwnd != IntPtr.Zero) HopDown();
         else if (Rng.NextDouble() < 0.4) _face = -_face; // look around
@@ -334,6 +357,11 @@ public sealed class PetGame : MiniGame
     public override bool PointerDown(Vec2 p, bool right)
     {
         if (_pressed || (p - (Center - new Vec2(0, 3))).Length > HitR) return false;
+        if (right)
+        {
+            Trick();
+            return false;
+        }
         _pressed = true;
         _pressPos = p;
         return true; // capture until release: a still release pets it, a drag carries it
@@ -362,6 +390,8 @@ public sealed class PetGame : MiniGame
                 new Vec2((Rng.NextDouble() - 0.5) * 90, -70 - Rng.NextDouble() * 60), 0.9 + Rng.NextDouble() * 0.5);
         Host.Fx.Burst(Center, Blush, 6, 150, 250, 4, 0.5);
         PlayThrottled("star", 0.3, 1.7 + Rng.NextDouble() * 0.2);
+        if (Kind == "cat" && _pets % 3 == 0) PlayThrottled("purr", 0.5); // every third pet a cat purrs instead
+        else Speak();
         RunBrain();
         UpdateHud();
         Host.HudChanged(); // the score changed even if the line did not
@@ -376,8 +406,60 @@ public sealed class PetGame : MiniGame
         _carryStart = _pos;
         _trail.Clear();
         _lastStir = Now;
+        _trick = "";
         RunBrain();
         PlayThrottled("pop", 0.3, 1.8);
+        Speak(1.25, 0.45); // a surprised little noise
+    }
+
+    /// <summary>Starts the animal's trick (right-click, or now and then on its own).</summary>
+    void Trick()
+    {
+        if (_mode is Mode.Air or Mode.Carried || _trick.Length > 0) return;
+        if (_mode == Mode.Walk) StopWalking();
+        _mode = Mode.Sit;
+        _lastStir = Now;
+        (_trick, _trickLen) = TrickFor(Kind);
+        _trickT = 0;
+        Host.Stats.Add("pet.tricks");
+        if (_trick == "binky") Drop(new Vec2(_face * 70, -560)); // straight up with a twist
+        else if (_trick == "pounce") _squashT = 0;                 // a crouch first, the leap comes after
+        Speak(_trick == "pounce" ? 1.1 : 1);
+        RunBrain();
+        UpdateHud();
+        Host.Wake();
+    }
+
+    /// <summary>Advances the trick; returns true while it runs.</summary>
+    bool StepTrick(double dt)
+    {
+        if (_trick.Length == 0) return false;
+        _trickT += dt;
+        double k = Math.Min(1, _trickT / _trickLen);
+        _trickAngle = 0;
+        switch (_trick)
+        {
+            case "spin":
+                _trickAngle = 360 * k * _face;
+                break;
+            case "binky":
+                _trickAngle = Math.Sin(k * Math.PI * 2) * 25; // a twist in mid-air
+                break;
+            case "slide":
+                if (_mode == Mode.Sit)
+                {
+                    var (lo, hi) = WalkRange();
+                    _pos.X = Clamp(_pos.X + _face * 220 * Math.Sin(Math.PI * k) * dt, lo, hi);
+                }
+                _trickAngle = _face * 72 * Math.Sin(Math.PI * Math.Min(1, k * 1.3));
+                break;
+        }
+        if (k < 1) return true;
+        if (_trick == "pounce" && _mode == Mode.Sit) Drop(new Vec2(_face * 330, -470));
+        _trick = "";
+        _trickAngle = 0;
+        UpdateHud();
+        return true;
     }
 
     void Throw(Vec2 v)
@@ -446,7 +528,8 @@ public sealed class PetGame : MiniGame
             _acc = 0;
         }
 
-        if (_mode == Mode.Sit && !_pressed) FaceCursor();
+        bool trick = StepTrick(dt);
+        if (_mode == Mode.Sit && !_pressed && !trick) FaceCursor();
         if (_mode != Mode.Carried) _swing *= Math.Max(0, 1 - dt * 8);
         _happyT = Math.Max(0, _happyT - dt);
         _squashT = Math.Max(0, _squashT - dt);
@@ -454,7 +537,7 @@ public sealed class PetGame : MiniGame
         Draw();
         UpdateHud();
         // sitting and sleeping are still: no frames needed until the behaviour timer or the user wakes us
-        return _pressed || (_mode is Mode.Walk or Mode.Air or Mode.Carried) || _happyT > 0 || _squashT > 0 || hearts;
+        return _pressed || (_mode is Mode.Walk or Mode.Air or Mode.Carried) || _happyT > 0 || _squashT > 0 || hearts || trick;
     }
 
     /// <summary>Ride along with the window underneath, or fall when it moved away, closed or got covered.</summary>
@@ -619,8 +702,30 @@ public sealed class PetGame : MiniGame
             sy = 1.06;
             sx = 0.95;
         }
+        if (_trick.Length > 0)
+        {
+            double k = Math.Min(1, _trickT / _trickLen), env = Math.Sin(Math.PI * k);
+            switch (_trick)
+            {
+                case "stretch": // long and low, then back
+                    sx = 1 + 0.3 * env;
+                    sy = 1 - 0.2 * env;
+                    break;
+                case "flap": // three little flaps up and down
+                    bob -= Math.Abs(Math.Sin(k * Math.PI * 3)) * 11;
+                    sx = 1 + 0.08 * Math.Abs(Math.Sin(k * Math.PI * 6));
+                    break;
+                case "pounce": // crouch down before the leap
+                    sy = 1 - 0.28 * Math.Min(1, k * 1.4);
+                    sx = 1 + 0.16 * Math.Min(1, k * 1.4);
+                    break;
+                case "slide": // flat on the belly
+                    sy = 1 - 0.25 * env;
+                    break;
+            }
+        }
 
-        _art.Root.Set(Center, _swing);
+        _art.Root.Set(Center, _swing + _trickAngle);
         _art.BodyScale.ScaleX = _face * sx;
         _art.BodyScale.ScaleY = sy;
         _art.BodyShift.Y = bob + CenterLift * (1 - sy); // squash toward the feet, not the middle
@@ -895,6 +1000,10 @@ public sealed class PetGame : MiniGame
         if (roll < 0.012)
         {
             Pet();
+        }
+        else if (roll < 0.016)
+        {
+            Trick();
         }
         else if (roll < 0.02)
         {
