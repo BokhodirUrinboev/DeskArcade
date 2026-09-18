@@ -479,3 +479,57 @@ public class SeaBattleTests
         Assert.Equal(fleet.Encode(), DeskArcade.Games.SeaFleet.Decode(fleet.Encode())!.Encode());
     }
 }
+
+public class LanLinkTests
+{
+    static bool WaitFor(Func<bool> condition, int ms = 5000)
+    {
+        var until = DateTime.UtcNow.AddMilliseconds(ms);
+        while (DateTime.UtcNow < until)
+        {
+            if (condition()) return true;
+            System.Threading.Thread.Sleep(20);
+        }
+        return condition();
+    }
+
+    [Fact]
+    public void AddressesParseWithAndWithoutAPort()
+    {
+        Assert.Equal(new System.Net.IPEndPoint(System.Net.IPAddress.Parse("192.168.1.20"), DeskArcade.Net.LanLink.Port),
+            DeskArcade.Net.LanLink.ParseAddress(" 192.168.1.20 "));
+        Assert.Equal(5000, DeskArcade.Net.LanLink.ParseAddress("10.0.0.7:5000")!.Port);
+        Assert.Null(DeskArcade.Net.LanLink.ParseAddress("not an address at all.invalid"));
+    }
+
+    [Fact]
+    public async System.Threading.Tasks.Task HostAndGuestPairOverLoopbackAndExchangeMessages()
+    {
+        using var host = new DeskArcade.Net.LanLink();
+        using var guest = new DeskArcade.Net.LanLink();
+        host.Host("chess");
+        Assert.Equal(DeskArcade.Net.LanState.Waiting, host.State);
+
+        var found = await DeskArcade.Net.LanLink.FindHosts(TimeSpan.FromSeconds(0.8));
+        var me = Assert.Single(found, h => h.GameId == "chess");
+        Assert.False(me.Busy);
+
+        guest.Join(new System.Net.IPEndPoint(System.Net.IPAddress.Loopback, DeskArcade.Net.LanLink.Port));
+        Assert.True(WaitFor(() => host.Connected && guest.Connected), "the two links never paired");
+        Assert.Equal("chess", guest.GameId);
+
+        guest.Send("mv|0|52,36");
+        string? got = null;
+        Assert.True(WaitFor(() => host.TryReceive(out got)));
+        Assert.Equal("mv|0|52,36", got);
+
+        int emote = -1;
+        host.EmoteReceived += i => emote = i;
+        guest.SendEmote(1);
+        Assert.True(WaitFor(() => emote == 1));
+        Assert.False(host.TryReceive(out _)); // emotes never reach the game's queue
+
+        guest.Stop();
+        Assert.True(WaitFor(() => host.State == DeskArcade.Net.LanState.Waiting), "the host didn't notice the guest leave");
+    }
+}

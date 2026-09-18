@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -12,11 +14,15 @@ public enum LanRole { None, Host, Guest }
 
 public enum LanState { Off, Waiting, Connected }
 
+/// <summary>A host found on the network by <see cref="LanLink.FindHosts"/>.</summary>
+public sealed record LanHost(IPEndPoint Address, string Name, string GameId, bool Busy);
+
 /// <summary>
 /// A two-player link over the local network: no server, no account. A host listens on UDP port
 /// <see cref="Port"/>; a guest broadcasts "hello" and pairs with the first host that answers. After that,
 /// games exchange short text messages ("kind|payload") with <see cref="Send"/> and drain them with
-/// <see cref="TryReceive"/>. Silence for <see cref="TimeoutSeconds"/> drops the link.
+/// <see cref="TryReceive"/>. Silence for <see cref="TimeoutSeconds"/> drops the link. Hosts also answer
+/// "find" probes so a lobby can list them, and emotes travel beside the game messages.
 /// Events fire on a background thread; the overlay marshals them to the UI thread.
 /// </summary>
 public sealed class LanLink : IDisposable
@@ -29,7 +35,7 @@ public sealed class LanLink : IDisposable
     readonly object _gate = new();
     UdpClient? _udp;
     CancellationTokenSource? _cts;
-    IPEndPoint? _peer;
+    IPEndPoint? _peer, _target; // _target: the one host a guest asked to join, or null for the first to answer
     DateTime _lastHeard, _lastSent;
 
     public LanRole Role { get; private set; }
@@ -43,6 +49,11 @@ public sealed class LanLink : IDisposable
     public event Action? StateChanged;
     /// <summary>Raised whenever a game message arrives (so the overlay can wake up and render).</summary>
     public event Action? MessageArrived;
+    /// <summary>Raised when the peer sends an emote (an index into <see cref="Emotes"/>).</summary>
+    public event Action<int>? EmoteReceived;
+
+    /// <summary>Short messages players can send each other. Only the index crosses the network.</summary>
+    public static readonly string[] Emotes = { "gg", "One more?", "Nice shot!", "Your move!", "Ha!" };
 
     public static string MyName => Environment.UserName is { Length: > 0 } u ? u : Environment.MachineName;
 
@@ -62,11 +73,82 @@ public sealed class LanLink : IDisposable
         }
     }
 
-    public void Join()
+    /// <summary>Joins <paramref name="target"/>, or the first host on the network to answer.</summary>
+    public void Join(IPEndPoint? target = null)
     {
         Stop();
         var udp = new UdpClient(new IPEndPoint(IPAddress.Any, 0)) { EnableBroadcast = true };
+        _target = target;
         Begin(udp, LanRole.Guest, "");
+    }
+
+    /// <summary>"192.168.1.20" or "192.168.1.20:47820"; host names work too.</summary>
+    public static IPEndPoint? ParseAddress(string text)
+    {
+        text = text.Trim();
+        int port = Port;
+        int colon = text.LastIndexOf(':');
+        if (colon > 0 && int.TryParse(text[(colon + 1)..], out int p) && p is > 0 and < 65536)
+        {
+            port = p;
+            text = text[..colon];
+        }
+        if (IPAddress.TryParse(text, out var ip)) return new IPEndPoint(ip, port);
+        try
+        {
+            var found = Dns.GetHostAddresses(text).FirstOrDefault(a => a.AddressFamily == AddressFamily.InterNetwork);
+            return found == null ? null : new IPEndPoint(found, port);
+        }
+        catch (SocketException)
+        {
+            return null;
+        }
+    }
+
+    /// <summary>Broadcasts a probe and collects the hosts that answer within <paramref name="wait"/>.</summary>
+    public static async Task<List<LanHost>> FindHosts(TimeSpan wait)
+    {
+        var hosts = new Dictionary<string, LanHost>();
+        using var udp = new UdpClient(new IPEndPoint(IPAddress.Any, 0)) { EnableBroadcast = true };
+        TrySend(udp, new IPEndPoint(IPAddress.Broadcast, Port), "find|");
+        TrySend(udp, new IPEndPoint(IPAddress.Loopback, Port), "find|");
+        using var cts = new CancellationTokenSource(wait);
+        try
+        {
+            while (true)
+            {
+                var r = await udp.ReceiveAsync(cts.Token);
+                var f = Encoding.UTF8.GetString(r.Buffer).Split('|');
+                if (f.Length == 5 && f[0] == Magic && f[1] == "here")
+                    hosts[f[3] + "@" + r.RemoteEndPoint.Address] = new LanHost(r.RemoteEndPoint, f[3], f[2], f[4] == "1");
+            }
+        }
+        catch (OperationCanceledException) { }
+        catch (SocketException) { }
+        // the same host can answer on loopback and on the LAN; keep one of each name
+        return hosts.Values.GroupBy(h => h.Name).Select(g => g.OrderBy(h => IPAddress.IsLoopback(h.Address.Address)).First()).ToList();
+    }
+
+    public void SendEmote(int index) => Send($"em|{index}");
+
+    /// <summary>This PC's IPv4 addresses on the local network, for "join by address".</summary>
+    public static string LocalAddresses()
+    {
+        try
+        {
+            var ips = System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces()
+                .Where(n => n.OperationalStatus == System.Net.NetworkInformation.OperationalStatus.Up &&
+                            n.NetworkInterfaceType != System.Net.NetworkInformation.NetworkInterfaceType.Loopback)
+                .SelectMany(n => n.GetIPProperties().UnicastAddresses)
+                .Select(a => a.Address)
+                .Where(a => a.AddressFamily == AddressFamily.InterNetwork && !a.ToString().StartsWith("169.254.", StringComparison.Ordinal))
+                .Select(a => a.ToString());
+            return string.Join(", ", ips.Distinct());
+        }
+        catch (System.Net.NetworkInformation.NetworkInformationException)
+        {
+            return "";
+        }
     }
 
     public void Stop()
@@ -79,6 +161,7 @@ public sealed class LanLink : IDisposable
             _udp = null;
             _cts = null;
             _peer = null;
+            _target = null;
             Role = LanRole.None;
             PeerName = "";
             while (_inbox.TryDequeue(out _)) { }
@@ -137,6 +220,11 @@ public sealed class LanLink : IDisposable
         int bar = msg.IndexOf('|');
         string kind = bar < 0 ? msg : msg[..bar], body = bar < 0 ? "" : msg[(bar + 1)..];
 
+        if (kind == "find" && Role == LanRole.Host)
+        {
+            TrySend(udp, from, $"here|{GameId}|{MyName}|{(State == LanState.Connected ? 1 : 0)}");
+            return;
+        }
         if (kind == "hello" && Role == LanRole.Host)
         {
             // first guest wins; the same guest re-sending hello (lost welcome) is answered again
@@ -150,7 +238,7 @@ public sealed class LanLink : IDisposable
             else TrySend(udp, from, "busy|");
             return;
         }
-        if (kind == "welcome" && Role == LanRole.Guest && State == LanState.Waiting)
+        if (kind == "welcome" && Role == LanRole.Guest && State == LanState.Waiting && (_target == null || _target.Address.Equals(from.Address)))
         {
             var parts = body.Split('|', 2);
             lock (_gate) _peer = from;
@@ -170,6 +258,11 @@ public sealed class LanLink : IDisposable
         }
         _lastHeard = DateTime.UtcNow;
         if (kind == "ping") return;
+        if (kind == "em")
+        {
+            if (int.TryParse(body, out int emote) && emote >= 0 && emote < Emotes.Length) EmoteReceived?.Invoke(emote);
+            return;
+        }
         _inbox.Enqueue(msg);
         MessageArrived?.Invoke();
     }
@@ -193,8 +286,12 @@ public sealed class LanLink : IDisposable
             var now = DateTime.UtcNow;
             if (State == LanState.Waiting && Role == LanRole.Guest && (now - _lastSent).TotalSeconds >= HelloSeconds)
             {
-                TrySend(udp, broadcast, hello);
-                TrySend(udp, loopback, hello);
+                if (_target != null) TrySend(udp, _target, hello);
+                else
+                {
+                    TrySend(udp, broadcast, hello);
+                    TrySend(udp, loopback, hello);
+                }
                 _lastSent = now;
             }
             else if (State == LanState.Connected)

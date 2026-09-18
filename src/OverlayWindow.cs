@@ -196,6 +196,11 @@ public sealed class OverlayWindow : Window, IGameHost
         Ipc.StartServer(msg => Dispatcher.UIThread.Post(() => OnSignal(msg)), _cts.Token);
         Lan.StateChanged += () => Dispatcher.UIThread.Post(OnLanStateChanged);
         Lan.MessageArrived += () => Dispatcher.UIThread.Post(Wake);
+        Lan.EmoteReceived += i => Dispatcher.UIThread.Post(() =>
+        {
+            Sound.Play("best", 0.35, 1.5);
+            Notice(L.T(LanLink.Emotes[i]), L.F("from {0}", Lan.PeerName), Color.FromRgb(255, 209, 102));
+        });
         _platform.RegisterHotkeys(OnHotkey);
         _platformTimer.Start();
         _blinkTimer.Start();
@@ -628,6 +633,7 @@ public sealed class OverlayWindow : Window, IGameHost
             case "lan-host": HostLan(); break;
             case "lan-join": JoinLan(); break;
             case "lan-leave": LeaveLan(); break;
+            case "lan-find": OpenLobby(); break;
             case "quit": Quit(); break;
         }
     }
@@ -643,13 +649,22 @@ public sealed class OverlayWindow : Window, IGameHost
             Notice(L.T("Can't host"), L.F("UDP port {0} is in use", LanLink.Port), Color.FromRgb(255, 107, 107));
     }
 
-    public void JoinLan() => Lan.Join();
+    public void JoinLan(System.Net.IPEndPoint? address = null) => Lan.Join(address);
+
+    public void OpenLobby() => LobbyWindow.ShowFor(this);
+
+    public void SendEmote(int index)
+    {
+        if (!Lan.Connected) return;
+        Lan.SendEmote(index);
+        Notice(L.T(LanLink.Emotes[index]), L.F("sent to {0}", Lan.PeerName), Color.FromRgb(170, 180, 195));
+    }
 
     public void LeaveLan() => Lan.Stop();
 
     public string LanStatus => Lan.State switch
     {
-        LanState.Waiting when Lan.Role == LanRole.Host => L.T("Waiting for a player to join…"),
+        LanState.Waiting when Lan.Role == LanRole.Host => L.T("Waiting for a player to join…") + " " + LanLink.LocalAddresses(),
         LanState.Waiting => L.T("Looking for a host…"),
         LanState.Connected => L.F("Playing with {0}", Lan.PeerName),
         _ => L.T("Not connected"),

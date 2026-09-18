@@ -51,6 +51,16 @@ public sealed class Tray : IDisposable
         lan.Add(new NativeMenuItemSeparator());
         lan.Add(Item(L.T("Host a game"), () => _w.HostLan()));
         lan.Add(Item(L.T("Join a game"), () => _w.JoinLan()));
+        lan.Add(Item(L.T("Find games / join by address…"), () => _w.OpenLobby()));
+        var emotes = new NativeMenu();
+        for (int i = 0; i < Net.LanLink.Emotes.Length; i++)
+        {
+            int index = i;
+            emotes.Add(Item(L.T(Net.LanLink.Emotes[i]), () => _w.SendEmote(index)));
+        }
+        var send = new NativeMenuItem(L.T("Send")) { Menu = emotes };
+        _refreshers.Add(() => send.IsEnabled = _w.Lan.Connected);
+        lan.Add(send);
         lan.Add(Item(L.T("Leave"), () => _w.LeaveLan()));
         menu.Add(new NativeMenuItem(L.T("Play over LAN")) { Menu = lan });
         menu.Add(new NativeMenuItemSeparator());
