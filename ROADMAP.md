@@ -43,7 +43,8 @@ may differ in size.
   (`Program.LaunchPath`). *Verified: unit test; not yet run inside a real AppImage.*
 - [x] **Real-hardware smoke tests in CI.** The `smoke` job runs `tests/smoke.sh` (start in demo mode, open
   the stats window, quit over `--signal`) on `windows-11-arm`, `ubuntu-24.04-arm` and `macos-14`.
-  *Verified: passes locally on Windows x64; actionlint is clean; see "Not verified here".*
+  *Verified: passes on all three runners (CI run 35307933851), so the ARM64 builds and the macOS app have
+  now actually run.*
 
 ## Distribution
 
@@ -73,7 +74,6 @@ may differ in size.
 | What | Needs |
 |---|---|
 | LAN games between two real PCs, played by two people; office networks that block broadcast | Two PCs on one network |
-| The smoke job on the ARM64 and Apple Silicon runners | A push to GitHub |
 | Rebinding shortcuts on X11, Wayland and macOS | Those desktops |
 | The silent in-place update | A release newer than the installed version |
 | AppImage autostart with `$APPIMAGE` | A Linux desktop |
