@@ -17,7 +17,7 @@
       hoops while a build, a deploy or an AI agent is working and still see everything underneath.
     </p>
     <ul>
-      <li>20 games, among them hoops, archery, mini golf, air hockey, pong, tower stack, chess and sea battle, and a desktop pet</li>
+      <li>21 games, among them hoops, archery, mini golf, air hockey, pong, chess, checkers and durak for up to four players, and a desktop pet</li>
       <li>Play with a co-worker over the local network and see their shots as they happen</li>
       <li>Clicks outside the game objects pass straight through to your windows</li>
       <li>The overlay never takes keyboard focus</li>
@@ -57,6 +57,7 @@
   <content_rating type="oars-1.1"/>
 
   <releases>
+    <release version="1.6.0" date="2026-09-18"/>
     <release version="1.5.0" date="2026-09-18"/>
     <release version="1.4.1" date="2026-09-18"/>
     <release version="1.4.0" date="2026-09-18"/>
