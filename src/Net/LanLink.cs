@@ -29,14 +29,14 @@ public sealed class LanLink : IDisposable
 {
     public const int Port = 47820;
     const string Magic = "DA1";
-    const double TimeoutSeconds = 3, PingSeconds = 0.5, HelloSeconds = 0.7;
+    const double TimeoutSeconds = 3, PingSeconds = 0.5, HelloSeconds = 0.7, GameSeconds = 1;
 
     readonly ConcurrentQueue<string> _inbox = new();
     readonly object _gate = new();
     UdpClient? _udp;
     CancellationTokenSource? _cts;
     IPEndPoint? _peer, _target; // _target: the one host a guest asked to join, or null for the first to answer
-    DateTime _lastHeard, _lastSent;
+    DateTime _lastHeard, _lastSent, _lastGameSent;
 
     public LanRole Role { get; private set; }
     public LanState State { get; private set; }
@@ -133,11 +133,16 @@ public sealed class LanLink : IDisposable
 
     public void SendEmote(int index) => Send($"em|{index}");
 
-    /// <summary>Host: tell the guest to switch to <paramref name="gameId"/> too.</summary>
+    /// <summary>
+    /// Host: the game the session is for. A connected guest is told at once; a guest that joins later
+    /// gets it in the welcome. The host also repeats it every <see cref="GameSeconds"/>, since a single
+    /// UDP message can be lost.
+    /// </summary>
     public void SendGame(string gameId)
     {
         GameId = gameId;
         Send($"gm|{gameId}");
+        _lastGameSent = DateTime.UtcNow;
     }
 
     /// <summary>This PC's IPv4 addresses on the local network, for "join by address".</summary>
@@ -269,6 +274,7 @@ public sealed class LanLink : IDisposable
         if (kind == "ping") return;
         if (kind == "gm" && Role == LanRole.Guest)
         {
+            if (body.Length == 0 || body == GameId) return; // the host's periodic reminder: nothing changed
             GameId = body;
             GameChanged?.Invoke(body);
             return;
@@ -317,6 +323,7 @@ public sealed class LanLink : IDisposable
                     lock (_gate) _peer = null;
                     SetState(LanState.Waiting);
                 }
+                else if (Role == LanRole.Host && (now - _lastGameSent).TotalSeconds >= GameSeconds) SendGame(GameId);
                 else if ((now - _lastSent).TotalSeconds >= PingSeconds) Send("ping|");
             }
         }
