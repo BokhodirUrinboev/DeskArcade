@@ -92,6 +92,7 @@ jobs:
       - name: Check the package installs
         if: matrix.deb-arch == 'amd64'
         run: |
+          sudo apt-get update # the runner image's package lists go stale; dependencies then 404
           sudo apt-get install -y "./dist-linux/deskarcade_${VERSION}_amd64.deb"
           test -x /usr/bin/deskarcade
           dpkg -s deskarcade | grep -Fx "Version: $VERSION"

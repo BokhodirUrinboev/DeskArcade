@@ -23,12 +23,7 @@ public sealed class GlobalShortcutsPortal : IDisposable
     const string RegistryInterface = "org.freedesktop.host.portal.Registry";
     const string AppId = "deskarcade"; // basename of the installed deskarcade.desktop
 
-    static readonly (string Id, HotkeyAction Action, string Description, string Trigger)[] Shortcuts =
-    {
-        ("toggle", HotkeyAction.ToggleOverlay, "Show or hide the overlay", "CTRL+ALT+g"),
-        ("next", HotkeyAction.NextGame, "Next game", "CTRL+ALT+n"),
-        ("summon", HotkeyAction.Summon, "Bring the ball, bow, paddle or mallet to the cursor", "CTRL+ALT+b"),
-    };
+    readonly (string Id, HotkeyAction Action, string Description, string Trigger)[] Shortcuts;
 
     delegate void BodyWriter(ref MessageWriter writer);
 
@@ -42,9 +37,16 @@ public sealed class GlobalShortcutsPortal : IDisposable
 
     /// <param name="onActivated">Runs on a D-Bus thread for every press; post to the UI thread from there.</param>
     /// <param name="address">D-Bus address of the session bus; null finds it the usual way.</param>
-    public GlobalShortcutsPortal(Action<HotkeyAction> onActivated, string? address = null)
+    public GlobalShortcutsPortal(Action<HotkeyAction> onActivated, HotkeySet? keys = null, string? address = null)
     {
         _onActivated = onActivated;
+        keys ??= HotkeySet.Default;
+        Shortcuts = new[]
+        {
+            ("toggle", HotkeyAction.ToggleOverlay, "Show or hide the overlay", keys.PortalTrigger(HotkeyAction.ToggleOverlay)),
+            ("next", HotkeyAction.NextGame, "Next game", keys.PortalTrigger(HotkeyAction.NextGame)),
+            ("summon", HotkeyAction.Summon, "Bring the ball, bow, paddle or mallet to the cursor", keys.PortalTrigger(HotkeyAction.Summon)),
+        };
         _address = address;
     }
 

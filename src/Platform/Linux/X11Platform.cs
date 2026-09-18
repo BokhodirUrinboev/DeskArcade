@@ -35,6 +35,7 @@ public sealed class X11Platform : IDesktopPlatform
     Thread? _hkThread;
     volatile bool _hkRunning;
     readonly int[] _keycodes = new int[3];
+    HotkeySet _keys = HotkeySet.Default;
     Action<HotkeyAction>? _onHotkey;
     GlobalShortcutsPortal? _portal;
     volatile bool _disposed;
@@ -257,13 +258,14 @@ public sealed class X11Platform : IDesktopPlatform
     /// which asks the user once. Without the portal, or when the user declines, it falls back to the X11 grab, which
     /// XWayland only honours while an X11 window has focus; custom shortcuts running "deskarcade --signal ..." still work.
     /// </summary>
-    public bool RegisterHotkeys(Action<HotkeyAction> onHotkey)
+    public bool RegisterHotkeys(Action<HotkeyAction> onHotkey, HotkeySet keys)
     {
         _onHotkey = onHotkey;
+        _keys = keys;
         if (_hkDpy != IntPtr.Zero || _portal != null) return true;
         if (!IsWaylandSession) return GrabHotkeys();
 
-        var portal = _portal = new GlobalShortcutsPortal(RaiseHotkey);
+        var portal = _portal = new GlobalShortcutsPortal(RaiseHotkey, keys);
         Task.Run(() => portal.StartAsync()).ContinueWith(started =>
         {
             if (started.IsCompletedSuccessfully && started.Result) return;
@@ -284,13 +286,15 @@ public sealed class X11Platform : IDesktopPlatform
         if (_hkDpy == IntPtr.Zero) return false;
 
         IntPtr root = X11.XDefaultRootWindow(_hkDpy);
-        long[] keysyms = { 0x67, 0x6e, 0x62 }; // g, n, b (order matches HotkeyAction)
+        // lowercase letters' keysyms are their ASCII codes (order matches HotkeyAction)
+        long[] keysyms = { char.ToLowerInvariant(_keys.Key(HotkeyAction.ToggleOverlay)), char.ToLowerInvariant(_keys.Key(HotkeyAction.NextGame)), char.ToLowerInvariant(_keys.Key(HotkeyAction.Summon)) };
+        uint mods = (_keys.Ctrl ? X11.ControlMask : 0) | (_keys.Alt ? X11.Mod1Mask : 0) | (_keys.Shift ? X11.ShiftMask : 0);
         uint[] extras = { 0, X11.LockMask, X11.Mod2Mask, X11.LockMask | X11.Mod2Mask };
         for (int i = 0; i < keysyms.Length; i++)
         {
             _keycodes[i] = X11.XKeysymToKeycode(_hkDpy, (IntPtr)keysyms[i]);
             foreach (uint extra in extras)
-                X11.XGrabKey(_hkDpy, _keycodes[i], X11.ControlMask | X11.Mod1Mask | extra, root, true, X11.GrabModeAsync, X11.GrabModeAsync);
+                X11.XGrabKey(_hkDpy, _keycodes[i], mods | extra, root, true, X11.GrabModeAsync, X11.GrabModeAsync);
         }
         X11.XSync(_hkDpy, false);
 
@@ -346,7 +350,7 @@ public sealed class X11Platform : IDesktopPlatform
                 if (File.Exists(AutostartFile)) File.Delete(AutostartFile);
                 return;
             }
-            string exe = File.Exists("/usr/bin/deskarcade") ? "/usr/bin/deskarcade" : Environment.ProcessPath ?? "deskarcade";
+            string exe = Program.LaunchPath;
             Directory.CreateDirectory(Path.GetDirectoryName(AutostartFile)!);
             File.WriteAllText(AutostartFile,
                 "[Desktop Entry]\nType=Application\nName=Desk Arcade\n" +

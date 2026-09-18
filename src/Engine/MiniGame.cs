@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
+using DeskArcade.Net;
 
 namespace DeskArcade.Engine;
 
@@ -20,9 +21,14 @@ public interface IGameHost
     Stats Stats { get; }
     /// <summary>Live mouse position in overlay DIPs.</summary>
     Vec2 Pointer { get; }
+    /// <summary>The local-network link to a second player. Games that support it check <c>Lan.Connected</c>.</summary>
+    LanLink Lan { get; }
     /// <summary>Area the HUD occupies, so games can avoid spawning things under it.</summary>
     Rect HudBounds { get; }
     void HudChanged();
+    /// <summary>Round-based games report rounds, so race mode can start the rival's and compare scores.</summary>
+    void RoundStarted();
+    void RoundEnded(int score);
     void Wake();
     void SaveSettings();
 }
@@ -39,6 +45,15 @@ public abstract class MiniGame
     public abstract string Id { get; }
     public abstract string Title { get; }
     public abstract HudInfo Hud { get; }
+
+    /// <summary>True if two players can share this game over <see cref="IGameHost.Lan"/>.</summary>
+    public virtual bool SupportsLan => false;
+
+    /// <summary>Round-based games that can be raced over the LAN: the round's score and whether it's running.</summary>
+    public virtual (int Score, bool Active)? Race => null;
+
+    /// <summary>Race mode: start a round now, because the other player just started theirs.</summary>
+    public virtual void StartRace() { }
 
     /// <summary>A small (about 20 px) icon for the scoreboard, drawn around its origin. Called once per use.</summary>
     public abstract Sprite CreateIcon();

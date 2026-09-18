@@ -118,7 +118,9 @@ public sealed class WindowsPlatform : IDesktopPlatform
         }, IntPtr.Zero);
     }
 
-    public bool RegisterHotkeys(Action<HotkeyAction> onHotkey)
+    public bool HotkeysApplyLive => true;
+
+    public bool RegisterHotkeys(Action<HotkeyAction> onHotkey, HotkeySet keys)
     {
         _onHotkey = onHotkey;
         if (_msgHwnd == IntPtr.Zero)
@@ -136,10 +138,13 @@ public sealed class WindowsPlatform : IDesktopPlatform
             _msgHwnd = Win32.CreateWindowEx(0, wc.lpszClassName, "", 0, 0, 0, 0, 0, Win32.HWND_MESSAGE, IntPtr.Zero, wc.hInstance, IntPtr.Zero);
             if (_msgHwnd == IntPtr.Zero) return false;
         }
-        const uint mods = Win32.MOD_CONTROL | Win32.MOD_ALT | Win32.MOD_NOREPEAT;
-        bool ok = Win32.RegisterHotKey(_msgHwnd, 1, mods, 0x47); // G
-        ok &= Win32.RegisterHotKey(_msgHwnd, 2, mods, 0x4E);     // N
-        ok &= Win32.RegisterHotKey(_msgHwnd, 3, mods, 0x42);     // B
+        uint mods = Win32.MOD_NOREPEAT | (keys.Ctrl ? Win32.MOD_CONTROL : 0) | (keys.Alt ? Win32.MOD_ALT : 0) | (keys.Shift ? Win32.MOD_SHIFT : 0);
+        bool ok = true;
+        for (int id = 1; id <= 3; id++)
+        {
+            Win32.UnregisterHotKey(_msgHwnd, id);
+            ok &= Win32.RegisterHotKey(_msgHwnd, id, mods, keys.Key((HotkeyAction)(id - 1))); // A–Z virtual keys are their ASCII codes
+        }
         return ok;
     }
 

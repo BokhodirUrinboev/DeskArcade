@@ -219,7 +219,7 @@ public sealed class Hud : Border
         _status = status;
         _claudeSince = since;
         _waited = waited;
-        _flashes = status is ClaudeStatus.Done or ClaudeStatus.Attention ? 8 : 0;
+        _flashes = status is ClaudeStatus.Done or ClaudeStatus.Attention && !Fx.ReducedMotion ? 8 : 0;
         (string dot, string bg) = status switch
         {
             ClaudeStatus.Working => ("#FFB020", "#3A2E12"),
@@ -228,7 +228,7 @@ public sealed class Hud : Border
             _ => ("#888888", "#222222"),
         };
         _chip.IsVisible = _pillDot.IsVisible = status != ClaudeStatus.Unknown;
-        _chipDot.Fill = _pillDot.Fill = Art.Brush(dot);
+        _chipDot.Fill = _pillDot.Fill = Art.Brush(Art.Safe(Color.Parse(dot)));
         _chip.Background = Art.Brush(bg);
         _chip.Opacity = _pillDot.Opacity = 1;
         UpdateClaudeText();

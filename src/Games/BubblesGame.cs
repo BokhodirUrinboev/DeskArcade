@@ -94,9 +94,20 @@ public sealed class BubblesGame : MiniGame
         }, -Radius[3], -9));
     }
 
+    public override bool SupportsLan => true;
+    public override (int Score, bool Active)? Race => (_score, _active);
+
+    public override void StartRace()
+    {
+        if (_active) return;
+        _bubbles.Clear();
+        StartGame();
+    }
+
     void StartGame()
     {
         _active = true;
+        Host.RoundStarted();
         _score = _combo = 0;
         _wave = 1;
         _beatBest = false;
@@ -190,6 +201,7 @@ public sealed class BubblesGame : MiniGame
     void TimeUp()
     {
         _active = false;
+        Host.RoundEnded(_score);
         foreach (var b in _bubbles.ToArray()) Pop(b, false);
         var a = Host.Arena;
         var at = new Vec2(a.Center.X, a.Top + a.Height * 0.3);

@@ -141,9 +141,18 @@ public sealed class WhackGame : MiniGame
         bug.Sprite.Children.Add(bug.Zzz);
     }
 
+    public override bool SupportsLan => true;
+    public override (int Score, bool Active)? Race => (_score, _active);
+
+    public override void StartRace()
+    {
+        if (!_active) StartRound();
+    }
+
     void StartRound()
     {
         _active = true;
+        Host.RoundStarted();
         _roundLeft = RoundSeconds;
         _score = _hits = _combo = 0;
         _lastHit = -10;
@@ -156,6 +165,7 @@ public sealed class WhackGame : MiniGame
     void EndRound()
     {
         _active = false;
+        Host.RoundEnded(_score);
         _combo = 0;
         foreach (var b in _bugs)
             if (b.WhackT < 0) Leave(b);

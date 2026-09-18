@@ -5,7 +5,7 @@ deploy or Claude Code is working, and still see everything underneath.
 
 **Platforms:** Windows 10/11 (x64, ARM64) · Ubuntu 22.04/24.04 (amd64, arm64) · other Linux via AppImage
 or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE) &nbsp;·&nbsp;
-**Version:** 1.3.0
+**Version:** 1.4.0
 
 ---
 
@@ -13,6 +13,7 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 
 - [Highlights](#highlights)
 - [Games](#games)
+- [Play with a co-worker](#play-with-a-co-worker)
 - [Scoreboard, stats and achievements](#scoreboard-stats-and-achievements)
 - [Controls](#controls)
 - [Language](#language)
@@ -36,7 +37,9 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 - **Window tops are platforms.** Balls, bugs, pets and towers sit on the top edges of your windows and
   ride along when you drag one. You can turn this off in the tray menu.
 - **Idle means idle.** When nothing is moving, rendering stops and CPU use drops to almost zero.
-- **15 games, 39 achievements**, play-time stats, and English, Uzbek and Russian text.
+- **20 games, 47 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
+- **Play with the person at the next desk** over the local network: Air Hockey, H-O-R-S-E, board games,
+  Sea Battle and score races.
 - **No assets to download.** Every sound is synthesized and all artwork is drawn in code.
 
 ## Games
@@ -57,18 +60,45 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 | 🎲 **Plinko** | Click the strip at the top of the board to drop a disc through the pegs. Slots score 10 to 250, and the gold middle slot is the jackpot. Ten discs a round. Right-drag the board's header to move it. |
 | 🗼 **Tower Stack** | Click the sliding block to drop it on the tower. The overhang is cut off, so the tower narrows; a perfect drop keeps the full width, and three in a row widen it. Miss completely and the game ends. |
 | 🪨 **Slingshot** | Pull the stone back and let go to knock a tower of blocks off a window top. 3 stones a tower, 10 points a block, 50 for each spare stone. Clear the tower for a bigger one. |
-| 🐱 **Desktop Pet** | Not a game: a cat that walks along your taskbar and window tops, follows the cursor, jumps between windows and sleeps when left alone. Click to pet it, drag to carry and throw it. |
+| ♟️ **Checkers** | Click one of your pieces, then the square it should move to (for a multi-jump, the last square). Captures are compulsory and a piece reaching the far row is crowned. Play the CPU, or a co-worker over the LAN. Right-drag the board to move it. |
+| ♞ **Chess** | Click a piece, then its square. Full rules: castling, en passant, check, mate, stalemate and the 50-move rule; pawns always promote to a queen. Play the CPU or a co-worker over the LAN. Right-drag the board to move it. |
+| 🔴 **Connect Four** | Click a column to drop a disc; four in a row (across, down or diagonal) wins. Play the CPU or a co-worker. |
+| ❌ **Tic-tac-toe** | Click a square; three in a row wins. The CPU is good but slips now and then. |
+| 🚢 **Sea Battle** | Your fleet is on the left, the enemy's waters on the right. Click your grid to shuffle your ships, the enemy grid to start, then fire. A hit shoots again; sink all five ships to win. Against the CPU or a co-worker. |
+| 🐱 **Desktop Pet** | Not a game: a cat (or a dog, or a duck: **tray → Pet**) that walks along your taskbar and window tops, follows the cursor, jumps between windows and sleeps when left alone. Click to pet it, drag to carry and throw it. |
 
 > **Brick Breaker note:** while a ball is in play, a strip along the bottom of the screen takes the
 > mouse so the paddle can follow it. It goes away as soon as the ball is lost or you switch games.
+
+## Play with a co-worker
+
+**Play over LAN** in the tray menu: one of you picks **Host a game** and the other picks **Join a game**
+(the first game found) or **Find games / join by address…** (a list of everyone hosting, plus a box for an
+IP address when the network blocks broadcasts; the host's tray shows its address). No server or account is
+involved: everything goes over UDP port 47820 on your local network. When the host switches games, the
+guest follows.
+
+| Game | Together |
+|---|---|
+| Air Hockey | Your co-worker's mallet replaces the CPU; each of you defends the left goal on your own screen |
+| Hoops | H-O-R-S-E: make a shot and the other player has to make it from the same spot, or take a letter |
+| Checkers, Chess, Connect Four, Tic-tac-toe | Turns over the network; the guest sees the board from their side |
+| Sea Battle | Each fleet stays on its own PC; only shots and hits cross the network |
+| Bubble Pop, Whack-a-Bug | Race: start a round and theirs starts too; you see their live score and who won |
+
+**Send** in the same menu pops a quick emote ("gg", "One more?"…) up on the other screen. Windows asks
+once whether to allow Desk Arcade on private networks; say yes on both PCs.
 
 ## Scoreboard, stats and achievements
 
 The scoreboard is a small pill showing the game icon, score and best. **Click it** to open the full
 board with a tab for every game; it shrinks back shortly after the mouse leaves. Drag it anywhere.
 
+**Daily challenge:** one task a day, the same for everyone ("Make 15 baskets in Hoops"), shown in the tray
+with your progress; click it to jump to the game. Finish it on consecutive days to build a streak.
+
 **Stats & achievements** in the tray menu (or `DeskArcade --signal stats`) opens a window with time
-played and best score per game, and all 39 achievements with their progress. Stats live in
+played and best score per game, and all 47 achievements with their progress. Stats live in
 `stats.json` next to your settings and can be reset from the tray.
 
 ## Controls
@@ -83,12 +113,18 @@ played and best score per game, and all 39 achievements with their progress. Sta
 | Tray icon, left-click | Show or hide |
 | Tray icon menu | Game, volume, language, Claude Code options, updates, stats, monitor, reset, exit |
 
-On macOS the shortcuts are **Control+Option+G/N/B**.
+On macOS the shortcuts are **Control+Option+G/N/B**. **Tray → Shortcuts…** changes the modifier keys and the
+letters (Windows applies them at once; Linux and macOS from the next start).
+
+**Tray → Accessibility** has **Reduce motion** (no particle bursts; popups appear in place) and
+**Colour-blind friendly colours** (greens become sky blue and reds vermillion, and Connect Four discs are
+also marked by shape).
 
 Every action is also available from the command line, which is useful for custom shortcuts and scripts:
 
 ```
-DeskArcade --signal toggle|next|summon|show|hide|expand|stats|quit
+DeskArcade --signal toggle|next|summon|show|hide|expand|stats|shortcuts|quit
+DeskArcade --signal lan-host|lan-join|lan-find|lan-leave
 ```
 
 ## Language
@@ -138,9 +174,8 @@ working area anyway, so nothing changes on screen.
 ### Other Linux distributions
 
 - **AppImage:** `chmod +x DeskArcade-<version>-x86_64.AppImage` and run it. Ubuntu 22.04+ needs
-  `libfuse2` (`sudo apt install libfuse2`), or run with `APPIMAGE_EXTRACT_AND_RUN=1`. In the AppImage,
-  "Start when I sign in" and the Claude Code hook config record the temporary mount path, so re-run
-  them after moving the file.
+  `libfuse2` (`sudo apt install libfuse2`), or run with `APPIMAGE_EXTRACT_AND_RUN=1`. "Start when I sign in"
+  and the Claude Code hook config record the AppImage file itself, so re-run them after moving the file.
 - **Flatpak:** a manifest is in [`packaging/flatpak/`](packaging/flatpak/) for building it yourself. It
   is not on Flathub.
 
@@ -159,8 +194,11 @@ repository yet.
 
 ## Updating
 
-Desk Arcade checks GitHub Releases once a day (switch it off in the tray) and offers the download when
-a newer version exists. **Check for updates** in the tray menu does it immediately.
+Desk Arcade checks GitHub Releases once a day (switch it off in the tray) and tells you when a newer
+version exists. **Check for updates** in the tray menu does it immediately. On Windows installs the tray
+then offers **Install version X.Y.Z**: it downloads the matching installer, checks its SHA-256 against
+GitHub's, and runs it silently; the game closes and comes back updated. Elsewhere it opens the download
+page.
 
 | Platform | How | What happens |
 |---|---|---|
@@ -185,8 +223,9 @@ and tell you how long you waited.
 | `Stop` | `--signal done` | Green, "Claude done after 3:12" and a chime |
 | `Notification` | `--signal attention` | Red, "Claude needs you" |
 
-In **tray → Claude Code** you can also let the overlay appear by itself when Claude starts working, and
-hide (pausing the game) when Claude finishes or needs you. Playing while Claude works earns the
+In **tray → Claude Code** you can also let the overlay appear by itself when Claude starts working, hide it
+when Claude finishes or needs you, or just **pause the game** until you click it. The "done" notice also
+sums up the session: "Claude worked 12:03, you played 4:10". Playing while Claude works earns the
 "Pair programmer" achievement.
 
 ## Building from source
@@ -227,13 +266,15 @@ Releases are built and published by GitHub Actions when a `vX.Y.Z` tag is pushed
 | Path | Contents |
 |---|---|
 | `src/Engine` | Lightweight game engine: `Vec2`, ball physics, window-top platforms, sprites, effects, `MiniGame` |
-| `src/Games` | One class per game |
+| `src/Games` | One class per game; `BoardGame` is shared by the grid games, whose rules (`Draughts`, `ChessRules`, `LineRules`, `SeaBattle`) have no UI |
+| `src/Net` | `LanLink`: pairing and messages between two copies on the local network |
+| `src/RaceMode.cs`, `src/Daily.cs` | Score races over the LAN; the daily challenge |
 | `src/Platform` | The OS layer behind `IDesktopPlatform`, with `Windows`, `Linux` and `Mac` implementations |
 | `src/Loc.cs`, `src/Strings.*.cs` | Translation lookup and the Uzbek and Russian tables |
 | `src/Stats.cs`, `src/Achievements.cs`, `src/StatsWindow.cs` | Counters, achievements and the stats window |
 | `src/OverlayWindow.cs` | The transparent, topmost window: frame loop, input, signals |
-| `tests/DeskArcade.Tests` | Unit tests |
-| `installer/`, `packaging/` | Inno Setup script, `.deb`, AppImage, Flatpak, winget and macOS packaging |
+| `tests/DeskArcade.Tests`, `tests/smoke.sh` | Unit tests; the start-and-quit check CI runs on real hardware |
+| `installer/`, `packaging/` | Inno Setup script, `.deb`, AppImage, Flatpak, winget, Homebrew, Scoop and macOS packaging |
 | `.github/workflows` | CI on every pull request, releases on version tags |
 
 The UI is built with [Avalonia](https://avaloniaui.net/), so the games contain no OS-specific code.

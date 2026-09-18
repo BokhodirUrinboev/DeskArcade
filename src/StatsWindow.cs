@@ -46,6 +46,7 @@ public sealed class StatsWindow : Window
         panel.Children.Add(Text(
             L.F("Time played {0} · achievements {1}/{2}", Duration(stats.TotalSeconds), stats.UnlockedCount, Achievements.All.Length),
             13, FontWeight.Normal, "#AAB3C0"));
+        panel.Children.Add(Text(overlay.DailyLine, 13, FontWeight.SemiBold, "#FFD166"));
 
         panel.Children.Add(Section(L.T("Games")));
         foreach (var game in overlay.Games)

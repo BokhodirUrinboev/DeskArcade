@@ -62,5 +62,14 @@ public static class Achievements
 
         new("plinko-jackpot", "plinko", "Jackpot", "Land 5 discs in the jackpot slot", "plinko.jackpots", 5),
         new("plinko-100", "plinko", "Disc dropper", "Drop 100 discs", "plinko.discs", 100),
+
+        new("checkers-win", "checkers", "Crowned", "Win a game of Checkers", "checkers.wins", 1),
+        new("chess-win", "chess", "Checkmate", "Win a game of Chess", "chess.wins", 1),
+        new("connect4-win", "connect4", "Four in a row", "Win a game of Connect Four", "connect4.wins", 1),
+        new("tictactoe-win", "tictactoe", "Three in a row", "Win a game of Tic-tac-toe", "tictactoe.wins", 1),
+        new("seabattle-win", "seabattle", "Admiral", "Win a game of Sea Battle", "seabattle.wins", 1),
+        new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),
+        new("daily-first", "general", "Daily player", "Finish a daily challenge", "daily.done", 1),
+        new("daily-week", "general", "Seven in a row", "Finish the daily challenge 7 days in a row", "daily.streak", 7),
     };
 }

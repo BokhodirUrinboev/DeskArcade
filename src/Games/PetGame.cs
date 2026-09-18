@@ -48,7 +48,7 @@ public sealed class PetGame : MiniGame
         public double Age, Life, Phase;
     }
 
-    readonly PetArt _art = BuildPet();
+    PetArt _art;
     readonly Canvas _heartLayer = new() { IsHitTestVisible = false };
     readonly List<Heart> _hearts = new();
     readonly Stack<Heart> _heartPool = new();
@@ -70,6 +70,7 @@ public sealed class PetGame : MiniGame
 
     public PetGame(IGameHost host) : base(host)
     {
+        _art = BuildPet(Kind);
         _art.Root.IsHitTestVisible = false;
         Layer.Children.Add(_art.Root);
         Layer.Children.Add(_heartLayer);
@@ -79,9 +80,25 @@ public sealed class PetGame : MiniGame
     public override string Id => "pet";
     public override string Title => "Desktop Pet";
 
+    /// <summary>"cat", "dog" or "duck" (Settings.PetKind); they behave the same and only look different.</summary>
+    public static readonly string[] Kinds = { "cat", "dog", "duck" };
+
+    string Kind => Array.IndexOf(Kinds, Host.Settings.PetKind) >= 0 ? Host.Settings.PetKind : "cat";
+
+    /// <summary>Redraws the pet after the kind changes in the tray.</summary>
+    public void Rebuild()
+    {
+        int at = Layer.Children.IndexOf(_art.Root);
+        Layer.Children.Remove(_art.Root);
+        _art = BuildPet(Kind);
+        _art.Root.IsHitTestVisible = false;
+        Layer.Children.Insert(Math.Max(0, at), _art.Root);
+        Draw();
+    }
+
     public override Sprite CreateIcon()
     {
-        var icon = BuildPet();
+        var icon = BuildPet(Kind);
         icon.Shadow.IsVisible = false;
         icon.BodyShift.Y = 4;
         icon.Root.Scale = 0.42;
@@ -706,12 +723,14 @@ public sealed class PetGame : MiniGame
     }
 
     /// <summary>A round cat-like blob facing +x, origin at the body center, feet at y = CenterLift.</summary>
-    static PetArt BuildPet()
+    static PetArt BuildPet(string kind)
     {
-        var ink = Art.Brush("#8A4F2A");
-        var fur = Art.Brush("#F2A566");
+        bool dog = kind == "dog", duck = kind == "duck";
+        var ink = Art.Brush(dog ? "#5E3B22" : duck ? "#B7791F" : "#8A4F2A");
+        var fur = Art.Brush(dog ? "#C98B55" : duck ? "#FFD54A" : "#F2A566");
         var innerEar = Art.Brush("#FF9FB0");
         var eyeInk = Art.Brush("#2B2320");
+        var orange = Art.Brush("#FF8C1A");
         var s = new Sprite();
 
         var shadow = Art.At(new Ellipse { Width = 32, Height = 6, Fill = Art.Brush(50, 0, 0, 0) }, -16, CenterLift - 3);
@@ -727,22 +746,37 @@ public sealed class PetGame : MiniGame
         s.Rotor.Children.Add(body);
 
         // tail and ears first, so the body covers their roots
-        const string tail = "M-16,9 C-29,9 -33,-4 -26,-14";
-        body.Children.Add(Art.PathOf(tail, null, ink, 6.5));
-        body.Children.Add(Art.PathOf(tail, null, fur, 3.8));
-        body.Children.Add(Art.PathOf("M-16,-6 L-14,-25 L-3,-15 Z", fur, ink, 1.3));
-        body.Children.Add(Art.PathOf("M5,-15 L15,-25 L18,-6 Z", fur, ink, 1.3));
-        body.Children.Add(Art.PathOf("M-12.5,-11 L-12.5,-20 L-7,-14.5 Z", innerEar));
-        body.Children.Add(Art.PathOf("M9,-14.5 L14,-20 L15,-10 Z", innerEar));
+        if (duck)
+        {
+            body.Children.Add(Art.PathOf("M-17,4 L-27,-3 L-24,6 L-29,9 L-17,11 Z", fur, ink, 1.2)); // tail feathers
+            body.Children.Add(Art.PathOf("M1,-16 C-1,-24 4,-26 6,-21 C7,-26 12,-25 10,-17", fur, ink, 1.2)); // tuft
+        }
+        else if (dog)
+        {
+            const string tail = "M-17,6 C-26,4 -28,-6 -24,-11";
+            body.Children.Add(Art.PathOf(tail, null, ink, 7));
+            body.Children.Add(Art.PathOf(tail, null, fur, 4.2));
+        }
+        else
+        {
+            const string tail = "M-16,9 C-29,9 -33,-4 -26,-14";
+            body.Children.Add(Art.PathOf(tail, null, ink, 6.5));
+            body.Children.Add(Art.PathOf(tail, null, fur, 3.8));
+            body.Children.Add(Art.PathOf("M-16,-6 L-14,-25 L-3,-15 Z", fur, ink, 1.3));
+            body.Children.Add(Art.PathOf("M5,-15 L15,-25 L18,-6 Z", fur, ink, 1.3));
+            body.Children.Add(Art.PathOf("M-12.5,-11 L-12.5,-20 L-7,-14.5 Z", innerEar));
+            body.Children.Add(Art.PathOf("M9,-14.5 L14,-20 L15,-10 Z", innerEar));
+        }
 
         var furFill = new RadialGradientBrush
         {
             GradientOrigin = new RelativePoint(0.35, 0.3, RelativeUnit.Relative),
             Center = new RelativePoint(0.45, 0.42, RelativeUnit.Relative),
         };
-        furFill.GradientStops.Add(new GradientStop(Color.Parse("#FFE3C2"), 0));
-        furFill.GradientStops.Add(new GradientStop(Color.Parse("#F7B37A"), 0.6));
-        furFill.GradientStops.Add(new GradientStop(Color.Parse("#E08A4E"), 1));
+        string[] shades = dog ? new[] { "#F0D2B0", "#D39A63", "#A8703F" } : duck ? new[] { "#FFF6C2", "#FFD84D", "#F2B200" } : new[] { "#FFE3C2", "#F7B37A", "#E08A4E" };
+        furFill.GradientStops.Add(new GradientStop(Color.Parse(shades[0]), 0));
+        furFill.GradientStops.Add(new GradientStop(Color.Parse(shades[1]), 0.6));
+        furFill.GradientStops.Add(new GradientStop(Color.Parse(shades[2]), 1));
         body.Children.Add(Art.At(new Ellipse { Width = 40, Height = 34, Fill = furFill, Stroke = ink, StrokeThickness = 1.3 }, -20, -17));
         body.Children.Add(Art.At(new Ellipse { Width = 22, Height = 12, Fill = Art.Brush(190, 255, 244, 228) }, -8, 3));
         body.Children.Add(Art.At(new Ellipse { Width = 9, Height = 5, Fill = Art.Brush(120, 255, 255, 255), RenderTransform = new RotateTransform(-30) }, -14, -12));
@@ -750,7 +784,15 @@ public sealed class PetGame : MiniGame
         var blush = Art.Brush(110, 255, 110, 150);
         body.Children.Add(Art.At(new Ellipse { Width = 7, Height = 4, Fill = blush }, -12.5, 3));
         body.Children.Add(Art.At(new Ellipse { Width = 7, Height = 4, Fill = blush }, 10.5, 3));
-        body.Children.Add(Art.PathOf("M-1,3.5 Q0.75,6 2.5,3.5 Q4.25,6 6,3.5", null, Art.Brush("#5A3320"), 1.1));
+        if (duck) body.Children.Add(Art.PathOf("M-1,1 L22,3 L-1,8 Z", orange, Art.Brush("#C2610C"), 1.1)); // beak
+        else body.Children.Add(Art.PathOf("M-1,3.5 Q0.75,6 2.5,3.5 Q4.25,6 6,3.5", null, Art.Brush("#5A3320"), 1.1));
+        if (dog)
+        {
+            body.Children.Add(Art.At(new Ellipse { Width = 7, Height = 5, Fill = Art.Brush("#2B2320") }, -1, -1)); // nose
+            // floppy ears hang over the sides of the head
+            body.Children.Add(Art.PathOf("M-15,-13 C-24,-12 -24,2 -18,5 C-15,1 -13,-6 -12,-12 Z", Art.Brush("#7A4A2A"), ink, 1.2));
+            body.Children.Add(Art.PathOf("M14,-13 C23,-12 23,2 17,5 C14,1 12,-6 11,-12 Z", Art.Brush("#7A4A2A"), ink, 1.2));
+        }
 
         var eyes = new Canvas();
         var pupilL = new TranslateTransform();
@@ -770,7 +812,7 @@ public sealed class PetGame : MiniGame
         body.Children.Add(eyesSleep);
         body.Children.Add(eyesHappy);
 
-        var paw = Art.Brush("#FFE7CC");
+        var paw = duck ? orange : Art.Brush(dog ? "#F0D2B0" : "#FFE7CC");
         var footA = new TranslateTransform();
         var footB = new TranslateTransform();
         body.Children.Add(Art.At(new Ellipse { Width = 11, Height = 7, Fill = paw, Stroke = ink, StrokeThickness = 1, RenderTransform = footA }, -13.5, 13));

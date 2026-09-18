@@ -52,6 +52,7 @@ jobs:
       - name: Check the package installs
         run: |
           version="$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' DeskArcade.csproj | head -n1)"
+          sudo apt-get update # the runner image's package lists go stale; dependencies then 404
           sudo apt-get install -y "./dist-linux/deskarcade_${version}_amd64.deb"
           test -x /usr/bin/deskarcade
           dpkg -s deskarcade | grep -Fx "Version: $version"
@@ -67,6 +68,41 @@ jobs:
       # Compile only: the macOS platform layer is still being written.
       - name: Build
         run: dotnet build DeskArcade.csproj -c Release -r osx-arm64
+
+  smoke:
+    # Start the real app on ARM64 and Apple Silicon hardware, which no other job does: publish, run it in
+    # demo mode, open the stats window and quit it over --signal. See tests/smoke.sh.
+    name: Smoke test (${{ matrix.rid }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: windows-11-arm, rid: win-arm64, exe: DeskArcade.exe }
+          - { os: ubuntu-24.04-arm, rid: linux-arm64, exe: DeskArcade }
+          - { os: macos-14, rid: osx-arm64, exe: DeskArcade }
+    env:
+      RID: ${{ matrix.rid }}
+      EXE: out/${{ matrix.exe }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Publish
+        shell: bash
+        run: dotnet publish DeskArcade.csproj -c Release -r "$RID" --self-contained -o out
+      - name: Install a virtual display
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y xvfb dbus libfontconfig1 libice6 libsm6
+      - name: Run it
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = Linux ]; then
+            dbus-run-session -- xvfb-run -a bash tests/smoke.sh "$EXE"
+          else
+            bash tests/smoke.sh "$EXE"
+          fi
 
   actionlint:
     name: Lint workflows

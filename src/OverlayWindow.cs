@@ -13,6 +13,7 @@ using Avalonia.Platform;
 using Avalonia.Threading;
 using DeskArcade.Engine;
 using DeskArcade.Games;
+using DeskArcade.Net;
 using DeskArcade.Platform;
 
 namespace DeskArcade;
@@ -43,12 +44,20 @@ public sealed class OverlayWindow : Window, IGameHost
     DispatcherTimer? _demoTimer;
 
     Hud _hud = null!;
+    RaceMode _race = null!;
+    readonly TextBlock _raceLabel = new()
+    {
+        FontFamily = Fx.Font, FontSize = 14, FontWeight = FontWeight.Bold, Foreground = Brushes.White, IsVisible = false, IsHitTestVisible = false,
+        Background = Engine.Art.Brush(200, 18, 20, 28), Padding = new Thickness(8, 3),
+    };
     Tray? _tray;
     bool _loopOn, _captured, _quitting, _pushedCapture;
     double _lastTick, _idle;
     Vec2 _eventPointer;
     UpdateInfo? _update;
     DateTime? _claudeSince;
+    double _playedWhileClaude; // seconds of play since Claude started working, for the summary
+    bool _paused;
     bool _checkingUpdates;
     double _lastAchievementAt = -10;
     int _achievementRow;
@@ -58,6 +67,8 @@ public sealed class OverlayWindow : Window, IGameHost
     public Sound Sound { get; }
     public Fx Fx { get; } = new();
     public Platforms Platforms { get; } = new();
+    public LanLink Lan { get; } = new();
+    public Daily Daily { get; }
     public Rect Arena { get; private set; }
     public Vec2 Pointer { get; private set; }
     public Rect HudBounds => _hud?.Area ?? default;
@@ -108,9 +119,24 @@ public sealed class OverlayWindow : Window, IGameHost
 
         L.Apply(Settings.Language);
         Stats.Unlocked += OnAchievement;
+        Daily = new Daily(Settings, Stats);
+        Stats.CounterChanged += counter =>
+        {
+            if (counter != Daily.For(Daily.Today).Counter || !Daily.Check(Daily.Today)) return;
+            SaveSettings();
+            int streak = Daily.Streak(Daily.Today);
+            Dispatcher.UIThread.Post(() =>
+            {
+                Sound.Play("best", 0.8);
+                Notice(L.T("Daily challenge done!"), streak > 1 ? L.F("{0} days in a row", streak) : L.T("come back tomorrow for a new one"), Color.FromRgb(255, 209, 102));
+                _tray?.Refresh();
+            });
+        };
         _platform = DesktopPlatform.Create();
         Sound = new Sound(_platform) { Enabled = Settings.Sound, Volume = Settings.Volume };
         Platforms.Enabled = Settings.Platforms;
+        Fx.ReducedMotion = Settings.ReducedMotion;
+        Engine.Art.ColorBlind = Settings.ColorBlind;
 
         _platformTimer.Tick += (_, _) => RefreshPlatforms();
         _blinkTimer.Tick += (_, _) => _hud?.Blink();
@@ -152,6 +178,11 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new PlinkoGame(this));
         _games.Add(new TowerGame(this));
         _games.Add(new SlingshotGame(this));
+        _games.Add(new CheckersGame(this));
+        _games.Add(new ChessGame(this));
+        _games.Add(new ConnectFourGame(this));
+        _games.Add(new TicTacToeGame(this));
+        _games.Add(new SeaBattleGame(this));
         _games.Add(new PetGame(this));
 
         _hud = new Hud(_games);
@@ -179,6 +210,8 @@ public sealed class OverlayWindow : Window, IGameHost
             Wake();
         };
         _hudLayer.Children.Add(_hud);
+        _hudLayer.Children.Add(_raceLabel);
+        _race = new RaceMode(this);
 
         PlaceWindow();
         UpdateArena();
@@ -187,7 +220,16 @@ public sealed class OverlayWindow : Window, IGameHost
         _tray = new Tray(this, Icon);
 
         Ipc.StartServer(msg => Dispatcher.UIThread.Post(() => OnSignal(msg)), _cts.Token);
-        _platform.RegisterHotkeys(OnHotkey);
+        Lan.StateChanged += () => Dispatcher.UIThread.Post(OnLanStateChanged);
+        Lan.MessageArrived += () => Dispatcher.UIThread.Post(Wake);
+        Lan.GameChanged += id => Dispatcher.UIThread.Post(() => SwitchGame(id));
+        Lan.EmoteReceived += i => Dispatcher.UIThread.Post(() =>
+        {
+            Sound.Play("best", 0.35, 1.5);
+            Notice(L.T(LanLink.Emotes[i]), L.F("from {0}", Lan.PeerName), Color.FromRgb(255, 209, 102));
+        });
+        Shortcuts.Current = HotkeySet.From(Settings.ShortcutModifiers, Settings.ShortcutKeys);
+        _platform.RegisterHotkeys(OnHotkey, Shortcuts.Current);
         _platformTimer.Start();
         _blinkTimer.Start();
         _hudHoverTimer.Start();
@@ -202,7 +244,7 @@ public sealed class OverlayWindow : Window, IGameHost
             DispatcherTimer.RunOnce(() =>
             {
                 Fx.Popup(new Vec2(Arena.Left + Arena.Width / 2, Arena.Top + Arena.Height * 0.45), L.T("Welcome to Desk Arcade"),
-                    Color.FromRgb(255, 209, 102), 34, 6, L.F("click the scoreboard to pick a game · {0} show/hide · {1} next game", Shortcuts.Label('G'), Shortcuts.Label('N')));
+                    Color.FromRgb(255, 209, 102), 34, 6, L.F("click the scoreboard to pick a game · {0} show/hide · {1} next game", Shortcuts.Label(HotkeyAction.ToggleOverlay), Shortcuts.Label(HotkeyAction.NextGame)));
                 Wake();
             }, TimeSpan.FromSeconds(2.2));
         }
@@ -333,6 +375,11 @@ public sealed class OverlayWindow : Window, IGameHost
     void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         if (e.Handled || Current == null || _captured) return;
+        if (_paused)
+        {
+            Resume();
+            return; // the click only wakes the game
+        }
         var point = e.GetCurrentPoint(_root);
         bool right = point.Properties.IsRightButtonPressed;
         if (!right && !point.Properties.IsLeftButtonPressed) return;
@@ -415,10 +462,14 @@ public sealed class OverlayWindow : Window, IGameHost
 
         UpdatePointer();
         bool busy = _captured || HudBusy;
-        if (Current != null)
+        if (Current != null && !_paused)
         {
             bool playing = Current.Update(dt) || _captured;
-            if (playing) Stats.AddTime(Current.Id, dt); // only time spent actually playing
+            if (playing)
+            {
+                Stats.AddTime(Current.Id, dt); // only time spent actually playing
+                if (_claudeSince != null) _playedWhileClaude += dt;
+            }
             busy |= playing;
         }
         busy |= Fx.Update(dt);
@@ -451,6 +502,11 @@ public sealed class OverlayWindow : Window, IGameHost
         "bricks" => L.T("click the paddle to launch — the mouse steers it"),
         "bubbles" => L.T("click a bubble to split it — clear them all in time"),
         "hockey" => L.T("drag your mallet and score in the right-hand goal"),
+        "checkers" => L.T("click a piece, then the square it should move to"),
+        "chess" => L.T("click a piece, then the square it should move to"),
+        "connect4" => L.T("click a column to drop a disc — four in a row wins"),
+        "tictactoe" => L.T("click a square — three in a row wins"),
+        "seabattle" => L.T("click the enemy grid to start, then fire — a hit shoots again"),
         "clay" => L.T("click the trap machine, then shoot the clays at the top of their arc"),
         "slingshot" => L.T("drag back from the slingshot and let go — knock the tower down"),
         "pet" => L.T("click the pet to pet it — drag to carry and throw it"),
@@ -473,6 +529,8 @@ public sealed class OverlayWindow : Window, IGameHost
 
         Settings.Game = next.Id;
         SaveSettings();
+        if (Lan.Connected && Lan.Role == LanRole.Host) Lan.SendGame(next.Id); // the guest follows
+        _race.Reset();
         _hud.SetGame(next.Id, next.Title);
         HudChanged();
         _tray?.Refresh();
@@ -524,6 +582,13 @@ public sealed class OverlayWindow : Window, IGameHost
         Sound.Enabled = Settings.Sound;
         Sound.Volume = Settings.Volume;
         Platforms.Enabled = Settings.Platforms;
+        Fx.ReducedMotion = Settings.ReducedMotion;
+        if (Engine.Art.ColorBlind != Settings.ColorBlind)
+        {
+            Engine.Art.ColorBlind = Settings.ColorBlind;
+            Current?.Layout(); // redraw pieces in the new colours
+            _hud.SetClaude(_hud.Status, _claudeSince);
+        }
         RefreshPlatforms();
         SaveSettings();
         _tray?.Refresh();
@@ -561,9 +626,7 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public async void CopyHookConfig()
     {
-        string exe = OperatingSystem.IsLinux() && File.Exists("/usr/bin/deskarcade")
-            ? "/usr/bin/deskarcade"
-            : (Environment.ProcessPath ?? "DeskArcade").Replace('\\', '/');
+        string exe = Program.LaunchPath.Replace('\\', '/');
         string Cmd(string signal) => $"\\\"{exe}\\\" --signal {signal}";
         string json = $$"""
             {
@@ -613,13 +676,177 @@ public sealed class OverlayWindow : Window, IGameHost
             case "summon": SummonToCursor(); break;
             case "expand": _hud.Expand(); break;
             case "stats": OpenStats(); break;
+            case "lan-host": HostLan(); break;
+            case "lan-join": JoinLan(); break;
+            case "lan-leave": LeaveLan(); break;
+            case "lan-find": OpenLobby(); break;
+            case "shortcuts": OpenShortcuts(); break;
             case "quit": Quit(); break;
         }
     }
 
+    // ------------------------------------------------------------------ LAN multiplayer
+
+    /// <summary>Hosts the current game, or Air Hockey if the current one is single-player only.</summary>
+    public void HostLan()
+    {
+        if (Current?.SupportsLan != true) SwitchGame(_games.First(g => g.SupportsLan).Id);
+        Lan.Host(Current!.Id);
+        if (Lan.State == LanState.Off)
+            Notice(L.T("Can't host"), L.F("UDP port {0} is in use", LanLink.Port), Color.FromRgb(255, 107, 107));
+    }
+
+    public void JoinLan(System.Net.IPEndPoint? address = null) => Lan.Join(address);
+
+    public void OpenLobby() => LobbyWindow.ShowFor(this);
+
+    public void OpenShortcuts() => ShortcutsWindow.ShowFor(this);
+
+    /// <summary>"Today: Make 15 baskets in Hoops (4/15) · streak 2", for the tray and the stats window.</summary>
+    public string DailyLine
+    {
+        get
+        {
+            var day = Daily.Today;
+            var c = Daily.Current(day);
+            string text = L.F("Today: {0} ({1}/{2})", L.F(c.Text, c.Target), Daily.Progress(day), c.Target);
+            if (Daily.Done(day)) text += " ✓";
+            int streak = Daily.Streak(day);
+            return streak > 0 ? L.F("{0} · streak {1}", text, streak) : text;
+        }
+    }
+
+    public void PlayDaily() => SwitchGame(Daily.For(Daily.Today).GameId);
+
+    /// <summary>
+    /// Windows installs: downloads the new installer and runs it silently. The installer asks this copy to
+    /// quit and starts the new version afterwards. Elsewhere, or if anything fails, opens the release page.
+    /// </summary>
+    public async void InstallUpdate()
+    {
+        if (_update is not UpdateInfo u) return;
+        if (!UpdateChecker.CanInstall)
+        {
+            UpdateChecker.OpenInBrowser(u.Url);
+            return;
+        }
+        SetOverlayVisible(true);
+        Notice(L.F("Downloading version {0}…", u.Version.ToString(3)), L.T("the game restarts when it is done"), Color.FromRgb(77, 163, 255));
+        string? installer = await UpdateChecker.DownloadInstallerAsync(u);
+        if (installer == null)
+        {
+            Notice(L.T("Couldn't download the update"), L.T("opening the download page instead"), Color.FromRgb(255, 107, 107));
+            UpdateChecker.OpenInBrowser(u.Url);
+            return;
+        }
+        try
+        {
+            Process.Start(new ProcessStartInfo(installer, "/SILENT /SUPPRESSMSGBOXES /NORESTART") { UseShellExecute = true });
+        }
+        catch
+        {
+            UpdateChecker.OpenInBrowser(u.Url); // e.g. the elevation prompt was declined
+        }
+    }
+
+    public void SetPet(string kind)
+    {
+        Settings.PetKind = kind;
+        SaveSettings();
+        foreach (var pet in _games.OfType<PetGame>()) pet.Rebuild();
+        _hud.SetGame(Current!.Id, Current.Title); // the scoreboard icon too
+        SwitchGame("pet");
+        _tray?.Refresh();
+    }
+
+    /// <summary>Saves and registers new shortcuts; returns a line for the Shortcuts window to show.</summary>
+    public string ApplyShortcuts(HotkeySet keys)
+    {
+        Settings.ShortcutModifiers = keys.Modifiers.ToString();
+        Settings.ShortcutKeys = keys.Keys;
+        SaveSettings();
+        string saved = string.Join(" · ", Enum.GetValues<HotkeyAction>().Select(keys.Label));
+        if (!_platform.HotkeysApplyLive) return L.F("Saved: {0}. They take effect the next time Desk Arcade starts.", saved);
+        Shortcuts.Current = keys;
+        _tray?.Rebuild();
+        if (_platform.RegisterHotkeys(OnHotkey, keys)) return L.F("Saved: {0}", saved);
+        return L.F("Saved, but another app already uses one of these ({0}). Try other letters or keys.", saved);
+    }
+
+    public void SendEmote(int index)
+    {
+        if (!Lan.Connected) return;
+        Lan.SendEmote(index);
+        Notice(L.T(LanLink.Emotes[index]), L.F("sent to {0}", Lan.PeerName), Color.FromRgb(170, 180, 195));
+    }
+
+    public void LeaveLan() => Lan.Stop();
+
+    public string LanStatus => Lan.State switch
+    {
+        LanState.Waiting when Lan.Role == LanRole.Host => L.T("Waiting for a player to join…") + " " + LanLink.LocalAddresses(),
+        LanState.Waiting => L.T("Looking for a host…"),
+        LanState.Connected => L.F("Playing with {0}", Lan.PeerName),
+        _ => L.T("Not connected"),
+    };
+
+    /// <summary>Race mode's line under the scoreboard (the rival's live score), or null to hide it.</summary>
+    public void RoundStarted() => _race.LocalStart();
+
+    public void RoundEnded(int score) => _race.LocalEnd(score);
+
+    public void SetRaceLabel(string? text)
+    {
+        _raceLabel.IsVisible = text != null;
+        if (text == null) return;
+        _raceLabel.Text = text;
+        var b = _hud.Area;
+        Canvas.SetLeft(_raceLabel, b.Left);
+        Canvas.SetTop(_raceLabel, b.Bottom + 6 < Arena.Bottom - 30 ? b.Bottom + 6 : b.Top - 30);
+    }
+
+    public void RaceResult(string title, string sub, Color color, bool won)
+    {
+        var at = new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.3);
+        Fx.Popup(at, title, color, 40, 2.6, sub);
+        if (won) Fx.Burst(at, new[] { color, Colors.White }, 40, 520, 650, 7, 1.0);
+        Sound.Play(won ? "best" : "buzzer", won ? 0.8 : 0.4);
+        Wake();
+    }
+
+    void OnLanStateChanged()
+    {
+        _race.Reset();
+        if (Lan.Connected)
+        {
+            if (Lan.Role == LanRole.Guest) SwitchGame(Lan.GameId);
+            SetOverlayVisible(true);
+            Notice(L.T("Connected"), L.F("Playing with {0}", Lan.PeerName), Color.FromRgb(61, 220, 132));
+        }
+        else if (Lan.State == LanState.Waiting && Lan.Role == LanRole.Host)
+            Notice(L.T("Hosting"), L.T("Waiting for a player to join…"), Color.FromRgb(77, 163, 255));
+        Current?.Layout();
+        HudChanged();
+        _tray?.Refresh();
+        Wake();
+    }
+
+    void Resume()
+    {
+        if (!_paused) return;
+        _paused = false;
+        Fx.Popup(new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.3), L.T("Resumed"), Color.FromRgb(61, 220, 132), 30, 1.0);
+        Wake();
+    }
+
     void ClaudeWorking()
     {
-        if (_hud.Status != ClaudeStatus.Working) _claudeSince = DateTime.UtcNow;
+        if (_hud.Status != ClaudeStatus.Working)
+        {
+            _claudeSince = DateTime.UtcNow;
+            _playedWhileClaude = 0;
+        }
+        Resume();
         _hud.SetClaude(ClaudeStatus.Working, _claudeSince);
         if (Settings.ClaudeAutoShow && !IsVisible) SetOverlayVisible(true);
     }
@@ -634,8 +861,17 @@ public sealed class OverlayWindow : Window, IGameHost
         {
             Sound.Play(sound, 0.9);
             string sub = status == ClaudeStatus.Done ? L.T("your turn!") : L.T("check the terminal");
-            if (waited is TimeSpan w && w.TotalSeconds >= 5) sub = L.F("{0} · waited {1}", sub, Hud.FormatWait(w));
+            if (waited is TimeSpan w && w.TotalSeconds >= 5)
+                sub = _playedWhileClaude >= 5
+                    ? L.F("{0} · Claude worked {1}, you played {2}", sub, Hud.FormatWait(w), Hud.FormatWait(TimeSpan.FromSeconds(_playedWhileClaude)))
+                    : L.F("{0} · waited {1}", sub, Hud.FormatWait(w));
             Notice(title, sub, color);
+        }
+        if (Settings.ClaudePause && IsVisible && !_paused && Current != null)
+        {
+            _paused = true;
+            _captured = false;
+            Fx.Popup(new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.42), L.T("PAUSED"), Colors.White, 34, 3.0, L.T("click the game to resume"));
         }
         if (Settings.ClaudeAutoHide && IsVisible)
         {
@@ -718,6 +954,7 @@ public sealed class OverlayWindow : Window, IGameHost
     {
         if (_quitting) return;
         _quitting = true;
+        Lan.Stop();
         SaveSettings();
         _cts.Cancel();
         _loopOn = false;

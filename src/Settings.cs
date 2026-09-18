@@ -15,6 +15,8 @@ public sealed class Settings
     public bool ClaudeAutoShow { get; set; }
     /// <summary>Hide the overlay when Claude finishes or needs you.</summary>
     public bool ClaudeAutoHide { get; set; }
+    /// <summary>Freeze the current game when Claude finishes or needs you; a click on the game resumes it.</summary>
+    public bool ClaudePause { get; set; }
     /// <summary>"auto" (follow the system), "en", "uz" or "ru".</summary>
     public string Language { get; set; } = "auto";
     public bool CheckForUpdates { get; set; } = true;
@@ -42,6 +44,20 @@ public sealed class Settings
     public int BestBubbles { get; set; }
     public int HockeyWins { get; set; }
     public bool FirstRun { get; set; } = true;
+    public bool ReducedMotion { get; set; }
+    public bool ColorBlind { get; set; }
+    /// <summary>The desktop pet: "cat", "dog" or "duck".</summary>
+    public string PetKind { get; set; } = "cat";
+    /// <summary>A <see cref="DeskArcade.ShortcutModifiers"/> name and three letters, for show/hide, next game and bring to cursor.</summary>
+    public string ShortcutModifiers { get; set; } = "CtrlAlt";
+    public string ShortcutKeys { get; set; } = "GNB";
+
+    // daily challenge (see Daily)
+    public string? DailyDate { get; set; }
+    public long DailyBase { get; set; }
+    public bool DailyDone { get; set; }
+    public string? DailyLastDone { get; set; }
+    public int DailyStreak { get; set; }
 
     /// <summary>%APPDATA%\DeskArcade on Windows, ~/.config/DeskArcade on Linux (suffixed for --profile runs).</summary>
     public static string DataDirectory

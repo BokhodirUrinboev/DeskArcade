@@ -1,5 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Net.Http;
 using System.Reflection;
 using System.Text.Json;
@@ -8,7 +13,10 @@ using System.Threading.Tasks;
 
 namespace DeskArcade;
 
-public sealed record UpdateInfo(Version Version, string Url);
+public sealed record UpdateInfo(Version Version, string Url, IReadOnlyList<ReleaseAsset>? Assets = null);
+
+/// <summary>A file attached to a release; <see cref="Sha256"/> comes from GitHub's asset digest when it has one.</summary>
+public sealed record ReleaseAsset(string Name, string Url, string? Sha256);
 
 /// <summary>
 /// Asks GitHub Releases whether a newer version is published. The request carries nothing but the
@@ -40,11 +48,65 @@ public static class UpdateChecker
             var root = json.RootElement;
             var latest = Parse(root.TryGetProperty("tag_name", out var tag) ? tag.GetString() : null);
             string url = root.TryGetProperty("html_url", out var html) ? html.GetString() ?? ReleasesUrl : ReleasesUrl;
-            return latest != null && latest > Current ? new UpdateInfo(latest, url) : null;
+            var assets = new List<ReleaseAsset>();
+            if (root.TryGetProperty("assets", out var list) && list.ValueKind == JsonValueKind.Array)
+                foreach (var a in list.EnumerateArray())
+                {
+                    string? name = a.TryGetProperty("name", out var n) ? n.GetString() : null;
+                    string? href = a.TryGetProperty("browser_download_url", out var d) ? d.GetString() : null;
+                    string? digest = a.TryGetProperty("digest", out var g) ? g.GetString() : null;
+                    if (name != null && href != null)
+                        assets.Add(new ReleaseAsset(name, href, digest is { } x && x.StartsWith("sha256:", StringComparison.Ordinal) ? x[7..] : null));
+                }
+            return latest != null && latest > Current ? new UpdateInfo(latest, url, assets) : null;
         }
         catch
         {
             return null; // offline, rate-limited or GitHub changed: try again another day
+        }
+    }
+
+    /// <summary>True when this copy came from the Windows installer, which can upgrade it in place.</summary>
+    public static bool CanInstall =>
+        OperatingSystem.IsWindows() && File.Exists(Path.Combine(AppContext.BaseDirectory, "unins000.exe"));
+
+    /// <summary>The installer matching this copy: ARM64, self-contained ("standalone") or the regular one.</summary>
+    public static string InstallerName(Version v) =>
+        RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? $"DeskArcade-Setup-{v.ToString(3)}-arm64.exe"
+        : File.Exists(Path.Combine(AppContext.BaseDirectory, "coreclr.dll")) ? $"DeskArcade-Setup-{v.ToString(3)}-standalone.exe"
+        : $"DeskArcade-Setup-{v.ToString(3)}.exe";
+
+    /// <summary>
+    /// Downloads the matching installer to the temp folder and checks it against GitHub's SHA-256 digest when
+    /// the release has one. Null when there is no matching installer or the download or check fails.
+    /// </summary>
+    public static async Task<string?> DownloadInstallerAsync(UpdateInfo update, CancellationToken ct = default)
+    {
+        var asset = update.Assets?.FirstOrDefault(a => a.Name == InstallerName(update.Version));
+        if (asset == null) return null;
+        string path = Path.Combine(Path.GetTempPath(), asset.Name);
+        try
+        {
+            using var http = new HttpClient { Timeout = TimeSpan.FromMinutes(10) };
+            http.DefaultRequestHeaders.UserAgent.ParseAdd($"DeskArcade/{Current}");
+            await using (var file = File.Create(path))
+            await using (var body = await http.GetStreamAsync(asset.Url, ct))
+                await body.CopyToAsync(file, ct);
+            if (asset.Sha256 is { } expected)
+            {
+                await using var check = File.OpenRead(path);
+                string actual = Convert.ToHexString(await SHA256.HashDataAsync(check, ct));
+                if (!actual.Equals(expected, StringComparison.OrdinalIgnoreCase))
+                {
+                    File.Delete(path);
+                    return null;
+                }
+            }
+            return path;
+        }
+        catch
+        {
+            return null;
         }
     }
 

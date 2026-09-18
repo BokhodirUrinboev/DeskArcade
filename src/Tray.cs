@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls;
+using DeskArcade.Platform;
 
 namespace DeskArcade;
 
@@ -40,12 +41,39 @@ public sealed class Tray : IDisposable
             games.Add(Radio(L.T(g.Title), () => _w.SwitchGame(id), () => _w.Current?.Id == id));
         }
         menu.Add(new NativeMenuItem(L.T("Game")) { Menu = games });
-        menu.Add(Item(L.T("Next game") + "   (" + Shortcuts.Label('N') + ")", () => _w.NextGame()));
-        menu.Add(Item(L.T("Bring to cursor") + "   (" + Shortcuts.Label('B') + ")", () => _w.SummonToCursor()));
+        var pets = new NativeMenu();
+        foreach (var (kind, name) in new[] { ("cat", L.T("Cat")), ("dog", L.T("Dog")), ("duck", L.T("Duck")) })
+            pets.Add(Radio(name, () => _w.SetPet(kind), () => _w.Settings.PetKind == kind));
+        menu.Add(new NativeMenuItem(L.T("Pet")) { Menu = pets });
+        menu.Add(Item(L.T("Next game") + "   (" + Shortcuts.Label(HotkeyAction.NextGame) + ")", () => _w.NextGame()));
+        menu.Add(Item(L.T("Bring to cursor") + "   (" + Shortcuts.Label(HotkeyAction.Summon) + ")", () => _w.SummonToCursor()));
         menu.Add(Item(L.T("Stats & achievements…"), () => _w.OpenStats()));
+        var daily = Item(_w.DailyLine, () => _w.PlayDaily());
+        _refreshers.Add(() => daily.Header = _w.DailyLine);
+        menu.Add(daily);
+
+        var lan = new NativeMenu();
+        var status = new NativeMenuItem(_w.LanStatus) { IsEnabled = false };
+        _refreshers.Add(() => status.Header = _w.LanStatus);
+        lan.Add(status);
+        lan.Add(new NativeMenuItemSeparator());
+        lan.Add(Item(L.T("Host a game"), () => _w.HostLan()));
+        lan.Add(Item(L.T("Join a game"), () => _w.JoinLan()));
+        lan.Add(Item(L.T("Find games / join by address…"), () => _w.OpenLobby()));
+        var emotes = new NativeMenu();
+        for (int i = 0; i < Net.LanLink.Emotes.Length; i++)
+        {
+            int index = i;
+            emotes.Add(Item(L.T(Net.LanLink.Emotes[i]), () => _w.SendEmote(index)));
+        }
+        var send = new NativeMenuItem(L.T("Send")) { Menu = emotes };
+        _refreshers.Add(() => send.IsEnabled = _w.Lan.Connected);
+        lan.Add(send);
+        lan.Add(Item(L.T("Leave"), () => _w.LeaveLan()));
+        menu.Add(new NativeMenuItem(L.T("Play over LAN")) { Menu = lan });
         menu.Add(new NativeMenuItemSeparator());
 
-        menu.Add(Check(L.T("Show overlay") + "   (" + Shortcuts.Label('G') + ")", () => _w.ToggleOverlay(), () => _w.OverlayVisible));
+        menu.Add(Check(L.T("Show overlay") + "   (" + Shortcuts.Label(HotkeyAction.ToggleOverlay) + ")", () => _w.ToggleOverlay(), () => _w.OverlayVisible));
         menu.Add(Check(L.T("Bounce on window tops"), () => Toggle(s => s.Platforms = !s.Platforms), () => _w.Settings.Platforms));
         menu.Add(Check(L.T("Sound"), () => Toggle(s => s.Sound = !s.Sound), () => _w.Settings.Sound));
 
@@ -53,6 +81,11 @@ public sealed class Tray : IDisposable
         foreach (double level in VolumeLevels)
             volume.Add(Radio($"{(int)(level * 100)}%", () => _w.SetVolume(level), () => Math.Abs(_w.Settings.Volume - level) < 0.126));
         menu.Add(new NativeMenuItem(L.T("Volume")) { Menu = volume });
+
+        var access = new NativeMenu();
+        access.Add(Check(L.T("Reduce motion"), () => Toggle(s => s.ReducedMotion = !s.ReducedMotion), () => _w.Settings.ReducedMotion));
+        access.Add(Check(L.T("Colour-blind friendly colours"), () => Toggle(s => s.ColorBlind = !s.ColorBlind), () => _w.Settings.ColorBlind));
+        menu.Add(new NativeMenuItem(L.T("Accessibility")) { Menu = access });
 
         var language = new NativeMenu();
         foreach (var (code, name) in L.Languages)
@@ -63,10 +96,12 @@ public sealed class Tray : IDisposable
         claude.Add(Check(L.T("Alerts when Claude finishes"), () => Toggle(s => s.ClaudeNotify = !s.ClaudeNotify), () => _w.Settings.ClaudeNotify));
         claude.Add(Check(L.T("Show the overlay when Claude starts working"), () => Toggle(s => s.ClaudeAutoShow = !s.ClaudeAutoShow), () => _w.Settings.ClaudeAutoShow));
         claude.Add(Check(L.T("Hide the overlay when Claude finishes or needs you"), () => Toggle(s => s.ClaudeAutoHide = !s.ClaudeAutoHide), () => _w.Settings.ClaudeAutoHide));
+        claude.Add(Check(L.T("Pause the game when Claude finishes or needs you"), () => Toggle(s => s.ClaudePause = !s.ClaudePause), () => _w.Settings.ClaudePause));
         claude.Add(new NativeMenuItemSeparator());
         claude.Add(Item(L.T("Copy Claude Code hook config"), () => _w.CopyHookConfig()));
         menu.Add(new NativeMenuItem("Claude Code") { Menu = claude });
 
+        menu.Add(Item(L.T("Shortcuts…"), () => _w.OpenShortcuts()));
         menu.Add(Check(L.T("Start when I sign in"), () =>
         {
             _w.AutostartEnabled = !_w.AutostartEnabled;
@@ -77,11 +112,11 @@ public sealed class Tray : IDisposable
 
         var update = Item(L.T("Check for updates"), () =>
         {
-            if (_w.AvailableUpdate is UpdateInfo u) UpdateChecker.OpenInBrowser(u.Url);
+            if (_w.AvailableUpdate != null) _w.InstallUpdate();
             else _w.CheckForUpdates(manual: true);
         });
         _refreshers.Add(() => update.Header = _w.AvailableUpdate is UpdateInfo u
-            ? L.F("Download version {0}…", u.Version.ToString(3))
+            ? UpdateChecker.CanInstall ? L.F("Install version {0}", u.Version.ToString(3)) : L.F("Download version {0}…", u.Version.ToString(3))
             : L.T("Check for updates"));
         menu.Add(update);
         menu.Add(Check(L.T("Check for updates automatically"), () => Toggle(s => s.CheckForUpdates = !s.CheckForUpdates), () => _w.Settings.CheckForUpdates));
