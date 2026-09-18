@@ -3,9 +3,9 @@
 cask "deskarcade" do
   arch arm: "arm64", intel: "x64"
 
-  version "1.4.1"
-  sha256 arm:   "16c684ab381327b28ee608ad545b5ef915cf37d014396abb947ab31459b33a9d",
-         intel: "1e939afda46822dccbaf7da5e5612f50a3524e4b2bb37a2c9ccc12bc128b19e9"
+  version "1.5.0"
+  sha256 arm:   "5f3afd2a053098e6d34c49bd7186bf9cbe572f3eb1838770d093e74b9614d8ce",
+         intel: "3862dffdf0d6be4d9b81d74aa4bf573d055136869ff817c887d97493cc620fa1"
 
   url "https://github.com/BokhodirUrinboev/DeskArcade/releases/download/v#{version}/DeskArcade-#{version}-macos-#{arch}.zip"
   name "Desk Arcade"
