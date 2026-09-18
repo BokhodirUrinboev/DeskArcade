@@ -271,7 +271,11 @@ public abstract class BoardGame : MiniGame
         {
             _myWins++;
             Host.Stats.Add(Id + ".wins");
-            if (LanOn) Host.Stats.Add(Id + ".lanwins");
+            if (LanOn)
+            {
+                Host.Stats.Add(Id + ".lanwins");
+                Host.Stats.Add("lan.wins");
+            }
             Host.Fx.Popup(at, L.T("YOU WIN!"), Gold, 42, 2.6, L.F("vs {0}", Rival));
             Host.Fx.Burst(at, new[] { Gold, Colors.White, Color.FromRgb(214, 64, 69) }, 44, 540, 700, 7, 1.1);
             Host.Sound.Play("best", 0.8);

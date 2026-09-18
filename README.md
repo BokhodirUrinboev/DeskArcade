@@ -36,7 +36,7 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 - **Window tops are platforms.** Balls, bugs, pets and towers sit on the top edges of your windows and
   ride along when you drag one. You can turn this off in the tray menu.
 - **Idle means idle.** When nothing is moving, rendering stops and CPU use drops to almost zero.
-- **17 games, 39 achievements**, play-time stats, and English, Uzbek and Russian text.
+- **17 games, 45 achievements**, play-time stats, and English, Uzbek and Russian text.
 - **No assets to download.** Every sound is synthesized and all artwork is drawn in code.
 
 ## Games
@@ -78,7 +78,7 @@ The scoreboard is a small pill showing the game icon, score and best. **Click it
 board with a tab for every game; it shrinks back shortly after the mouse leaves. Drag it anywhere.
 
 **Stats & achievements** in the tray menu (or `DeskArcade --signal stats`) opens a window with time
-played and best score per game, and all 39 achievements with their progress. Stats live in
+played and best score per game, and all 45 achievements with their progress. Stats live in
 `stats.json` next to your settings and can be reset from the tray.
 
 ## Controls

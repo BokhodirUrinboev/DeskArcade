@@ -216,6 +216,7 @@ public sealed class HockeyGame : MiniGame
         if (won)
         {
             Host.Stats.Add("hockey.lanwins");
+            Host.Stats.Add("lan.wins");
             Host.Fx.Popup(at, L.T("YOU WIN!"), Gold, 42, 2.6, L.F("{0}–{1} vs {2}", _myGoals, _cpuGoals, Rival));
             Host.Fx.Burst(at, Confetti, 44, 540, 700, 7, 1.1);
             Host.Sound.Play("best", 0.8);
