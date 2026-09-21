@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using DeskArcade.Platform;
 
@@ -10,7 +9,7 @@ namespace DeskArcade;
 /// Tiny software mixer so short sounds can overlap with low latency. All clips are synthesized;
 /// the platform only supplies a raw 16-bit mono output (waveOut on Windows, PulseAudio on Linux).
 /// </summary>
-public sealed class Sound : IDisposable
+public sealed partial class Sound : IDisposable
 {
     const int Rate = 44100;
     const int BufSamples = 512;
@@ -49,6 +48,9 @@ public sealed class Sound : IDisposable
             _voices.Add(new Voice { Clip = clip, Vol = (float)Math.Clamp(vol, 0, 1.5), Rate = pitch });
         }
     }
+
+    /// <summary>The synthesized samples of a clip (for tests), or null if there is no such clip.</summary>
+    public float[]? Samples(string name) => _clips.TryGetValue(name, out var clip) ? clip : null;
 
     void Loop()
     {
@@ -145,54 +147,7 @@ public sealed class Sound : IDisposable
         });
         _clips["whoosh"] = Filtered(0.22, 0.25, 0.7, t => Math.Sin(Math.PI * t / 0.22) * 0.35);
 
-        // pet voices: a pitch sweep with harmonics, a little vibrato and breath noise
-        _clips["meow"] = Voiced(0.62, t => 470 + 430 * Math.Sin(Math.PI * Math.Min(1, t / 0.62)), t => Swell(t, 0.62, 0.06),
-            new[] { 1, 0.7, 0.5, 0.32, 0.2, 0.12 }, vibrato: 6, depth: 0.015, breath: 0.05);
-        _clips["purr"] = Render(0.9, t => (Noise() * 0.6 + Math.Sin(2 * Math.PI * 55 * t) * 0.5)
-            * (0.55 + 0.45 * Math.Sin(2 * Math.PI * 24 * t)) * Swell(t, 0.9, 0.15) * 0.22);
-        _clips["bark"] = Concat(Voiced(0.16, t => 330 - 380 * t, t => Swell(t, 0.16, 0.01), new[] { 1, 0.9, 0.7, 0.55, 0.4, 0.3 }, breath: 0.35),
-            0.07, Voiced(0.14, t => 350 - 400 * t, t => Swell(t, 0.14, 0.01), new[] { 1, 0.9, 0.7, 0.55, 0.4, 0.3 }, breath: 0.35));
-        _clips["quack"] = Voiced(0.3, t => 520 - 220 * t, t => Swell(t, 0.3, 0.02) * (0.7 + 0.3 * Math.Sin(2 * Math.PI * 38 * t)),
-            new[] { 0.35, 0.6, 1, 0.8, 0.55, 0.4, 0.3 }, breath: 0.12);
-        _clips["squeak"] = Voiced(0.13, t => 1700 + 5200 * t, t => Swell(t, 0.13, 0.01), new[] { 1, 0.25 }, breath: 0.03);
-        _clips["honk"] = Voiced(0.42, t => 300 + 30 * Math.Sin(Math.PI * t / 0.42), t => Swell(t, 0.42, 0.03),
-            new[] { 1, 0.85, 0.7, 0.6, 0.45, 0.35, 0.25 }, vibrato: 9, depth: 0.03, breath: 0.08);
-        _clips["yip"] = Concat(Voiced(0.1, t => 900 + 2600 * t, t => Swell(t, 0.1, 0.008), new[] { 1, 0.5, 0.3 }, breath: 0.15),
-            0.05, Voiced(0.12, t => 1150 + 2000 * t, t => Swell(t, 0.12, 0.008), new[] { 1, 0.5, 0.3 }, breath: 0.15));
-    }
-
-    /// <summary>An envelope that fades in over <paramref name="attack"/> seconds and out toward the end.</summary>
-    static double Swell(double t, double length, double attack) => Math.Min(1, t / attack) * Math.Pow(Math.Max(0, 1 - t / length), 0.6);
-
-    /// <summary>
-    /// A voiced sound: the pitch follows <paramref name="freq"/> (Hz over time, with optional vibrato), the
-    /// loudness <paramref name="env"/>; <paramref name="harmonics"/> weights the overtones, which is what
-    /// makes a meow sound unlike a quack, and <paramref name="breath"/> mixes in noise.
-    /// </summary>
-    float[] Voiced(double seconds, Func<double, double> freq, Func<double, double> env, double[] harmonics,
-        double vibrato = 0, double depth = 0, double breath = 0)
-    {
-        var b = Buf(seconds);
-        double phase = 0, norm = harmonics.Sum();
-        for (int i = 0; i < b.Length; i++)
-        {
-            double t = (double)i / Rate;
-            double f = freq(t) * (1 + depth * Math.Sin(2 * Math.PI * vibrato * t));
-            phase += 2 * Math.PI * f / Rate;
-            double s = 0;
-            for (int h = 0; h < harmonics.Length; h++) s += Math.Sin(phase * (h + 1)) * harmonics[h];
-            b[i] = (float)((s / norm + Noise() * breath) * env(t) * 0.55);
-        }
-        return b;
-    }
-
-    /// <summary>Two sounds with <paramref name="gap"/> seconds of silence between them.</summary>
-    float[] Concat(float[] a, double gap, float[] c)
-    {
-        var b = new float[a.Length + (int)(gap * Rate) + c.Length];
-        a.CopyTo(b, 0);
-        c.CopyTo(b, a.Length + (int)(gap * Rate));
-        return b;
+        SynthesizeAnimals();
     }
 
     float[] Render(double seconds, Func<double, double> fn)

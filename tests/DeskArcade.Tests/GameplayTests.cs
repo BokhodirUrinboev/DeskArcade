@@ -610,3 +610,29 @@ public class RoomLinkTests
         Assert.Equal("notfound", guest.Refusal);
     }
 }
+
+public class PetVoiceTests
+{
+    [Fact]
+    public void EveryPetClipIsSynthesizedAudibleAndUnclipped()
+    {
+        using var sound = new Sound(new DeskArcade.Platform.NullPlatform());
+        foreach (var name in PetGame.ClipsUsed().Distinct())
+        {
+            var clip = sound.Samples(name);
+            Assert.True(clip != null, $"no clip named {name}");
+            Assert.True(clip!.Length > 1000, $"{name} is too short");
+            Assert.All(clip, x => Assert.True(float.IsFinite(x), $"{name} has a bad sample"));
+            float peak = clip.Max(Math.Abs);
+            Assert.InRange(peak, 0.2f, 0.8f);
+        }
+    }
+
+    [Fact]
+    public void EveryHabitHasALength()
+    {
+        foreach (var kind in PetGame.Kinds)
+            foreach (var habit in PetGame.HabitsOf(kind))
+                Assert.True(PetGame.ActLength(habit) > 0, $"{kind}: {habit}");
+    }
+}

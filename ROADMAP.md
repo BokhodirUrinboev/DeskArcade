@@ -37,6 +37,13 @@ Work happens on `feature/roadmap-1.6`. Each item says how it was verified. "Demo
 ## Pets
 
 - [x] **Voices**: meow (and a purr), bark, quack, squeak, honk and yip, synthesized like every other sound.
+- [x] **Natural voices**: a source-filter voice (a buzzing source with jitter and rasp, shaped by moving
+  formants) instead of plain tones, and several calls per animal for greeting, surprise, calling, complaining
+  and hunting. *Verified: unit test that every clip is synthesized, finite and unclipped.*
+- [x] **Animal behaviour over time**: habits per animal (grooming, kneading, sniffing, scratching, preening,
+  flopping, braying), a gait per animal, stalking and pouncing on the cursor, reactions to being thrown, and
+  moods: excitement (zoomies), boredom (calls for you) and tiredness (yawns, naps, snores). *Verified: demo
+  run; the new behaviours still need a look on screen.*
 - [x] **Tricks** on right-click, and now and then by themselves: the cat stretches, the dog chases its
   tail, the duck flaps, the bunny does a binky, the penguin belly-slides, the fox pounces. *Verified: demo
   run; the sounds and tricks still need a listen and a look on screen.*
