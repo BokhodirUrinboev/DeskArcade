@@ -361,6 +361,27 @@ public static partial class Strings
         ["Whack the sleepy bug to start · spare the ladybugs"] = "Прихлопните сонного бага, чтобы начать · божьих коровок не трогайте",
         ["{0} points · {1} whacked"] = "очков: {0} · прихлопнуто {1}",
 
+        // ---- Darts
+        ["Darts"] = "Дартс",
+        ["hold on the board to aim, let go to throw — finish on a double"] = "зажмите на мишени, чтобы прицелиться, отпустите, чтобы бросить — закончите удвоением",
+        ["Hold on the board to aim, let go to throw · finish on a double"] = "Зажмите на мишени, чтобы прицелиться, отпустите, чтобы бросить · финиш удвоением",
+        ["Best {0} darts"] = "Рекорд: {0} дрот.",
+        ["Game shot in {0} darts · click the board for a new leg"] = "Лег закрыт за {0} дрот. · нажмите на мишень для новой партии",
+        ["Dart {0} of 3 · {1} this turn"] = "Дротик {0} из 3 · за подход {1}",
+        ["Miss"] = "Мимо",
+        ["BULL"] = "БУЛЛ",
+        ["BUST"] = "ПЕРЕБОР",
+        ["back to {0}"] = "снова {0}",
+        ["GAME SHOT!"] = "ЛЕГ ЗАКРЫТ!",
+        ["{0} darts"] = "Дротиков: {0}",
+        ["{0} darts · new best!"] = "Дротиков: {0} · новый рекорд!",
+        ["game on!"] = "игра началась!",
+        ["One hundred and eighty"] = "Сто восемьдесят",
+        ["Score 180 with three darts"] = "Наберите 180 очков тремя дротиками",
+        ["Checked out"] = "Точный финиш",
+        ["Finish 5 games of 501"] = "Закончите 5 партий в 501",
+        ["Hit {0} trebles in Darts"] = "Попадите в утроение в дартсе {0} раз",
+
         // ---- Clay Shooting
         ["Click the trap machine to start · shoot the clays"] = "Нажмите на машинку, чтобы начать · стреляйте по тарелкам",
         ["click to start"] = "нажмите, чтобы начать",
