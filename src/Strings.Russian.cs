@@ -681,5 +681,23 @@ public static partial class Strings
         ["Matchmaker"] = "Мастер пар",
         ["Find 100 pairs"] = "Найдите 100 пар",
         ["Find {0} pairs in Memory"] = "Найдите пары в «Мемори»: {0}",
+        // codebreaker
+        ["Code Breaker"] = "Взломщик кода",
+        ["Check"] = "Проверить",
+        ["Guess {0}/{1} · pick a colour, then click a hole"] = "Попытка {0}/{1} · выберите цвет, затем нажмите на лунку",
+        ["Guess {0}/{1} · click Check"] = "Попытка {0}/{1} · нажмите «Проверить»",
+        ["Code cracked · click the board for a new code"] = "Код разгадан · нажмите на доску для нового кода",
+        ["Out of guesses · click the board for a new code"] = "Попытки кончились · нажмите на доску для нового кода",
+        ["Fewest guesses {0}"] = "Рекорд попыток {0}",
+        ["CODE CRACKED!"] = "КОД РАЗГАДАН!",
+        ["{0} of {1} guesses"] = "попыток: {0} из {1}",
+        ["OUT OF GUESSES"] = "ПОПЫТКИ КОНЧИЛИСЬ",
+        ["here is the code · click the board for a new code"] = "вот код · нажмите на доску для нового кода",
+        ["pick a colour, fill the row and click Check — a black pin is the right colour in the right place"] = "выберите цвет, заполните ряд и нажмите «Проверить» — чёрный штырёк: верный цвет на верном месте",
+        ["Code cracked"] = "Код взломан",
+        ["Break a code"] = "Разгадайте код",
+        ["Mind reader"] = "Телепат",
+        ["Break a code in 4 guesses or fewer"] = "Разгадайте код за 4 попытки или меньше",
+        ["Break {0} codes in Code Breaker"] = "Разгадайте коды в «Взломщике кода»: {0}",
     };
 }

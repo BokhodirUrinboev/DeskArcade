@@ -199,6 +199,7 @@ public sealed class OverlayWindow : Window, IGameHost
         durak.SetupRequested += () => DurakRoomWindow.ShowFor(this, durak);
         _games.Add(durak);
         _games.Add(new MemoryGame(this));
+        _games.Add(new CodeBreakerGame(this));
         _games.Add(new PetGame(this));
 
         _hud = new Hud(_games);
@@ -535,6 +536,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "plinko" => L.T("click the strip to drop a disc — the gold slot is the jackpot"),
         "whack" => L.T("whack the bugs as they peek out — spare the ladybugs"),
         "memory" => L.T("flip two cards at a time — find all the pairs"),
+        "codebreaker" => L.T("pick a colour, fill the row and click Check — a black pin is the right colour in the right place"),
         _ => "",
     };
 

@@ -33,6 +33,7 @@ public sealed class Daily
         new("chess", "chess.captures", 6, "Capture {0} pieces in Chess"),
         new("seabattle", "seabattle.sunk", 5, "Sink {0} ships in Sea Battle"),
         new("memory", "memory.pairs", 12, "Find {0} pairs in Memory"),
+        new("codebreaker", "codebreaker.wins", 2, "Break {0} codes in Code Breaker"),
     };
 
     readonly Settings _settings;

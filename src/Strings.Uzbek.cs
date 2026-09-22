@@ -681,5 +681,23 @@ public static partial class Strings
         ["Matchmaker"] = "Juftlar ustasi",
         ["Find 100 pairs"] = "100 ta juft toping",
         ["Find {0} pairs in Memory"] = "«Xotira»da {0} ta juft toping",
+        // codebreaker
+        ["Code Breaker"] = "Kod buzuvchi",
+        ["Check"] = "Tekshirish",
+        ["Guess {0}/{1} · pick a colour, then click a hole"] = "Taxmin {0}/{1} · rangni tanlang, so'ng teshikni bosing",
+        ["Guess {0}/{1} · click Check"] = "Taxmin {0}/{1} · «Tekshirish»ni bosing",
+        ["Code cracked · click the board for a new code"] = "Kod topildi · yangi kod uchun taxtani bosing",
+        ["Out of guesses · click the board for a new code"] = "Taxminlar tugadi · yangi kod uchun taxtani bosing",
+        ["Fewest guesses {0}"] = "Eng kam taxmin {0}",
+        ["CODE CRACKED!"] = "KOD TOPILDI!",
+        ["{0} of {1} guesses"] = "{1} taxmindan {0} tasi",
+        ["OUT OF GUESSES"] = "TAXMINLAR TUGADI",
+        ["here is the code · click the board for a new code"] = "mana kod · yangi kod uchun taxtani bosing",
+        ["pick a colour, fill the row and click Check — a black pin is the right colour in the right place"] = "rangni tanlang, qatorni to'ldiring va «Tekshirish»ni bosing — qora pin: to'g'ri rang to'g'ri joyda",
+        ["Code cracked"] = "Kod ochildi",
+        ["Break a code"] = "Kodni toping",
+        ["Mind reader"] = "Fikr o'quvchi",
+        ["Break a code in 4 guesses or fewer"] = "Kodni 4 yoki undan kam taxminda toping",
+        ["Break {0} codes in Code Breaker"] = "«Kod buzuvchi»da {0} ta kodni toping",
     };
 }
