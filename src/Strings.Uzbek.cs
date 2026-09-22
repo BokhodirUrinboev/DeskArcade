@@ -667,5 +667,31 @@ public static partial class Strings
         ["Expert"] = "Ekspert",
         ["Couldn't open a room"] = "Xonani ochib bo'lmadi",
         ["{0} is back"] = "{0} qaytdi",
+
+        // ---- Fishing
+        ["Fishing"] = "Baliq ovi",
+        ["drag back from the rod to cast — click when the bobber goes under, hold to reel"] =
+            "tashlash uchun qarmoqdan orqaga torting — po'plavok suvga botganda bosing, ipni o'rash uchun bosib turing",
+        ["{0}s left · caught {1}"] = "{0} s qoldi · tutildi {1}",
+        ["Drag back from the rod tip and let go to cast"] = "Qarmoq uchidan orqaga torting va tashlash uchun qo'yib yuboring",
+        ["Perch"] = "Olabug'a",
+        ["Carp"] = "Zog'ora baliq",
+        ["Pike"] = "Cho'rtan",
+        ["Catfish"] = "Laqqa baliq",
+        ["Golden Trout"] = "Oltin gulmoy",
+        ["{0} · {1} kg"] = "{0} · {1} kg",
+        ["+{0} points"] = "+{0} ochko",
+        ["{0} points · {1} caught"] = "{0} ochko · {1} ta baliq",
+        ["Too soon!"] = "Juda erta!",
+        ["you spooked it"] = "baliqni cho'chitib yubordingiz",
+        ["Missed!"] = "Qo'ldan boy berdingiz!",
+        ["it stole the bait · reel in"] = "xo'rakni o'g'irlab ketdi · ipni o'rab oling",
+        ["Line snapped!"] = "Ip uzildi!",
+        ["it got away"] = "baliq qochib ketdi",
+        ["Angler"] = "Baliqchi",
+        ["Catch 50 fish"] = "50 ta baliq tuting",
+        ["Golden catch"] = "Oltin o'lja",
+        ["Catch a golden trout"] = "Oltin gulmoy tuting",
+        ["Catch {0} fish"] = "{0} ta baliq tuting",
     };
 }

@@ -667,5 +667,31 @@ public static partial class Strings
         ["Expert"] = "Эксперт",
         ["Couldn't open a room"] = "Не удалось открыть комнату",
         ["{0} is back"] = "{0} вернулся",
+
+        // ---- Fishing
+        ["Fishing"] = "Рыбалка",
+        ["drag back from the rod to cast — click when the bobber goes under, hold to reel"] =
+            "потяните назад от удочки, чтобы забросить — жмите, когда поплавок уйдёт под воду, и держите, чтобы подматывать",
+        ["{0}s left · caught {1}"] = "осталось {0} с · поймано {1}",
+        ["Drag back from the rod tip and let go to cast"] = "Потяните назад от кончика удочки и отпустите, чтобы забросить",
+        ["Perch"] = "Окунь",
+        ["Carp"] = "Карп",
+        ["Pike"] = "Щука",
+        ["Catfish"] = "Сом",
+        ["Golden Trout"] = "Золотая форель",
+        ["{0} · {1} kg"] = "{0} · {1} кг",
+        ["+{0} points"] = "очков: +{0}",
+        ["{0} points · {1} caught"] = "очков: {0} · поймано {1}",
+        ["Too soon!"] = "Рано!",
+        ["you spooked it"] = "вы спугнули рыбу",
+        ["Missed!"] = "Упустили!",
+        ["it stole the bait · reel in"] = "рыба украла наживку · смотайте леску",
+        ["Line snapped!"] = "Леска оборвалась!",
+        ["it got away"] = "рыба ушла",
+        ["Angler"] = "Рыболов",
+        ["Catch 50 fish"] = "Поймайте 50 рыб",
+        ["Golden catch"] = "Золотой улов",
+        ["Catch a golden trout"] = "Поймайте золотую форель",
+        ["Catch {0} fish"] = "Поймайте рыб: {0}",
     };
 }
