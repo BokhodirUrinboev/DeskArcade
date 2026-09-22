@@ -73,6 +73,9 @@ public static class Achievements
         new("plinko-jackpot", "plinko", "Jackpot", "Land 5 discs in the jackpot slot", "plinko.jackpots", 5),
         new("plinko-100", "plinko", "Disc dropper", "Drop 100 discs", "plinko.discs", 100),
 
+        new("toss-10", "toss", "Wastebasket pro", "Score 10 in one run", "toss.run", 10),
+        new("toss-swish", "toss", "Clean throw", "Toss 25 swishes into the bin", "toss.swishes", 25),
+
         new("checkers-win", "checkers", "Crowned", "Win a game of Checkers", "checkers.wins", 1),
         new("chess-win", "chess", "Checkmate", "Win a game of Chess", "chess.wins", 1),
         new("connect4-win", "connect4", "Four in a row", "Win a game of Connect Four", "connect4.wins", 1),
