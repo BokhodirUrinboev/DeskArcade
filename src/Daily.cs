@@ -32,6 +32,14 @@ public sealed class Daily
         new("checkers", "checkers.captures", 8, "Capture {0} pieces in Checkers"),
         new("chess", "chess.captures", 6, "Capture {0} pieces in Chess"),
         new("seabattle", "seabattle.sunk", 5, "Sink {0} ships in Sea Battle"),
+        new("darts", "darts.trebles", 6, "Hit {0} trebles in Darts"),
+        new("toss", "toss.baskets", 10, "Toss {0} paper balls into the bin"),
+        new("fishing", "fishing.caught", 8, "Catch {0} fish"),
+        new("bowling", "bowling.pins", 60, "Knock down {0} pins in Bowling"),
+        new("pool", "pool.potted", 15, "Pot {0} balls in Pool"),
+        new("memory", "memory.pairs", 12, "Find {0} pairs in Memory"),
+        new("codebreaker", "codebreaker.wins", 2, "Break {0} codes in Code Breaker"),
+        new("pinball", "pinball.bumpers", 60, "Hit {0} bumpers in Pinball"),
     };
 
     readonly Settings _settings;

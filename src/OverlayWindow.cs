@@ -198,6 +198,14 @@ public sealed class OverlayWindow : Window, IGameHost
         var durak = new DurakGame(this);
         durak.SetupRequested += () => DurakRoomWindow.ShowFor(this, durak);
         _games.Add(durak);
+        _games.Add(new DartsGame(this));
+        _games.Add(new PaperTossGame(this));
+        _games.Add(new FishingGame(this));
+        _games.Add(new BowlingGame(this));
+        _games.Add(new PoolGame(this));
+        _games.Add(new MemoryGame(this));
+        _games.Add(new CodeBreakerGame(this));
+        _games.Add(new PinballGame(this));
         _games.Add(new PetGame(this));
 
         _hud = new Hud(_games);
@@ -432,6 +440,15 @@ public sealed class OverlayWindow : Window, IGameHost
         Wake();
     }
 
+    /// <summary>Ends a press without a release (pause, hide): the game drops it rather than acting on it.</summary>
+    void CancelCapture()
+    {
+        if (!_captured) return;
+        _captured = false;
+        Current?.PointerCancel();
+        PushHitShapes();
+    }
+
     /// <summary>Tell the platform which areas take the mouse (only when that changed).</summary>
     void PushHitShapes()
     {
@@ -533,6 +550,14 @@ public sealed class OverlayWindow : Window, IGameHost
         "tower" => L.T("click the sliding block to drop it — stack as high as you can"),
         "plinko" => L.T("click the strip to drop a disc — the gold slot is the jackpot"),
         "whack" => L.T("whack the bugs as they peek out — spare the ladybugs"),
+        "darts" => L.T("hold on the board to aim, let go to throw — finish on a double"),
+        "toss" => L.T("flick the paper ball into the bin — mind the fan"),
+        "fishing" => L.T("drag back from the rod to cast — click when the bobber goes under, hold to reel"),
+        "bowling" => L.T("drag back from the ball and let go — knock all ten pins down"),
+        "pool" => L.T("drag back from the cue ball to shoot — pot every ball in as few shots as you can"),
+        "memory" => L.T("flip two cards at a time — find all the pairs"),
+        "codebreaker" => L.T("pick a colour, fill the row and click Check — a black pin is the right colour in the right place"),
+        "pinball" => L.T("click the ball to serve — press by a flipper to flip it, right-click flips both"),
         _ => "",
     };
 
@@ -587,7 +612,7 @@ public sealed class OverlayWindow : Window, IGameHost
         }
         else
         {
-            _captured = false;
+            CancelCapture();
             _loopOn = false;
             Hide();
         }
@@ -946,7 +971,7 @@ public sealed class OverlayWindow : Window, IGameHost
         if (Settings.ClaudePause && IsVisible && !_paused && Current != null)
         {
             _paused = true;
-            _captured = false;
+            CancelCapture();
             Fx.Popup(new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.42), L.T("PAUSED"), Colors.White, 34, 3.0, L.T("click the game to resume"));
         }
         if (Settings.ClaudeAutoHide && IsVisible)

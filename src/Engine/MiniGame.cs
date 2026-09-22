@@ -79,6 +79,12 @@ public abstract class MiniGame
     public abstract bool PointerDown(Vec2 p, bool right);
     public virtual void PointerUp(Vec2 p) { }
 
+    /// <summary>
+    /// A captured press was cut off without a release (the overlay paused for Claude or was hidden). Drop what
+    /// the press was doing (a held ball, an aim, a raised flipper) without acting on it: no throw, no shot.
+    /// </summary>
+    public virtual void PointerCancel() { }
+
     /// <summary>Bring the main object (ball, bow, ...) to the cursor.</summary>
     public abstract void Summon(Vec2 p);
 

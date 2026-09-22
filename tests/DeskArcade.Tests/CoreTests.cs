@@ -48,6 +48,19 @@ public class StatsTests
     }
 
     [Fact]
+    public void MinKeepsTheFewestAndTreatsUnsetAsNoRecord()
+    {
+        var stats = Stats.Load(TempPath());
+        stats.Min("darts.fewest", 30);
+        stats.Min("darts.fewest", 42);
+        stats.Min("darts.fewest", 0); // not a result
+        Assert.Equal(30, stats.Get("darts.fewest"));
+        stats.Min("darts.fewest", 21);
+        Assert.Equal(21, stats.Get("darts.fewest"));
+        Assert.Equal(21, stats.Today("darts.fewest"));
+    }
+
+    [Fact]
     public void MaxKeepsTheHighestValue()
     {
         var stats = Stats.Load(TempPath());
@@ -159,6 +172,18 @@ public class TranslationCoverageTests
         Assert.NotEmpty(keys);
         Assert.Empty(keys.Where(k => !Strings.Uzbek.ContainsKey(k)).Select(k => "uz: " + k));
         Assert.Empty(keys.Where(k => !Strings.Russian.ContainsKey(k)).Select(k => "ru: " + k));
+    }
+
+    [Fact]
+    public void NoTranslationKeyIsDefinedTwice()
+    {
+        // the tables are indexer initializers, where a second ["key"] silently wins over the first
+        foreach (var name in new[] { "Strings.Uzbek.cs", "Strings.Russian.cs" })
+        {
+            var keys = Regex.Matches(File.ReadAllText(Path.Combine(RepoRoot(), "src", name)), @"^\s*\[""((?:[^""\\]|\\.)*)""\]\s*=", RegexOptions.Multiline)
+                .Select(m => m.Groups[1].Value);
+            Assert.Empty(keys.GroupBy(k => k).Where(g => g.Count() > 1).Select(g => $"{name}: {g.Key}"));
+        }
     }
 
     [Fact]

@@ -64,11 +64,26 @@ public static class Achievements
         new("whack-200", "whack", "Bug whacker", "Whack 200 bugs", "whack.hits", 200),
         new("whack-round", "whack", "Lightning hands", "Score 50 points in one round", "whack.round", 50),
 
+        new("darts-180", "darts", "One hundred and eighty", "Score 180 with three darts", "darts.180s", 1),
+        new("darts-legs", "darts", "Checked out", "Finish 5 games of 501", "darts.legs", 5),
+
         new("clay-100", "clay", "Clay breaker", "Hit 100 clay targets", "clay.hits", 100),
         new("clay-double", "clay", "Double trouble", "Hit two targets with one shot", "clay.doubles", 1),
 
         new("plinko-jackpot", "plinko", "Jackpot", "Land 5 discs in the jackpot slot", "plinko.jackpots", 5),
         new("plinko-100", "plinko", "Disc dropper", "Drop 100 discs", "plinko.discs", 100),
+
+        new("toss-10", "toss", "Wastebasket pro", "Score 10 in one run", "toss.run", 10),
+        new("toss-swish", "toss", "Clean throw", "Toss 25 swishes into the bin", "toss.swishes", 25),
+        new("fishing-50", "fishing", "Angler", "Catch 50 fish", "fishing.caught", 50),
+        new("fishing-golden", "fishing", "Golden catch", "Catch a golden trout", "fishing.golden", 1),
+        new("bowling-turkey", "bowling", "Turkey", "Bowl three strikes in a row", "bowling.turkeys", 1),
+        new("bowling-150", "bowling", "League night", "Score 150 in one game", "bowling.best", 150),
+
+        new("pool-clear", "pool", "Table cleared", "Clear the pool table", "pool.cleared", 1),
+        new("pool-triple", "pool", "Hat trick", "Pot 3 balls with one shot", "pool.multi", 3),
+        new("pinball-5k", "pinball", "Pinball wizard", "Score 5,000 in one game", "pinball.best", 5000),
+        new("pinball-bumpers", "pinball", "Bumper cars", "Hit 500 bumpers", "pinball.bumpers", 500),
 
         new("checkers-win", "checkers", "Crowned", "Win a game of Checkers", "checkers.wins", 1),
         new("chess-win", "chess", "Checkmate", "Win a game of Chess", "chess.wins", 1),
@@ -77,6 +92,10 @@ public static class Achievements
         new("seabattle-win", "seabattle", "Admiral", "Win a game of Sea Battle", "seabattle.wins", 1),
         new("durak-win", "durak", "Not the fool", "Get rid of your cards before someone else in Durak", "durak.wins", 1),
         new("durak-ten", "durak", "Card shark", "Escape being the durak 10 times", "durak.wins", 10),
+        new("memory-win", "memory", "Total recall", "Clear a Memory board", "memory.wins", 1),
+        new("memory-pairs", "memory", "Matchmaker", "Find 100 pairs", "memory.pairs", 100),
+        new("codebreaker-win", "codebreaker", "Code cracked", "Break a code", "codebreaker.wins", 1),
+        new("codebreaker-fast", "codebreaker", "Mind reader", "Break a code in 4 guesses or fewer", "codebreaker.fast", 1),
         new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),
         new("daily-first", "general", "Daily player", "Finish a daily challenge", "daily.done", 1),
         new("daily-week", "general", "Seven in a row", "Finish the daily challenge 7 days in a row", "daily.streak", 7),

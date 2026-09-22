@@ -148,6 +148,10 @@ public sealed partial class Sound : IDisposable
         _clips["whoosh"] = Filtered(0.22, 0.25, 0.7, t => Math.Sin(Math.PI * t / 0.22) * 0.35);
 
         SynthesizeAnimals();
+        SynthesizePaperToss();
+        SynthesizeFishing();
+        SynthesizePool();
+        SynthesizePinball();
     }
 
     float[] Render(double seconds, Func<double, double> fn)

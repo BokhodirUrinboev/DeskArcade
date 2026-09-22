@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Controls;
@@ -208,8 +209,16 @@ public sealed class Hud : Border
         _pillScore.Text = info.Score;
         _line.Text = info.Line;
         _best.Text = info.Best;
+        // the pill has room for the number only: "Best 17 darts" shows as 17, "Best —" as —
         var words = info.Best.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        _pillBest.Text = "★ " + (words.Length > 0 ? words[^1] : "");
+        string shown = words.Length > 0 ? words[^1] : "";
+        for (int i = words.Length - 1; i >= 0; i--)
+        {
+            if (!words[i].Any(char.IsDigit)) continue;
+            shown = words[i];
+            break;
+        }
+        _pillBest.Text = "★ " + shown;
     }
 
     /// <param name="since">When Claude started working (shows a running timer).</param>
