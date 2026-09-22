@@ -57,6 +57,7 @@ public sealed class PaperTossGame : MiniGame
     IntPtr _binHwnd;
     int _binGen = -1, _score, _streak;
     double _wind, _time, _acc, _sinceThrow, _stillT, _resetIn = -1, _bladeAngle;
+    long _bestBefore;
     bool _placed, _holding, _inFlight, _touched, _scored, _runOver, _onLeft, _fanLeft;
 
     public PaperTossGame(IGameHost host) : base(host)
@@ -122,6 +123,7 @@ public sealed class PaperTossGame : MiniGame
             if (_binHwnd == IntPtr.Zero) _bin.Y = a.Bottom;
             bool fits = _bin.X >= a.Left + BinMargin && _bin.X <= a.Right - BinMargin && _bin.Y - PaperFlight.BinH > a.Top + 60;
             if (!fits || !Supported() || Math.Abs(_bin.X - _spot.X) < MinBinDist) PlaceBin();
+            else DrawBin(); // the floor may have moved under it
             if (!_inFlight && !_holding && _resetIn < 0) _paper.Place(_spot);
             PlaceFan();
         }
@@ -194,11 +196,13 @@ public sealed class PaperTossGame : MiniGame
         _inFlight = false;
         bool swish = !_touched;
         int pts = PaperFlight.Points(swish);
+        if (_score == 0) _bestBefore = Host.Stats.Get("toss.best"); // the record this run has to beat
         _streak++;
         _score += pts;
         Host.Stats.Add("toss.baskets");
         if (swish) Host.Stats.Add("toss.swishes");
         Host.Stats.Max("toss.run", _score);
+        Host.Stats.Max("toss.best", _score); // saved as it grows, so quitting mid-run keeps it
 
         var at = new Vec2(_bin.X, _bin.Y - PaperFlight.BinH - 50);
         Host.Fx.Popup(at, swish ? L.T("Swish!") : L.T("In!"), swish ? Gold : Colors.White, swish ? 34 : 30, 1.2, $"+{pts}");
@@ -213,8 +217,7 @@ public sealed class PaperTossGame : MiniGame
     {
         _inFlight = false;
         _runOver = true;
-        long before = Host.Stats.Get("toss.best");
-        Host.Stats.Max("toss.best", _score);
+        long before = _score > 0 ? _bestBefore : Host.Stats.Get("toss.best");
         bool best = _score > before;
 
         var at = _paper.Pos - new Vec2(0, 90);
@@ -362,6 +365,14 @@ public sealed class PaperTossGame : MiniGame
         var v = ThrowVelocity();
         if (v.Length < MinThrow) _paper.Place(_paper.Pos, v); // just set down: not a throw
         else Throw(v);
+    }
+
+    public override void PointerCancel()
+    {
+        if (!_holding) return;
+        _holding = false; // cut off mid-flick: set it down where it is, no throw
+        _zone.IsVisible = false;
+        _paper.Place(_paper.Pos);
     }
 
     void Throw(Vec2 v)

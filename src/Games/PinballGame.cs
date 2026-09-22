@@ -348,6 +348,8 @@ public sealed class PinballGame : MiniGame
         _held = 0;
     }
 
+    public override void PointerCancel() => PointerUp(default); // drop the held flippers
+
     /// <summary>Raise or drop the flippers in <paramref name="mask"/> (1 left, 2 right, 3 both).</summary>
     void SetFlippers(int mask, bool up, bool quiet = false)
     {

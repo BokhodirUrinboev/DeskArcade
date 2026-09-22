@@ -163,6 +163,13 @@ public sealed class DartsGame : MiniGame
         if (_aiming && !_demoAim) Release();
     }
 
+    public override void PointerCancel()
+    {
+        if (!_aiming || _demoAim) return;
+        _aiming = false; // cut off mid-aim: no dart thrown
+        _reticle.IsVisible = false;
+    }
+
     void StartAim()
     {
         _aiming = true;

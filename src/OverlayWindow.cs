@@ -440,6 +440,15 @@ public sealed class OverlayWindow : Window, IGameHost
         Wake();
     }
 
+    /// <summary>Ends a press without a release (pause, hide): the game drops it rather than acting on it.</summary>
+    void CancelCapture()
+    {
+        if (!_captured) return;
+        _captured = false;
+        Current?.PointerCancel();
+        PushHitShapes();
+    }
+
     /// <summary>Tell the platform which areas take the mouse (only when that changed).</summary>
     void PushHitShapes()
     {
@@ -603,7 +612,7 @@ public sealed class OverlayWindow : Window, IGameHost
         }
         else
         {
-            _captured = false;
+            CancelCapture();
             _loopOn = false;
             Hide();
         }
@@ -962,7 +971,7 @@ public sealed class OverlayWindow : Window, IGameHost
         if (Settings.ClaudePause && IsVisible && !_paused && Current != null)
         {
             _paused = true;
-            _captured = false;
+            CancelCapture();
             Fx.Popup(new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.42), L.T("PAUSED"), Colors.White, 34, 3.0, L.T("click the game to resume"));
         }
         if (Settings.ClaudeAutoHide && IsVisible)
