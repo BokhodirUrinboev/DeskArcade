@@ -70,6 +70,12 @@ public static class Achievements
         new("plinko-jackpot", "plinko", "Jackpot", "Land 5 discs in the jackpot slot", "plinko.jackpots", 5),
         new("plinko-100", "plinko", "Disc dropper", "Drop 100 discs", "plinko.discs", 100),
 
+        new("bowling-turkey", "bowling", "Turkey", "Bowl three strikes in a row", "bowling.turkeys", 1),
+        new("bowling-150", "bowling", "League night", "Score 150 in one game", "bowling.best", 150),
+
+        new("pool-clear", "pool", "Table cleared", "Clear the pool table", "pool.cleared", 1),
+        new("pool-triple", "pool", "Hat trick", "Pot 3 balls with one shot", "pool.multi", 3),
+
         new("checkers-win", "checkers", "Crowned", "Win a game of Checkers", "checkers.wins", 1),
         new("chess-win", "chess", "Checkmate", "Win a game of Chess", "chess.wins", 1),
         new("connect4-win", "connect4", "Four in a row", "Win a game of Connect Four", "connect4.wins", 1),
