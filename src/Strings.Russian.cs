@@ -802,7 +802,7 @@ public static partial class Strings
         ["Drained!"] = "Шар ушёл!",
         ["×{0} multiplier"] = "множитель ×{0}",
         ["Pinball wizard"] = "Пинбольный волшебник",
-        ["Score 10,000 in one game"] = "Наберите 10 000 очков за одну игру",
+        ["Score 5,000 in one game"] = "Наберите 5000 очков за одну игру",
         ["Bumper cars"] = "Автодром",
         ["Hit 500 bumpers"] = "Попадите в бамперы 500 раз",
         ["Hit {0} bumpers in Pinball"] = "Попадите в бамперы {0} раз в пинболе",

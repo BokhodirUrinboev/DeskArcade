@@ -802,7 +802,7 @@ public static partial class Strings
         ["Drained!"] = "To'p tushib ketdi!",
         ["×{0} multiplier"] = "×{0} ko'paytirgich",
         ["Pinball wizard"] = "Pinbol sehrgari",
-        ["Score 10,000 in one game"] = "Bitta o'yinda 10 000 ochko to'plang",
+        ["Score 5,000 in one game"] = "Bitta o'yinda 5000 ochko to'plang",
         ["Bumper cars"] = "Bamper poygasi",
         ["Hit 500 bumpers"] = "Bamperlarga 500 marta tegizing",
         ["Hit {0} bumpers in Pinball"] = "Pinbolda bamperlarga {0} marta tegizing",
