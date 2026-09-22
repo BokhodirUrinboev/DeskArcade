@@ -423,6 +423,17 @@ public sealed class FishingGame : MiniGame
         Host.Wake();
     }
 
+    public override void PointerCancel()
+    {
+        if (_state == State.Aiming)
+        {
+            HideGuide(); // cut off mid-drag: no cast
+            _state = State.Ready;
+        }
+        _reeling = false;
+        Host.Wake();
+    }
+
     /// <summary>Casts to where the cursor is, if it is over the pond.</summary>
     public override void Summon(Vec2 p)
     {
