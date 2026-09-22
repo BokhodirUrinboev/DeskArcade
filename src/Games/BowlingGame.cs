@@ -18,9 +18,11 @@ namespace DeskArcade.Games;
 /// </summary>
 public sealed class BowlingGame : MiniGame
 {
+    /// <summary>The longest drag that counts, and how far in from the lane's left end the ball waits.</summary>
+    public const double MaxPull = 170, StartInset = 36;
     const double LaneW = 110, GutterW = 24, Approach = 70, Pit = 44, MaxLane = 1500;
     const double BallR = 11.5, PinR = 6.5, PinSpacing = 31, RowGap = 27, BallMass = 4, PinDrag = 10;
-    const double MaxPull = 170, MinPull = 14, MaxSpeed = 2000, MinSpeed = 380, MaxAngle = 12, Reach = 34;
+    const double MinPull = 14, MaxSpeed = 2000, MinSpeed = 380, MaxAngle = 12, Reach = 34;
     const double KnockDist = 3, PitWait = 1.5, RollTimeout = 12, FadeOut = 0.35, FadeIn = 0.3;
     const double FrameW = 44, TenthW = 62, MarkH = 17, TotalH = 22;
 
@@ -64,7 +66,8 @@ public sealed class BowlingGame : MiniGame
     // lane geometry, in arena coordinates
     double _laneLeft, _laneEnd, _laneTop, _laneBottom, _cy, _startX, _headX;
     double _time, _acc, _rollT, _pitT, _sweepT, _ballAngle;
-    int _standingBefore, _strikeRun;
+    int _strikeRun;
+    bool _freshBefore;
     bool _placed, _aiming, _active, _gameOver, _resetRack, _ballInPit;
     Phase _phase;
     Vec2 _pull;
@@ -152,13 +155,12 @@ public sealed class BowlingGame : MiniGame
         double oldLeft = _laneLeft, oldEnd = _laneEnd, oldCy = _cy;
         bool first = !_placed;
 
-        double length = Math.Min(a.Width - 80, MaxLane);
-        _laneLeft = a.Left + (a.Width - length) / 2;
+        (_laneLeft, double length) = LaneSpan(a);
         _laneEnd = _laneLeft + length - Pit;
         _laneBottom = a.Bottom - 10 - GutterW;
         _laneTop = _laneBottom - LaneW;
         _cy = (_laneTop + _laneBottom) / 2;
-        _startX = _laneLeft + 36;
+        _startX = _laneLeft + StartInset;
         _headX = _laneEnd - 28 - 3 * RowGap;
         _table.Bounds = new Rect(_laneLeft, _laneTop - GutterW, length, LaneW + GutterW * 2);
 
@@ -197,6 +199,15 @@ public sealed class BowlingGame : MiniGame
     {
         _aiming = false;
         HideGuide();
+    }
+
+    /// <summary>Where the lane starts and how long it is (pit included): centred, but on a narrow screen
+    /// moved right and shortened so a full-power drag still fits between the ball and the screen edge.</summary>
+    public static (double Left, double Length) LaneSpan(Rect a)
+    {
+        double length = Math.Min(a.Width - 80, MaxLane);
+        double left = Math.Max(a.Left + (a.Width - length) / 2, a.Left + MaxPull + 24 - StartInset);
+        return (left, Math.Min(length, a.Right - 10 - left));
     }
 
     /// <summary>Pins 1-10 in the standard triangle: row 0 is the headpin, row 3 the back row (7-10).</summary>
@@ -262,7 +273,11 @@ public sealed class BowlingGame : MiniGame
     public override bool PointerDown(Vec2 p, bool right)
     {
         if (_phase != Phase.Ready || (p - _ball.Pos).Length > Reach) return false;
-        if (_gameOver) NewGame();
+        if (_gameOver)
+        {
+            NewGame(); // the ball jumps back to the start: grab it again to bowl
+            return false;
+        }
         _aiming = true;
         _pull = default;
         return true;
@@ -294,7 +309,7 @@ public sealed class BowlingGame : MiniGame
     {
         if (_phase != Phase.Ready || _gameOver) return;
         if (!_active) StartGame();
-        _standingBefore = _score.PinsStanding;
+        _freshBefore = _score.FreshRack;
         _ball.Vel = dir * speed;
         _phase = Phase.Rolling;
         _rollT = 0;
@@ -410,10 +425,9 @@ public sealed class BowlingGame : MiniGame
         _ballSprite.IsVisible = false;
         bool gutter = _ball.Ghost && knocked == 0;
 
-        _score.Roll(knocked);
+        var kind = _score.Roll(knocked);
         Host.Stats.Add("bowling.pins", knocked);
-        bool strike = _standingBefore == BowlingScore.Pins && knocked == BowlingScore.Pins;
-        bool spare = _standingBefore < BowlingScore.Pins && knocked == _standingBefore;
+        bool strike = kind == BowlingScore.Kind.Strike, spare = kind == BowlingScore.Kind.Spare;
         var at = new Vec2(_headX + RowGap * 1.5, _table.Bounds.Top - 40);
 
         if (strike)
@@ -441,12 +455,12 @@ public sealed class BowlingGame : MiniGame
             }
             else
             {
-                bool split = _standingBefore == BowlingScore.Pins && headDown && IsSplit();
+                bool split = _freshBefore && headDown && IsSplit();
                 Host.Fx.Popup(at, knocked.ToString(), Colors.White, 28, 1.0, split ? L.T("split") : null);
             }
         }
 
-        _resetRack = _score.GameOver || _score.PinsStanding == BowlingScore.Pins;
+        _resetRack = _score.GameOver || _score.FreshRack;
         _phase = Phase.Sweep;
         _sweepT = 0;
         UpdateSheet();
@@ -740,7 +754,7 @@ public sealed class BowlingGame : MiniGame
         _ball.Pos.Y = Clamp(_cy + (Rng.NextDouble() - 0.5) * 36, _laneTop + BallR + 4, _laneBottom - BallR - 4);
 
         Vec2 target;
-        if (_score.PinsStanding == BowlingScore.Pins)
+        if (_score.FreshRack)
         {
             // the pocket: between the headpin and the 3 pin (or the 2 pin, now and then)
             double side = Rng.NextDouble() < 0.8 ? 1 : -1;

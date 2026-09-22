@@ -194,6 +194,44 @@ public sealed class DiscTable
         if (hit > 0) Cushion?.Invoke(d, hit);
     }
 
+    /// <summary>
+    /// Pushes overlapping discs apart and back inside the cushions, moving positions only (no velocity
+    /// change, no events): for tidying up after the table has been resized.
+    /// </summary>
+    public void Separate(int passes = 30)
+    {
+        var box = Bounds;
+        for (int pass = 0; pass < passes; pass++)
+        {
+            bool moved = false;
+            for (int i = 0; i < Discs.Count; i++)
+            {
+                var a = Discs[i];
+                if (a.Sunk) continue;
+                for (int j = i + 1; j < Discs.Count; j++)
+                {
+                    var b = Discs[j];
+                    if (b.Sunk) continue;
+                    var d = b.Pos - a.Pos;
+                    double dist = d.Length, min = a.R + b.R + 0.01;
+                    if (dist >= min) continue;
+                    var n = dist < 1e-9 ? new Vec2(1, 0) : d / dist;
+                    double half = (min - dist) / 2;
+                    a.Pos -= n * half;
+                    b.Pos += n * half;
+                    moved = true;
+                }
+            }
+            foreach (var d in Discs)
+            {
+                if (d.Sunk) continue;
+                d.Pos.X = Math.Clamp(d.Pos.X, box.Left + d.R, Math.Max(box.Left + d.R, box.Right - d.R));
+                d.Pos.Y = Math.Clamp(d.Pos.Y, box.Top + d.R, Math.Max(box.Top + d.R, box.Bottom - d.R));
+            }
+            if (!moved) return;
+        }
+    }
+
     // ------------------------------------------------------------------ geometry for aiming
 
     /// <summary>

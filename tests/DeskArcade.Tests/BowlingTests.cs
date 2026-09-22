@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Avalonia;
 using DeskArcade.Games;
 using Xunit;
 
@@ -128,5 +129,68 @@ public class BowlingScoreTests
         Assert.Equal(new[] { 7, 3 }, s.Rolls);
         Assert.Equal(new[] { "7", "/" }, s.Marks(0));
         Assert.Equal(10, s.PinsStanding);
+    }
+    [Fact]
+    public void ZeroThenTenIsASpareNotAStrike()
+    {
+        var s = new BowlingScore();
+        Assert.Equal(BowlingScore.Kind.Open, s.Roll(0));
+        Assert.False(s.FreshRack);
+        Assert.Equal(10, s.PinsStanding);
+        Assert.Equal(BowlingScore.Kind.Spare, s.Roll(10));
+        Assert.Equal(new[] { "-", "/" }, s.Marks(0));
+        s.Roll(4);
+        s.Roll(0);
+        Assert.Equal(14, s.RunningTotals()[0]); // 10 plus the next ball only
+    }
+
+    [Fact]
+    public void ATenthFrameSpareAfterAZeroIsMarkedAsASpare()
+    {
+        var s = Bowl(Enumerable.Repeat(0, 18).ToArray());
+        Assert.Equal(BowlingScore.Kind.Open, s.Roll(0));
+        Assert.Equal(BowlingScore.Kind.Spare, s.Roll(10));
+        Assert.True(s.FreshRack);
+        Assert.Equal(BowlingScore.Kind.Strike, s.Roll(10)); // the bonus ball meets a fresh rack
+        Assert.Equal(new[] { "-", "/", "X" }, s.Marks(9));
+        Assert.Equal(20, s.Total);
+    }
+
+    [Fact]
+    public void ATenthFrameStrikeThenZeroThenTenEndsWithASpare()
+    {
+        var s = Bowl(Enumerable.Repeat(0, 18).ToArray());
+        Assert.Equal(BowlingScore.Kind.Strike, s.Roll(10));
+        Assert.Equal(BowlingScore.Kind.Open, s.Roll(0));
+        Assert.False(s.FreshRack);
+        Assert.Equal(BowlingScore.Kind.Spare, s.Roll(10));
+        Assert.Equal(new[] { "X", "-", "/" }, s.Marks(9));
+        Assert.True(s.GameOver);
+    }
+
+    [Fact]
+    public void StrikesAreOnlyTenOnAFreshRack()
+    {
+        // X X then a 10th of X 0 10: three strikes in a row, not four
+        var s = Bowl(Enumerable.Repeat(0, 14).ToArray());
+        var kinds = new[] { 10, 10, 10, 0, 10 }.Select(s.Roll).ToArray();
+        Assert.Equal(new[] { BowlingScore.Kind.Strike, BowlingScore.Kind.Strike, BowlingScore.Kind.Strike, BowlingScore.Kind.Open, BowlingScore.Kind.Spare }, kinds);
+    }
+}
+
+public class BowlingLaneTests
+{
+    [Theory]
+    [InlineData(1280)]
+    [InlineData(1366)]
+    [InlineData(1920)]
+    [InlineData(3840)]
+    public void AFullPowerDragFitsLeftOfTheBallOnAnyScreen(double width)
+    {
+        var arena = new Rect(0, 0, width, 700);
+        var (left, length) = BowlingGame.LaneSpan(arena);
+        Assert.True(left + BowlingGame.StartInset - BowlingGame.MaxPull >= arena.Left + 20, $"only {left + BowlingGame.StartInset:0} px for the drag");
+        Assert.True(left + length <= arena.Right - 10);
+        Assert.True(length >= 900);
     }
 }
