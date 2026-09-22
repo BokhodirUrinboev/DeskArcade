@@ -39,6 +39,7 @@ public sealed class Daily
         new("pool", "pool.potted", 15, "Pot {0} balls in Pool"),
         new("memory", "memory.pairs", 12, "Find {0} pairs in Memory"),
         new("codebreaker", "codebreaker.wins", 2, "Break {0} codes in Code Breaker"),
+        new("pinball", "pinball.bumpers", 60, "Hit {0} bumpers in Pinball"),
     };
 
     readonly Settings _settings;

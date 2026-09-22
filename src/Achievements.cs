@@ -82,6 +82,8 @@ public static class Achievements
 
         new("pool-clear", "pool", "Table cleared", "Clear the pool table", "pool.cleared", 1),
         new("pool-triple", "pool", "Hat trick", "Pot 3 balls with one shot", "pool.multi", 3),
+        new("pinball-10k", "pinball", "Pinball wizard", "Score 10,000 in one game", "pinball.best", 10000),
+        new("pinball-bumpers", "pinball", "Bumper cars", "Hit 500 bumpers", "pinball.bumpers", 500),
 
         new("checkers-win", "checkers", "Crowned", "Win a game of Checkers", "checkers.wins", 1),
         new("chess-win", "chess", "Checkmate", "Win a game of Chess", "chess.wins", 1),

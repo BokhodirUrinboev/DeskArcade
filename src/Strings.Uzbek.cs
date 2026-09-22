@@ -792,5 +792,19 @@ public static partial class Strings
         ["Mind reader"] = "Fikr o'quvchi",
         ["Break a code in 4 guesses or fewer"] = "Kodni 4 yoki undan kam taxminda toping",
         ["Break {0} codes in Code Breaker"] = "«Kod buzuvchi»da {0} ta kodni toping",
+        // ---- Pinball
+        ["Pinball"] = "Pinbol",
+        ["click the ball to serve — press by a flipper to flip it, right-click flips both"] = "o'yinga kiritish uchun to'pni bosing — flipperni ko'tarish uchun uning yonini bosing, o'ng tugma ikkalasini ko'taradi",
+        ["Ball {0} of 3"] = "To'p {0} / 3",
+        ["Ball {0} of 3 · ×{1}"] = "To'p {0} / 3 · ×{1}",
+        ["Ball {0} of 3 · click the ball to serve"] = "To'p {0} / 3 · o'yinga kiritish uchun to'pni bosing",
+        ["Game over · click the ball to play again"] = "O'yin tugadi · qayta o'ynash uchun to'pni bosing",
+        ["Drained!"] = "To'p tushib ketdi!",
+        ["×{0} multiplier"] = "×{0} ko'paytirgich",
+        ["Pinball wizard"] = "Pinbol sehrgari",
+        ["Score 10,000 in one game"] = "Bitta o'yinda 10 000 ochko to'plang",
+        ["Bumper cars"] = "Bamper poygasi",
+        ["Hit 500 bumpers"] = "Bamperlarga 500 marta tegizing",
+        ["Hit {0} bumpers in Pinball"] = "Pinbolda bamperlarga {0} marta tegizing",
     };
 }
