@@ -6,7 +6,7 @@
 #
 # Reads packaging\homebrew\deskarcade.rb and packaging\scoop\deskarcade.json and writes the stamped copies to
 # dist\homebrew and dist\scoop (or -OutDir). The templates keep their own version and placeholder hashes.
-# Publishing them (a tap or homebrew/cask; a Scoop bucket) is a manual step: see docs/RELEASING.md.
+# Publishing them to the Homebrew tap and the Scoop bucket is a manual step: see docs/RELEASING.md.
 param(
     [Parameter(Mandatory)][string]$Version,
     [string]$AssetDir,
