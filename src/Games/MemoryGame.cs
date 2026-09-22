@@ -45,7 +45,7 @@ public sealed class MemoryGame : MiniGame
     Vec2? _summoned;
     double _scale = 1, _mismatchIn = -1, _elapsed;
     long _clockFrom;
-    bool _started, _clockOn, _over;
+    bool _started, _clockOn, _over, _drawnColorBlind;
     int _demoWait, _demoIdle;
 
     public MemoryGame(IGameHost host) : base(host)
@@ -115,6 +115,12 @@ public sealed class MemoryGame : MiniGame
             c.Size.ScaleX = c.Size.ScaleY = _scale;
             c.Move.X = c.Center.X;
             c.Move.Y = c.Center.Y;
+        }
+        if (_drawnColorBlind != Art.ColorBlind) // the overlay calls Layout when colour-blind mode is toggled
+        {
+            _drawnColorBlind = Art.ColorBlind;
+            foreach (var c in _cards)
+                if (c.DrawnFace >= 0) DrawFace(c, c.DrawnFace);
         }
         Host.HudChanged();
     }
@@ -267,9 +273,11 @@ public sealed class MemoryGame : MiniGame
     void ShowSide(int i)
     {
         var c = _cards[i];
+        // a new deal draws a face when it is next turned up; checked even if the face side never went out of
+        // view (a click right after the deal reverses a card before it shows its back)
+        if (c.Up && c.DrawnFace != _rules.FaceOf(i)) DrawFace(c, _rules.FaceOf(i));
         if (c.ShowingFace == c.Up) return;
         c.ShowingFace = c.Up;
-        if (c.Up && c.DrawnFace != _rules.FaceOf(i)) DrawFace(c, _rules.FaceOf(i)); // a new deal draws the face only once it's hidden
         c.Back.IsVisible = !c.Up;
         c.Face.IsVisible = c.Up;
     }
