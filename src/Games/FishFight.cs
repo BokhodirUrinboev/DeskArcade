@@ -73,7 +73,14 @@ public sealed class FishFight
     public double Kg { get; }
     public double Strength { get; }
     public double Distance { get; private set; }
-    public double MaxDistance { get; }
+    public double MaxDistance { get; private set; }
+
+    /// <summary>The pond changed size mid-fight: the fish can take no more line than <paramref name="max"/>, and is pulled in if it is farther.</summary>
+    public void Limit(double max)
+    {
+        MaxDistance = Math.Max(1, max);
+        Distance = Math.Min(Distance, MaxDistance);
+    }
     /// <summary>0 slack … <see cref="SnapAt"/> snapped.</summary>
     public double Tension { get; private set; }
     /// <summary>1 fresh, falling as the fish fights a tight line.</summary>

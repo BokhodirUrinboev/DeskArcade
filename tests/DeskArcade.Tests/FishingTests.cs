@@ -102,6 +102,17 @@ public class FishFightTests
     }
 
     [Fact]
+    public void ShrinkingThePondMidFightKeepsTheFishInsideIt()
+    {
+        var f = Fight("pike", heaviest: true, 1);
+        f.Limit(200);
+        Assert.Equal(200, f.Distance, 3);
+        for (int i = 0; i < 120 * 30; i++) f.Step(Dt, false); // slack line: the fish runs as far as it can
+        Assert.False(f.Over);
+        Assert.True(f.Distance <= 200 + 1e-9, $"{f.Distance:0} px is past the new pond");
+    }
+
+    [Fact]
     public void HeavierFishAreWorthMoreAndPointsNeverDropBelowTheBase()
     {
         foreach (var s in FishFight.Table)

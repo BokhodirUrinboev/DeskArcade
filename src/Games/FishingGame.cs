@@ -72,6 +72,8 @@ public sealed class FishingGame : MiniGame
     double _depth, _surface, _waterL, _waterR, _deckY, _pierEnd, _castMin, _castMax, _shoreX;
     double _power, _flyT, _flyTime, _interestIn, _waitT, _landT, _reelT, _reelSpin;
     int _score, _caught, _shownSecond = -1, _barZone = -1, _demoPause;
+    double _rodBend = double.NaN;
+    Vec2 _rodButt;
     Vec2 _butt, _tip, _reelAt, _bob, _pressAt, _flyFrom, _landAt, _reelFrom, _landFrom;
     Fish? _suitor;
     BiteSchedule? _bite;
@@ -181,6 +183,8 @@ public sealed class FishingGame : MiniGame
         // a changed screen mid-cast: keep the bobber on the new pond
         _landAt = new Vec2(Clamp(_landAt.X, _castMin, _castMax), _surface);
         if (_state is State.Waiting or State.Reeling) _bob = new Vec2(Clamp(_bob.X, _castMin, _castMax), _surface);
+        _fight?.Limit(MaxLine); // a hooked fish stays on the new pond
+        if (_state == State.Landing && _suitor != null) _landFrom = ClampToWater(_landFrom, _suitor.Len);
         DrawWater(_time);
         Draw();
         Host.HudChanged();
@@ -350,6 +354,11 @@ public sealed class FishingGame : MiniGame
             _reeling = false;
         }
         if (_state == State.Waiting) ReelIn();
+        if (_state == State.Aiming)
+        {
+            _state = State.Ready; // the release must not cast, or it would start a round nobody asked for
+            HideGuide();
+        }
 
         long before = Host.Stats.Get("fishing.best");
         Host.Stats.Max("fishing.best", _score);
@@ -483,7 +492,7 @@ public sealed class FishingGame : MiniGame
     void Missed()
     {
         var f = _suitor!;
-        Host.Fx.Popup(_bob - new Vec2(0, 44), L.T("Missed!"), Color.FromRgb(255, 130, 130), 26, 1.4, L.T("it stole the bait · reel in"));
+        Host.Fx.Popup(_bob - new Vec2(0, 44), L.T("Too late!"), Color.FromRgb(255, 130, 130), 26, 1.4, L.T("it stole the bait · reel in"));
         Host.Sound.Play("buzzer", 0.3);
         Flee(f);
         _suitor = null;
@@ -511,8 +520,8 @@ public sealed class FishingGame : MiniGame
         f.Sprite.Opacity = 0.6;
         _bite = null;
         _state = State.Fighting;
-        double dist = Math.Max(20, f.Pos.X - _shoreX);
-        _fight = new FishFight(f.Species, f.Kg, dist, Rng, _castMax + 40 - _shoreX);
+        double dist = Math.Clamp(f.Pos.X - _shoreX, 20, MaxLine);
+        _fight = new FishFight(f.Species, f.Kg, dist, Rng, MaxLine);
         Host.Sound.Play("kick", 0.5, 1.4);
         Host.Sound.Play("splash", 0.4, 1.6);
         AddRipple(_bob, 40);
@@ -653,6 +662,9 @@ public sealed class FishingGame : MiniGame
     }
 
     Vec2 HangPos => _tip + new Vec2(0, Hang);
+
+    /// <summary>The most line a hooked fish can take: it stays inside the pond.</summary>
+    double MaxLine => Math.Max(20, _castMax - _shoreX);
 
     void TickWaiting(double h)
     {
@@ -859,15 +871,20 @@ public sealed class FishingGame : MiniGame
         else if (_state == State.Fighting && _fight != null) bend = 30 * _fight.Tension;
         ang += bend;
         _tip = _butt + Polar(RodLen * (1 - 0.04 * Math.Abs(bend) / 30), ang);
-        var ctrl = _butt + Polar(RodLen * 0.55, RodAngle + bend * 0.25);
-        var rod = new StreamGeometry();
-        using (var ctx = rod.Open())
+        if (bend != _rodBend || _butt != _rodButt) // a resting rod keeps its geometry for the whole round
         {
-            ctx.BeginFigure(_butt.ToPoint(), false);
-            ctx.QuadraticBezierTo(ctrl.ToPoint(), _tip.ToPoint());
-            ctx.EndFigure(false);
+            _rodBend = bend;
+            _rodButt = _butt;
+            var ctrl = _butt + Polar(RodLen * 0.55, RodAngle + bend * 0.25);
+            var rod = new StreamGeometry();
+            using (var ctx = rod.Open())
+            {
+                ctx.BeginFigure(_butt.ToPoint(), false);
+                ctx.QuadraticBezierTo(ctrl.ToPoint(), _tip.ToPoint());
+                ctx.EndFigure(false);
+            }
+            _rod.Data = rod;
         }
-        _rod.Data = rod;
         _reelSprite.Set(_reelAt, _reelSpin % 360);
 
         if (_state is State.Ready or State.Aiming) _bob = HangPos;
