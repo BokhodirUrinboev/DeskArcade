@@ -291,6 +291,13 @@ public sealed class BowlingGame : MiniGame
         if (Aim(_pull, out var dir, out double speed)) Roll(dir, speed);
     }
 
+    public override void PointerCancel()
+    {
+        if (!_aiming) return;
+        _aiming = false; // cut off mid-drag: no ball bowled
+        HideGuide();
+    }
+
     /// <summary>A drag back from the ball, turned into a line down the lane (within a few degrees) and a speed.</summary>
     static bool Aim(Vec2 pull, out Vec2 dir, out double speed)
     {

@@ -307,6 +307,13 @@ public sealed class PoolGame : MiniGame
         if (len >= MinPull) Shoot(-_pull / len, SpeedFor(len));
     }
 
+    public override void PointerCancel()
+    {
+        if (!_aiming) return;
+        _aiming = false; // cut off mid-aim: no shot
+        HideAim();
+    }
+
     static double SpeedFor(double pull) => MaxShot * Math.Pow(Math.Min(pull, MaxPull) / MaxPull, 1.3);
 
     void Shoot(Vec2 dir, double speed)

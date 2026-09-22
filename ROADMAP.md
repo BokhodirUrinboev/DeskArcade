@@ -3,16 +3,37 @@
 1.7.0 shipped on 2026-09-21 with natural pet voices and animal behaviour (the 1.6.0 and 1.7.0 roadmap is
 in the git history). The next three months are about **getting Desk Arcade in front of people**: package
 managers, Flathub, a real Mac test, and the visibility SignPath asked for before it signs Windows builds.
-New games come along the way, one or two per release.
+Eight new games came early and ship with 1.8.0; after that the new work is LAN play for them.
 
 Each item says how it will be verified. "Demo" means copies on one PC (`--profile`) playing by themselves
 (`--demo`).
 
 | Release | Target | Theme |
 |---|---|---|
-| 1.8.0 | late October | Package managers, Fetch for the pet |
-| 1.9.0 | late November | Flathub, a real Mac, Paper Toss and Darts |
-| 2.0.0 | mid December | Signed Windows builds, Bowling, a winter event |
+| 1.8.0 | late October | Eight new games, package managers, Fetch for the pet |
+| 1.9.0 | late November | Flathub, a real Mac, LAN play for the new games |
+| 2.0.0 | mid December | Signed Windows builds, a winter event |
+
+## 1.8.0: eight new games (done early, on `feature/six-games`)
+
+- [x] **Paper Toss** (`toss`): flick a paper ball into a bin on a window top or the taskbar; a desk fan blows
+  a new wind each throw, stronger with the streak. *Verified: unit tests for the flight, the wind and the aim
+  solver (35 wind/layout cases); demo run.*
+- [x] **Darts** (`darts`): 501 double out, an aim that wobbles more the longer you hold, checkout suggestions.
+  *Verified: unit tests for every ring and segment, busts, double-out and checkouts 2–170; demo run.*
+- [x] **Bowling** (`bowling`) and **Pool** (`pool`) on one top-down disc physics engine (`DiscTable`).
+  Bowling: 10 frames on a lane above the taskbar, LAN race. Pool: clear the table in the fewest shots.
+  *Verified: unit tests for the physics (collisions, pockets, no tunnelling) and the bowling score sheet; demo
+  runs.*
+- [x] **Pinball** (`pinball`): flippers at the bottom, bumpers in the middle and on window tops, the taskbar as
+  the drain. *Verified: unit tests for the flipper physics (cradle, launch, no tunnelling) and scoring; demo
+  run.*
+- [x] **Fishing** (`fishing`): cast, strike on the bite, reel against the line tension; 2-minute rounds, LAN
+  race. *Verified: unit tests for the fight model and the bite timing; demo run.*
+- [x] **Memory** (`memory`) and **Code Breaker** (`codebreaker`). *Verified: unit tests for the rules, and a
+  solver that breaks 300 random codes in 5 guesses or fewer; demo runs.*
+- [ ] **A feel pass by hand** on all eight: throw power, wobble, fight length, flipper timing. The demos play
+  them, but nobody has played them with a real mouse yet.
 
 ## 1.8.0: package managers (October)
 
@@ -36,6 +57,8 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 
 ## 1.9.0: Linux and macOS (November)
 
+- [ ] **LAN for the new games:** Darts and Pool turn by turn (the other player's darts and shots as ghosts),
+  Pinball and Paper Toss as score races. *Verified: two copies over loopback, then two PCs.*
 - [ ] **Flathub.** Pick the app id (`io.github.BokhodirUrinboev.DeskArcade` unless the `imperiumgames.com`
   domain can be verified), attach a `linux-x64` publish tarball to each release for an `archive` source, add
   screenshots to the metainfo, and replace the `xdg-config/autostart` permission with the Background portal.
@@ -44,10 +67,6 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 - [ ] **A real Mac.** Run the macOS build on Apple Silicon and Intel: click-through, the window list, hotkeys,
   sound, the tray. Fix what breaks, and decide on an Apple Developer ID for notarization (needed for
   homebrew/cask itself). *Verified: a checklist run on both Macs, recorded here.*
-- [ ] **Paper Toss.** Flick a paper ball into a bin on a window top; a desk fan blows a different wind each
-  throw. LAN: race. *Verified: unit tests for the flight and the wind; demo run.*
-- [ ] **Darts.** A board on the screen, the aim wobbles while you hold, 501 down to a double. LAN: turns.
-  *Verified: unit tests for the scoring and checkouts; demo run.*
 
 ## 2.0.0: signed and seasonal (December)
 
@@ -55,8 +74,6 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
   managers and Flathub listings, a README with screenshots and a short demo GIF, and download numbers from
   1.8 and 1.9 are in place. With the certificate, Windows builds stop tripping SmartScreen. *Verified: the
   2.0.0 installers carry a valid signature.*
-- [ ] **Bowling.** Roll a ball along the taskbar at pins on a window top; 10 frames with spares and strikes.
-  LAN: frame by frame, pins as ghosts. *Verified: unit tests for the scoring; demo run.*
 - [ ] **Winter event** (from 2026-12-15): snow settling on window tops, a snowball mode for Slingshot and
   scarves for the pets, switched on by the seasonal theme. *Verified: demo run with the date set to
   December.*
@@ -69,6 +86,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 |---|---|
 | Durak rooms across real PCs, played by people | Two to four PCs on one network |
 | How the pet voices sound; the new pet behaviours on screen | Speakers and a look on screen |
+| How the eight new games feel with a real mouse | Someone playing them |
 | macOS: click-through, window list, hotkeys, sound | A Mac |
 | The Node 24 action versions in the release workflow | A release dry run |
 
@@ -80,11 +98,6 @@ and using the windows and taskbar as the playing field. LAN notes say how each c
 | Idea | How it plays | LAN |
 |---|---|---|
 | **Curling** | Slide stones along the taskbar toward a target painted on the floor; knock the rival's stones away | Turns with ghost stones, like the golf duel |
-| **Pool** | A table drawn over the screen, cue by dragging back from the white ball (Air Hockey's physics, with friction and pockets) | Turns; host runs the balls |
-| **Pinball** | Flippers in the bottom corners, bumpers on window tops, the taskbar as the drain | Score race |
 | **Window Tetris** | Blocks fall from the top and settle on window tops as well as the taskbar | Race; cleared lines send garbage to the rival |
-| **Fishing** | Cast into a pond along the taskbar and reel in with well-timed clicks; rare fish are worth more | Race for the biggest catch |
-| **Memory** | Pairs of cards laid over the screen; flip two at a time | Turns, both see every flipped card |
 | **More card games** | Fool's cousins on the same room code: Perevodnoy (pass the attack on), Blackjack against the house, Crazy Eights | Rooms, like Durak |
-| **Code Breaker** | Guess a hidden four-colour code from black and white pegs (Mastermind) | Each sets a code for the other |
 | **Asteroids** | Rocks drift and bounce around the closed box; steer a ship with the mouse and click to fire | Co-op: two ships, one field |
