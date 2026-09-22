@@ -22,6 +22,7 @@ public sealed class CodeBreakerGame : MiniGame
     const double W = 220, Pad = 14, CodeH = 36, RowH = 32, HoleR = 10.5, PinR = 3.4, PegR = 11.5;
     const double RowsTop = Pad + CodeH + 10, PaletteY = RowsTop + MaxGuesses * RowH + 10 + 20, ButtonTop = PaletteY + 26, ButtonH = 30;
     const double H = ButtonTop + ButtonH + Pad, FeedbackX = 184, PaletteStep = 32;
+    const double RippleTime = 0.3;
     const int FastGuesses = 4; // "Mind reader" counts codes broken in this many guesses or fewer
 
     static readonly Color Gold = Color.FromRgb(255, 209, 102);
@@ -36,6 +37,10 @@ public sealed class CodeBreakerGame : MiniGame
     readonly ScaleTransform _size = new(1, 1);
     readonly TranslateTransform _move = new();
     readonly int[] _row = { -1, -1, -1, -1 };
+    // a ring that spreads from the peg or pins just touched: feedback, and it marks the frames as play time
+    readonly Ellipse _ripple = new() { Stroke = Art.Brush(Gold), StrokeThickness = 2, IsHitTestVisible = false, IsVisible = false };
+    Vec2 _rippleAt;
+    double _rippleT = -1;
     CodeBreakerRules _rules = new(Rng);
     Vec2 _origin;
     Vec2? _summoned;
@@ -97,6 +102,7 @@ public sealed class CodeBreakerGame : MiniGame
         _size.ScaleX = _size.ScaleY = _scale;
         _move.X = _origin.X;
         _move.Y = _origin.Y;
+        Draw(); // the overlay calls Layout when colour-blind mode is toggled
         Host.HudChanged();
     }
 
@@ -152,6 +158,7 @@ public sealed class CodeBreakerGame : MiniGame
             if (!right && (q - new Vec2(PaletteX(c), PaletteY)).Length <= PegR + 4)
             {
                 _selected = c;
+                Ripple(PaletteX(c), PaletteY);
                 Host.Sound.Play("board", 0.2, 1.8);
                 Changed();
                 return false;
@@ -173,6 +180,7 @@ public sealed class CodeBreakerGame : MiniGame
         else if (_selected >= 0 && _row[i] != _selected) _row[i] = _selected;
         else _selected = _row[i] = (_row[i] + 1) % Colours;
         Host.Sound.Play("board", 0.3, 1.2 + 0.08 * Math.Max(0, _row[i]));
+        Ripple(HoleX(i), RowY(Guess));
         Changed();
     }
 
@@ -181,6 +189,7 @@ public sealed class CodeBreakerGame : MiniGame
         var (black, white) = _rules.Submit(_row);
         Array.Fill(_row, -1);
         Host.Stats.Add("codebreaker.guesses");
+        Ripple(FeedbackX, RowY(Guess - 1));
         var at = new Vec2(_origin.X + FeedbackX * _scale, _origin.Y + RowY(Guess - 1) * _scale);
         if (_rules.Won)
         {
@@ -224,8 +233,37 @@ public sealed class CodeBreakerGame : MiniGame
         Host.Wake();
     }
 
-    // nothing moves on its own: the popups and bursts run in Fx
-    public override bool Update(double dt) => false;
+    void Ripple(double x, double y)
+    {
+        _rippleAt = new Vec2(x, y);
+        _rippleT = 0;
+        PlaceRipple();
+        Host.Wake();
+    }
+
+    void PlaceRipple()
+    {
+        double r = HoleR + 2 + (Fx.ReducedMotion ? 0 : 8 * _rippleT);
+        _ripple.Width = _ripple.Height = r * 2;
+        Canvas.SetLeft(_ripple, _rippleAt.X - r);
+        Canvas.SetTop(_ripple, _rippleAt.Y - r);
+        _ripple.Opacity = 0.9 * (1 - _rippleT);
+        _ripple.IsVisible = true;
+    }
+
+    // only the ripple moves; the overlay counts play time on the frames Update reports as busy
+    public override bool Update(double dt)
+    {
+        if (_rippleT < 0) return false;
+        if ((_rippleT += dt / RippleTime) >= 1)
+        {
+            _rippleT = -1;
+            _ripple.IsVisible = false;
+            return false;
+        }
+        PlaceRipple();
+        return true;
+    }
 
     // ------------------------------------------------------------------ demo
 
@@ -319,6 +357,7 @@ public sealed class CodeBreakerGame : MiniGame
         var b = Button;
         into.Add(Box(b.X, b.Y, b.Width, b.Height, 6, on ? Art.Brush(Gold) : Art.Brush("#2E3441"), on ? Art.Brush("#B7791F") : Art.Brush("#3A4252"), 1.5));
         into.Add(Text(L.T("Check"), b.X, b.Y + 5, b.Width, 15, on ? "#2A1E00" : "#6E7788"));
+        into.Add(_ripple);
     }
 
     /// <summary>A peg in colour <paramref name="c"/> with that colour's symbol: dot, ring, cross, bar, triangle or square.</summary>
