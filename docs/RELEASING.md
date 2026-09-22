@@ -172,7 +172,10 @@ winget install --manifest dist\winget\1.3.0
 `-InstallerDir installer\Output` hashes local files instead, but only use it with the exact files
 attached to the release: rebuilt installers have different digests.
 
-**Submitting to winget-pkgs** (not done yet):
+**Submitting to winget-pkgs:** the first submission,
+[microsoft/winget-pkgs#437055](https://github.com/microsoft/winget-pkgs/pull/437055) (1.5.0), passed
+validation and waits for the Microsoft CLA to be signed (comment `@microsoft-github-policy-service agree`
+on the pull request) and for a moderator. Steps for each version:
 
 1. Fork [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs).
 2. Copy the three files from `dist\winget\X.Y.Z` to
@@ -198,14 +201,23 @@ For a new release:
 .\packaging\Update-PackageManifests.ps1 -Version 1.4.0
 ```
 
-Copy the stamped files back over the templates so the repository always holds the current release.
+Copy the stamped files back over the templates so the repository always holds the current release,
+then publish them:
 
-**Publishing** (not done yet):
+```bash
+# in a clone of each repository
+cp dist/homebrew/deskarcade.rb  <homebrew-tap>/Casks/deskarcade.rb
+cp dist/scoop/deskarcade.json   <scoop-bucket>/bucket/deskarcade.json
+# commit "Desk Arcade X.Y.Z" in both and push
+```
 
-- **Homebrew:** a tap is the quick route: create `BokhodirUrinboev/homebrew-tap`, put the cask in
-  `Casks/deskarcade.rb`, and users run `brew install --cask bokhodirurinboev/tap/deskarcade`. homebrew/cask
-  itself wants a notarized app, which the unsigned build isn't yet.
-- **Scoop:** a bucket repository (`BokhodirUrinboev/scoop-bucket` with the JSON in `bucket/`); users run
+**Published** since 1.7.0:
+
+- **Homebrew:** the tap [`BokhodirUrinboev/homebrew-tap`](https://github.com/BokhodirUrinboev/homebrew-tap)
+  holds the cask in `Casks/deskarcade.rb`; users run `brew install --cask bokhodirurinboev/tap/deskarcade`.
+  homebrew/cask itself wants a notarized app, which the ad-hoc signed build isn't yet.
+- **Scoop:** the bucket [`BokhodirUrinboev/scoop-bucket`](https://github.com/BokhodirUrinboev/scoop-bucket)
+  holds the JSON in `bucket/`; users run
   `scoop bucket add deskarcade https://github.com/BokhodirUrinboev/scoop-bucket` and
   `scoop install deskarcade/deskarcade`. `checkver` and `autoupdate` let Scoop's tooling follow new releases.
 

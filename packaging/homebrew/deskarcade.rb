@@ -1,5 +1,5 @@
 # Homebrew cask for Desk Arcade, stamped for a release by packaging/Update-PackageManifests.ps1.
-# Publishing it (a tap, or homebrew/cask) is a manual step: see docs/RELEASING.md.
+# Published in the tap https://github.com/BokhodirUrinboev/homebrew-tap (Casks/deskarcade.rb): see docs/RELEASING.md.
 cask "deskarcade" do
   arch arm: "arm64", intel: "x64"
 
@@ -23,6 +23,12 @@ cask "deskarcade" do
 
   uninstall launchctl: "com.imperiumgames.deskarcade",
             quit:      "com.imperiumgames.deskarcade"
+
+  caveats <<~EOS
+    Desk Arcade is ad-hoc signed and not notarized. If macOS refuses to open it, right-click the app
+    in Applications and choose Open, or run:
+      xattr -dr com.apple.quarantine /Applications/DeskArcade.app
+  EOS
 
   zap trash: [
     "~/.config/DeskArcade",

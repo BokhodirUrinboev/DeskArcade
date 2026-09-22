@@ -175,6 +175,13 @@ Run the installer. It installs for the current user, without an administrator pr
 
 The installers are not code-signed yet, so Windows SmartScreen may warn on first run.
 
+Or install with [Scoop](https://scoop.sh) (x64 and ARM64, runtime bundled):
+
+```powershell
+scoop bucket add deskarcade https://github.com/BokhodirUrinboev/scoop-bucket
+scoop install deskarcade/deskarcade
+```
+
 ### Ubuntu (22.04 / 24.04)
 
 ```bash
@@ -209,7 +216,13 @@ working area anyway, so nothing changes on screen.
 
 ### macOS 14+ (experimental)
 
-Unzip `DeskArcade-<version>-macos-arm64.zip` (or `-x64`) and move `DeskArcade.app` to Applications.
+Install with [Homebrew](https://brew.sh):
+
+```bash
+brew install --cask bokhodirurinboev/tap/deskarcade
+```
+
+Or unzip `DeskArcade-<version>-macos-arm64.zip` (or `-x64`) and move `DeskArcade.app` to Applications.
 The app is ad-hoc signed and not notarized, so the first launch needs **right-click → Open**.
 
 > **Experimental:** the macOS layer compiles and is packaged by CI, but it has not been run on a Mac.
@@ -217,8 +230,9 @@ The app is ad-hoc signed and not notarized, so the first launch needs **right-cl
 
 ### winget
 
-Manifest templates live in [`packaging/winget/`](packaging/winget/). Desk Arcade is not in the winget
-repository yet.
+Desk Arcade is submitted to the winget repository and waiting for review. Once it is accepted:
+`winget install ImperiumGames.DeskArcade`. The manifest templates live in
+[`packaging/winget/`](packaging/winget/).
 
 ## Updating
 
