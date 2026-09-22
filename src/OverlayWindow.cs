@@ -734,6 +734,7 @@ public sealed class OverlayWindow : Window, IGameHost
             case "shortcuts": OpenShortcuts(); break;
             case "quit": Quit(); break;
             case "durak-rooms": OpenDurakRooms(); break;
+            case var g when g.StartsWith("game:", StringComparison.Ordinal): SwitchGame(g[5..]); break;
             default: DurakSignal(msg); break;
         }
     }

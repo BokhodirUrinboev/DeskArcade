@@ -155,6 +155,8 @@ public sealed class DurakRoomWindow : Window
             foreach (var s in room.Seats())
                 _players.Children.Add(Text((s.Seat == 0 ? L.F("{0} (you, host)", s.Name) : s.Name) + (s.Connected ? "" : " · " + L.T("disconnected")), 14, s.Connected ? "#FFFFFF" : "#777777"));
             _start.IsEnabled = !_durak.Playing;
+            // nobody has joined yet: say so, rather than quietly dealing a game against the computer
+            _start.Content = room.Seats().Count(s => s.Connected) < 2 ? L.T("Start with computers only") : L.T("Start the game");
         }
         if (_joinPanel.IsVisible && _tick++ % 2 == 0) Search();
     }
