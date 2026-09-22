@@ -198,6 +198,7 @@ public sealed class OverlayWindow : Window, IGameHost
         var durak = new DurakGame(this);
         durak.SetupRequested += () => DurakRoomWindow.ShowFor(this, durak);
         _games.Add(durak);
+        _games.Add(new PinballGame(this));
         _games.Add(new PetGame(this));
 
         _hud = new Hud(_games);
@@ -533,6 +534,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "tower" => L.T("click the sliding block to drop it — stack as high as you can"),
         "plinko" => L.T("click the strip to drop a disc — the gold slot is the jackpot"),
         "whack" => L.T("whack the bugs as they peek out — spare the ladybugs"),
+        "pinball" => L.T("click the ball to serve — press by a flipper to flip it, right-click flips both"),
         _ => "",
     };
 

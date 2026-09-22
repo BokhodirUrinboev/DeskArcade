@@ -667,5 +667,20 @@ public static partial class Strings
         ["Expert"] = "Эксперт",
         ["Couldn't open a room"] = "Не удалось открыть комнату",
         ["{0} is back"] = "{0} вернулся",
+
+        // ---- Pinball
+        ["Pinball"] = "Пинбол",
+        ["click the ball to serve — press by a flipper to flip it, right-click flips both"] = "нажмите на шар, чтобы запустить его — нажмите у флиппера, чтобы поднять его, правая кнопка поднимает оба",
+        ["Ball {0} of 3"] = "Шар {0} из 3",
+        ["Ball {0} of 3 · ×{1}"] = "Шар {0} из 3 · ×{1}",
+        ["Ball {0} of 3 · click the ball to serve"] = "Шар {0} из 3 · нажмите на шар, чтобы запустить",
+        ["Game over · click the ball to play again"] = "Игра окончена · нажмите на шар, чтобы сыграть ещё",
+        ["Drained!"] = "Шар ушёл!",
+        ["×{0} multiplier"] = "множитель ×{0}",
+        ["Pinball wizard"] = "Пинбольный волшебник",
+        ["Score 10,000 in one game"] = "Наберите 10 000 очков за одну игру",
+        ["Bumper cars"] = "Автодром",
+        ["Hit 500 bumpers"] = "Попадите в бамперы 500 раз",
+        ["Hit {0} bumpers in Pinball"] = "Попадите в бамперы {0} раз в пинболе",
     };
 }
