@@ -28,11 +28,11 @@ env:
 jobs:
   version:
     name: Check version
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       version: ${{ steps.v.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - id: v
         shell: bash
         env:
@@ -78,8 +78,8 @@ jobs:
       # Runners don't guarantee FUSE: AppImages (appimagetool included) run from an extracted copy.
       APPIMAGE_EXTRACT_AND_RUN: 1
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
       - name: Publish
@@ -108,7 +108,7 @@ jobs:
           dpkg-deb -f "$deb" Version | grep -Fx "$VERSION"
           dpkg-deb --fsys-tarfile "$deb" | tar -xO ./opt/deskarcade/DeskArcade | file - | grep -F 'ARM aarch64'
           file "dist-linux/DeskArcade-${VERSION}-aarch64.AppImage" | grep -F 'ARM aarch64'
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: linux-${{ matrix.deb-arch }}
           path: |
@@ -128,8 +128,8 @@ jobs:
     env:
       VERSION: ${{ needs.version.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
       - name: Install Inno Setup
@@ -166,7 +166,7 @@ jobs:
       - name: Upload the unsigned exes for signing
         id: unsigned-app
         if: steps.signing.outputs.enabled == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: unsigned-app
           path: dist/*/DeskArcade.exe
@@ -202,7 +202,7 @@ jobs:
       - name: Upload the unsigned installers for signing
         id: unsigned-installers
         if: steps.signing.outputs.enabled == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: unsigned-installers
           path: installer/Output/DeskArcade-Setup-*.exe
@@ -235,7 +235,7 @@ jobs:
             & $signtool verify /pa /tw $file.FullName
             if ($LASTEXITCODE -ne 0) { throw "Signature check failed: $($file.FullName)" }
           }
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: windows
           path: installer/Output/DeskArcade-Setup-*.exe
@@ -258,8 +258,8 @@ jobs:
       VERSION: ${{ needs.version.outputs.version }}
       ARCH: ${{ matrix.arch }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
       - name: Publish
@@ -317,12 +317,12 @@ jobs:
           echo "Desk Arcade ran for 15 seconds and quit cleanly"
       - name: Upload launch logs
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: macos-${{ matrix.arch }}-launch-logs
           path: ${{ runner.temp }}/deskarcade-*.log
           if-no-files-found: ignore
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: macos-${{ matrix.arch }}
           path: dist/macos/${{ matrix.arch }}/DeskArcade-*.zip
@@ -332,22 +332,22 @@ jobs:
     name: Publish release
     if: github.event_name == 'push'
     needs: [version, linux, windows, macos]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       # Only the finished packages: the unsigned-* artifacts from the signing rounds stay behind.
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           pattern: linux-*
           path: packages
           merge-multiple: true
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: windows
           path: packages
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           pattern: macos-*
           path: packages
