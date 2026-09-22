@@ -124,6 +124,8 @@ public sealed class OverlayWindow : Window, IGameHost
         L.Apply(Settings.Language);
         Stats.Unlocked += OnAchievement;
         Daily = new Daily(Settings, Stats);
+        _platform = DesktopPlatform.Create();
+        Sound = new Sound(_platform) { Enabled = Settings.Sound, Volume = Settings.Volume };
         Stats.CounterChanged += counter =>
         {
             if (counter != Daily.For(Daily.Today).Counter || !Daily.Check(Daily.Today)) return;
@@ -136,8 +138,6 @@ public sealed class OverlayWindow : Window, IGameHost
                 _tray?.Refresh();
             });
         };
-        _platform = DesktopPlatform.Create();
-        Sound = new Sound(_platform) { Enabled = Settings.Sound, Volume = Settings.Volume };
         Platforms.Enabled = Settings.Platforms;
         Fx.ReducedMotion = Settings.ReducedMotion;
         Engine.Art.ColorBlind = Settings.ColorBlind;

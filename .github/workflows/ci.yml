@@ -26,8 +26,8 @@ jobs:
     name: Windows build (win-x64)
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
       - name: Build
@@ -37,8 +37,8 @@ jobs:
     name: Ubuntu build and .deb
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
       - name: Build
@@ -61,8 +61,8 @@ jobs:
     name: macOS build (osx-arm64)
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
       # Compile only: the macOS platform layer is still being written.
@@ -85,8 +85,8 @@ jobs:
       RID: ${{ matrix.rid }}
       EXE: out/${{ matrix.exe }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
       - name: Publish
@@ -106,9 +106,9 @@ jobs:
 
   actionlint:
     name: Lint workflows
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       # The image bundles shellcheck, so run: scripts are checked too.
       - name: actionlint
         uses: docker://rhysd/actionlint:latest
