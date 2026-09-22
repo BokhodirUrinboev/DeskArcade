@@ -22,7 +22,15 @@ public sealed class BowlingScore
     public int Ball { get; private set; }
     /// <summary>Pins standing for the next ball: 10 on a fresh rack.</summary>
     public int PinsStanding { get; private set; } = Pins;
+    /// <summary>
+    /// True when the next ball faces a freshly set rack: the first ball of a frame, or in the 10th frame the
+    /// ball after a strike or a spare. Ten pins on a fresh rack is a strike; clearing a rack that isn't fresh
+    /// is a spare (even after a first ball of 0).
+    /// </summary>
+    public bool FreshRack { get; private set; } = true;
     public bool GameOver { get; private set; }
+
+    public enum Kind { Open, Strike, Spare }
 
     public void Reset()
     {
@@ -30,12 +38,15 @@ public sealed class BowlingScore
         Recount();
     }
 
-    /// <summary>Records a ball; more pins than are standing count as all of them.</summary>
-    public void Roll(int pins)
+    /// <summary>Records a ball (more pins than are standing count as all of them) and says what it was.</summary>
+    public Kind Roll(int pins)
     {
         if (GameOver) throw new InvalidOperationException("the game is over");
-        _rolls.Add(Math.Clamp(pins, 0, PinsStanding));
+        pins = Math.Clamp(pins, 0, PinsStanding);
+        var kind = pins < PinsStanding ? Kind.Open : FreshRack ? Kind.Strike : Kind.Spare;
+        _rolls.Add(pins);
         Recount();
+        return kind;
     }
 
     /// <summary>Index of the first roll of each frame (-1 for frames not reached yet).</summary>
@@ -65,6 +76,7 @@ public sealed class BowlingScore
         {
             Frame = Ball = 0;
             PinsStanding = Pins;
+            FreshRack = true;
             return;
         }
         int start = starts[last], thrown = _rolls.Count - start;
@@ -74,6 +86,7 @@ public sealed class BowlingScore
             Frame = done ? last + 1 : last;
             Ball = done ? 0 : 1;
             PinsStanding = done ? Pins : Pins - _rolls[start];
+            FreshRack = done;
             return;
         }
 
@@ -84,16 +97,20 @@ public sealed class BowlingScore
         {
             Ball = 1;
             PinsStanding = r0 == Pins ? Pins : Pins - r0;
+            FreshRack = r0 == Pins;
         }
         else if (thrown == 2 && (r0 == Pins || r0 + r1 == Pins))
         {
+            // after X X or a spare the third ball gets a new rack; after X and a count it faces what is left
             Ball = 2;
-            PinsStanding = r0 == Pins && r1 < Pins ? Pins - r1 : Pins;
+            FreshRack = r0 < Pins || r1 == Pins;
+            PinsStanding = FreshRack ? Pins : Pins - r1;
         }
         else
         {
             Ball = thrown;
             PinsStanding = 0;
+            FreshRack = false;
             GameOver = true;
         }
     }
@@ -175,11 +192,14 @@ public sealed class BowlingScore
             return marks;
         }
         int standing = Pins;
+        bool fresh = true;
         for (int i = 0; i < 3 && s + i < _rolls.Count; i++)
         {
             int r = _rolls[s + i];
-            marks[i] = r == standing && standing == Pins ? "X" : r == standing ? "/" : Mark(r);
-            standing = r == standing ? Pins : standing - r;
+            bool cleared = r == standing;
+            marks[i] = cleared ? (fresh ? "X" : "/") : Mark(r);
+            fresh = cleared;
+            standing = cleared ? Pins : standing - r;
         }
         return marks;
     }

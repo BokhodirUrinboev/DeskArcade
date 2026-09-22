@@ -205,4 +205,21 @@ public class DiscTableTests
         }
         Assert.True(potted >= 4, $"only {potted} of 6 went in");
     }
+    [Fact]
+    public void SeparatePullsOverlappingBallsApartOnTheFeltWithoutSettingThemMoving()
+    {
+        var t = PoolTable();
+        var rng = new Random(3);
+        for (int i = 0; i < 15; i++) t.Add(new Vec2(700 + rng.NextDouble() * 60, 330 + rng.NextDouble() * 40), 12); // a squashed rack
+        t.Add(new Vec2(1100, 600), 12); // pushed past the corner
+        t.Separate();
+        for (int i = 0; i < t.Discs.Count; i++)
+        {
+            var a = t.Discs[i];
+            Assert.True(a.Vel.Length == 0);
+            Assert.True(t.Bounds.Deflate(11.99).Contains(new Point(a.Pos.X, a.Pos.Y)), $"{a.Pos} is off the felt");
+            for (int j = i + 1; j < t.Discs.Count; j++)
+                Assert.True((t.Discs[j].Pos - a.Pos).Length >= 23.99, $"balls {i} and {j} still overlap");
+        }
+    }
 }

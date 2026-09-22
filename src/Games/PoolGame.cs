@@ -156,6 +156,7 @@ public sealed class PoolGame : MiniGame
                 b.Body.Pos = new Vec2(_felt.X + (b.Body.Pos.X - old.X) * k, _felt.Y + (b.Body.Pos.Y - old.Y) * k);
                 b.Body.Vel *= k;
             }
+            _table.Separate(); // the radius shrinks less than the table, so pull apart any that now overlap
         }
         if (oldR != _r) RebuildBalls();
         DrawTable();
@@ -287,7 +288,11 @@ public sealed class PoolGame : MiniGame
     public override bool PointerDown(Vec2 p, bool right)
     {
         if (!Ready || (p - Cue.Body.Pos).Length > Reach) return false;
-        if (_cleared) Rack();
+        if (_cleared)
+        {
+            Rack(); // the cue ball jumps to the head spot: grab it again to break
+            return false;
+        }
         _aiming = true;
         _pull = default;
         return true;
