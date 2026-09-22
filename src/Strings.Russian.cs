@@ -412,6 +412,21 @@ public static partial class Strings
         ["Pets {0}"] = "Поглажено {0}",
         ["z z"] = "z z",
 
+        // ---- Paper Toss
+        ["Paper Toss"] = "Бумажка в корзину",
+        ["flick the paper ball into the bin — mind the fan"] = "бросьте бумажный комок в корзину — следите за вентилятором",
+        ["Grab the paper ball and flick it into the bin"] = "Схватите бумажный комок и бросьте его в корзину",
+        ["Streak {0} · mind the wind"] = "Серия {0} · учитывайте ветер",
+        ["Wind {0}"] = "Ветер {0}",
+        ["In!"] = "Есть!",
+        ["Swish!"] = "Чисто!",
+        ["Missed!"] = "Мимо!",
+        ["Wastebasket pro"] = "Мастер корзины",
+        ["Score 10 in one run"] = "Наберите 10 очков за одну попытку",
+        ["Clean throw"] = "Чистый бросок",
+        ["Toss 25 swishes into the bin"] = "Забросьте в корзину 25 бумажек, не задев края",
+        ["Toss {0} paper balls into the bin"] = "Забросьте в корзину {0} бумажных комков",
+
         // ---- achievements
         ["Coffee break"] = "Кофе-брейк",
         ["Play for 30 minutes in total"] = "Сыграйте в сумме 30 минут",

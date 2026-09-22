@@ -412,6 +412,21 @@ public static partial class Strings
         ["Pets {0}"] = "Erkalashlar {0}",
         ["z z"] = "z z",
 
+        // ---- Paper Toss
+        ["Paper Toss"] = "Qog'oz savatga",
+        ["flick the paper ball into the bin — mind the fan"] = "qog'oz koptokni savatga otib yuboring — ventilyatorga e'tibor bering",
+        ["Grab the paper ball and flick it into the bin"] = "Qog'oz koptokni ushlab, savatga otib yuboring",
+        ["Streak {0} · mind the wind"] = "Ketma-ket {0} · shamolni hisobga oling",
+        ["Wind {0}"] = "Shamol {0}",
+        ["In!"] = "Tushdi!",
+        ["Swish!"] = "Toza!",
+        ["Missed!"] = "Tushmadi!",
+        ["Wastebasket pro"] = "Savat ustasi",
+        ["Score 10 in one run"] = "Bir urinishda 10 ochko to'plang",
+        ["Clean throw"] = "Toza otish",
+        ["Toss 25 swishes into the bin"] = "Savatga chetiga tegizmasdan 25 marta tushiring",
+        ["Toss {0} paper balls into the bin"] = "Savatga {0} ta qog'oz koptok tushiring",
+
         // ---- achievements
         ["Coffee break"] = "Qahva tanaffusi",
         ["Play for 30 minutes in total"] = "Jami 30 daqiqa o'ynang",

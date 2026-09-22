@@ -32,6 +32,7 @@ public sealed class Daily
         new("checkers", "checkers.captures", 8, "Capture {0} pieces in Checkers"),
         new("chess", "chess.captures", 6, "Capture {0} pieces in Chess"),
         new("seabattle", "seabattle.sunk", 5, "Sink {0} ships in Sea Battle"),
+        new("toss", "toss.baskets", 10, "Toss {0} paper balls into the bin"),
     };
 
     readonly Settings _settings;
