@@ -667,5 +667,19 @@ public static partial class Strings
         ["Expert"] = "Ekspert",
         ["Couldn't open a room"] = "Xonani ochib bo'lmadi",
         ["{0} is back"] = "{0} qaytdi",
+        // memory
+        ["Memory"] = "Xotira",
+        ["Click a card to flip it · find all the pairs"] = "Kartani ochish uchun ustiga bosing · barcha juftlarni toping",
+        ["Moves {0} · pairs left {1}"] = "Yurishlar {0} · qolgan juftlar {1}",
+        ["All pairs in {0} moves · click a card to deal again"] = "Barcha juftlar {0} yurishda topildi · qayta tarqatish uchun kartani bosing",
+        ["Fewest moves {0}"] = "Eng kam yurish {0}",
+        ["ALL PAIRS!"] = "BARCHA JUFTLAR!",
+        ["{0} moves · {1}s"] = "{0} yurish · {1} s",
+        ["flip two cards at a time — find all the pairs"] = "bir yo'la ikkita kartani oching — barcha juftlarni toping",
+        ["Total recall"] = "Mukammal xotira",
+        ["Clear a Memory board"] = "«Xotira»da barcha juftlarni toping",
+        ["Matchmaker"] = "Juftlar ustasi",
+        ["Find 100 pairs"] = "100 ta juft toping",
+        ["Find {0} pairs in Memory"] = "«Xotira»da {0} ta juft toping",
     };
 }

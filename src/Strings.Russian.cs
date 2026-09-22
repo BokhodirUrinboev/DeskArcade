@@ -667,5 +667,19 @@ public static partial class Strings
         ["Expert"] = "Эксперт",
         ["Couldn't open a room"] = "Не удалось открыть комнату",
         ["{0} is back"] = "{0} вернулся",
+        // memory
+        ["Memory"] = "Мемори",
+        ["Click a card to flip it · find all the pairs"] = "Нажмите на карту, чтобы открыть её · найдите все пары",
+        ["Moves {0} · pairs left {1}"] = "Ходов {0} · осталось пар {1}",
+        ["All pairs in {0} moves · click a card to deal again"] = "Все пары найдены, ходов: {0} · нажмите на карту, чтобы раздать заново",
+        ["Fewest moves {0}"] = "Рекорд ходов {0}",
+        ["ALL PAIRS!"] = "ВСЕ ПАРЫ!",
+        ["{0} moves · {1}s"] = "ходов: {0} · {1} с",
+        ["flip two cards at a time — find all the pairs"] = "открывайте по две карты — найдите все пары",
+        ["Total recall"] = "Абсолютная память",
+        ["Clear a Memory board"] = "Найдите все пары в «Мемори»",
+        ["Matchmaker"] = "Мастер пар",
+        ["Find 100 pairs"] = "Найдите 100 пар",
+        ["Find {0} pairs in Memory"] = "Найдите пары в «Мемори»: {0}",
     };
 }
