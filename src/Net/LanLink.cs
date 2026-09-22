@@ -47,6 +47,15 @@ public sealed class LanLink : IDisposable
     public string PeerName { get; private set; } = "";
     public bool Connected => State == LanState.Connected;
 
+    /// <summary>The other player's IP address while connected, e.g. so a Durak guest can find the host's room.</summary>
+    public IPAddress? PeerAddress
+    {
+        get
+        {
+            lock (_gate) return State == LanState.Connected ? _peer?.Address : null;
+        }
+    }
+
     /// <summary>Raised when <see cref="State"/> changes.</summary>
     public event Action? StateChanged;
     /// <summary>Raised whenever a game message arrives (so the overlay can wake up and render).</summary>

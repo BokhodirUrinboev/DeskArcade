@@ -465,6 +465,9 @@ public sealed class RoomLink : IDisposable
         }
     }
 
+    /// <summary>A player name as a room shows it in <see cref="Seats"/>.</summary>
+    public static string SeatName(string name) => Clean(name);
+
     static string Clean(string s) => new(s.Where(c => c is not ('|' or ',') && !char.IsControl(c)).Take(24).ToArray());
 
     static bool TrySend(UdpClient udp, IPEndPoint to, string message)

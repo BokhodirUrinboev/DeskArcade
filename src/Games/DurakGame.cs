@@ -92,7 +92,9 @@ public sealed class DurakGame : MiniGame
     readonly Avalonia.Threading.DispatcherTimer _hostTimer = new() { Interval = TimeSpan.FromMilliseconds(100) };
     readonly System.Diagnostics.Stopwatch _hostClock = new();
     int _game, _target = -1, _nextSeq, _drawnVersion = -1;
-    double _cpuT, _sendT, _resendT, _demoT;
+    double _cpuT, _sendT, _resendT, _demoT, _inviteT;
+    string _drawnPanel = "";
+    int _bridgedSession = -1; // the LAN session this table last opened a room for
     bool _announced, _demo;
     Rect _area;
 
@@ -121,6 +123,9 @@ public sealed class DurakGame : MiniGame
     public override string Id => "durak";
     public override string Title => "Durak";
     public RoomLink Room => _room;
+
+    /// <summary>Over the two-player link the host's table opens a room that the other player joins (see <see cref="LanBridge"/>).</summary>
+    public override bool SupportsLan => true;
     public bool Playing => _view != null && !_view.Over;
 
     public override Sprite CreateIcon()
@@ -143,7 +148,7 @@ public sealed class DurakGame : MiniGame
     {
         if (_mode == Mode.Guest && _room.State == RoomState.Joining) return L.F("Joining room {0}…", _room.Code);
         if (_mode == Mode.Guest && _room.State == RoomState.Lost) return L.T("The room closed · set up a new game");
-        if (_mode == Mode.Hosting && _rules == null) return L.F("Room {0} · {1} joined · start from the setup window", _room.Code, _room.Seats().Count);
+        if (_mode == Mode.Hosting && _rules == null) return L.F("Room {0} · {1} at the table", _room.Code, _room.Seats().Count(x => x.Connected));
         if (_view == null) return _mode == Mode.Guest ? L.F("In room {0} · waiting for the host to start", _room.Code) : L.T("Click Durak on the table to start a game");
         var v = _view;
         if (v.Over)
@@ -318,12 +323,13 @@ public sealed class DurakGame : MiniGame
 
     public override bool Update(double dt)
     {
+        bool inviting = LanBridge(dt);
         if (_mode == Mode.Guest) GuestUpdate(dt);
         else if (_mode == Mode.Solo) CpuTurns(dt); // a room's host plays on its own timer (HostTick)
-        if (_view != null && _view.Version != _drawnVersion) Draw();
+        if (_view != null ? _view.Version != _drawnVersion : PanelKey() != _drawnPanel) Draw();
         if (_view is { Over: true }) GameOverFx();
         // frames are needed only while something is due; arriving messages wake the overlay
-        return _mode switch
+        return inviting || _mode switch
         {
             Mode.Solo => _rules is { Over: false } || _demo,
             Mode.Guest => _room.State == RoomState.Joining || _outbox.Count > 0 || _demo && _room.State == RoomState.Joined,
@@ -434,6 +440,43 @@ public sealed class DurakGame : MiniGame
         }
     }
 
+    /// <summary>
+    /// Durak over the two-player link (tray → Play over LAN): the link only carries two-player games, so the
+    /// host's table opens a room and keeps inviting the other player, whose copy joins it by itself. Without
+    /// this the pair sat at two separate tables and each ended up playing the computer.
+    /// Returns true while an invitation is still going out.
+    /// </summary>
+    bool LanBridge(double dt)
+    {
+        var lan = Host.Lan;
+        if (!lan.Connected) return false;
+        while (lan.TryReceive(out var msg))
+        {
+            var f = msg.Split('|');
+            if (f.Length != 2 || f[0] != "dk" || lan.Role != LanRole.Guest || lan.PeerAddress is not { } ip) continue;
+            string code = RoomLink.CleanCode(f[1]);
+            bool inIt = _mode == Mode.Guest && _room.Code == code && _room.State is RoomState.Joining or RoomState.Joined;
+            // a game against the computer that is still going is not thrown away; the host keeps asking
+            if (code.Length > 0 && !inIt && !(_mode == Mode.Solo && Playing)) JoinRoom(code, new System.Net.IPEndPoint(ip, RoomLink.Port));
+        }
+        if (lan.Role != LanRole.Host) return false;
+        if (_mode == Mode.Idle && _bridgedSession != lan.Session)
+        {
+            _bridgedSession = lan.Session; // once per connection: leaving the room leaves it
+            HostRoom();
+            _inviteT = 0;
+        }
+        if (_mode != Mode.Hosting || _rules != null) return false;
+        string peer = RoomLink.SeatName(lan.PeerName);
+        if (_room.Seats().Any(s => s.Seat > 0 && s.Connected && s.Name == peer)) return false;
+        if ((_inviteT -= dt) <= 0)
+        {
+            _inviteT = 1;
+            lan.Send("dk|" + _room.Code);
+        }
+        return true;
+    }
+
     void OnRoomChanged()
     {
         Changed();
@@ -477,9 +520,13 @@ public sealed class DurakGame : MiniGame
 
     public override void Summon(Vec2 p) => Layout();
 
+    /// <summary>What the start panel shows depends on: the room's state and who is in it.</summary>
+    string PanelKey() => $"{_mode}|{_room.State}|{_room.Code}|{string.Join(",", _room.Seats().Select(s => s.Name + s.Connected))}";
+
     void Draw()
     {
         _drawnVersion = _view?.Version ?? -1;
+        _drawnPanel = _view == null ? PanelKey() : "";
         _canvas.Children.Clear();
         _clickables.Clear();
         var a = _area;
@@ -517,6 +564,32 @@ public sealed class DurakGame : MiniGame
         if (_mode is Mode.Guest or Mode.Hosting)
             Label(Status(), a.Center.X, a.Top + 170, 16, Gold, center: true);
         double y = a.Top + 220;
+        if (_mode == Mode.Hosting)
+        {
+            // a room is open: start it with whoever joined (a solo game here would close the room on them)
+            int humans = _room.Seats().Count(s => s.Connected);
+            if (humans < 2)
+            {
+                Label(L.T("Waiting for a co-worker to join…"), a.Center.X, y - 6, 15, Color.FromRgb(200, 230, 210), center: true);
+            }
+            else
+            {
+                for (int cpus = 0; cpus <= Math.Min(2, RoomLink.MaxSeats - humans); cpus++)
+                {
+                    int seats = humans + cpus;
+                    string text = cpus == 0 ? L.T("Start the game") : cpus == 1 ? L.T("Start + 1 computer") : L.F("Start + {0} computers", cpus);
+                    Button(text, a.Center.X - 190 + cpus * 190, y, 180, () => StartRoom(seats));
+                }
+            }
+            Button(L.T("Room setup…"), a.Center.X, y + 70, 260, OpenSetup);
+            Button(L.T("Leave the room"), a.Center.X, y + 130, 200, LeaveRoom);
+            return;
+        }
+        if (_mode == Mode.Guest && _room.State is RoomState.Joining or RoomState.Joined)
+        {
+            Button(L.T("Leave the room"), a.Center.X, y + 70, 200, LeaveRoom); // the host starts the game
+            return;
+        }
         for (int cpus = 1; cpus <= 3; cpus++)
         {
             int n = cpus;

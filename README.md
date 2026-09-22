@@ -102,6 +102,7 @@ joins straight into it and follows whenever the host switches.
 | Archery | Take turns, one arrow each, ten apiece, in the same wind. Their arrow flies from your bow as a ghost |
 | Checkers, Chess, Connect Four, Tic-tac-toe | Turns over the network; the guest sees the board from their side |
 | Sea Battle | Each fleet stays on its own PC; only shots and hits cross the network |
+| Durak | The host's table opens a room and your co-worker's copy joins it by itself; the host starts the game from the table, with or without computer players (the room also takes more co-workers, see below) |
 | Bubble Pop, Whack-a-Bug, Tower Stack, Bowling, Fishing | Race: start a round and theirs starts too. You see their live score, a red ring wherever they pop, whack or stack, and who won |
 
 **Durak rooms** are separate from the two-player link, for up to four people: **tray → Play over LAN → Durak
@@ -158,7 +159,7 @@ also marked by shape).
 Every action is also available from the command line, which is useful for custom shortcuts and scripts:
 
 ```
-DeskArcade --signal toggle|next|summon|show|hide|expand|stats|shortcuts|quit
+DeskArcade --signal toggle|next|summon|show|hide|expand|stats|shortcuts|quit|game:durak
 DeskArcade --signal lan-host|lan-join|lan-find|lan-leave
 DeskArcade --signal durak-rooms|durak-solo:2|durak-host:abcd|durak-join:abcd|durak-start:4|durak-leave
 ```
