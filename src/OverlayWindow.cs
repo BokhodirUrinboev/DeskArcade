@@ -200,6 +200,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(durak);
         _games.Add(new DartsGame(this));
         _games.Add(new PaperTossGame(this));
+        _games.Add(new FishingGame(this));
         _games.Add(new PetGame(this));
 
         _hud = new Hud(_games);
@@ -537,6 +538,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "whack" => L.T("whack the bugs as they peek out — spare the ladybugs"),
         "darts" => L.T("hold on the board to aim, let go to throw — finish on a double"),
         "toss" => L.T("flick the paper ball into the bin — mind the fan"),
+        "fishing" => L.T("drag back from the rod to cast — click when the bobber goes under, hold to reel"),
         _ => "",
     };
 

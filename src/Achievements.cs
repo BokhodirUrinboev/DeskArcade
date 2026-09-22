@@ -75,6 +75,8 @@ public static class Achievements
 
         new("toss-10", "toss", "Wastebasket pro", "Score 10 in one run", "toss.run", 10),
         new("toss-swish", "toss", "Clean throw", "Toss 25 swishes into the bin", "toss.swishes", 25),
+        new("fishing-50", "fishing", "Angler", "Catch 50 fish", "fishing.caught", 50),
+        new("fishing-golden", "fishing", "Golden catch", "Catch a golden trout", "fishing.golden", 1),
 
         new("checkers-win", "checkers", "Crowned", "Win a game of Checkers", "checkers.wins", 1),
         new("chess-win", "chess", "Checkmate", "Win a game of Chess", "chess.wins", 1),
