@@ -720,7 +720,7 @@ public static partial class Strings
         ["{0} points · {1} caught"] = "очков: {0} · поймано {1}",
         ["Too soon!"] = "Рано!",
         ["you spooked it"] = "вы спугнули рыбу",
-        ["Missed!"] = "Упустили!",
+        ["Too late!"] = "Поздно!",
         ["it stole the bait · reel in"] = "рыба украла наживку · смотайте леску",
         ["Line snapped!"] = "Леска оборвалась!",
         ["it got away"] = "рыба ушла",

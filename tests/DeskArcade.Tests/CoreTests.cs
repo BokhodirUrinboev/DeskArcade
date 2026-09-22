@@ -175,6 +175,18 @@ public class TranslationCoverageTests
     }
 
     [Fact]
+    public void NoTranslationKeyIsDefinedTwice()
+    {
+        // the tables are indexer initializers, where a second ["key"] silently wins over the first
+        foreach (var name in new[] { "Strings.Uzbek.cs", "Strings.Russian.cs" })
+        {
+            var keys = Regex.Matches(File.ReadAllText(Path.Combine(RepoRoot(), "src", name)), @"^\s*\[""((?:[^""\\]|\\.)*)""\]\s*=", RegexOptions.Multiline)
+                .Select(m => m.Groups[1].Value);
+            Assert.Empty(keys.GroupBy(k => k).Where(g => g.Count() > 1).Select(g => $"{name}: {g.Key}"));
+        }
+    }
+
+    [Fact]
     public void TranslationsKeepPlaceholders()
     {
         foreach (var table in new[] { Strings.Uzbek, Strings.Russian })

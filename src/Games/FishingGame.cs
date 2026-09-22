@@ -483,7 +483,7 @@ public sealed class FishingGame : MiniGame
     void Missed()
     {
         var f = _suitor!;
-        Host.Fx.Popup(_bob - new Vec2(0, 44), L.T("Missed!"), Color.FromRgb(255, 130, 130), 26, 1.4, L.T("it stole the bait · reel in"));
+        Host.Fx.Popup(_bob - new Vec2(0, 44), L.T("Too late!"), Color.FromRgb(255, 130, 130), 26, 1.4, L.T("it stole the bait · reel in"));
         Host.Sound.Play("buzzer", 0.3);
         Flee(f);
         _suitor = null;

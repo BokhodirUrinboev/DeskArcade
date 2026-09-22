@@ -720,7 +720,7 @@ public static partial class Strings
         ["{0} points · {1} caught"] = "{0} ochko · {1} ta baliq",
         ["Too soon!"] = "Juda erta!",
         ["you spooked it"] = "baliqni cho'chitib yubordingiz",
-        ["Missed!"] = "Qo'ldan boy berdingiz!",
+        ["Too late!"] = "Kechikdingiz!",
         ["it stole the bait · reel in"] = "xo'rakni o'g'irlab ketdi · ipni o'rab oling",
         ["Line snapped!"] = "Ip uzildi!",
         ["it got away"] = "baliq qochib ketdi",
