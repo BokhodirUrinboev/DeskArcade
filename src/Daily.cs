@@ -37,6 +37,8 @@ public sealed class Daily
         new("fishing", "fishing.caught", 8, "Catch {0} fish"),
         new("bowling", "bowling.pins", 60, "Knock down {0} pins in Bowling"),
         new("pool", "pool.potted", 15, "Pot {0} balls in Pool"),
+        new("memory", "memory.pairs", 12, "Find {0} pairs in Memory"),
+        new("codebreaker", "codebreaker.wins", 2, "Break {0} codes in Code Breaker"),
     };
 
     readonly Settings _settings;

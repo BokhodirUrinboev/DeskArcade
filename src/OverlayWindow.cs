@@ -203,6 +203,8 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new FishingGame(this));
         _games.Add(new BowlingGame(this));
         _games.Add(new PoolGame(this));
+        _games.Add(new MemoryGame(this));
+        _games.Add(new CodeBreakerGame(this));
         _games.Add(new PetGame(this));
 
         _hud = new Hud(_games);
@@ -543,6 +545,8 @@ public sealed class OverlayWindow : Window, IGameHost
         "fishing" => L.T("drag back from the rod to cast — click when the bobber goes under, hold to reel"),
         "bowling" => L.T("drag back from the ball and let go — knock all ten pins down"),
         "pool" => L.T("drag back from the cue ball to shoot — pot every ball in as few shots as you can"),
+        "memory" => L.T("flip two cards at a time — find all the pairs"),
+        "codebreaker" => L.T("pick a colour, fill the row and click Check — a black pin is the right colour in the right place"),
         _ => "",
     };
 
