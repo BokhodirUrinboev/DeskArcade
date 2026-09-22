@@ -3,18 +3,19 @@
 1.7.0 shipped on 2026-09-21 with natural pet voices and animal behaviour (the 1.6.0 and 1.7.0 roadmap is
 in the git history). The next three months are about **getting Desk Arcade in front of people**: package
 managers, Flathub, a real Mac test, and the visibility SignPath asked for before it signs Windows builds.
-Eight new games came early and ship with 1.8.0; after that the new work is LAN play for them.
+Eight new games came early and shipped in 1.7.1; after that the new work is LAN play for them.
 
 Each item says how it will be verified. "Demo" means copies on one PC (`--profile`) playing by themselves
 (`--demo`).
 
 | Release | Target | Theme |
 |---|---|---|
-| 1.8.0 | late October | Eight new games, package managers, Fetch for the pet |
+| 1.7.1 | 2026-09-22 | Eight new games; Durak with a co-worker joins one room |
+| 1.8.0 | late October | Package managers, Fetch for the pet |
 | 1.9.0 | late November | Flathub, a real Mac, LAN play for the new games |
 | 2.0.0 | mid December | Signed Windows builds, a winter event |
 
-## 1.8.0: eight new games (done early, on `feature/six-games`)
+## 1.7.1: eight new games (shipped 2026-09-22)
 
 - [x] **Paper Toss** (`toss`): flick a paper ball into a bin on a window top or the taskbar; a desk fan blows
   a new wind each throw, stronger with the streak. *Verified: unit tests for the flight, the wind and the aim
