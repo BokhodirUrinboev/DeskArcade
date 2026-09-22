@@ -123,6 +123,25 @@ public sealed class Stats
         Check(counter);
     }
 
+    /// <summary>
+    /// Keeps the lowest value seen where fewer is better, e.g. the fewest darts to finish 501. A counter that was
+    /// never set counts as unset, not as 0. Achievements only follow <see cref="Add"/> and <see cref="Max"/> counters.
+    /// </summary>
+    public void Min(string counter, long value)
+    {
+        if (value <= 0) return;
+        long today = Today(counter);
+        if (today == 0 || value < today)
+        {
+            _data.Today[counter] = value;
+            _dirty = true;
+        }
+        long best = Get(counter);
+        if (best != 0 && value >= best) return;
+        _data.Counters[counter] = value;
+        _dirty = true;
+    }
+
     public double SecondsPlayed(string gameId) => _data.Seconds.TryGetValue(gameId, out double s) ? s : 0;
 
     public double TotalSeconds => _data.Seconds.Values.Sum();

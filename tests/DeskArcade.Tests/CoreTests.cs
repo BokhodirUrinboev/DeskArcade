@@ -48,6 +48,19 @@ public class StatsTests
     }
 
     [Fact]
+    public void MinKeepsTheFewestAndTreatsUnsetAsNoRecord()
+    {
+        var stats = Stats.Load(TempPath());
+        stats.Min("darts.fewest", 30);
+        stats.Min("darts.fewest", 42);
+        stats.Min("darts.fewest", 0); // not a result
+        Assert.Equal(30, stats.Get("darts.fewest"));
+        stats.Min("darts.fewest", 21);
+        Assert.Equal(21, stats.Get("darts.fewest"));
+        Assert.Equal(21, stats.Today("darts.fewest"));
+    }
+
+    [Fact]
     public void MaxKeepsTheHighestValue()
     {
         var stats = Stats.Load(TempPath());
