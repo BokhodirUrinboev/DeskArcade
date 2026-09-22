@@ -64,6 +64,9 @@ public static class Achievements
         new("whack-200", "whack", "Bug whacker", "Whack 200 bugs", "whack.hits", 200),
         new("whack-round", "whack", "Lightning hands", "Score 50 points in one round", "whack.round", 50),
 
+        new("darts-180", "darts", "One hundred and eighty", "Score 180 with three darts", "darts.180s", 1),
+        new("darts-legs", "darts", "Checked out", "Finish 5 games of 501", "darts.legs", 5),
+
         new("clay-100", "clay", "Clay breaker", "Hit 100 clay targets", "clay.hits", 100),
         new("clay-double", "clay", "Double trouble", "Hit two targets with one shot", "clay.doubles", 1),
 

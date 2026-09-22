@@ -359,6 +359,27 @@ public static partial class Strings
         ["Whack the sleepy bug to start · spare the ladybugs"] = "Boshlash uchun mudrayotgan qo'ng'izni uring · xonqizlarga tegmang",
         ["{0} points · {1} whacked"] = "{0} ochko · {1} ta urildi",
 
+        // ---- Darts
+        ["Darts"] = "Dart",
+        ["hold on the board to aim, let go to throw — finish on a double"] = "nishonga olish uchun doskani bosib turing, otish uchun qo'yib yuboring — dubl bilan yakunlang",
+        ["Hold on the board to aim, let go to throw · finish on a double"] = "Nishonga olish uchun doskani bosib turing, otish uchun qo'yib yuboring · dubl bilan yakunlang",
+        ["Best {0} darts"] = "Rekord {0} ta dart",
+        ["Game shot in {0} darts · click the board for a new leg"] = "{0} ta dartda yakunlandi · yangi o'yin uchun doskani bosing",
+        ["Dart {0} of 3 · {1} this turn"] = "3 tadan {0}-dart · bu navbatda {1}",
+        ["Miss"] = "Xato",
+        ["BULL"] = "MARKAZ",
+        ["BUST"] = "OSHIB KETDI",
+        ["back to {0}"] = "yana {0}",
+        ["GAME SHOT!"] = "O'YIN YAKUNLANDI!",
+        ["{0} darts"] = "{0} ta dart",
+        ["{0} darts · new best!"] = "{0} ta dart · yangi rekord!",
+        ["game on!"] = "o'yin boshlandi!",
+        ["One hundred and eighty"] = "Bir yuz sakson",
+        ["Score 180 with three darts"] = "Uchta dart bilan 180 ochko to'plang",
+        ["Checked out"] = "Aniq yakun",
+        ["Finish 5 games of 501"] = "501 o'yinini 5 marta yakunlang",
+        ["Hit {0} trebles in Darts"] = "Dartda {0} marta triplga tekkizing",
+
         // ---- Clay Shooting
         ["Click the trap machine to start · shoot the clays"] = "Boshlash uchun otish mashinasini bosing · nishonlarni uring",
         ["click to start"] = "boshlash uchun bosing",
