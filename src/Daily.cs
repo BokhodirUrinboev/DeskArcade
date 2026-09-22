@@ -35,6 +35,8 @@ public sealed class Daily
         new("darts", "darts.trebles", 6, "Hit {0} trebles in Darts"),
         new("toss", "toss.baskets", 10, "Toss {0} paper balls into the bin"),
         new("fishing", "fishing.caught", 8, "Catch {0} fish"),
+        new("bowling", "bowling.pins", 60, "Knock down {0} pins in Bowling"),
+        new("pool", "pool.potted", 15, "Pot {0} balls in Pool"),
     };
 
     readonly Settings _settings;

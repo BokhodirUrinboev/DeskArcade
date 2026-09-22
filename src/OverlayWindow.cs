@@ -201,6 +201,8 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new DartsGame(this));
         _games.Add(new PaperTossGame(this));
         _games.Add(new FishingGame(this));
+        _games.Add(new BowlingGame(this));
+        _games.Add(new PoolGame(this));
         _games.Add(new PetGame(this));
 
         _hud = new Hud(_games);
@@ -539,6 +541,8 @@ public sealed class OverlayWindow : Window, IGameHost
         "darts" => L.T("hold on the board to aim, let go to throw — finish on a double"),
         "toss" => L.T("flick the paper ball into the bin — mind the fan"),
         "fishing" => L.T("drag back from the rod to cast — click when the bobber goes under, hold to reel"),
+        "bowling" => L.T("drag back from the ball and let go — knock all ten pins down"),
+        "pool" => L.T("drag back from the cue ball to shoot — pot every ball in as few shots as you can"),
         _ => "",
     };
 

@@ -77,6 +77,11 @@ public static class Achievements
         new("toss-swish", "toss", "Clean throw", "Toss 25 swishes into the bin", "toss.swishes", 25),
         new("fishing-50", "fishing", "Angler", "Catch 50 fish", "fishing.caught", 50),
         new("fishing-golden", "fishing", "Golden catch", "Catch a golden trout", "fishing.golden", 1),
+        new("bowling-turkey", "bowling", "Turkey", "Bowl three strikes in a row", "bowling.turkeys", 1),
+        new("bowling-150", "bowling", "League night", "Score 150 in one game", "bowling.best", 150),
+
+        new("pool-clear", "pool", "Table cleared", "Clear the pool table", "pool.cleared", 1),
+        new("pool-triple", "pool", "Hat trick", "Pot 3 balls with one shot", "pool.multi", 3),
 
         new("checkers-win", "checkers", "Crowned", "Win a game of Checkers", "checkers.wins", 1),
         new("chess-win", "chess", "Checkmate", "Win a game of Chess", "chess.wins", 1),
