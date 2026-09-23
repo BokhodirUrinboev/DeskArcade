@@ -95,6 +95,10 @@ public static class Achievements
         new("durak-ten", "durak", "Card shark", "Escape being the durak 10 times", "durak.wins", 10),
         new("memory-win", "memory", "Total recall", "Clear a Memory board", "memory.wins", 1),
         new("memory-pairs", "memory", "Matchmaker", "Find 100 pairs", "memory.pairs", 100),
+
+        new("solitaire-win", "solitaire", "Patience", "Solve a game of Solitaire", "solitaire.wins", 1),
+        new("solitaire-10", "solitaire", "Patience of a saint", "Solve 10 games of Solitaire", "solitaire.wins", 10),
+        new("solitaire-cards", "solitaire", "Homeward bound", "Send 500 cards home", "solitaire.cards", 500),
         new("codebreaker-win", "codebreaker", "Code cracked", "Break a code", "codebreaker.wins", 1),
         new("codebreaker-fast", "codebreaker", "Mind reader", "Break a code in 4 guesses or fewer", "codebreaker.fast", 1),
         new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),

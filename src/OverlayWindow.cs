@@ -208,6 +208,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new PoolGame(this));
         _games.Add(new MemoryGame(this));
         _games.Add(new CodeBreakerGame(this));
+        _games.Add(new SolitaireGame(this));
         _games.Add(new PinballGame(this));
         _games.Add(new PetGame(this));
 
@@ -561,6 +562,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "pool" => L.T("drag back from the cue ball to shoot — pot every ball in as few shots as you can"),
         "memory" => L.T("flip two cards at a time — find all the pairs"),
         "codebreaker" => L.T("pick a colour, fill the row and click Check — a black pin is the right colour in the right place"),
+        "solitaire" => L.T("click the stock to turn a card — click or drag cards onto the piles"),
         "pinball" => L.T("click the ball to serve — press by a flipper to flip it, right-click flips both"),
         _ => "",
     };

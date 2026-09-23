@@ -56,6 +56,12 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
   label; on Windows 11 the output reached the console, exit codes 0, 3 and 4 came through, and the scoreboard
   dot turned blue, then green. On Ubuntu 24.04 (WSL) arguments kept their spacing, output piped and exit
   codes came through. The installer script compiles.*
+- [x] **Solitaire** (`solitaire`): Klondike, draw one, on a felt over the desktop; click a card to send it where
+  it fits or drag it, undo, and the last cards go home by themselves. *Verified: unit tests for the deal, every
+  move rule, undo and one-click moves, and a simple player that solves some of 300 deals without a card lost;
+  a demo run on Windows 11.*
+- [ ] **Last Card**, an UNO-style game for 2–4: colours and numbers, Skip, Reverse, +2, Wild and Wild +4, and a
+  "Last card!" button to press in time. Against computer players or co-workers in a room, like Durak.
 - [ ] **Fetch.** Throw a ball for the pet: it runs after it, jumps between windows to reach it and brings it
   back to the cursor. Dogs fetch eagerly, cats only sometimes, ducks not at all. *Verified: unit test for the
   chase path; demo run.*
@@ -93,7 +99,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 |---|---|
 | Durak rooms across real PCs, played by people | Two to four PCs on one network |
 | How the pet voices sound; the new pet behaviours on screen | Speakers and a look on screen |
-| How the eight new games feel with a real mouse | Someone playing them |
+| How the eight new games and Solitaire feel with a real mouse (Solitaire's drag and drop was not tried by hand) | Someone playing them |
 | macOS: click-through, window list, hotkeys, sound | A Mac |
 | The Node 24 action versions in the release workflow | A release dry run |
 | The setup's "arcade" PATH option (added, then removed on uninstall); `--while` with the overlay on a Linux desktop and on macOS | Windows Sandbox; a Linux PC and a Mac |
