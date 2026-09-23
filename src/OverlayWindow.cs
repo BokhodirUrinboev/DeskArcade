@@ -57,6 +57,9 @@ public sealed class OverlayWindow : Window, IGameHost
     UpdateInfo? _update;
     DateTime? _claudeSince;
     double _playedWhileClaude; // seconds of play since Claude started working, for the summary
+    DateTime? _taskSince;       // a command run with --while is running
+    string _taskLabel = "";
+    double _playedWhileTask;
     bool _paused;
     bool _checkingUpdates;
     double _lastAchievementAt = -10;
@@ -503,6 +506,7 @@ public sealed class OverlayWindow : Window, IGameHost
             {
                 Stats.AddTime(Current.Id, dt); // only time spent actually playing
                 if (_claudeSince != null) _playedWhileClaude += dt;
+                if (_taskSince != null) _playedWhileTask += dt;
                 CountTowardBreak(now, dt);
             }
             busy |= playing;
@@ -639,6 +643,7 @@ public sealed class OverlayWindow : Window, IGameHost
             Engine.Art.ColorBlind = Settings.ColorBlind;
             Current?.Layout(); // redraw pieces in the new colours
             _hud.SetClaude(_hud.Status, _claudeSince);
+            if (_hud.Task != TaskStatus.None) _hud.SetTask(_hud.Task, _taskLabel, _taskSince);
         }
         RefreshPlatforms();
         SaveSettings();
@@ -735,6 +740,10 @@ public sealed class OverlayWindow : Window, IGameHost
             case "quit": Quit(); break;
             case "durak-rooms": OpenDurakRooms(); break;
             case var g when g.StartsWith("game:", StringComparison.Ordinal): SwitchGame(g[5..]); break;
+            case var t when t.StartsWith("task:", StringComparison.OrdinalIgnoreCase): TaskStarted(t[5..]); break;
+            case var t when t.StartsWith("task-end:", StringComparison.Ordinal):
+                TaskEnded(int.TryParse(t[9..], out int code) ? code : 1);
+                break;
             default: DurakSignal(msg); break;
         }
     }
@@ -983,6 +992,33 @@ public sealed class OverlayWindow : Window, IGameHost
                 if (_hud.Status == status) SetOverlayVisible(false);
             }, TimeSpan.FromSeconds(Settings.ClaudeNotify ? 2.5 : 0.2));
         }
+    }
+
+    /// <summary>"DeskArcade --while &lt;command&gt;" started the command.</summary>
+    void TaskStarted(string label)
+    {
+        _taskLabel = label.Trim();
+        _taskSince = DateTime.UtcNow;
+        _playedWhileTask = 0;
+        Resume();
+        _hud.SetTask(TaskStatus.Running, _taskLabel, _taskSince);
+        if (!IsVisible) SetOverlayVisible(true); // running a command this way means "let me play meanwhile"
+    }
+
+    /// <summary>The --while command ended: passed on exit code 0, failed otherwise.</summary>
+    void TaskEnded(int exitCode)
+    {
+        if (_taskSince is not DateTime since) return; // the overlay started while it ran; nothing to time
+        TimeSpan took = DateTime.UtcNow - since;
+        bool passed = exitCode == 0;
+        _taskSince = null;
+        _hud.SetTask(passed ? TaskStatus.Passed : TaskStatus.Failed, _taskLabel, null, took, exitCode);
+        if (IsVisible && Current != null && _playedWhileTask >= 5) Stats.Add("task.done");
+
+        Sound.Play(passed ? "done" : "attention", 0.9);
+        string sub = passed ? L.F("{0} · took {1}", _taskLabel, Hud.FormatWait(took)) : L.F("{0} · exit code {1}", _taskLabel, exitCode);
+        if (_playedWhileTask >= 5) sub = L.F("{0} · you played {1}", sub, Hud.FormatWait(TimeSpan.FromSeconds(_playedWhileTask)));
+        Notice(passed ? L.T("Passed") : L.T("Failed"), sub, passed ? Color.FromRgb(61, 220, 132) : Color.FromRgb(255, 107, 107));
     }
 
     public void SetVolume(double volume)

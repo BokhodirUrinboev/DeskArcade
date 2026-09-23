@@ -95,6 +95,8 @@ CloseApplications=yes
 RestartApplications=no
 SetupMutex=DeskArcadeSetup,Global\DeskArcadeSetup
 ShowLanguageDialog=no
+; the "arcade" command on PATH takes effect in terminals opened after setup
+ChangesEnvironment=yes
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -102,6 +104,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "autostart"; Description: "Start {#MyAppName} when I sign in to Windows"; GroupDescription: "Startup:"; Flags: unchecked
+Name: "addtopath"; Description: "Add the ""arcade"" command to PATH (""arcade dotnet test"" lets you play while it runs)"; GroupDescription: "Command line:"
 
 [InstallDelete]
 ; Files that older versions shipped but newer ones don't. Add entries here when you drop a file.
@@ -109,6 +112,7 @@ Type: files; Name: "{app}\*.pdb"
 
 [Files]
 Source: "{#SourceDir}\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\packaging\windows\arcade.cmd"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\README.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\LICENSE"; DestDir: "{app}"; DestName: "LICENSE.txt"; Flags: ignoreversion
 Source: "..\THIRD-PARTY-NOTICES.md"; DestDir: "{app}"; Flags: ignoreversion
@@ -121,6 +125,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: string; ValueName: "DeskArcade"; ValueData: """{app}\{#MyAppExeName}"""; Flags: uninsdeletevalue; Tasks: autostart
 ; If autostart was on in an older install and is now unticked, remove it.
 Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; ValueType: none; ValueName: "DeskArcade"; Flags: deletevalue; Tasks: not autostart
+Root: HKCU; Subkey: "Environment"; ValueType: expandsz; ValueName: "Path"; ValueData: "{olddata};{app}"; Check: NotOnPath; Tasks: addtopath
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}"; Flags: nowait postinstall skipifsilent
@@ -194,6 +199,40 @@ begin
   end;
 end;
 #endif
+
+{ The user PATH with the install directory taken out; Found says whether it was there. }
+function PathWithoutApp(var Found: Boolean): String;
+var
+  Path, Dir, Part: String;
+  P: Integer;
+begin
+  Result := '';
+  Found := False;
+  if not RegQueryStringValue(HKCU, 'Environment', 'Path', Path) then Exit;
+  Dir := Uppercase(ExpandConstant('{app}'));
+  while Path <> '' do
+  begin
+    P := Pos(';', Path);
+    if P = 0 then P := Length(Path) + 1;
+    Part := Copy(Path, 1, P - 1);
+    Delete(Path, 1, P);
+    if (Uppercase(Part) = Dir) or (Uppercase(Part) = Dir + '\') then
+      Found := True
+    else if Part <> '' then
+    begin
+      if Result <> '' then Result := Result + ';';
+      Result := Result + Part;
+    end;
+  end;
+end;
+
+function NotOnPath(): Boolean;
+var
+  Found: Boolean;
+begin
+  PathWithoutApp(Found);
+  Result := not Found;
+end;
 
 function IsAppRunning(): Boolean;
 begin
@@ -290,8 +329,14 @@ end;
 
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 var
-  DataDir: String;
+  DataDir, Path: String;
+  Found: Boolean;
 begin
+  if CurUninstallStep = usUninstall then
+  begin
+    Path := PathWithoutApp(Found);
+    if Found then RegWriteExpandStringValue(HKCU, 'Environment', 'Path', Path);
+  end;
   if CurUninstallStep <> usPostUninstall then Exit;
   DataDir := ExpandConstant('{userappdata}\DeskArcade');
   if DirExists(DataDir) and
