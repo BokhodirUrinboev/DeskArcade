@@ -80,8 +80,11 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 
 ## 1.9.0: Linux and macOS (November)
 
-- [ ] **LAN for the new games:** Darts and Pool turn by turn (the other player's darts and shots as ghosts),
-  Pinball and Paper Toss as score races. *Verified: two copies over loopback, then two PCs.*
+- [x] **Pinball and Paper Toss as LAN score races** (came early): a three-ball game, or a run until the first
+  miss, is one race. *Verified: two copies over loopback playing by themselves: two Pinball games each and five
+  Paper Toss races decided on both sides.*
+- [ ] **Darts and Pool turn by turn over the LAN** (the other player's darts and shots as ghosts). Both count
+  fewest-is-best, so a score race doesn't fit them. *Verified: two copies over loopback, then two PCs.*
 - [ ] **Flathub.** Pick the app id (`io.github.BokhodirUrinboev.DeskArcade` unless the `imperiumgames.com`
   domain can be verified), attach a `linux-x64` publish tarball to each release for an `archive` source, add
   screenshots to the metainfo, and replace the `xdg-config/autostart` permission with the Background portal.

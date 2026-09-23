@@ -217,6 +217,8 @@ public sealed class PaperTossGame : MiniGame
     {
         _inFlight = false;
         _runOver = true;
+        _inRun = false;
+        Host.RoundEnded(_score);
         long before = _score > 0 ? _bestBefore : Host.Stats.Get("toss.best");
         bool best = _score > before;
 
@@ -375,8 +377,27 @@ public sealed class PaperTossGame : MiniGame
         _paper.Place(_paper.Pos);
     }
 
+    /// <summary>A LAN race is one run: it starts with the first throw and ends at the first miss.</summary>
+    public override bool SupportsLan => true;
+    public override (int Score, bool Active)? Race => (_score, _inRun);
+
+    public override void StartRace()
+    {
+        if (_inRun) return;
+        if (_runOver) NextThrow(); // the last run's miss is still settling: start fresh now
+        _inRun = true;
+        Host.RoundStarted();
+    }
+
+    bool _inRun;
+
     void Throw(Vec2 v)
     {
+        if (!_inRun)
+        {
+            _inRun = true;
+            Host.RoundStarted();
+        }
         _paper.Place(_paper.Pos, v);
         _paper.Spin = (Rng.NextDouble() - 0.5) * 500 - v.X * 0.15;
         _inFlight = true;

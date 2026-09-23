@@ -109,7 +109,7 @@ joins straight into it and follows whenever the host switches.
 | Checkers, Chess, Connect Four, Tic-tac-toe | Turns over the network; the guest sees the board from their side |
 | Sea Battle | Each fleet stays on its own PC; only shots and hits cross the network |
 | Durak, Last Card | The host's table opens a room and your co-worker's copy joins it by itself; the host starts the game from the table, with or without computer players (the room also takes more co-workers, see below) |
-| Bubble Pop, Whack-a-Bug, Tower Stack, Bowling, Fishing | Race: start a round and theirs starts too. You see their live score, a red ring wherever they pop, whack or stack, and who won |
+| Bubble Pop, Whack-a-Bug, Tower Stack, Bowling, Fishing, Pinball, Paper Toss | Race: start a round (in Pinball a three-ball game, in Paper Toss a run) and theirs starts too. You see their live score, a red ring wherever they pop, whack or stack, and who won |
 
 **Rooms** for Durak and Last Card are separate from the two-player link, for up to four people: **tray → Play
 over LAN → Durak with co-workers…** or **Last Card with co-workers…** (or the button on the game's table). Each
