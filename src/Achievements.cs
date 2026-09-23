@@ -99,6 +99,10 @@ public static class Achievements
         new("solitaire-win", "solitaire", "Patience", "Solve a game of Solitaire", "solitaire.wins", 1),
         new("solitaire-10", "solitaire", "Patience of a saint", "Solve 10 games of Solitaire", "solitaire.wins", 10),
         new("solitaire-cards", "solitaire", "Homeward bound", "Send 500 cards home", "solitaire.cards", 500),
+
+        new("lastcard-win", "lastcard", "Out first", "Win a game of Last Card", "lastcard.wins", 1),
+        new("lastcard-10", "lastcard", "Empty-handed", "Win 10 games of Last Card", "lastcard.wins", 10),
+        new("lastcard-plus4", "lastcard", "No hard feelings", "Play 20 Wild Draw Fours", "lastcard.plusfours", 20),
         new("codebreaker-win", "codebreaker", "Code cracked", "Break a code", "codebreaker.wins", 1),
         new("codebreaker-fast", "codebreaker", "Mind reader", "Break a code in 4 guesses or fewer", "codebreaker.fast", 1),
         new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),

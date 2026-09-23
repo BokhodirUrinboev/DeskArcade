@@ -63,10 +63,10 @@ public sealed class DurakView
 /// re-send them until the host's view acknowledges them; the host takes each player's moves strictly in
 /// sequence, so none is lost or applied twice. The host's game runs on its own timer, so it goes on for
 /// everyone even while the host's overlay is hidden or showing another game. Computer players fill empty seats and take over the seat
-/// of anyone who drops out. Room setup happens in <see cref="DurakRoomWindow"/>, since typing a room code
+/// of anyone who drops out. Room setup happens in <see cref="RoomWindow"/>, since typing a room code
 /// needs a window that can take the keyboard.
 /// </summary>
-public sealed class DurakGame : MiniGame
+public sealed class DurakGame : MiniGame, IRoomGame
 {
     public const double CardW = 66, CardH = 94;
     const double CpuDelay = 0.8, SendEvery = 0.25, ResendEvery = 0.3;
@@ -123,6 +123,7 @@ public sealed class DurakGame : MiniGame
     public override string Id => "durak";
     public override string Title => "Durak";
     public RoomLink Room => _room;
+    public string MinVersion => "1.6";
 
     /// <summary>Over the two-player link the host's table opens a room that the other player joins (see <see cref="LanBridge"/>).</summary>
     public override bool SupportsLan => true;

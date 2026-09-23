@@ -42,7 +42,7 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 - **Play while it builds.** `arcade dotnet test` (or `deskarcade --while make`) runs your command as usual
   and shows it on the scoreboard, then chimes when it passes or fails.
 - **Idle means idle.** When nothing is moving, rendering stops and CPU use drops to almost zero.
-- **31 games, 75 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
+- **32 games, 78 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
 - **Play with the person at the next desk** over the local network: Air Hockey (best of 3), Pong,
   H-O-R-S-E, Mini Golf and Archery duels, board games, Sea Battle and score races. You see what the other
   player does: their ball, arrow or puck, and a marker wherever they pop, whack or stack.
@@ -84,6 +84,7 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 | 🃏 **Memory** | 24 cards face down. Flip two at a time to find the 12 pairs; your best is the fewest moves. |
 | 🟢 **Code Breaker** | Crack a hidden code of four colours (repeats allowed) in ten guesses. Pick a colour and click a hole, or click a hole to cycle it, then **Check**: a black pin is a right colour in the right place, a white pin a right colour in the wrong place. Each colour also has a symbol for colour-blind play. |
 | 🂡 **Solitaire** | Klondike, draw one. Click the stock to turn a card. Click a card to send it where it fits (home to its foundation first), or drag a card or a face-up run onto the pile you want. **Undo** takes a move back; **New deal** asks once more before it throws the game away. When every card is face up, the rest go home by themselves. Your best is the fewest moves. |
+| 🟥 **Last Card** | An UNO-style game for 2–4 players. Play a card of the colour on the pile, or the same number or symbol. **Skip**, **Reverse** and **+2** hit the next player; a **Wild** lets you pick the colour, and a **Wild +4** is allowed only when you hold nothing of the colour on the pile. Can't play? Click the pile to draw; a card that fits can go straight down, or **Pass**. Click **Last card!** when you're down to one card (or before, with two), or you draw two as soon as the next player moves. The first to play their last card wins. Every colour also has a shape in the corners (circle, triangle, square, diamond). Against 1–3 computer players, or co-workers in a room. |
 | 🐱 **Desktop Pet** | Not a game: a cat (or a dog, duck, bunny, penguin or fox: **tray → Pet**) that walks along your taskbar and window tops, follows the cursor, jumps between windows and sleeps when left alone. Click to pet it, drag to carry and throw it, **right-click for its trick**. Each animal has its own voices (the cat meows, trills, purrs, hisses and chatters at birds; the dog barks, woofs, whines and pants; the duck quacks; the bunny squeaks, grunts and thumps; the penguin brays; the fox barks "wow-wow", gekkers and screams), its own walk (the bunny hops, the duck and penguin waddle) and its own trick: the cat stretches, the dog chases its tail, the duck flaps, the bunny does a twisting hop, the penguin belly-slides and the fox pounces. Left alone it keeps busy the way its animal does: cats groom, knead and stalk the cursor, dogs sniff, scratch and wag, ducks preen and follow you, bunnies flop over, penguins throw back their heads and bray. Its mood changes over time: lots of play gives it the zoomies, ignoring it makes it call for you, and it yawns, naps and snores when tired. |
 
 > **Brick Breaker note:** while a ball is in play, a strip along the bottom of the screen takes the
@@ -106,11 +107,12 @@ joins straight into it and follows whenever the host switches.
 | Archery | Take turns, one arrow each, ten apiece, in the same wind. Their arrow flies from your bow as a ghost |
 | Checkers, Chess, Connect Four, Tic-tac-toe | Turns over the network; the guest sees the board from their side |
 | Sea Battle | Each fleet stays on its own PC; only shots and hits cross the network |
-| Durak | The host's table opens a room and your co-worker's copy joins it by itself; the host starts the game from the table, with or without computer players (the room also takes more co-workers, see below) |
+| Durak, Last Card | The host's table opens a room and your co-worker's copy joins it by itself; the host starts the game from the table, with or without computer players (the room also takes more co-workers, see below) |
 | Bubble Pop, Whack-a-Bug, Tower Stack, Bowling, Fishing | Race: start a round and theirs starts too. You see their live score, a red ring wherever they pop, whack or stack, and who won |
 
-**Durak rooms** are separate from the two-player link, for up to four people: **tray → Play over LAN → Durak
-with co-workers…** (or the button on the Durak table). One player clicks **Create a room** and reads out the
+**Rooms** for Durak and Last Card are separate from the two-player link, for up to four people: **tray → Play
+over LAN → Durak with co-workers…** or **Last Card with co-workers…** (or the button on the game's table). Each
+room plays one game, and the list only shows rooms for that game. One player clicks **Create a room** and reads out the
 four-letter code; the others pick the room from the list or type the code (plus the host's IP address if
 the network blocks broadcasts). The host chooses 2, 3 or 4 seats and starts; computer players fill the empty
 seats and take over for anyone who drops out. Several rooms can run on one network. Rooms use UDP port 47822.
@@ -127,7 +129,7 @@ board with a tab for every game; it shrinks back shortly after the mouse leaves.
 with your progress; click it to jump to the game. Finish it on consecutive days to build a streak.
 
 **Stats & achievements** in the tray menu (or `DeskArcade --signal stats`) opens a window with time
-played and best score per game, and all 75 achievements with their progress. Stats live in
+played and best score per game, and all 78 achievements with their progress. Stats live in
 `stats.json` next to your settings and can be reset from the tray.
 
 **Office leaderboard:** **tray → Office leaderboard** shows today's best hoops streak, baskets, Air Hockey
@@ -166,6 +168,7 @@ Every action is also available from the command line, which is useful for custom
 DeskArcade --signal toggle|next|summon|show|hide|expand|stats|shortcuts|quit|game:durak
 DeskArcade --signal lan-host|lan-join|lan-find|lan-leave
 DeskArcade --signal durak-rooms|durak-solo:2|durak-host:abcd|durak-join:abcd|durak-start:4|durak-leave
+DeskArcade --signal lastcard-rooms|lastcard-solo:2|lastcard-host:abcd|lastcard-join:abcd|lastcard-start:4|lastcard-leave
 ```
 
 ## Language
@@ -339,7 +342,7 @@ Releases are built and published by GitHub Actions when a `vX.Y.Z` tag is pushed
 
 | Flag | Purpose |
 |---|---|
-| `--game <id>` | Start on a specific game: `hoops`, `archery`, `juggle`, `golf`, `bugs`, `cans`, `bricks`, `bubbles`, `hockey`, `pong`, `clay`, `whack`, `plinko`, `tower`, `slingshot`, `checkers`, `chess`, `connect4`, `tictactoe`, `seabattle`, `durak`, `darts`, `toss`, `fishing`, `bowling`, `pool`, `pinball`, `memory`, `codebreaker`, `solitaire`, `pet` |
+| `--game <id>` | Start on a specific game: `hoops`, `archery`, `juggle`, `golf`, `bugs`, `cans`, `bricks`, `bubbles`, `hockey`, `pong`, `clay`, `whack`, `plinko`, `tower`, `slingshot`, `checkers`, `chess`, `connect4`, `tictactoe`, `seabattle`, `durak`, `darts`, `toss`, `fishing`, `bowling`, `pool`, `pinball`, `memory`, `codebreaker`, `solitaire`, `lastcard`, `pet` |
 | `--demo` | The current game plays itself, for smoke tests without touching the mouse |
 | `--profile <name>` | Run an isolated copy with its own lock, signal channel and settings, alongside the installed game |
 
@@ -348,8 +351,8 @@ Releases are built and published by GitHub Actions when a `vX.Y.Z` tag is pushed
 | Path | Contents |
 |---|---|
 | `src/Engine` | Lightweight game engine: `Vec2`, ball physics, window-top platforms, sprites, effects, themes, the rival's ghost ball, `MiniGame` |
-| `src/Games` | One class per game; `BoardGame` is shared by the grid games. Rules and physics without UI (`Draughts`, `ChessRules`, `LineRules`, `SeaBattle`, `HockeyTable`, `PongTable`, `GolfMatch`, `ArcheryMatch`, `DurakRules`, `DartsRules`, `PaperFlight`, `DiscTable`, `BowlingScore`, `PinballTable`, `FishFight`, `MemoryRules`, `CodeBreakerRules`, `SolitaireRules`) are unit-tested |
-| `src/Net` | `LanLink`: pairing and messages between two copies on the local network; `DuelChannel`: reliable, ordered events for turn-based duels; `OfficeBoard`: the opt-in leaderboard; `RoomLink`: rooms of up to four players by code, for Durak |
+| `src/Games` | One class per game; `BoardGame` is shared by the grid games. Rules and physics without UI (`Draughts`, `ChessRules`, `LineRules`, `SeaBattle`, `HockeyTable`, `PongTable`, `GolfMatch`, `ArcheryMatch`, `DurakRules`, `DartsRules`, `PaperFlight`, `DiscTable`, `BowlingScore`, `PinballTable`, `FishFight`, `MemoryRules`, `CodeBreakerRules`, `SolitaireRules`, `LastCardRules`) are unit-tested |
+| `src/Net` | `LanLink`: pairing and messages between two copies on the local network; `DuelChannel`: reliable, ordered events for turn-based duels; `OfficeBoard`: the opt-in leaderboard; `RoomLink`: rooms of up to four players by code, for Durak and Last Card |
 | `src/RaceMode.cs`, `src/Daily.cs` | Score races over the LAN; the daily challenge |
 | `src/Platform` | The OS layer behind `IDesktopPlatform`, with `Windows`, `Linux` and `Mac` implementations |
 | `src/Loc.cs`, `src/Strings.*.cs` | Translation lookup and the Uzbek and Russian tables |
@@ -406,7 +409,7 @@ exception you can switch off:
   automatically** in the tray menu.
 - **LAN play:** only when you host or join a game does it talk to other computers on your local network
   (UDP port 47820). It sends your user name and the game moves, and nothing leaves the local network.
-- **Durak rooms:** only when you create or join a room does it talk to other computers on your local
+- **Durak and Last Card rooms:** only when you create or join a room does it talk to other computers on your local
   network (UDP port 47822). It sends your user name and the game, and nothing leaves the local network.
 - **Office leaderboard:** off unless you turn it on. While it is on, it broadcasts your user name and
   today's scores to your local network (UDP port 47821) every 20 seconds, and nothing leaves the local

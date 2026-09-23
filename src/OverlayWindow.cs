@@ -199,7 +199,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new TicTacToeGame(this));
         _games.Add(new SeaBattleGame(this));
         var durak = new DurakGame(this);
-        durak.SetupRequested += () => DurakRoomWindow.ShowFor(this, durak);
+        durak.SetupRequested += () => RoomWindow.ShowFor(this, durak);
         _games.Add(durak);
         _games.Add(new DartsGame(this));
         _games.Add(new PaperTossGame(this));
@@ -209,6 +209,9 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new MemoryGame(this));
         _games.Add(new CodeBreakerGame(this));
         _games.Add(new SolitaireGame(this));
+        var lastCard = new LastCardGame(this);
+        lastCard.SetupRequested += () => RoomWindow.ShowFor(this, lastCard);
+        _games.Add(lastCard);
         _games.Add(new PinballGame(this));
         _games.Add(new PetGame(this));
 
@@ -562,6 +565,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "pool" => L.T("drag back from the cue ball to shoot — pot every ball in as few shots as you can"),
         "memory" => L.T("flip two cards at a time — find all the pairs"),
         "codebreaker" => L.T("pick a colour, fill the row and click Check — a black pin is the right colour in the right place"),
+        "lastcard" => L.T("match the colour or the number — say “last card” when you're down to one"),
         "solitaire" => L.T("click the stock to turn a card — click or drag cards onto the piles"),
         "pinball" => L.T("click the ball to serve — press by a flipper to flip it, right-click flips both"),
         _ => "",
@@ -741,36 +745,37 @@ public sealed class OverlayWindow : Window, IGameHost
             case "shortcuts": OpenShortcuts(); break;
             case "quit": Quit(); break;
             case "durak-rooms": OpenDurakRooms(); break;
+            case "lastcard-rooms": OpenLastCardRooms(); break;
             case var g when g.StartsWith("game:", StringComparison.Ordinal): SwitchGame(g[5..]); break;
             case var t when t.StartsWith("task:", StringComparison.OrdinalIgnoreCase): TaskStarted(t[5..]); break;
             case var t when t.StartsWith("task-end:", StringComparison.Ordinal):
                 TaskEnded(int.TryParse(t[9..], out int code) ? code : 1);
                 break;
-            default: DurakSignal(msg); break;
+            default: RoomSignal(msg); break;
         }
     }
 
     /// <summary>
-    /// Scriptable Durak rooms, for tests and shortcuts: "durak-solo:N" (N computer players),
-    /// "durak-host[:code]", "durak-join:code" and "durak-start:N" (N seats in all).
+    /// Scriptable rooms, for tests and shortcuts, as "&lt;game&gt;-&lt;verb&gt;" with the game "durak" or "lastcard":
+    /// "-solo:N" (N computer players), "-host[:code]", "-join:code", "-start:N" (N seats in all) and "-leave".
     /// </summary>
-    void DurakSignal(string msg)
+    void RoomSignal(string msg)
     {
-        if (_games.OfType<DurakGame>().FirstOrDefault() is not { } durak) return;
-        int colon = msg.IndexOf(':');
-        string verb = colon < 0 ? msg : msg[..colon], arg = colon < 0 ? "" : msg[(colon + 1)..];
+        int dash = msg.IndexOf('-'), colon = msg.IndexOf(':');
+        if (dash < 0 || _games.OfType<IRoomGame>().FirstOrDefault(g => g.Id == msg[..dash]) is not { } game) return;
+        string verb = colon < 0 ? msg[(dash + 1)..] : msg[(dash + 1)..colon], arg = colon < 0 ? "" : msg[(colon + 1)..];
         int.TryParse(arg, out int n);
         switch (verb)
         {
-            case "durak-solo": durak.StartSolo(Math.Clamp(n, 1, 3)); break;
-            case "durak-host": durak.HostRoom(arg.Length > 0 ? Net.RoomLink.CleanCode(arg) : null); break;
-            case "durak-join": durak.JoinRoom(arg, null); break;
-            case "durak-start": durak.StartRoom(Math.Clamp(n, 2, Net.RoomLink.MaxSeats)); break;
-            case "durak-leave": durak.LeaveRoom(); break;
+            case "solo": game.StartSolo(Math.Clamp(n, 1, 3)); break;
+            case "host": game.HostRoom(arg.Length > 0 ? Net.RoomLink.CleanCode(arg) : null); break;
+            case "join": game.JoinRoom(arg, null); break;
+            case "start": game.StartRoom(Math.Clamp(n, 2, Net.RoomLink.MaxSeats)); break;
+            case "leave": game.LeaveRoom(); break;
             default: return;
         }
         SetOverlayVisible(true);
-        SwitchGame(durak.Id);
+        SwitchGame(game.Id);
     }
 
     // ------------------------------------------------------------------ LAN multiplayer
@@ -790,7 +795,12 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public void OpenDurakRooms()
     {
-        if (_games.OfType<DurakGame>().FirstOrDefault() is { } durak) DurakRoomWindow.ShowFor(this, durak);
+        if (_games.OfType<DurakGame>().FirstOrDefault() is { } durak) RoomWindow.ShowFor(this, durak);
+    }
+
+    public void OpenLastCardRooms()
+    {
+        if (_games.OfType<LastCardGame>().FirstOrDefault() is { } game) RoomWindow.ShowFor(this, game);
     }
 
     public void OpenShortcuts() => ShortcutsWindow.ShowFor(this);
