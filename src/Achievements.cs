@@ -108,6 +108,10 @@ public static class Achievements
         new("interns-10", "interns", "Head of department", "Clear level 10 of Interns", "interns.level", 10),
         new("interns-100", "interns", "Mentor", "Get 100 interns to the exit", "interns.saved", 100),
         new("interns-perfect", "interns", "Nobody left behind", "Save every intern on a level", "interns.perfect", 1),
+
+        new("blockfall-four", "blockfall", "Four at once", "Clear four lines with one piece", "blockfall.fours", 1),
+        new("blockfall-lines", "blockfall", "Line manager", "Clear 200 lines", "blockfall.lines", 200),
+        new("blockfall-10k", "blockfall", "Stacked", "Score 10,000 points in one game", "blockfall.best", 10000),
         new("codebreaker-win", "codebreaker", "Code cracked", "Break a code", "codebreaker.wins", 1),
         new("codebreaker-fast", "codebreaker", "Mind reader", "Break a code in 4 guesses or fewer", "codebreaker.fast", 1),
         new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),

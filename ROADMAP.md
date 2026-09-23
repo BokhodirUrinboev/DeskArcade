@@ -72,6 +72,11 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
   unit tests for walking, turning, manholes, high falls and umbrellas, stairs over a manhole, blockers,
   riding a moving window and running out of tools; a demo run on Windows 11 cleared level 1 and bridged
   both manholes of level 2.*
+- [x] **Blockfall** (`blockfall`), the "Window Tetris" idea: falling blocks steered with the mouse (the piece
+  follows the pointer's column; click turns, hold drops faster, right-click drops), a well that stands on a
+  window top and rides along with it, and a LAN score race. *Verified: unit tests for the bags, turning and
+  wall nudges, drops, line clears and scoring, levels and game over, and 5,000 random moves that never lose a
+  cell; a demo run on Windows 11 cleared four lines at once.*
 - [ ] **Fetch.** Throw a ball for the pet: it runs after it, jumps between windows to reach it and brings it
   back to the cursor. Dogs fetch eagerly, cats only sometimes, ducks not at all. *Verified: unit test for the
   chase path; demo run.*
@@ -125,6 +130,5 @@ and using the windows and taskbar as the playing field. LAN notes say how each c
 | Idea | How it plays | LAN |
 |---|---|---|
 | **Curling** | Slide stones along the taskbar toward a target painted on the floor; knock the rival's stones away | Turns with ghost stones, like the golf duel |
-| **Window Tetris** | Blocks fall from the top and settle on window tops as well as the taskbar | Race; cleared lines send garbage to the rival |
 | **More card games** | Fool's cousins on the same room code: Perevodnoy (pass the attack on), Blackjack against the house, Crazy Eights | Rooms, like Durak |
 | **Asteroids** | Rocks drift and bounce around the closed box; steer a ship with the mouse and click to fire | Co-op: two ships, one field |
