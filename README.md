@@ -42,7 +42,7 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 - **Play while it builds.** `arcade dotnet test` (or `deskarcade --while make`) runs your command as usual
   and shows it on the scoreboard, then chimes when it passes or fails.
 - **Idle means idle.** When nothing is moving, rendering stops and CPU use drops to almost zero.
-- **32 games, 78 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
+- **33 games, 82 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
 - **Play with the person at the next desk** over the local network: Air Hockey (best of 3), Pong,
   H-O-R-S-E, Mini Golf and Archery duels, board games, Sea Battle and score races. You see what the other
   player does: their ball, arrow or puck, and a marker wherever they pop, whack or stack.
@@ -85,6 +85,7 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 | 🟢 **Code Breaker** | Crack a hidden code of four colours (repeats allowed) in ten guesses. Pick a colour and click a hole, or click a hole to cycle it, then **Check**: a black pin is a right colour in the right place, a white pin a right colour in the wrong place. Each colour also has a symbol for colour-blind play. |
 | 🂡 **Solitaire** | Klondike, draw one. Click the stock to turn a card. Click a card to send it where it fits (home to its foundation first), or drag a card or a face-up run onto the pile you want. **Undo** takes a move back; **New deal** asks once more before it throws the game away. When every card is face up, the rest go home by themselves. Your best is the fewest moves. |
 | 🟥 **Last Card** | An UNO-style game for 2–4 players. Play a card of the colour on the pile, or the same number or symbol. **Skip**, **Reverse** and **+2** hit the next player; a **Wild** lets you pick the colour, and a **Wild +4** is allowed only when you hold nothing of the colour on the pile. Can't play? Click the pile to draw; a card that fits can go straight down, or **Pass**. Click **Last card!** when you're down to one card (or before, with two), or you draw two as soon as the next player moves. The first to play their last card wins. Every colour also has a shape in the corners (circle, triangle, square, diamond). Against 1–3 computer players, or co-workers in a room. |
+| 🧑‍💼 **Interns** | Click the hatch and a line of office interns drops out, onto a window top or just above the taskbar, and walks wherever their feet take them. Get enough of them to the **EXIT** door on the taskbar, past open manholes and drops too high to survive. Pick a tool on the toolbar (right-click an intern to switch tools) and click an intern: an **Umbrella** for a safe fall, a **Blocker** who turns the others round (click them again to let them go), or a **Builder** who lays a staircase. Drag a window and everyone standing on it rides along, so a window can be a bridge. Each level has more interns and manholes and fewer spare tools; your best is the highest level cleared. **Ctrl+Alt+B** moves the toolbar to the cursor. |
 | 🐱 **Desktop Pet** | Not a game: a cat (or a dog, duck, bunny, penguin or fox: **tray → Pet**) that walks along your taskbar and window tops, follows the cursor, jumps between windows and sleeps when left alone. Click to pet it, drag to carry and throw it, **right-click for its trick**. Each animal has its own voices (the cat meows, trills, purrs, hisses and chatters at birds; the dog barks, woofs, whines and pants; the duck quacks; the bunny squeaks, grunts and thumps; the penguin brays; the fox barks "wow-wow", gekkers and screams), its own walk (the bunny hops, the duck and penguin waddle) and its own trick: the cat stretches, the dog chases its tail, the duck flaps, the bunny does a twisting hop, the penguin belly-slides and the fox pounces. Left alone it keeps busy the way its animal does: cats groom, knead and stalk the cursor, dogs sniff, scratch and wag, ducks preen and follow you, bunnies flop over, penguins throw back their heads and bray. Its mood changes over time: lots of play gives it the zoomies, ignoring it makes it call for you, and it yawns, naps and snores when tired. |
 
 > **Brick Breaker note:** while a ball is in play, a strip along the bottom of the screen takes the
@@ -129,7 +130,7 @@ board with a tab for every game; it shrinks back shortly after the mouse leaves.
 with your progress; click it to jump to the game. Finish it on consecutive days to build a streak.
 
 **Stats & achievements** in the tray menu (or `DeskArcade --signal stats`) opens a window with time
-played and best score per game, and all 78 achievements with their progress. Stats live in
+played and best score per game, and all 82 achievements with their progress. Stats live in
 `stats.json` next to your settings and can be reset from the tray.
 
 **Office leaderboard:** **tray → Office leaderboard** shows today's best hoops streak, baskets, Air Hockey
@@ -342,7 +343,7 @@ Releases are built and published by GitHub Actions when a `vX.Y.Z` tag is pushed
 
 | Flag | Purpose |
 |---|---|
-| `--game <id>` | Start on a specific game: `hoops`, `archery`, `juggle`, `golf`, `bugs`, `cans`, `bricks`, `bubbles`, `hockey`, `pong`, `clay`, `whack`, `plinko`, `tower`, `slingshot`, `checkers`, `chess`, `connect4`, `tictactoe`, `seabattle`, `durak`, `darts`, `toss`, `fishing`, `bowling`, `pool`, `pinball`, `memory`, `codebreaker`, `solitaire`, `lastcard`, `pet` |
+| `--game <id>` | Start on a specific game: `hoops`, `archery`, `juggle`, `golf`, `bugs`, `cans`, `bricks`, `bubbles`, `hockey`, `pong`, `clay`, `whack`, `plinko`, `tower`, `slingshot`, `checkers`, `chess`, `connect4`, `tictactoe`, `seabattle`, `durak`, `darts`, `toss`, `fishing`, `bowling`, `pool`, `pinball`, `memory`, `codebreaker`, `solitaire`, `lastcard`, `interns`, `pet` |
 | `--demo` | The current game plays itself, for smoke tests without touching the mouse |
 | `--profile <name>` | Run an isolated copy with its own lock, signal channel and settings, alongside the installed game |
 
@@ -351,7 +352,7 @@ Releases are built and published by GitHub Actions when a `vX.Y.Z` tag is pushed
 | Path | Contents |
 |---|---|
 | `src/Engine` | Lightweight game engine: `Vec2`, ball physics, window-top platforms, sprites, effects, themes, the rival's ghost ball, `MiniGame` |
-| `src/Games` | One class per game; `BoardGame` is shared by the grid games. Rules and physics without UI (`Draughts`, `ChessRules`, `LineRules`, `SeaBattle`, `HockeyTable`, `PongTable`, `GolfMatch`, `ArcheryMatch`, `DurakRules`, `DartsRules`, `PaperFlight`, `DiscTable`, `BowlingScore`, `PinballTable`, `FishFight`, `MemoryRules`, `CodeBreakerRules`, `SolitaireRules`, `LastCardRules`) are unit-tested |
+| `src/Games` | One class per game; `BoardGame` is shared by the grid games. Rules and physics without UI (`Draughts`, `ChessRules`, `LineRules`, `SeaBattle`, `HockeyTable`, `PongTable`, `GolfMatch`, `ArcheryMatch`, `DurakRules`, `DartsRules`, `PaperFlight`, `DiscTable`, `BowlingScore`, `PinballTable`, `FishFight`, `MemoryRules`, `CodeBreakerRules`, `SolitaireRules`, `LastCardRules`, `InternsWorld`) are unit-tested |
 | `src/Net` | `LanLink`: pairing and messages between two copies on the local network; `DuelChannel`: reliable, ordered events for turn-based duels; `OfficeBoard`: the opt-in leaderboard; `RoomLink`: rooms of up to four players by code, for Durak and Last Card |
 | `src/RaceMode.cs`, `src/Daily.cs` | Score races over the LAN; the daily challenge |
 | `src/Platform` | The OS layer behind `IDesktopPlatform`, with `Windows`, `Linux` and `Mac` implementations |

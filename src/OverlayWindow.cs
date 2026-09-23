@@ -212,6 +212,7 @@ public sealed class OverlayWindow : Window, IGameHost
         var lastCard = new LastCardGame(this);
         lastCard.SetupRequested += () => RoomWindow.ShowFor(this, lastCard);
         _games.Add(lastCard);
+        _games.Add(new InternsGame(this));
         _games.Add(new PinballGame(this));
         _games.Add(new PetGame(this));
 
@@ -565,6 +566,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "pool" => L.T("drag back from the cue ball to shoot — pot every ball in as few shots as you can"),
         "memory" => L.T("flip two cards at a time — find all the pairs"),
         "codebreaker" => L.T("pick a colour, fill the row and click Check — a black pin is the right colour in the right place"),
+        "interns" => L.T("pick a tool, then click an intern — get enough of them to the exit"),
         "lastcard" => L.T("match the colour or the number — say “last card” when you're down to one"),
         "solitaire" => L.T("click the stock to turn a card — click or drag cards onto the piles"),
         "pinball" => L.T("click the ball to serve — press by a flipper to flip it, right-click flips both"),

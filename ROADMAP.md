@@ -67,6 +67,11 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
   effect, drawing, the call and the catch, and computer players finishing 300 games of 2, 3 and 4; two copies
   on one PC (`--profile`, `--demo`) played a room of host, guest and a computer through two games, and both
   saw the same games end.*
+- [x] **Interns** (`interns`): lead office interns from a trapdoor to the exit on the taskbar, over window tops and
+  past manholes, with umbrellas, blockers and builders; dragging a window carries everyone on it. *Verified:
+  unit tests for walking, turning, manholes, high falls and umbrellas, stairs over a manhole, blockers,
+  riding a moving window and running out of tools; a demo run on Windows 11 cleared level 1 and bridged
+  both manholes of level 2.*
 - [ ] **Fetch.** Throw a ball for the pet: it runs after it, jumps between windows to reach it and brings it
   back to the cursor. Dogs fetch eagerly, cats only sometimes, ducks not at all. *Verified: unit test for the
   chase path; demo run.*
@@ -104,7 +109,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 |---|---|
 | Durak and Last Card rooms across real PCs, played by people | Two to four PCs on one network |
 | How the pet voices sound; the new pet behaviours on screen | Speakers and a look on screen |
-| How the eight new games and Solitaire feel with a real mouse (Solitaire's drag and drop was not tried by hand) | Someone playing them |
+| How the eight new games, Solitaire, Last Card and Interns feel with a real mouse (none of the last three was played by hand) | Someone playing them |
 | macOS: click-through, window list, hotkeys, sound | A Mac |
 | The Node 24 action versions in the release workflow | A release dry run |
 | The setup's "arcade" PATH option (added, then removed on uninstall); `--while` with the overlay on a Linux desktop and on macOS | Windows Sandbox; a Linux PC and a Mac |

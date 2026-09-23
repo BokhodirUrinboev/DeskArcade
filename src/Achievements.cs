@@ -103,6 +103,11 @@ public static class Achievements
         new("lastcard-win", "lastcard", "Out first", "Win a game of Last Card", "lastcard.wins", 1),
         new("lastcard-10", "lastcard", "Empty-handed", "Win 10 games of Last Card", "lastcard.wins", 10),
         new("lastcard-plus4", "lastcard", "No hard feelings", "Play 20 Wild Draw Fours", "lastcard.plusfours", 20),
+
+        new("interns-1", "interns", "Onboarding", "Clear the first level of Interns", "interns.level", 1),
+        new("interns-10", "interns", "Head of department", "Clear level 10 of Interns", "interns.level", 10),
+        new("interns-100", "interns", "Mentor", "Get 100 interns to the exit", "interns.saved", 100),
+        new("interns-perfect", "interns", "Nobody left behind", "Save every intern on a level", "interns.perfect", 1),
         new("codebreaker-win", "codebreaker", "Code cracked", "Break a code", "codebreaker.wins", 1),
         new("codebreaker-fast", "codebreaker", "Mind reader", "Break a code in 4 guesses or fewer", "codebreaker.fast", 1),
         new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),
