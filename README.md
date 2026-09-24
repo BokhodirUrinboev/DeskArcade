@@ -288,19 +288,22 @@ Desk Arcade is submitted to the winget repository and waiting for review. Once i
 ## Updating
 
 Desk Arcade checks GitHub Releases once a day (switch it off in the tray) and tells you when a newer
-version exists. **Check for updates** in the tray menu does it immediately. On Windows installs the tray
-then offers **Install version X.Y.Z**: it downloads the matching installer, checks its SHA-256 against
-GitHub's, and runs it silently; the game closes and comes back updated. Elsewhere it opens the download
-page.
+version exists. **Check for updates** in the tray menu (or the scoreboard's ☰ menu) does it immediately.
 
-| Platform | How | What happens |
-|---|---|---|
-| Windows | Run the newer setup | Closes the running game, replaces the files in the same folder, keeps your shortcut and autostart choices, and restarts the game after silent updates. Downgrades are refused. |
-| Ubuntu | `sudo apt install ./deskarcade_x.y.z_amd64.deb` | apt replaces the older version and closes the running game first. Start it again afterwards. |
-| AppImage | Replace the file | Nothing else to do. |
+On the Windows installer, the Ubuntu `.deb` and the AppImage, the tray and the ☰ menu then offer
+**Install version X.Y.Z**: the game downloads the matching file into its updates folder
+(`~/.config/DeskArcade/updates`, `%APPDATA%\DeskArcade\updates` on Windows), shows the progress on the
+scoreboard, checks the file's SHA-256 against GitHub's digest, and installs it.
 
-Settings, high scores and stats are never touched by an update. They live in `%APPDATA%\DeskArcade` on
-Windows and `~/.config/DeskArcade` on Linux and macOS.
+| Install | What happens |
+|---|---|
+| Windows installer | The installer runs silently; the game closes and comes back updated |
+| Ubuntu / Debian `.deb` | PolicyKit asks for your password (the same prompt as Software Updater); apt installs the package, which closes the running game, and the new version starts by itself (with the same `--profile`, if one was used). Dismiss the prompt and the `.deb` stays in the updates folder, which opens so you can double-click it or run `sudo apt install ./deskarcade_X.Y.Z_amd64.deb`; on a desktop without `pkexec` the game opens a terminal running `sudo apt-get install` instead |
+| AppImage | The new file replaces the running one in place and starts; if its folder is read-only, the new AppImage is saved next to it under its versioned name and the game says where |
+| Flatpak | Updates come through `flatpak update` once the app is on Flathub; until then take the `.deb` or the AppImage from the release page |
+| A copy you unpacked yourself, macOS | The download page opens |
+
+Settings, high scores and stats are never touched by an update.
 
 ## Claude Code integration
 
