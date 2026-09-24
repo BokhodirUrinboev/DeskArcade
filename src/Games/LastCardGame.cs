@@ -656,15 +656,16 @@ public sealed class LastCardGame : MiniGame, IRoomGame
         _top.Children.Clear();
         _clickables.Clear();
         var a = _table;
+        var cloth = Themes.Current.Felt ?? Felt;
         _canvas.Children.Add(Art.At(new Border
         {
             Width = a.Width, Height = a.Height, CornerRadius = new CornerRadius(22), Opacity = 0.94,
             Background = new LinearGradientBrush
             {
                 StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative), EndPoint = new RelativePoint(0, 1, RelativeUnit.Relative),
-                GradientStops = { new GradientStop(Art.Blend(Felt, Colors.White, 0.1), 0), new GradientStop(Felt, 1) },
+                GradientStops = { new GradientStop(Art.Blend(cloth, Colors.White, 0.1), 0), new GradientStop(cloth, 1) },
             },
-            BorderBrush = Art.Brush("#161A2C"), BorderThickness = new Thickness(3), IsHitTestVisible = false,
+            BorderBrush = Art.Brush(Art.Blend(cloth, Colors.Black, 0.5)), BorderThickness = new Thickness(3), IsHitTestVisible = false,
         }, a.Left, a.Top));
 
         if (_view == null)
@@ -1062,20 +1063,41 @@ public sealed class LastCardGame : MiniGame, IRoomGame
         else into.Children.Add(Art.PathOf(string.Create(CultureInfo.InvariantCulture, $"{path}"), fill));
     }
 
-    /// <summary>The back: a dark card with the four colours in a tilted band, so it never reads as a face.</summary>
+    /// <summary>
+    /// The back: a dark card with the four colours in a tilted band, so it never reads as a face; the theme's card-back
+    /// colour, when it has one, takes the place of the dark ground. Tagged so <see cref="PaintBack"/> can find it again.
+    /// </summary>
     public static Border CardBack(double w, double h)
     {
         var inner = new Canvas { Width = w, Height = h, ClipToBounds = true };
         var band = new StackPanel { Orientation = Orientation.Horizontal, RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative), RenderTransform = new RotateTransform(-35) };
         foreach (var c in CardColors) band.Children.Add(new Rectangle { Width = w * 0.16, Height = h * 1.4, Fill = Art.Brush(c) });
         inner.Children.Add(Art.At(band, w / 2 - w * 0.32, -h * 0.2));
-        inner.Children.Add(Art.At(new Ellipse { Width = w * 0.46, Height = w * 0.46, Fill = Art.Brush("#1B1B22"), Stroke = Brushes.White, StrokeThickness = Math.Max(1, w * 0.04) }, w * 0.27, h / 2 - w * 0.23));
-        return new Border
+        var hub = new Ellipse { Width = w * 0.46, Height = w * 0.46, Stroke = Brushes.White, StrokeThickness = Math.Max(1, w * 0.04) };
+        inner.Children.Add(Art.At(hub, w * 0.27, h / 2 - w * 0.23));
+        var back = new Border
         {
             Width = w, Height = h, CornerRadius = new CornerRadius(w * 0.12), BorderBrush = Brushes.White, BorderThickness = new Thickness(Math.Max(1.5, w * 0.035)),
-            Background = Art.Brush("#1B1B22"), Child = inner, IsHitTestVisible = false,
+            Child = inner, IsHitTestVisible = false, Tag = hub,
             BoxShadow = new BoxShadows(new BoxShadow { OffsetX = 1, OffsetY = 2, Blur = 4, Color = Avalonia.Media.Color.FromArgb(80, 0, 0, 0) }),
         };
+        PaintBack(back);
+        return back;
+    }
+
+    /// <summary>Recolours a back from <see cref="CardBack"/> for the current theme.</summary>
+    public static void PaintBack(Border back)
+    {
+        var ground = Art.Brush(Themes.Current.CardBack is { } c ? Art.Blend(c, Colors.Black, 0.35) : Avalonia.Media.Color.Parse("#1B1B22"));
+        back.Background = ground;
+        if (back.Tag is Ellipse hub) hub.Fill = ground;
+    }
+
+    public override void ThemeChanged()
+    {
+        foreach (var card in _cards.Shown)
+            if (card.Visual is Border { Tag: Ellipse } back) PaintBack(back);
+        _drawnSize = default; // the felt is drawn afresh at the next layout
     }
 
     // ------------------------------------------------------------------ pieces

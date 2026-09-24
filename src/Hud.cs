@@ -58,6 +58,7 @@ public sealed class Hud : Border
     readonly Ellipse _pillDot = new() { Width = 8, Height = 8, IsVisible = false };
     readonly Ellipse _pillTaskDot = new() { Width = 8, Height = 8, IsVisible = false };
     readonly TextBlock _menuButton = Text(15, FontWeight.Bold, "#C9D1DC");
+    readonly TextBlock _menuTabText = Text(15, FontWeight.Bold, "#C9D1DC");
     readonly ScaleTransform _scoreScale = new(), _oppScale = new();
     readonly Anims _anims = new();
 
@@ -77,7 +78,7 @@ public sealed class Hud : Border
     bool _expanded, _pressed, _dragging, _menuOpen, _shownOnce;
     Vec2 _pressAt, _dragOffset;
     Opponent? _opponent;
-    string _lastScore = "";
+    string _lastScore = "", _currentId = "";
 
     public event Action<string>? GameClicked;
     /// <summary>A press started on the scoreboard, or its menu opened (the overlay must keep taking the mouse until it ends).</summary>
@@ -94,8 +95,6 @@ public sealed class Hud : Border
 
     public Hud(IEnumerable<MiniGame> games)
     {
-        Background = Art.Brush(240, 18, 20, 28);
-        BorderBrush = Art.Brush(70, 255, 255, 255);
         BorderThickness = new Thickness(1);
         HorizontalAlignment = HorizontalAlignment.Left;
         VerticalAlignment = VerticalAlignment.Top;
@@ -123,15 +122,13 @@ public sealed class Hud : Border
             _tabs[id] = tab;
             tabs.Children.Add(tab);
         }
+        _menuTabText.HorizontalAlignment = HorizontalAlignment.Center;
+        _menuTabText.VerticalAlignment = VerticalAlignment.Center;
+        _menuTabText.IsHitTestVisible = false;
         var menuTab = new Border
         {
             Width = 34, Height = 28, CornerRadius = new CornerRadius(8), Margin = new Thickness(0, 0, 4, 4),
-            Background = Brushes.Transparent, Cursor = new Cursor(StandardCursorType.Hand),
-            Child = new TextBlock
-            {
-                Text = "☰", FontFamily = Fx.Font, FontSize = 15, FontWeight = FontWeight.Bold, Foreground = Art.Brush("#C9D1DC"),
-                HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center, IsHitTestVisible = false,
-            },
+            Background = Brushes.Transparent, Cursor = new Cursor(StandardCursorType.Hand), Child = _menuTabText,
         };
         ToolTip.SetTip(menuTab, L.T("Menu"));
         menuTab.PointerPressed += (_, e) =>
@@ -198,6 +195,7 @@ public sealed class Hud : Border
         _pillTaskDot.Margin = new Thickness(6, 0, 0, 0);
         _pillTaskDot.VerticalAlignment = VerticalAlignment.Center;
         _menuButton.Text = "☰";
+        _menuTabText.Text = "☰";
         _menuButton.Margin = new Thickness(9, 0, 0, 1);
         _menuButton.Padding = new Thickness(2, 0);
         _menuButton.VerticalAlignment = VerticalAlignment.Center;
@@ -221,6 +219,7 @@ public sealed class Hud : Border
         Child = new Panel { Children = { _pill, _board } };
         ApplyState();
         SetClaude(ClaudeStatus.Unknown);
+        ThemeChanged();
 
         _collapseTimer.Tick += (_, _) =>
         {
@@ -279,8 +278,8 @@ public sealed class Hud : Border
 
     public void SetGame(string id, string title)
     {
-        foreach (var (key, tab) in _tabs)
-            tab.Background = key == id ? Art.Brush(70, 255, 255, 255) : Brushes.Transparent;
+        _currentId = id;
+        MarkTab();
         _title.Text = L.T(title).ToUpperInvariant();
         foreach (var (key, tab) in _tabs) ToolTip.SetTip(tab, L.T(_games[key].Title));
         UpdateClaudeText();
@@ -334,13 +333,15 @@ public sealed class Hud : Border
         _pillOppText.Text = turn.Length > 0 ? turn : who;
         ToolTip.SetTip(_pillOpp, _oppText.Text);
 
-        (string dot, string bg) = opp.MyTurn switch
+        // turns keep their traffic-light colours; a rival without turns takes the theme's accent (the CPU) or rival colour
+        var theme = Themes.Current;
+        (Color dot, Color bg) = opp.MyTurn switch
         {
-            true => ("#3DDC84", "#113A24"),
-            false => ("#FFB020", "#3A2E12"),
-            _ => opp.IsCpu ? ("#4DA3FF", "#1C2A40") : ("#FF5C6C", "#3A1C22"),
+            true => (Color.Parse("#3DDC84"), Color.Parse("#113A24")),
+            false => (Color.Parse("#FFB020"), Color.Parse("#3A2E12")),
+            _ => opp.IsCpu ? (theme.Accent, Art.Blend(theme.Accent, theme.HudBack, 0.72)) : (theme.Rival, Art.Blend(theme.Rival, theme.HudBack, 0.72)),
         };
-        var fill = Art.Brush(Art.Safe(Color.Parse(dot)));
+        var fill = Art.Brush(Art.Safe(dot));
         _oppDot.Fill = _pillOppDot.Fill = fill;
         _oppChip.Background = _pillOpp.Background = Art.Brush(bg);
         _oppDot.Opacity = _pillOppDot.Opacity = 1;
@@ -348,6 +349,36 @@ public sealed class Hud : Border
     }
 
     static string Short(string s, int max) => s.Length <= max ? s : s[..(max - 1)] + "…";
+
+    /// <summary>The current game's tab lit in the theme's accent.</summary>
+    void MarkTab()
+    {
+        var accent = Themes.Current.Accent;
+        foreach (var (key, tab) in _tabs)
+            tab.Background = key == _currentId ? Art.Brush(Color.FromArgb(95, accent.R, accent.G, accent.B)) : Brushes.Transparent;
+    }
+
+    /// <summary>
+    /// Dresses the scoreboard in <see cref="Themes.Current"/>: its background and text, the accent border and tab,
+    /// the gold of the best score and the rival chip. Everything else about it stays as it is.
+    /// </summary>
+    public void ThemeChanged()
+    {
+        var t = Themes.Current;
+        Background = Art.Brush(Color.FromArgb(240, t.HudBack.R, t.HudBack.G, t.HudBack.B));
+        BorderBrush = Art.Brush(Color.FromArgb(120, t.Accent.R, t.Accent.G, t.Accent.B));
+        var front = Art.Brush(t.HudFront);
+        var soft = Art.Brush(Art.Blend(t.HudFront, t.HudBack, 0.2));
+        var dim = Art.Brush(Art.Blend(t.HudFront, t.HudBack, 0.42));
+        var gold = Art.Brush(t.Gold);
+        _score.Foreground = _pillScore.Foreground = front;
+        _best.Foreground = _pillBest.Foreground = gold;
+        _line.Foreground = soft;
+        _title.Foreground = dim;
+        _menuButton.Foreground = _menuTabText.Foreground = soft;
+        MarkTab();
+        SetOpponent(_opponent);
+    }
 
     /// <summary>A quick pop of the score or the turn chip: a bit bigger, then back, in a third of a second.</summary>
     void Bump(ScaleTransform scale, double amount)

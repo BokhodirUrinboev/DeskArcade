@@ -8,7 +8,10 @@ using Avalonia.Media;
 
 namespace DeskArcade.Engine;
 
-/// <summary>Floating score text and simple particles, drawn above the games.</summary>
+/// <summary>
+/// Floating score text and simple particles, drawn above the games. The classic gold the games write their popups
+/// and bursts in becomes the current theme's gold on the way through (<see cref="Themes.Themed"/>).
+/// </summary>
 public sealed class Fx
 {
     sealed class Pop
@@ -62,7 +65,7 @@ public sealed class Fx
     public void Popup(Vec2 p, string text, Color color, double size = 30, double life = 1.2, string? sub = null)
     {
         var panel = new StackPanel { IsHitTestVisible = false };
-        color = Art.Safe(color);
+        color = Art.Safe(Themes.Themed(color));
         panel.Children.Add(Outlined(text, color, size));
         if (sub != null) panel.Children.Add(Outlined(sub, Colors.White, size * 0.45));
 
@@ -142,7 +145,7 @@ public sealed class Fx
     public void Spawn(Vec2 p, Vec2 v, Color c, double size, double life, double gravity)
     {
         if (ReducedMotion) return;
-        c = Art.Safe(c);
+        c = Art.Safe(Themes.Themed(c));
         if (_parts.Count >= MaxParticles) return;
         Particle part;
         if (_pool.Count > 0)

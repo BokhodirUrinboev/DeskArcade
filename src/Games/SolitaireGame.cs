@@ -207,6 +207,12 @@ public sealed class SolitaireGame : MiniGame
 
     public override void PositionsReset() => _placed = false;
 
+    /// <summary>The card backs take the theme's colour at once; the felt follows at the next layout, which the overlay asks for.</summary>
+    public override void ThemeChanged()
+    {
+        foreach (var back in _backs) DurakGame.PaintBack(back);
+    }
+
     public override void Activate()
     {
         if (_clockOn) _clockFrom = Environment.TickCount64;
@@ -257,10 +263,11 @@ public sealed class SolitaireGame : MiniGame
         _layout.Clear();
         _buttons.Clear();
         _moving.Clear();
+        var cloth = Themes.Current.Felt ?? Felt;
         _board.Children.Add(Art.At(new Rectangle
         {
             Width = PanelW, Height = PanelH, RadiusX = 16, RadiusY = 16,
-            Fill = Art.Brush(Color.FromArgb(215, Felt.R, Felt.G, Felt.B)), Stroke = Art.Brush(90, 255, 255, 255), StrokeThickness = 1.5,
+            Fill = Art.Brush(Color.FromArgb(215, cloth.R, cloth.G, cloth.B)), Stroke = Art.Brush(90, 255, 255, 255), StrokeThickness = 1.5,
         }, 0, 0));
 
         // empty piles: outlines, with a suit on each foundation and a "take the waste back" arrow on the stock

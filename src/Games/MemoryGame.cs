@@ -84,7 +84,7 @@ public sealed class MemoryGame : MiniGame
     public override Sprite CreateIcon()
     {
         var s = new Sprite();
-        var back = Themes.Current.Mine;
+        var back = Themes.Current.CardBack ?? Themes.Current.Mine;
         s.Rotor.Children.Add(Box(-10, -8, 11, 15, 2, Art.Brush(Art.Blend(back, Colors.Black, 0.5)), Art.Brush(back), 1.2));
         s.Rotor.Children.Add(Box(-1, -6, 11, 15, 2, Art.Brush(Paper), Ink, 1));
         var heart = Geometry.Parse(HeartPath);
@@ -526,11 +526,11 @@ public sealed class MemoryGame : MiniGame
 
     // ------------------------------------------------------------------ visuals
 
-    /// <summary>The patterned back, in the theme's own colour.</summary>
+    /// <summary>The patterned back, in the theme's card-back colour (its player colour when it has none).</summary>
     static void DrawBack(Canvas into)
     {
         into.Children.Clear();
-        var mine = Themes.Current.Mine;
+        var mine = Themes.Current.CardBack ?? Themes.Current.Mine;
         into.Children.Add(Box(-CardW / 2, -CardH / 2, CardW, CardH, Corner, Art.Brush(Art.Blend(mine, Colors.Black, 0.55)), Art.Brush(Art.Blend(mine, Colors.Black, 0.75)), 1.5));
         var lattice = new StringBuilder();
         for (double d = -CardH; d <= CardW; d += 10)

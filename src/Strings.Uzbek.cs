@@ -1024,6 +1024,28 @@ public static partial class Strings
 
 
         // ---- 1.8.0: themes
+        ["Ocean"] = "Okean",
+        ["Forest"] = "O'rmon",
+        ["Sunset"] = "Shom",
+        ["Candy"] = "Shirinlik",
+        ["Mono"] = "Mono",
+        ["Spring"] = "Bahor",
+        ["Autumn"] = "Kuz",
+        ["Midnight"] = "Yarim tun",
+        ["Theme decorations"] = "Mavzu bezaklari",
+        ["the desk as you know it"] = "o'zingiz bilgan stol",
+        ["lights on, volume up"] = "chiroqlar yoqilgan, ovoz balandroq",
+        ["insert coin"] = "tanga tashlang",
+        ["boo"] = "buu",
+        ["mind the snow"] = "qorga ehtiyot bo'ling",
+        ["deep breath"] = "chuqur nafas oling",
+        ["quiet under the trees"] = "daraxtlar ostida sokinlik",
+        ["golden hour"] = "oltin soat",
+        ["sweet"] = "shirin",
+        ["just the game"] = "faqat o'yin",
+        ["fresh start"] = "yangi boshlanish",
+        ["crunchy leaves"] = "shitirlagan barglar",
+        ["lights out"] = "chiroqlar o'chdi",
 
 
     };
