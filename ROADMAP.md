@@ -3,7 +3,7 @@
 1.7.0 shipped on 2026-09-21 with natural pet voices and animal behaviour (the 1.6.0 and 1.7.0 roadmap is
 in the git history). The next three months are about **getting Desk Arcade in front of people**: package
 managers, Flathub, a real Mac test, and the visibility SignPath asked for before it signs Windows builds.
-Eight new games came early and shipped in 1.7.1; after that the new work is LAN play for them.
+Eight new games came early and shipped in 1.7.1, and four more with `--while` and the first LAN races in 1.7.2.
 
 Each item says how it will be verified. "Demo" means copies on one PC (`--profile`) playing by themselves
 (`--demo`).
@@ -11,6 +11,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 | Release | Target | Theme |
 |---|---|---|
 | 1.7.1 | 2026-09-22 | Eight new games; Durak with a co-worker joins one room |
+| 1.7.2 | 2026-09-24 | `--while`, Solitaire, Last Card, Interns, Blockfall; Pinball and Paper Toss races |
 | 1.8.0 | late October | Package managers, Fetch for the pet |
 | 1.9.0 | late November | Flathub, a real Mac, LAN play for the new games |
 | 2.0.0 | mid December | Signed Windows builds, a winter event |
@@ -36,20 +37,8 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 - [ ] **A feel pass by hand** on all eight: throw power, wobble, fight length, flipper timing. The demos play
   them, but nobody has played them with a real mouse yet.
 
-## 1.8.0: package managers (October)
+## 1.7.2: play while it builds, four more games (shipped 2026-09-24)
 
-- [ ] **winget.** Sign the Microsoft CLA on
-  [winget-pkgs#437055](https://github.com/microsoft/winget-pkgs/pull/437055) and see the first submission
-  through moderator review, then submit 1.7.0. *Verified: `winget install ImperiumGames.DeskArcade` on a
-  clean Windows Sandbox.*
-- [ ] **Automatic package updates.** After the GitHub Release is published, the release workflow stamps the
-  Homebrew cask and the Scoop manifest and pushes them to
-  [homebrew-tap](https://github.com/BokhodirUrinboev/homebrew-tap) and
-  [scoop-bucket](https://github.com/BokhodirUrinboev/scoop-bucket), and opens the winget update with
-  `wingetcreate update --submit`. Needs a fine-grained token as a repository secret. *Verified: the 1.8.0
-  tag updates all three without a hand-made commit.*
-- [ ] **Release dry run** with the Node 24 action versions from #18, before the 1.8.0 tag. *Verified:
-  Actions → Release → Run workflow builds every package.*
 - [x] **Play while a command runs.** `arcade dotnet test` (Windows, `arcade.cmd` on PATH from setup or Scoop)
   or `deskarcade --while make` runs the command in the terminal, shows it on the scoreboard and chimes when
   it passes or fails; the exit code and output come through. *Verified: unit tests for the quoting and the
@@ -77,6 +66,24 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
   window top and rides along with it, and a LAN score race. *Verified: unit tests for the bags, turning and
   wall nudges, drops, line clears and scoring, levels and game over, and 5,000 random moves that never lose a
   cell; a demo run on Windows 11 cleared four lines at once.*
+- [x] **Pinball and Paper Toss as LAN score races** (came early): a three-ball game, or a run until the first
+  miss, is one race. *Verified: two copies over loopback playing by themselves: two Pinball games each and five
+  Paper Toss races decided on both sides.*
+
+## 1.8.0: package managers (October)
+
+- [ ] **winget.** Sign the Microsoft CLA on
+  [winget-pkgs#437055](https://github.com/microsoft/winget-pkgs/pull/437055) and see the first submission
+  through moderator review, then submit 1.7.0. *Verified: `winget install ImperiumGames.DeskArcade` on a
+  clean Windows Sandbox.*
+- [ ] **Automatic package updates.** After the GitHub Release is published, the release workflow stamps the
+  Homebrew cask and the Scoop manifest and pushes them to
+  [homebrew-tap](https://github.com/BokhodirUrinboev/homebrew-tap) and
+  [scoop-bucket](https://github.com/BokhodirUrinboev/scoop-bucket), and opens the winget update with
+  `wingetcreate update --submit`. Needs a fine-grained token as a repository secret. *Verified: the 1.8.0
+  tag updates all three without a hand-made commit.*
+- [ ] **Release dry run** with the Node 24 action versions from #18, before the 1.8.0 tag. *Verified:
+  Actions → Release → Run workflow builds every package.*
 - [ ] **Fetch.** Throw a ball for the pet: it runs after it, jumps between windows to reach it and brings it
   back to the cursor. Dogs fetch eagerly, cats only sometimes, ducks not at all. *Verified: unit test for the
   chase path; demo run.*
@@ -85,9 +92,6 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 
 ## 1.9.0: Linux and macOS (November)
 
-- [x] **Pinball and Paper Toss as LAN score races** (came early): a three-ball game, or a run until the first
-  miss, is one race. *Verified: two copies over loopback playing by themselves: two Pinball games each and five
-  Paper Toss races decided on both sides.*
 - [ ] **Darts and Pool turn by turn over the LAN** (the other player's darts and shots as ghosts). Both count
   fewest-is-best, so a score race doesn't fit them. *Verified: two copies over loopback, then two PCs.*
 - [ ] **Flathub.** Pick the app id (`io.github.BokhodirUrinboev.DeskArcade` unless the `imperiumgames.com`
