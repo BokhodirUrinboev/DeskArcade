@@ -24,7 +24,12 @@ public sealed class BowlingGame : MiniGame
     const double BallR = 11.5, PinR = 6.5, PinSpacing = 31, RowGap = 27, BallMass = 4, PinDrag = 10;
     const double MinPull = 14, MaxSpeed = 2000, MinSpeed = 380, MaxAngle = 12, Reach = 34;
     const double KnockDist = 3, PitWait = 1.5, RollTimeout = 12, FadeOut = 0.35, FadeIn = 0.3;
-    const double FrameW = 44, TenthW = 62, MarkH = 17, TotalH = 22;
+    const double FrameW = 44, TenthW = 62, MarkH = 17, TotalH = 22, WobbleTime = 0.2;
+
+    /// <summary>A fair game for a decent player: a few strikes and spares among the open frames.</summary>
+    public const int FairRound = 120;
+    /// <summary>About how long a ten-frame game takes, in seconds.</summary>
+    public const double TypicalRoundSeconds = 110;
 
     static readonly Color Gold = Color.FromRgb(255, 209, 102);
     static readonly Color[] Confetti = { Gold, Colors.White, Color.FromRgb(239, 71, 111), Color.FromRgb(77, 163, 255) };
@@ -39,6 +44,8 @@ public sealed class BowlingGame : MiniGame
         public required Sprite Sprite;
         public required Control Standing;
         public required Control Toppled;
+        public required RotateTransform Tilt;
+        public Anims.Tween? Tween;
         public Vec2 Home;
         public bool Knocked, Gone;
         public double Angle;
@@ -82,11 +89,14 @@ public sealed class BowlingGame : MiniGame
             var standing = MakeStandingPin();
             var toppled = MakeToppledPin();
             toppled.IsVisible = false;
+            var tilt = new RotateTransform();
+            standing.RenderTransformOrigin = RelativePoint.TopLeft; // the pin is drawn around the origin
+            standing.RenderTransform = tilt;
             var sprite = new Sprite { IsHitTestVisible = false };
             sprite.Rotor.Children.Add(toppled);
             sprite.Children.Add(standing);
             _pinLayer.Children.Add(sprite);
-            _pins[i] = new Pin { Body = body, Sprite = sprite, Standing = standing, Toppled = toppled };
+            _pins[i] = new Pin { Body = body, Sprite = sprite, Standing = standing, Toppled = toppled, Tilt = tilt };
         }
         _table.Collided += OnCollided;
         _table.Cushion += (d, speed) =>
@@ -107,6 +117,9 @@ public sealed class BowlingGame : MiniGame
     public override string Title => "Bowling";
     public override bool SupportsLan => true;
     public override (int Score, bool Active)? Race => (_score.Total, _active);
+    public override int RaceBaseline => FairRound;
+    public override int RaceBest => (int)Host.Stats.Get("bowling.best");
+    public override double RaceSeconds => TypicalRoundSeconds;
 
     public override void StartRace()
     {
@@ -199,6 +212,7 @@ public sealed class BowlingGame : MiniGame
     {
         _aiming = false;
         HideGuide();
+        Anims.Finish(); // pins fall, banners go
     }
 
     /// <summary>Where the lane starts and how long it is (pit included): centred, but on a narrow screen
@@ -242,6 +256,9 @@ public sealed class BowlingGame : MiniGame
     {
         foreach (var pin in _pins)
         {
+            pin.Tween?.Cancel();
+            pin.Tween = null;
+            pin.Tilt.Angle = 0;
             pin.Knocked = pin.Gone = false;
             pin.Body.Sunk = false;
             pin.Body.Pos = pin.Home;
@@ -355,7 +372,7 @@ public sealed class BowlingGame : MiniGame
                 _table.StepOnce(DiscTable.Step);
                 CheckBall();
             }
-            _ballAngle += _ball.Vel.X * dt * 0.6;
+            _ballAngle += _ball.Vel.Length * Math.Sign(_ball.Vel.X) * dt * 0.6; // rolls with its speed
             CheckPins();
             if (_pitT >= 0) _pitT += dt;
             if (_table.AllStill || _pitT >= PitWait || _rollT >= RollTimeout) Resolve();
@@ -365,8 +382,9 @@ public sealed class BowlingGame : MiniGame
             Sweep(dt);
         }
 
+        bool anim = Anims.Update(dt);
         Draw();
-        return _aiming || _phase != Phase.Ready;
+        return anim || _aiming || _phase != Phase.Ready;
     }
 
     /// <summary>A ball over the edge drops into the gutter and runs straight down it; past the pins it drops into the pit.</summary>
@@ -401,8 +419,7 @@ public sealed class BowlingGame : MiniGame
             pin.Knocked = true;
             var v = pin.Body.Vel;
             pin.Angle = (v.LengthSquared > 1 ? Math.Atan2(v.Y, v.X) * 180 / Math.PI : Rng.NextDouble() * 360) + (Rng.NextDouble() - 0.5) * 40;
-            pin.Standing.IsVisible = false;
-            pin.Toppled.IsVisible = true;
+            Topple(pin);
         }
     }
 
@@ -412,6 +429,8 @@ public sealed class BowlingGame : MiniGame
         bool ball = a == _ball || b == _ball;
         if (ball) PlayThrottled("thunk", Math.Min(0.8, speed / 1500), 0.75 + Rng.NextDouble() * 0.1);
         else PlayThrottled("click", Math.Min(0.7, speed / 1400), 0.55 + Rng.NextDouble() * 0.15);
+        foreach (var d in new[] { a, b })
+            if (d.Tag >= 0 && d.Tag < _pins.Length) Nudge(_pins[d.Tag]);
     }
 
     /// <summary>The roll has settled: count the pins it knocked down and score the ball.</summary>
@@ -434,6 +453,7 @@ public sealed class BowlingGame : MiniGame
 
         var kind = _score.Roll(knocked);
         Host.Stats.Add("bowling.pins", knocked);
+        Host.ShareAction(new Vec2(_headX + RowGap * 1.5, _cy), knocked);
         bool strike = kind == BowlingScore.Kind.Strike, spare = kind == BowlingScore.Kind.Spare;
         var at = new Vec2(_headX + RowGap * 1.5, _table.Bounds.Top - 40);
 
@@ -443,7 +463,7 @@ public sealed class BowlingGame : MiniGame
             Host.Stats.Add("bowling.strikes");
             bool turkey = _strikeRun % 3 == 0;
             if (turkey) Host.Stats.Add("bowling.turkeys");
-            Host.Fx.Popup(at, turkey ? L.T("TURKEY!") : L.T("STRIKE!"), Gold, 36, 1.5, turkey ? L.T("three strikes in a row") : null);
+            Banner(turkey ? L.T("TURKEY!") : L.T("STRIKE!"), Gold, turkey ? L.T("three strikes in a row") : null);
             Host.Fx.Burst(at + new Vec2(0, 30), Confetti, turkey ? 40 : 26, 420, 600, 6, 1.0);
             Host.Sound.Play(turkey ? "best" : "score", 0.8);
         }
@@ -453,7 +473,7 @@ public sealed class BowlingGame : MiniGame
             if (spare)
             {
                 Host.Stats.Add("bowling.spares");
-                Host.Fx.Popup(at, L.T("SPARE!"), Colors.White, 32, 1.3);
+                Banner(L.T("SPARE!"), Colors.White, null);
                 Host.Sound.Play("star", 0.6);
             }
             else if (gutter)
@@ -697,9 +717,9 @@ public sealed class BowlingGame : MiniGame
         {
             var marks = _score.Marks(f);
             for (int c = 0; c < marks.Length; c++)
-                if (_marks[f][c].Text != marks[c]) _marks[f][c].Text = marks[c];
+                if (_marks[f][c].Text != marks[c]) Fill(_marks[f][c], marks[c]);
             string total = totals[f]?.ToString() ?? "";
-            if (_totals[f].Text != total) _totals[f].Text = total;
+            if (_totals[f].Text != total) Fill(_totals[f], total);
             bool current = !_score.GameOver && f == _score.Frame && _score.Rolls.Count > 0;
             _frameBoxes[f].Fill = current ? Art.Brush(50, 255, 209, 102) : null;
         }
@@ -710,6 +730,79 @@ public sealed class BowlingGame : MiniGame
         if (_lastSound.TryGetValue(name, out double t) && _time - t < 0.045) return;
         _lastSound[name] = _time;
         Host.Sound.Play(name, vol, pitch);
+    }
+
+    // ------------------------------------------------------------------ animation
+
+    /// <summary>A knocked pin rocks on its base for a moment and then lies down.</summary>
+    void Topple(Pin pin)
+    {
+        pin.Tween?.Cancel();
+        pin.Tween = Anims.Add(WobbleTime, k => pin.Tilt.Angle = 28 * Math.Sin(k * Math.PI * 2.5) * (1 - k), Ease.Linear, () =>
+        {
+            pin.Tween = null;
+            pin.Tilt.Angle = 0;
+            pin.Standing.IsVisible = false;
+            pin.Toppled.IsVisible = true;
+        });
+    }
+
+    /// <summary>A pin that was brushed but stays up wobbles and settles.</summary>
+    void Nudge(Pin pin)
+    {
+        if (pin.Knocked || pin.Gone || pin.Tween != null) return;
+        pin.Tween = Anims.Add(0.3, k => pin.Tilt.Angle = 12 * Math.Sin(k * Math.PI * 3) * (1 - k), Ease.Linear, () =>
+        {
+            pin.Tween = null;
+            pin.Tilt.Angle = 0;
+        });
+    }
+
+    /// <summary>A banner that sweeps in along the lane from the approach, holds over the middle, and sweeps out past the pins.</summary>
+    void Banner(string text, Color color, string? sub)
+    {
+        var panel = new StackPanel { HorizontalAlignment = HorizontalAlignment.Center };
+        panel.Children.Add(new TextBlock
+        {
+            Text = text, FontFamily = Fx.Font, FontSize = 30, FontWeight = FontWeight.Black, Foreground = Art.Brush(Art.Safe(color)),
+            HorizontalAlignment = HorizontalAlignment.Center,
+        });
+        if (sub != null)
+            panel.Children.Add(new TextBlock
+            {
+                Text = sub, FontFamily = Fx.Font, FontSize = 13, FontWeight = FontWeight.Bold, Foreground = Brushes.White,
+                HorizontalAlignment = HorizontalAlignment.Center,
+            });
+        var banner = new Border
+        {
+            Background = Art.Brush(215, 16, 20, 28), BorderBrush = Art.Brush(Art.Safe(color)), BorderThickness = new Thickness(1.5),
+            CornerRadius = new CornerRadius(10), Padding = new Thickness(20, 4, 20, 6), Child = panel, IsHitTestVisible = false,
+        };
+        banner.Measure(Size.Infinity);
+        double w = banner.DesiredSize.Width, h = banner.DesiredSize.Height;
+        var tr = new TranslateTransform();
+        banner.RenderTransform = tr;
+        Canvas.SetTop(banner, _cy - h / 2);
+        Layer.Children.Add(banner);
+        double start = _laneLeft - w, middle = (_laneLeft + _laneEnd) / 2 - w / 2, end = _laneEnd + Pit + 10;
+        Anims.Add(0.4, k => tr.X = start + (middle - start) * k, Ease.OutCubic);
+        Anims.Add(0.35, k =>
+        {
+            tr.X = middle + (end - middle) * k;
+            banner.Opacity = 1 - k * k;
+        }, Ease.InCubic, () => Layer.Children.Remove(banner), delay: 1.3);
+    }
+
+    /// <summary>Writes a mark or total into its cell; a new entry pops in.</summary>
+    void Fill(TextBlock cell, string text)
+    {
+        bool fresh = string.IsNullOrEmpty(cell.Text) && !string.IsNullOrEmpty(text);
+        cell.Text = text;
+        if (!fresh) return;
+        var sc = new ScaleTransform(1.8, 1.8);
+        cell.RenderTransformOrigin = RelativePoint.Center;
+        cell.RenderTransform = sc;
+        Anims.Add(0.3, k => sc.ScaleX = sc.ScaleY = 1.8 - 0.8 * k, Ease.OutBack, () => cell.RenderTransform = null);
     }
 
     static Sprite MakeBall()

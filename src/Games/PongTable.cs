@@ -14,8 +14,15 @@ public sealed class PongTable
     public const double BallR = 11, PaddleW = 16, PaddleH = 130, Inset = 34, Step = 1.0 / 240;
     const double ServeSpeed = 620, MaxSpeed = 1700, SpeedUp = 1.06, MaxAngle = 60;
 
+    /// <summary>Paddle speed per skill (Easy … Expert) at the start of a session, in px/s.</summary>
+    public static readonly double[] BaseSpeeds = { 380, 520, 680, 840 };
+    /// <summary>Every match the computer loses adds this much to its speed, up to <see cref="MaxCpuSpeed"/>.</summary>
+    public const double SpeedPerWin = 60, MaxCpuSpeed = 1150;
+    static readonly double[] Errors = { 1.15, 0.9, 0.55, 0.25 };
+    static readonly double[] Reactions = { 0.3, 0.18, 0.08, 0 };
+
     readonly Random _rng;
-    double _acc, _cpuError;
+    double _acc, _cpuError, _cpuReactT;
 
     public PongTable(Rect arena, Random? rng = null)
     {
@@ -30,7 +37,9 @@ public sealed class PongTable
     /// <summary>Paddle centres (y) and their speeds (px/s, used for spin).</summary>
     public double MeY, ThemY, MeVel, ThemVel;
     public bool BallInPlay { get; set; }
-    /// <summary>The computer's level: it moves faster and aims better as you beat it.</summary>
+    /// <summary>The computer's base strength, 1 (Easy) to 4 (Expert): tray → CPU difficulty.</summary>
+    public int Skill { get; set; } = 2;
+    /// <summary>The computer's level within a session: it starts at 1 and moves faster and aims better with every match it loses.</summary>
     public int Level { get; set; } = 1;
     /// <summary>Paddle hits in the current rally.</summary>
     public int Rally { get; private set; }
@@ -42,7 +51,18 @@ public sealed class PongTable
 
     public double MeX => Arena.Left + Inset;
     public double ThemX => Arena.Right - Inset;
-    double CpuSpeed => Math.Min(1150, 430 + 90 * Level);
+    double CpuSpeed => SpeedFor(Skill, Level);
+
+    /// <summary>How fast the computer's paddle moves (px/s) at a skill, after the session's wins have sped it up.</summary>
+    public static double SpeedFor(int skill, int level) =>
+        Math.Min(MaxCpuSpeed, BaseSpeeds[Math.Clamp(skill, 1, BaseSpeeds.Length) - 1] + SpeedPerWin * Math.Max(0, level - 1));
+
+    /// <summary>How far the computer can misjudge a return, as a share of the paddle's height; it shrinks as the session goes on.</summary>
+    public static double ErrorFor(int skill, int level) =>
+        Errors[Math.Clamp(skill, 1, Errors.Length) - 1] * Math.Max(0.25, 1 - 0.08 * Math.Max(0, level - 1));
+
+    /// <summary>Seconds the computer stands still after the ball is sent its way.</summary>
+    public static double ReactionFor(int skill) => Reactions[Math.Clamp(skill, 1, Reactions.Length) - 1];
 
     public double ClampPaddle(double y) => Math.Clamp(y, Arena.Top + PaddleH / 2, Arena.Bottom - PaddleH / 2);
 
@@ -55,11 +75,17 @@ public sealed class PongTable
         BallInPlay = true;
         Rally = 0;
         _cpuError = 0;
+        _cpuReactT = 0;
     }
 
     /// <summary>Where the computer's paddle goes this frame: toward where the ball will arrive, with a human-ish error.</summary>
     public double CpuMove(double dt)
     {
+        if (_cpuReactT > 0)
+        {
+            _cpuReactT -= dt;
+            return ThemY; // hasn't reacted yet
+        }
         double target = Arena.Center.Y;
         if (BallInPlay && BallVel.X > 0)
             target = PredictY(ThemX - PaddleW / 2 - BallR) + _cpuError;
@@ -141,8 +167,9 @@ public sealed class PongTable
         BallVel = new Vec2(Math.Cos(angle) * dir * speed, Math.Sin(angle) * speed + vel * 0.15);
         Ball.X = face + dir * BallR;
         Rally++;
-        // the computer misjudges some returns, more often at low levels and in long, fast rallies
-        _cpuError = dir > 0 ? (_rng.NextDouble() * 2 - 1) * (PaddleH * 0.9) * Math.Max(0.2, 1.2 - Level * 0.12) : 0;
+        // the computer misjudges some returns and is slow off the mark, more so at the easier levels
+        _cpuError = dir > 0 ? (_rng.NextDouble() * 2 - 1) * (PaddleH * 0.9) * ErrorFor(Skill, Level) : 0;
+        if (dir > 0) _cpuReactT = ReactionFor(Skill);
         Hit?.Invoke("board", Math.Min(0.9, 0.35 + speed / 3000), 1.2 + Math.Min(0.6, Rally * 0.03));
     }
 

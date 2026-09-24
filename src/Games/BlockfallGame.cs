@@ -21,6 +21,12 @@ namespace DeskArcade.Games;
 public sealed class BlockfallGame : MiniGame
 {
     const double Pad = 8, FollowStep = 0.035, SoftStep = 0.04, HoldForSoft = 0.18, PanelCells = 5;
+    const double RowFlash = 0.22, RowCollapse = 0.22, LockFlash = 0.25;
+
+    /// <summary>A fair game for a decent player: twenty-odd lines, a few of them cleared two or three at a time.</summary>
+    public const int FairRound = 2500;
+    /// <summary>About how long such a game lasts, in seconds.</summary>
+    public const double TypicalRoundSeconds = 150;
 
     static readonly Color[] PieceColors =
     {
@@ -32,14 +38,20 @@ public sealed class BlockfallGame : MiniGame
     readonly Canvas _root = new() { IsHitTestVisible = false };
     readonly Rectangle _frame = new() { RadiusX = 10, RadiusY = 10, Fill = Art.Brush(215, 16, 18, 26), Stroke = Art.Brush(90, 255, 255, 255), StrokeThickness = 1.5 };
     readonly Rectangle[,] _cells = new Rectangle[Height, Width];
-    readonly Rectangle[] _piece = new Rectangle[4], _ghost = new Rectangle[4], _next = new Rectangle[4];
+    readonly Rectangle[] _piece = new Rectangle[4], _ghost = new Rectangle[4], _next = new Rectangle[4], _lockFlash = new Rectangle[4];
+    readonly Rectangle _frameGlow = new() { RadiusX = 10, RadiusY = 10, Stroke = Art.Brush(Gold), StrokeThickness = 3, Opacity = 0, IsHitTestVisible = false };
     readonly TextBlock _info = new() { FontFamily = Fx.Font, FontSize = 13, FontWeight = FontWeight.Bold, Foreground = Brushes.White, LineHeight = 20 };
     readonly TextBlock _prompt = new() { FontFamily = Fx.Font, FontSize = 15, FontWeight = FontWeight.Bold, Foreground = Art.Brush(Gold), TextAlignment = TextAlignment.Center };
 
     BlockfallRules? _rules;
     bool _running, _holding;
-    double _s = 22, _fallT, _followT, _holdT;
-    int _seenGen = -1, _demoTurn = -1, _demoCol;
+    double _s = 22, _fallT, _followT, _holdT, _collapse, _rowFlashK;
+    int _seenGen = -1, _demoTurn = -1, _demoCol, _sharedScore;
+    // a lock that cleared rows: the well as it was with the piece in, shown while the rows flash and the rest slides down
+    int[,]? _frozen;
+    bool[] _fullRows = new bool[Height];
+    int[] _drops = new int[Height];
+    Anims.Tween? _clearTween;
     Vec2 _origin; // the well's top-left
     Vec2? _summoned;
     IntPtr _hwnd;
@@ -55,7 +67,9 @@ public sealed class BlockfallGame : MiniGame
             _root.Children.Add(_ghost[i] = Cell(true));
             _root.Children.Add(_piece[i] = Cell(false));
             _root.Children.Add(_next[i] = Cell(false));
+            _root.Children.Add(_lockFlash[i] = new Rectangle { RadiusX = 3, RadiusY = 3, Fill = Brushes.White, IsVisible = false, IsHitTestVisible = false });
         }
+        _root.Children.Add(_frameGlow);
         _root.Children.Add(_info);
         _root.Children.Add(_prompt);
         Layer.Children.Add(_root);
@@ -164,6 +178,9 @@ public sealed class BlockfallGame : MiniGame
 
     public override bool SupportsLan => true;
     public override (int Score, bool Active)? Race => (_rules?.Score ?? 0, _running);
+    public override int RaceBaseline => FairRound;
+    public override int RaceBest => (int)Host.Stats.Get("blockfall.best");
+    public override double RaceSeconds => TypicalRoundSeconds;
 
     public override void StartRace()
     {
@@ -172,10 +189,12 @@ public sealed class BlockfallGame : MiniGame
 
     void NewGame()
     {
+        EndClearAnim();
         _rules = new BlockfallRules(Rng);
         _running = true;
         _fallT = 0;
         _demoTurn = -1;
+        _sharedScore = 0;
         Host.RoundStarted();
         Host.Sound.Play("whoosh", 0.35, 1.2);
         Draw();
@@ -200,10 +219,27 @@ public sealed class BlockfallGame : MiniGame
         Host.HudChanged();
     }
 
-    /// <summary>After a lock: the rows it cleared, and the end if the next piece has no room.</summary>
-    void Locked(int cleared, int levelBefore)
+    /// <summary>
+    /// Runs a move that may lock the piece (a gravity step, a hard drop) and, if it did, plays the lock: the flash, the
+    /// row clears sliding down, what it scored, and the end if the next piece has no room.
+    /// </summary>
+    void Play(Func<int> move)
     {
         var g = _rules!;
+        int level = g.Level, version = g.Version;
+        var landing = CellsOf(g.Kind, g.Turn, g.Col, g.DropRow()).ToList(); // where it lies if this move locks it
+        var before = (int[,])g.Cells.Clone();
+        int cleared = move();
+        if (g.Version == version) return;
+        EndClearAnim();
+        if (cleared > 0) StartClearAnim(before, landing, g.Kind);
+        else FlashLock(landing);
+
+        int gained = g.Score - _sharedScore;
+        _sharedScore = g.Score;
+        double midRow = landing.Average(c => c.R), midCol = landing.Average(c => c.C);
+        Host.ShareAction(new Vec2(_origin.X + (midCol + 0.5) * _s, _origin.Y + (midRow + 0.5) * _s), gained);
+
         if (cleared > 0)
         {
             Host.Stats.Add("blockfall.lines", cleared);
@@ -213,7 +249,11 @@ public sealed class BlockfallGame : MiniGame
             if (text.Length > 0) Host.Fx.Popup(at, text, cleared == 4 ? Gold : Colors.White, cleared == 4 ? 30 : 22, 1.2);
             Host.Fx.Burst(at, PieceColors, 10 * cleared, 380, 500, 5, 0.6);
             Host.Sound.Play(cleared == 4 ? "fire" : "score", 0.5, 1 + cleared * 0.05);
-            if (g.Level > levelBefore) Host.Fx.Popup(at - new Vec2(0, 50), L.F("Level {0}", g.Level), Gold, 24, 1.4);
+            if (g.Level > level)
+            {
+                Host.Fx.Popup(at - new Vec2(0, 50), L.F("Level {0}", g.Level), Gold, 24, 1.4);
+                LevelRipple();
+            }
         }
         else Host.Sound.Play("thunk", 0.25, 1.3);
         if (g.Over) GameOver();
@@ -232,8 +272,7 @@ public sealed class BlockfallGame : MiniGame
         var g = _rules!;
         if (right)
         {
-            int level = g.Level;
-            Locked(g.HardDrop(), level);
+            Play(g.HardDrop);
             _fallT = 0;
             Draw();
             return false;
@@ -254,7 +293,9 @@ public sealed class BlockfallGame : MiniGame
     public override bool Update(double dt)
     {
         FollowWindow();
-        if (!_running || _rules is not { } g) return false;
+        bool anim = Anims.Update(dt);
+        if (_frozen != null) Draw(); // the cleared rows are on the move
+        if (!_running || _rules is not { } g) return anim;
         dt = Math.Min(dt, 0.1);
         bool moved = false;
 
@@ -272,13 +313,11 @@ public sealed class BlockfallGame : MiniGame
 
         _holdT += dt;
         bool soft = _holding && _holdT >= HoldForSoft;
-        _fallT += dt;
+        if (_frozen == null) _fallT += dt; // gravity waits while cleared rows slide down
         if (_fallT >= (soft ? SoftStep : g.Gravity))
         {
             _fallT = 0;
-            int level = g.Level, version = g.Version;
-            int cleared = g.Fall(soft);
-            if (g.Version != version) Locked(cleared, level);
+            Play(() => g.Fall(soft));
             moved = true;
         }
         if (moved) Draw();
@@ -307,8 +346,7 @@ public sealed class BlockfallGame : MiniGame
         }
         else
         {
-            int level = g.Level;
-            Locked(g.HardDrop(), level);
+            Play(g.HardDrop);
             _demoTurn = -1;
         }
         Draw();
@@ -391,12 +429,27 @@ public sealed class BlockfallGame : MiniGame
         Canvas.SetLeft(_frame, box.X);
         Canvas.SetTop(_frame, box.Y);
         var g = _rules;
+        var shown = _frozen ?? g?.Cells;
         for (int r = 0; r < Height; r++) // all of them, since the well itself may have moved
             for (int c = 0; c < Width; c++)
             {
-                int k = g?.Cells[r, c] ?? -1;
+                int k = shown?[r, c] ?? -1;
                 Put(_cells[r, c], c, r, k, k >= 0);
+                if (_frozen == null || k < 0) continue;
+                var cell = _cells[r, c];
+                if (_fullRows[r])
+                {
+                    // a full row flashes white, then is gone as the rows above slide into its place
+                    cell.IsVisible = _collapse <= 0;
+                    cell.Fill = Brushes.White;
+                    cell.Opacity = 0.55 + 0.45 * _rowFlashK;
+                }
+                else if (_drops[r] > 0) Canvas.SetTop(cell, _origin.Y + (r + _drops[r] * _collapse) * _s + 0.5);
             }
+        Canvas.SetLeft(_frameGlow, box.X);
+        Canvas.SetTop(_frameGlow, box.Y);
+        _frameGlow.Width = box.Width;
+        _frameGlow.Height = box.Height;
         var piece = g != null && !g.Over && _running ? g.PieceCells().ToList() : new List<(int C, int R)>();
         int drop = g != null && _running ? g.DropRow() - g.Row : 0;
         for (int i = 0; i < 4; i++)
@@ -404,7 +457,7 @@ public sealed class BlockfallGame : MiniGame
             bool show = i < piece.Count && piece[i].R >= 0;
             if (show) Put(_piece[i], piece[i].C, piece[i].R, g!.Kind, true);
             else _piece[i].IsVisible = false;
-            bool ghost = i < piece.Count && drop > 0 && piece[i].R + drop >= 0;
+            bool ghost = i < piece.Count && drop > 0 && piece[i].R + drop >= 0 && _frozen == null; // not while the rows are still sliding
             if (ghost)
             {
                 Put(_ghost[i], piece[i].C, piece[i].R + drop, -1, true);
@@ -445,8 +498,94 @@ public sealed class BlockfallGame : MiniGame
         cell.IsVisible = show;
         if (!show) return;
         cell.Width = cell.Height = _s - 1;
+        cell.Opacity = 1;
         if (kind >= 0) cell.Fill = Art.Brush(PieceColors[kind]);
         Canvas.SetLeft(cell, _origin.X + c * _s + 0.5);
         Canvas.SetTop(cell, _origin.Y + r * _s + 0.5);
+    }
+
+    // ------------------------------------------------------------------ animation
+
+    /// <summary>
+    /// For a well with some full rows: which rows are full, and how many rows each of the others drops when the full
+    /// ones go (rows count from the top, so a row drops by the number of full rows below it).
+    /// </summary>
+    public static int[] RowDrops(int[,] cells, bool[] full)
+    {
+        int rows = cells.GetLength(0), cols = cells.GetLength(1);
+        var drops = new int[rows];
+        int below = 0;
+        for (int r = rows - 1; r >= 0; r--)
+        {
+            full[r] = true;
+            for (int c = 0; c < cols && full[r]; c++) full[r] = cells[r, c] >= 0;
+            drops[r] = full[r] ? 0 : below;
+            if (full[r]) below++;
+        }
+        return drops;
+    }
+
+    /// <summary>The rows the lock filled flash, then the rows above them slide down into the gap.</summary>
+    void StartClearAnim(int[,] before, List<(int C, int R)> landing, int kind)
+    {
+        foreach (var (c, r) in landing)
+            if (r >= 0 && r < Height && c >= 0 && c < Width) before[r, c] = kind;
+        _frozen = before;
+        _drops = RowDrops(before, _fullRows);
+        _collapse = 0;
+        _rowFlashK = 1;
+        Anims.Add(RowFlash, k => _rowFlashK = 1 - k, Ease.Pulse);
+        _clearTween = Anims.Add(RowCollapse, k => _collapse = k, Ease.InQuad, EndClearAnim, RowFlash);
+    }
+
+    /// <summary>Shows the well as it really is (also cuts a clear animation short).</summary>
+    void EndClearAnim()
+    {
+        if (_frozen == null) return;
+        _clearTween?.Cancel();
+        _clearTween = null;
+        _frozen = null;
+        _collapse = 0;
+        Draw();
+    }
+
+    /// <summary>The cells a piece just locked into light up for an instant.</summary>
+    void FlashLock(List<(int C, int R)> landing)
+    {
+        for (int i = 0; i < _lockFlash.Length; i++)
+        {
+            var flash = _lockFlash[i];
+            bool show = i < landing.Count && landing[i].R >= 0;
+            flash.IsVisible = show;
+            if (!show) continue;
+            flash.Width = flash.Height = _s - 1;
+            flash.Opacity = 0.85;
+            Canvas.SetLeft(flash, _origin.X + landing[i].C * _s + 0.5);
+            Canvas.SetTop(flash, _origin.Y + landing[i].R * _s + 0.5);
+        }
+        Anims.Add(LockFlash, k =>
+        {
+            foreach (var flash in _lockFlash) flash.Opacity = 0.85 * (1 - k);
+        }, Ease.OutQuad, () =>
+        {
+            foreach (var flash in _lockFlash) flash.IsVisible = false;
+        });
+    }
+
+    /// <summary>A new level: a gold ring spreads out from the middle of the well and the frame glows.</summary>
+    void LevelRipple()
+    {
+        var ring = new Ellipse { Stroke = Art.Brush(Gold), StrokeThickness = 3, IsHitTestVisible = false };
+        var centre = new Vec2(_origin.X + WellW / 2, _origin.Y + WellH / 2);
+        _root.Children.Add(ring);
+        Anims.Add(0.7, k =>
+        {
+            double r = 12 + (WellH * 0.55 - 12) * k;
+            ring.Width = ring.Height = r * 2;
+            Canvas.SetLeft(ring, centre.X - r);
+            Canvas.SetTop(ring, centre.Y - r);
+            ring.Opacity = 1 - k;
+        }, Ease.OutCubic, () => _root.Children.Remove(ring));
+        Anims.Add(0.6, k => _frameGlow.Opacity = k, Ease.Pulse, () => _frameGlow.Opacity = 0);
     }
 }

@@ -17,9 +17,13 @@ namespace DeskArcade.Games;
 /// </summary>
 public sealed class FishingGame : MiniGame
 {
-    const double Step = 1.0 / 240, RoundSeconds = 120, RodLen = 150, RodAngle = -58, TipReach = 30, ReelReach = 30;
+    /// <summary>A round is two minutes.</summary>
+    public const double RoundSeconds = 120;
+    /// <summary>A fair round for a decent player: four or five fish landed, one of them a good size.</summary>
+    public const int FairRound = 120;
+    const double Step = 1.0 / 240, RodLen = 150, RodAngle = -58, TipReach = 30, ReelReach = 30;
     const double BobberReach = 26, BobR = 6, MaxPull = 160, MinPower = 0.08, LandTime = 0.6, LandHold = 0.4, ReelTime = 0.5;
-    const double WaveStep = 24, RippleLife = 0.9, BarH = 100, Hang = 36, PulseAt = 0.7;
+    const double WaveStep = 24, RippleLife = 0.9, BarH = 100, Hang = 36, PulseAt = 0.7, LandJump = 70, CardHold = 2.2;
 
     static readonly Color Gold = Color.FromRgb(255, 209, 102);
     static readonly Color[] Drops = { Color.FromRgb(200, 230, 255), Colors.White, Color.FromRgb(140, 200, 240) };
@@ -70,11 +74,12 @@ public sealed class FishingGame : MiniGame
     bool _active, _reeling, _baitGone, _demoWillMiss, _barColorBlind;
     double _time, _acc, _roundLeft, _lastWave = -1, _lastClick = -1, _lastPlop = -1;
     double _depth, _surface, _waterL, _waterR, _deckY, _pierEnd, _castMin, _castMax, _shoreX;
-    double _power, _flyT, _flyTime, _interestIn, _waitT, _landT, _reelT, _reelSpin;
+    double _power, _flyT, _flyTime, _interestIn, _waitT, _landT, _reelT, _reelSpin, _whip, _idleRippleIn;
     int _score, _caught, _shownSecond = -1, _barZone = -1, _demoPause;
     double _rodBend = double.NaN;
-    Vec2 _rodButt;
+    Vec2 _rodButt, _bobSwing;
     Vec2 _butt, _tip, _reelAt, _bob, _pressAt, _flyFrom, _landAt, _reelFrom, _landFrom;
+    Anims.Tween? _whipTween, _swingTween;
     Fish? _suitor;
     BiteSchedule? _bite;
     FishFight? _fight;
@@ -206,6 +211,7 @@ public sealed class FishingGame : MiniGame
             r.El.IsVisible = false;
         }
         HideGuide();
+        Anims.Finish(); // the rod settles, a weight card goes
         _acc = 0;
     }
 
@@ -324,6 +330,9 @@ public sealed class FishingGame : MiniGame
 
     public override bool SupportsLan => true;
     public override (int Score, bool Active)? Race => (_score, _active);
+    public override int RaceBaseline => FairRound;
+    public override int RaceBest => (int)Host.Stats.Get("fishing.best");
+    public override double RaceSeconds => RoundSeconds;
 
     public override void StartRace()
     {
@@ -448,6 +457,7 @@ public sealed class FishingGame : MiniGame
         _flyT = 0;
         _flyTime = 0.45 + 0.35 * power;
         _state = State.Flying;
+        Whip(16 * power, 2); // the rod springs forward and quivers
         Host.Sound.Play("whoosh", 0.45 + 0.35 * power, 1.25 - 0.35 * power);
         if (!_active) StartRound();
         Host.Wake();
@@ -462,6 +472,7 @@ public sealed class FishingGame : MiniGame
         _baitGone = false;
         _waitT = 0;
         _interestIn = 1.2 + Rng.NextDouble() * 2.5;
+        _idleRippleIn = 1.2;
         Host.Sound.Play("splash", 0.45, 1.3);
         AddRipple(_bob, 36);
         Host.Fx.Burst(_bob, Drops, 8, 170, 900, 4, 0.45);
@@ -551,6 +562,9 @@ public sealed class FishingGame : MiniGame
         _fight = null;
         _reeling = false;
         _state = State.Ready; // a fresh float comes with the new line
+        Whip(-24, 2.5); // the rod whips back the other way
+        Swing(); // and the new float swings from the tip
+        _reelSpin += 120;
         Host.ShareAction(_bob, 0);
     }
 
@@ -574,8 +588,7 @@ public sealed class FishingGame : MiniGame
         f.Sprite.Opacity = 1;
 
         string kg = f.Kg.ToString("0.0", CultureInfo.InvariantCulture);
-        Host.Fx.Popup(_tip + new Vec2(80, -30), L.F("{0} · {1} kg", NameOf(f.Species), kg), f.Species.Golden ? Gold : Colors.White, 26, 1.8,
-            L.F("+{0} points", pts));
+        Card(L.F("{0} · {1} kg", NameOf(f.Species), kg), L.F("+{0} points", pts), f.Species.Golden);
         Host.Sound.Play("splash", 0.5, 1.1);
         Host.Fx.Burst(f.Pos with { Y = _surface }, Drops, 12, 260, 900, 4, 0.55);
         if (f.Species.Golden)
@@ -627,9 +640,10 @@ public sealed class FishingGame : MiniGame
             ripples = true;
             DrawRipple(r);
         }
+        bool anim = Anims.Update(dt);
         Draw();
 
-        bool busy = _active || ripples || _state is State.Aiming or State.Flying or State.Landing or State.Reeling;
+        bool busy = _active || ripples || anim || _state is State.Aiming or State.Flying or State.Landing or State.Reeling;
         if (!busy) _acc = 0;
         return busy;
     }
@@ -703,6 +717,11 @@ public sealed class FishingGame : MiniGame
         }
         double dip = _bite?.Dip ?? 0;
         _bob = new Vec2(_bob.X, WaveY(_bob.X, _time) - 1 + (_active ? Math.Sin(_time * 3) * 1.2 : 0) + dip * 12);
+        if ((_idleRippleIn -= h) <= 0) // the float bobs on the ripples it makes
+        {
+            _idleRippleIn = 1.4 + Rng.NextDouble() * 0.8;
+            AddRipple(_bob, 14);
+        }
     }
 
     void PickSuitor()
@@ -760,6 +779,7 @@ public sealed class FishingGame : MiniGame
         _landT += h;
         double k = Smooth(Math.Min(1, _landT / LandTime));
         f.Pos = _landFrom + (_tip + new Vec2(0, 10 + f.Len * 0.5) - _landFrom) * k;
+        if (!Fx.ReducedMotion) f.Pos.Y -= 4 * LandJump * k * (1 - k); // it leaps out of the water on the way
         f.Face = 1;
         _bob = _tip + new Vec2(0, 4);
         if (_landT < LandTime + LandHold) return;
@@ -876,10 +896,10 @@ public sealed class FishingGame : MiniGame
 
     void Draw()
     {
-        // the rod bends back while aiming and toward the fish under tension
-        double ang = RodAngle, bend = 0;
-        if (_state == State.Aiming) bend = -30 * _power;
-        else if (_state == State.Fighting && _fight != null) bend = 30 * _fight.Tension;
+        // the rod bends back while aiming and toward the fish under tension, and whips after a cast or a snap
+        double ang = RodAngle, bend = _whip;
+        if (_state == State.Aiming) bend += -30 * _power;
+        else if (_state == State.Fighting && _fight != null) bend += 30 * _fight.Tension;
         ang += bend;
         _tip = _butt + Polar(RodLen * (1 - 0.04 * Math.Abs(bend) / 30), ang);
         if (bend != _rodBend || _butt != _rodButt) // a resting rod keeps its geometry for the whole round
@@ -898,7 +918,7 @@ public sealed class FishingGame : MiniGame
         }
         _reelSprite.Set(_reelAt, _reelSpin % 360);
 
-        if (_state is State.Ready or State.Aiming) _bob = HangPos;
+        if (_state is State.Ready or State.Aiming) _bob = HangPos + _bobSwing;
         _bobber.Set(_bob);
         _bobber.Opacity = _state == State.Waiting && (_bite?.Dip ?? 0) >= 1 ? 0.45 : 1;
 
@@ -991,6 +1011,62 @@ public sealed class FishingGame : MiniGame
     void HideGuide()
     {
         foreach (var d in _dots) d.IsVisible = false;
+    }
+
+    // ------------------------------------------------------------------ animation
+
+    /// <summary>The rod springs <paramref name="degrees"/> one way and quivers back to rest over <paramref name="cycles"/> swings.</summary>
+    void Whip(double degrees, double cycles)
+    {
+        _whipTween?.Cancel();
+        _whipTween = Anims.Add(0.6, k => _whip = degrees * Math.Sin(k * Math.PI * cycles) * (1 - k), Ease.Linear, () =>
+        {
+            _whip = 0;
+            _whipTween = null;
+        });
+    }
+
+    /// <summary>The float hanging from the tip swings after a jolt.</summary>
+    void Swing()
+    {
+        _swingTween?.Cancel();
+        _swingTween = Anims.Add(0.8, k => _bobSwing = new Vec2(-34 * Math.Sin(k * Math.PI * 3) * (1 - k), 0), Ease.Linear, () =>
+        {
+            _bobSwing = default;
+            _swingTween = null;
+        });
+    }
+
+    /// <summary>The catch's card (what it was, how heavy, what it scored) flips up beside the rod tip, holds, and flips away.</summary>
+    void Card(string title, string sub, bool golden)
+    {
+        var panel = new StackPanel();
+        panel.Children.Add(new TextBlock
+        {
+            Text = title, FontFamily = Fx.Font, FontSize = 18, FontWeight = FontWeight.Black, Foreground = Art.Brush(golden ? Gold : Colors.White),
+        });
+        panel.Children.Add(new TextBlock { Text = sub, FontFamily = Fx.Font, FontSize = 13, FontWeight = FontWeight.Bold, Foreground = Art.Brush("#D5DBE5") });
+        var card = new Border
+        {
+            Background = Art.Brush(220, 18, 20, 28), BorderBrush = golden ? Art.Brush(Gold) : Art.Brush(90, 255, 255, 255), BorderThickness = new Thickness(1.5),
+            CornerRadius = new CornerRadius(8), Padding = new Thickness(12, 6, 12, 7), Child = panel, IsHitTestVisible = false,
+        };
+        card.Measure(Size.Infinity);
+        var size = card.DesiredSize;
+        var a = Host.Arena;
+        double x = Clamp(_tip.X + 40, a.Left + 8, Math.Max(a.Left + 8, a.Right - size.Width - 8)), y = Math.Max(a.Top + 8, _tip.Y - 40 - size.Height);
+        Canvas.SetLeft(card, x);
+        Canvas.SetTop(card, y);
+        var sc = new ScaleTransform(1, 0);
+        card.RenderTransformOrigin = new RelativePoint(0.5, 1, RelativeUnit.Relative);
+        card.RenderTransform = sc;
+        Layer.Children.Add(card);
+        Anims.Add(0.32, k => sc.ScaleY = k, Ease.OutBack);
+        Anims.Add(0.25, k =>
+        {
+            sc.ScaleY = 1 - k;
+            card.Opacity = 1 - k;
+        }, Ease.InQuad, () => Layer.Children.Remove(card), delay: CardHold);
     }
 
     void AddRipple(Vec2 p, double size)
