@@ -13,64 +13,61 @@ namespace DeskArcade.Games;
 /// <summary>
 /// Sea Battle (Battleship) against the CPU or over the LAN. Your fleet is on the left, the enemy's waters
 /// on the right. Before the first shot, click your grid to shuffle the fleet and the enemy grid to start.
-/// A hit earns another shot. Over the LAN each fleet stays on its own PC: only shots and their results
-/// cross the link, and a shot is re-sent until its answer arrives. The host fires first.
+/// A hit earns another shot. Shells arc across to their square: a splash for a miss, a burst for a hit, and
+/// a sunk ship darkens square by square; the enemy's fleet surfaces when the game is over. The grip above
+/// the grids (or a right-drag) moves them. Over the LAN each fleet stays on its own PC: only shots and their
+/// results cross the link, and a shot is re-sent until its answer arrives. The host fires first. The CPU has
+/// four levels, from a random shooter to one that hunts where the most ships could still lie.
 /// </summary>
 public sealed class SeaBattleGame : MiniGame
 {
     const int N = SeaFleet.N;
-    const double CpuDelay = 0.7, ResendEvery = 0.4;
+    const double CpuDelay = 0.7, ResendEvery = 0.4, Flight = 0.4, DarkenStep = 0.12;
 
     static readonly Color Water = Color.FromRgb(28, 74, 128), Grid = Color.FromRgb(90, 140, 200);
     static readonly Color ShipColor = Color.FromRgb(160, 170, 185), HitColor = Color.FromRgb(240, 70, 60), Gold = Color.FromRgb(255, 209, 102);
+    static readonly Color Foam = Color.FromRgb(216, 230, 245), Ember = Color.FromRgb(255, 140, 40);
 
     enum Phase { Setup, Playing, Over }
 
-    readonly Canvas _canvas = new() { IsHitTestVisible = false };
+    readonly Canvas _canvas = new() { IsHitTestVisible = false }; // the frame, labels, grids and my ships
+    readonly Canvas _marks = new() { IsHitTestVisible = false };  // one sprite per square that was shot at
+    readonly Canvas _reveal = new() { IsHitTestVisible = false }; // the enemy's ships, once the game is over
+    readonly Canvas _hints = new() { IsHitTestVisible = false };  // whose turn, the shot awaiting its answer, the last shot at me
+    readonly Canvas _air = new() { IsHitTestVisible = false };    // shells in flight
+    readonly DragHandle _handle;
+    readonly Sprite?[] _myMarks = new Sprite?[N * N], _enemyMarks = new Sprite?[N * N];
+    readonly sbyte[] _shownMine = new sbyte[N * N], _shownEnemy = new sbyte[N * N]; // what each mark sprite shows
+    readonly HashSet<(bool AtMe, int Sq)> _inFlight = new(); // squares whose shell hasn't landed yet
     SeaFleet _fleet = SeaFleet.Random(Rng);
     SeaFleet? _cpuFleet = SeaFleet.Random(Rng), _enemyFleet; // the CPU's fleet (null over the LAN); the rival's once revealed
     sbyte[] _chart = new sbyte[N * N], _cpuChart = new sbyte[N * N];
     Phase _phase;
-    bool _myTurn, _placed, _dragging, _demo, _wasLan, _meReady, _peerReady;
-    Vec2 _origin, _dragOffset;
+    bool _myTurn, _placed, _demo, _wasLan, _meReady, _peerReady, _revealShown, _quiet;
+    Vec2 _origin;
     double _cell, _cpuIn = -1, _resendT;
-    int _gameNo = 1, _shotSeq, _lastAnswered, _pendingSq = -1, _lastShotAtMe = -1;
+    int _gameNo = 1, _shotSeq, _lastAnswered, _pendingSq = -1, _lastShotAtMe = -1, _flights, _lossStreak;
+    string _endSub = "";
     readonly Dictionary<int, string> _answers = new(); // LAN: our answers by shot number, for re-sent shots
 
-    public SeaBattleGame(IGameHost host) : base(host) => Layer.Children.Add(_canvas);
+    public SeaBattleGame(IGameHost host) : base(host)
+    {
+        foreach (var layer in new[] { _canvas, _marks, _reveal, _hints, _air }) Layer.Children.Add(layer);
+        _handle = new DragHandle(host, Id, Title);
+        Layer.Children.Add(_handle.Visual);
+    }
 
     public override string Id => "seabattle";
     public override string Title => "Sea Battle";
     public override bool SupportsLan => true;
+    public override bool HasCpuLevels => true;
 
     bool LanOn => Host.Lan.Connected;
     bool IsHost => !LanOn || Host.Lan.Role == LanRole.Host;
     string Rival => LanOn ? Host.Lan.PeerName : L.T("CPU");
-    int EnemyShipsLeft => SeaFleet.Sizes.Length - SunkShips(_chart);
+    int EnemyShipsLeft => SeaFleet.Sizes.Length - SeaChart.SunkSizes(_chart).Count;
 
-    /// <summary>Sunk ships on a chart: ships never touch, so each group of sunk squares is one ship.</summary>
-    static int SunkShips(sbyte[] chart)
-    {
-        var seen = new HashSet<int>();
-        int count = 0;
-        for (int sq = 0; sq < N * N; sq++)
-        {
-            if (chart[sq] != SeaChart.Sunk || !seen.Add(sq)) continue;
-            count++;
-            var stack = new Stack<int>(new[] { sq });
-            while (stack.Count > 0)
-            {
-                int c = stack.Pop();
-                foreach (int d in new[] { -1, 1, -N, N })
-                {
-                    int o = c + d;
-                    if (o < 0 || o >= N * N || (d is -1 or 1 && o / N != c / N)) continue;
-                    if (chart[o] == SeaChart.Sunk && seen.Add(o)) stack.Push(o);
-                }
-            }
-        }
-        return count;
-    }
+    public override Opponent? Opponent => new(Rival, !LanOn, LanOn ? 0 : CpuLevel, _phase == Phase.Playing ? _myTurn : null);
 
     public override Sprite CreateIcon()
     {
@@ -89,7 +86,8 @@ public sealed class SeaBattleGame : MiniGame
             Phase.Over => L.T("Game over · click a grid for a rematch"),
             _ => _myTurn ? L.T("Your shot · click the enemy grid · a hit shoots again") : L.F("{0} is aiming…", Rival),
         },
-        L.F("Wins {0}", Host.Stats.Get("seabattle.wins")));
+        LanOn ? L.F("Wins {0}", Host.Stats.Get("seabattle.wins"))
+            : L.F("Wins {0} · CPU {1}", Host.Stats.Get("seabattle.wins"), L.T(LevelNames[CpuLevel - 1])));
 
     // ------------------------------------------------------------------ layout
 
@@ -105,7 +103,7 @@ public sealed class SeaBattleGame : MiniGame
         if (!_placed)
         {
             _placed = true;
-            _origin = new Vec2(a.Center.X - w / 2, a.Center.Y - h / 2);
+            _origin = _handle.Saved() ?? new Vec2(a.Center.X - w / 2, a.Center.Y - h / 2);
         }
         _origin = new Vec2(Clamp(_origin.X, a.Left + 10, a.Right - w - 10), Clamp(_origin.Y, a.Top + 10, a.Bottom - h - 10));
         if (LanOn != _wasLan)
@@ -117,7 +115,17 @@ public sealed class SeaBattleGame : MiniGame
         Draw();
     }
 
-    public override void Deactivate() => _dragging = false;
+    public override void Deactivate()
+    {
+        _handle.Cancel();
+        _quiet = true; // shells land and ships sink without sounds or popups: the game is leaving the screen
+        Anims.Finish();
+        _quiet = false;
+    }
+
+    public override void PointerCancel() => _handle.Cancel();
+
+    public override void PositionsReset() => _placed = false;
 
     void NewGame()
     {
@@ -127,17 +135,30 @@ public sealed class SeaBattleGame : MiniGame
         _chart = new sbyte[N * N];
         _cpuChart = new sbyte[N * N];
         _phase = Phase.Setup;
-        _meReady = _peerReady = _myTurn = false;
+        _meReady = _peerReady = _myTurn = _revealShown = false;
         _shotSeq = _lastAnswered = 0;
         _pendingSq = _lastShotAtMe = -1;
         _cpuIn = -1;
         _answers.Clear();
+        Anims.Clear(); // the old game's shells and sinkings are dropped
+        _air.Children.Clear();
+        _flights = 0;
+        _inFlight.Clear();
         Changed();
     }
 
+    /// <summary>The grids need drawing again (a new fleet, a new game).</summary>
     void Changed()
     {
         Draw();
+        Host.HudChanged();
+        Host.Wake();
+    }
+
+    /// <summary>A shot went out or came in: the hints and the HUD follow now; the marks follow when the shell lands.</summary>
+    void Touched()
+    {
+        DrawHints();
         Host.HudChanged();
         Host.Wake();
     }
@@ -151,14 +172,17 @@ public sealed class SeaBattleGame : MiniGame
 
     // ------------------------------------------------------------------ input
 
-    public override void CollectHitShapes(List<HitShape> into) => into.Add(HitShape.Box(Whole));
+    public override void CollectHitShapes(List<HitShape> into)
+    {
+        into.Add(HitShape.Box(Whole));
+        into.Add(_handle.Hit);
+    }
 
     public override bool PointerDown(Vec2 p, bool right)
     {
-        if (right)
+        if (right || _handle.Contains(p))
         {
-            _dragging = true;
-            _dragOffset = _origin - p;
+            _handle.Begin(p, _origin, anywhere: true); // the grip, or a right-drag anywhere on the grids
             return true;
         }
         int mine = CellAt(MyGrid, _cell, p), theirs = CellAt(EnemyGrid, _cell, p);
@@ -187,12 +211,13 @@ public sealed class SeaBattleGame : MiniGame
         return false;
     }
 
-    public override void PointerUp(Vec2 p) => _dragging = false;
+    public override void PointerUp(Vec2 p) => _handle.End(_origin);
 
     public override void Summon(Vec2 p)
     {
         _origin = p - new Vec2(_cell * N, _cell * N / 2);
         Layout();
+        _handle.Save(_origin);
     }
 
     // ------------------------------------------------------------------ play
@@ -216,7 +241,7 @@ public sealed class SeaBattleGame : MiniGame
         _pendingSq = sq;
         _shotSeq++;
         SendShot();
-        Changed();
+        Touched();
     }
 
     /// <summary>Our shot at <paramref name="sq"/> came back as <paramref name="r"/>.</summary>
@@ -224,14 +249,15 @@ public sealed class SeaBattleGame : MiniGame
     {
         _pendingSq = -1;
         SeaChart.Record(_chart, sq, r);
-        ShotFx(EnemyCenter(sq), r, byMe: true);
+        if (r.Kind is ShotKind.Sunk or ShotKind.Win) Host.Stats.Add("seabattle.sunk");
         if (r.Kind == ShotKind.Win) GameOver(true);
         else if (r.Kind == ShotKind.Miss)
         {
             _myTurn = false;
             if (!LanOn) _cpuIn = CpuDelay;
         }
-        Changed();
+        Shell(atMe: false, sq, r);
+        Touched();
     }
 
     /// <summary>The rival fired at <paramref name="sq"/>; returns the result for them.</summary>
@@ -239,38 +265,92 @@ public sealed class SeaBattleGame : MiniGame
     {
         var r = _fleet.Shoot(sq);
         _lastShotAtMe = sq;
-        ShotFx(MyCenter(sq), r, byMe: false);
         if (r.Kind == ShotKind.Win) GameOver(false);
         else if (r.Kind == ShotKind.Miss) _myTurn = true;
-        Changed();
+        Shell(atMe: true, sq, r);
+        Touched();
         return r;
+    }
+
+    /// <summary>A shell arcs from the shooter's waters to the square; what it did shows when it lands.</summary>
+    void Shell(bool atMe, int sq, ShotResult r)
+    {
+        var key = (atMe, sq);
+        _inFlight.Add(key);
+        _flights++;
+        var s = new Sprite();
+        s.Children.Add(Art.Circle(0, 0, _cell * 0.17, Art.Brush("#2A2F3A"), Art.Brush(Foam), 1.2));
+        _air.Children.Add(s);
+        Host.Sound.Play("whoosh", 0.3, 1.3);
+        Anims.Add(Flight, k =>
+        {
+            Vec2 a = atMe ? new Vec2(EnemyGrid.Left, EnemyGrid.Center.Y) : new Vec2(MyGrid.Right, MyGrid.Center.Y);
+            Vec2 b = atMe ? MyCenter(sq) : EnemyCenter(sq);
+            var p = a + (b - a) * k;
+            p.Y -= _cell * 2.5 * Ease.Pulse(k);
+            s.Set(p);
+            s.Scale = 1 + 0.8 * Ease.Pulse(k);
+        }, Ease.InOutQuad, () =>
+        {
+            _air.Children.Remove(s);
+            _flights--;
+            _inFlight.Remove(key);
+            Land(atMe, sq, r);
+        });
+        Host.Wake();
+    }
+
+    /// <summary>The shell landed: its mark appears, a sunk ship darkens square by square, and the last one ends the game.</summary>
+    void Land(bool atMe, int sq, ShotResult r)
+    {
+        ShotFx(atMe ? MyCenter(sq) : EnemyCenter(sq), r, byMe: !atMe);
+        SetMark(atMe, sq, r.Kind == ShotKind.Miss ? SeaChart.Miss : SeaChart.Hit, pop: true);
+        double t = 0;
+        if (r.Kind is ShotKind.Sunk or ShotKind.Win)
+        {
+            foreach (int c in r.Ship.OrderBy(c => Math.Abs(c - sq))) // outward from the square that sank it
+            {
+                int cell = c;
+                Anims.After(t, () => SetMark(atMe, cell, SeaChart.Sunk, fade: true));
+                t += DarkenStep;
+            }
+            Anims.After(t + 0.05, () => SyncMarks()); // the empty water around it
+        }
+        if (r.Kind == ShotKind.Win)
+            Anims.After(t + 0.3, () =>
+            {
+                GameOverFx(!atMe);
+                Reveal();
+            });
+        else if (_phase == Phase.Over && _flights == 0) Reveal();
     }
 
     void ShotFx(Vec2 at, ShotResult r, bool byMe)
     {
+        if (_quiet) return;
         switch (r.Kind)
         {
             case ShotKind.Miss:
-                Host.Sound.Play("rim", 0.3, 1.6);
+                Host.Sound.Play("splash", 0.35, 1.2);
+                Host.Fx.Burst(at, new[] { Foam, Grid }, 8, 150, 520, 3.5, 0.45);
                 break;
             case ShotKind.Hit:
                 Host.Sound.Play("board", 0.7, 0.7);
-                Host.Fx.Burst(at, new[] { HitColor, Gold }, 12, 260, 300, 4, 0.5);
+                Host.Fx.Burst(at, new[] { HitColor, Ember, Gold }, 14, 260, 300, 4, 0.5);
                 break;
             default:
                 Host.Sound.Play("score", 0.6);
-                Host.Fx.Burst(at, new[] { HitColor, Gold, Colors.White }, 24, 360, 400, 5, 0.7);
+                Host.Fx.Burst(at, new[] { HitColor, Ember, Gold, Colors.White }, 24, 360, 400, 5, 0.7);
                 Host.Fx.Popup(at + new Vec2(0, -_cell * 1.5), byMe ? L.T("SUNK!") : L.T("Ship lost"), byMe ? Gold : HitColor, 24, 1.2);
-                if (byMe) Host.Stats.Add("seabattle.sunk");
                 break;
         }
     }
 
+    /// <summary>The outcome: the score, the CPU level and what the popup will say once the last ship has gone down.</summary>
     void GameOver(bool won)
     {
         _phase = Phase.Over;
-        var b = Whole;
-        var at = new Vec2(b.Center.X, b.Top + b.Height * 0.3);
+        _myTurn = false;
         if (won)
         {
             Host.Stats.Add("seabattle.wins");
@@ -279,23 +359,54 @@ public sealed class SeaBattleGame : MiniGame
                 Host.Stats.Add("seabattle.lanwins");
                 Host.Stats.Add("lan.wins");
             }
-            Host.Fx.Popup(at, L.T("YOU WIN!"), Gold, 42, 2.6, L.F("vs {0}", Rival));
+            _endSub = L.F("vs {0}", Rival);
+            if (!LanOn && !_demo) // demo games don't move the player's level
+            {
+                _lossStreak = 0;
+                if (CpuLevel < LevelNames.Length)
+                {
+                    CpuLevel++;
+                    _endSub = L.F("the CPU moves up to {0}", L.T(LevelNames[CpuLevel - 1]));
+                }
+            }
+        }
+        else
+        {
+            _endSub = L.T("click a grid for a rematch");
+            if (!LanOn && !_demo && ++_lossStreak >= 2 && CpuLevel > 1)
+            {
+                _lossStreak = 0;
+                CpuLevel--;
+                _endSub = L.F("the CPU goes easier: {0} · click a grid for a rematch", L.T(LevelNames[CpuLevel - 1]));
+            }
+        }
+        if (!LanOn) _enemyFleet = _cpuFleet;
+    }
+
+    void GameOverFx(bool won)
+    {
+        if (_quiet) return;
+        var b = Whole;
+        var at = new Vec2(b.Center.X, b.Top + b.Height * 0.3);
+        if (won)
+        {
+            Host.Fx.Popup(at, L.T("YOU WIN!"), Gold, 42, 2.6, _endSub);
             Host.Fx.Burst(at, new[] { Gold, Colors.White, HitColor }, 44, 540, 700, 7, 1.1);
             Host.Sound.Play("best", 0.8);
         }
         else
         {
-            Host.Fx.Popup(at, L.F("{0} WINS", Rival), Colors.White, 38, 2.4, L.T("click a grid for a rematch"));
+            Host.Fx.Popup(at, L.F("{0} WINS", Rival), Colors.White, 38, 2.4, _endSub);
             Host.Sound.Play("buzzer", 0.45);
         }
-        if (!LanOn) _enemyFleet = _cpuFleet;
     }
 
     public override bool Update(double dt)
     {
-        if (_dragging)
+        if (_handle.Dragging)
         {
-            _origin = Host.Pointer + _dragOffset;
+            var whole = Whole;
+            _origin = _handle.Move(Host.Pointer, new Size(whole.Width, whole.Height));
             Layout();
         }
         if (LanOn) Network(dt);
@@ -304,14 +415,15 @@ public sealed class SeaBattleGame : MiniGame
             _cpuIn = -1;
             if (_phase == Phase.Playing && !_myTurn)
             {
-                int sq = SeaChart.NextShot(_cpuChart, Rng);
+                int sq = SeaChart.NextShot(_cpuChart, Rng, CpuLevel);
                 var r = TakeShot(sq);
                 SeaChart.Record(_cpuChart, sq, r);
                 if (r.Kind is ShotKind.Hit or ShotKind.Sunk) _cpuIn = CpuDelay; // a hit shoots again
             }
         }
         if (_demo) DemoStep();
-        return _dragging || _cpuIn > 0 || LanOn || _demo;
+        bool animating = Anims.Update(dt);
+        return _handle.Dragging || _cpuIn > 0 || LanOn || _demo || animating;
     }
 
     public override void DemoTick() => _demo = true;
@@ -319,7 +431,7 @@ public sealed class SeaBattleGame : MiniGame
     void DemoStep()
     {
         if (_phase == Phase.Setup && !_meReady) PointerDown(new Vec2(EnemyGrid.Center.X, EnemyGrid.Center.Y), false);
-        else if (_phase == Phase.Playing && _myTurn && _pendingSq < 0 && _cpuIn < 0)
+        else if (_phase == Phase.Playing && _myTurn && _pendingSq < 0 && _cpuIn < 0 && _flights == 0)
             Fire(SeaChart.NextShot(_chart, Rng));
     }
 
@@ -364,7 +476,7 @@ public sealed class SeaBattleGame : MiniGame
                     break;
                 case "fl" when f.Length == 3 && _phase == Phase.Over && _enemyFleet == null:
                     _enemyFleet = SeaFleet.Decode(f[2]);
-                    Changed();
+                    if (_flights == 0) Reveal(); // otherwise the landing shell reveals it, once the last ship has gone down
                     break;
             }
         }
@@ -385,6 +497,7 @@ public sealed class SeaBattleGame : MiniGame
 
     Vec2 EnemyCenter(int sq) => new(EnemyGrid.Left + (sq % N + 0.5) * _cell, EnemyGrid.Top + (sq / N + 0.5) * _cell);
 
+    /// <summary>Draws everything afresh at the current place and size; marks and the reveal appear at once.</summary>
     void Draw()
     {
         _canvas.Children.Clear();
@@ -399,24 +512,16 @@ public sealed class SeaBattleGame : MiniGame
         {
             var cells = ship.Select(MyCenter).ToList();
             double left = cells.Min(c => c.X), top = cells.Min(c => c.Y), right = cells.Max(c => c.X), bottom = cells.Max(c => c.Y);
-            bool sunk = ship.All(_fleet.WasShot);
             _canvas.Children.Add(Place(new Rectangle
             {
                 Width = right - left + _cell * 0.7, Height = bottom - top + _cell * 0.7, RadiusX = _cell * 0.3, RadiusY = _cell * 0.3,
-                Fill = Art.Brush(sunk ? Art.Blend(ShipColor, Colors.Black, 0.5) : ShipColor), Stroke = Art.Brush("#2A2F3A"), StrokeThickness = 1.5,
+                Fill = Art.Brush(ShipColor), Stroke = Art.Brush("#2A2F3A"), StrokeThickness = 1.5,
             }, left - _cell * 0.35, top - _cell * 0.35));
         }
-        for (int sq = 0; sq < N * N; sq++)
-            if (_fleet.WasShot(sq)) Mark(MyCenter(sq), _fleet.ShipAt(sq) >= 0 ? SeaChart.Hit : SeaChart.Miss, sq == _lastShotAtMe);
-
-        if (_enemyFleet != null)
-            foreach (int sq in _enemyFleet.Ships.SelectMany(s => s).Where(sq => _chart[sq] == SeaChart.Unknown))
-                _canvas.Children.Add(Art.Circle(EnemyCenter(sq).X, EnemyCenter(sq).Y, _cell * 0.3, Art.Brush(ShipColor)));
-        for (int sq = 0; sq < N * N; sq++)
-            if (_chart[sq] != SeaChart.Unknown) Mark(EnemyCenter(sq), _chart[sq], false);
-        if (_pendingSq >= 0) Mark(EnemyCenter(_pendingSq), -1, true);
-        if (_phase == Phase.Playing && _myTurn)
-            _canvas.Children.Add(Place(new Rectangle { Width = EnemyGrid.Width + 6, Height = EnemyGrid.Height + 6, Stroke = Art.Brush(Gold), StrokeThickness = 2 }, EnemyGrid.Left - 3, EnemyGrid.Top - 3));
+        _handle.Show(whole);
+        SyncMarks(force: true);
+        DrawReveal(animate: false);
+        DrawHints();
     }
 
     void DrawGrid(Rect g)
@@ -435,30 +540,133 @@ public sealed class SeaBattleGame : MiniGame
         Width = grid.Width, TextAlignment = TextAlignment.Center,
     }, grid.Left, grid.Top - _cell * 0.95));
 
-    /// <summary>A miss is a small dot, a hit a red cross, a sunk square a dark red block; −1 is a shot in flight.</summary>
-    void Mark(Vec2 c, int state, bool fresh)
+    /// <summary>Whose turn it is (a gold frame on the enemy grid), the shot awaiting its answer and the last shot at me.</summary>
+    void DrawHints()
     {
+        _hints.Children.Clear();
+        if (_lastShotAtMe >= 0) _hints.Children.Add(Ring(MyCenter(_lastShotAtMe), _cell * 0.46, 1.5));
+        if (_pendingSq >= 0)
+        {
+            var c = EnemyCenter(_pendingSq);
+            _hints.Children.Add(Ring(c, _cell * 0.32, 2));
+            _hints.Children.Add(Ring(c, _cell * 0.46, 1.5));
+        }
+        if (_phase == Phase.Playing && _myTurn)
+            _hints.Children.Add(Place(new Rectangle { Width = EnemyGrid.Width + 6, Height = EnemyGrid.Height + 6, Stroke = Art.Brush(Gold), StrokeThickness = 2 }, EnemyGrid.Left - 3, EnemyGrid.Top - 3));
+    }
+
+    static Ellipse Ring(Vec2 c, double r, double thick) => Art.Circle(c.X, c.Y, r, null, Art.Brush(Gold), thick);
+
+    /// <summary>The enemy's fleet surfaces once the game is over, ship by ship.</summary>
+    void Reveal()
+    {
+        if (_revealShown || _enemyFleet == null) return;
+        _revealShown = true;
+        DrawReveal(animate: !Fx.ReducedMotion);
+        Host.Wake();
+    }
+
+    void DrawReveal(bool animate)
+    {
+        _reveal.Children.Clear();
+        if (_enemyFleet == null || !_revealShown) return;
+        double t = 0.1;
+        foreach (var ship in _enemyFleet.Ships)
+        {
+            foreach (int sq in ship.Where(sq => _chart[sq] == SeaChart.Unknown))
+            {
+                var s = new Sprite();
+                s.Children.Add(Art.Circle(0, 0, _cell * 0.3, Art.Brush(ShipColor)));
+                s.Set(EnemyCenter(sq));
+                _reveal.Children.Add(s);
+                if (!animate) continue;
+                s.Scale = 0;
+                Anims.Add(0.3, k => s.Scale = k, Ease.OutBack, delay: t);
+                t += 0.06;
+            }
+            t += 0.12;
+        }
+    }
+
+    /// <summary>What my grid shows at a square: nothing, a miss, a hit or a square of a sunk ship.</summary>
+    sbyte MineState(int sq)
+    {
+        if (!_fleet.WasShot(sq)) return SeaChart.Unknown;
+        int ship = _fleet.ShipAt(sq);
+        if (ship < 0) return SeaChart.Miss;
+        return _fleet.Ships[ship].All(_fleet.WasShot) ? SeaChart.Sunk : SeaChart.Hit;
+    }
+
+    /// <summary>Brings every mark up to date with the game at once, except where a shell is still in the air.</summary>
+    void SyncMarks(bool force = false)
+    {
+        if (force)
+        {
+            _marks.Children.Clear();
+            Array.Clear(_myMarks);
+            Array.Clear(_enemyMarks);
+            Array.Clear(_shownMine);
+            Array.Clear(_shownEnemy);
+        }
+        for (int sq = 0; sq < N * N; sq++)
+        {
+            if (!_inFlight.Contains((true, sq))) SetMark(true, sq, MineState(sq));
+            if (!_inFlight.Contains((false, sq))) SetMark(false, sq, _chart[sq]);
+        }
+    }
+
+    /// <summary>Shows <paramref name="state"/> at a square: popping in (a fresh shot) or fading in over the old mark (a ship darkening).</summary>
+    void SetMark(bool atMe, int sq, sbyte state, bool pop = false, bool fade = false)
+    {
+        var sprites = atMe ? _myMarks : _enemyMarks;
+        var shown = atMe ? _shownMine : _shownEnemy;
+        if (shown[sq] == state) return;
+        var old = sprites[sq];
+        shown[sq] = state;
+        sprites[sq] = null;
+        if (state == SeaChart.Unknown)
+        {
+            if (old != null) _marks.Children.Remove(old);
+            return;
+        }
+        var s = MarkSprite(state);
+        s.Set(atMe ? MyCenter(sq) : EnemyCenter(sq));
+        _marks.Children.Add(s);
+        sprites[sq] = s;
+        if (fade && old != null)
+        {
+            s.Opacity = 0;
+            Anims.Add(0.22, k => s.Opacity = k, Ease.OutQuad, () => _marks.Children.Remove(old));
+            return;
+        }
+        if (old != null) _marks.Children.Remove(old);
+        if (!pop) return;
+        s.Scale = 0.3;
+        Anims.Add(0.26, k => s.Scale = 0.3 + 0.7 * k, Ease.OutBack);
+    }
+
+    /// <summary>A miss is a small dot, a hit a red cross, a sunk square a dark red block; known-empty water a faint dot.</summary>
+    Sprite MarkSprite(sbyte state)
+    {
+        var s = new Sprite();
         double r = _cell * 0.32;
         switch (state)
         {
             case SeaChart.Miss:
-                _canvas.Children.Add(Art.Circle(c.X, c.Y, _cell * 0.1, Art.Brush("#D8E6F5")));
+                s.Children.Add(Art.Circle(0, 0, _cell * 0.1, Art.Brush(Foam)));
                 break;
             case SeaChart.Empty:
-                _canvas.Children.Add(Art.Circle(c.X, c.Y, _cell * 0.07, Art.Brush(120, 216, 230, 245)));
+                s.Children.Add(Art.Circle(0, 0, _cell * 0.07, Art.Brush(120, 216, 230, 245)));
                 break;
             case SeaChart.Sunk:
-                _canvas.Children.Add(Place(new Rectangle { Width = _cell - 2, Height = _cell - 2, Fill = Art.Brush("#7A1C1C") }, c.X - _cell / 2 + 1, c.Y - _cell / 2 + 1));
+                s.Children.Add(Place(new Rectangle { Width = _cell - 2, Height = _cell - 2, Fill = Art.Brush("#7A1C1C") }, -_cell / 2 + 1, -_cell / 2 + 1));
                 goto case SeaChart.Hit;
             case SeaChart.Hit:
-                foreach (int s in new[] { -1, 1 })
-                    _canvas.Children.Add(new Line { StartPoint = new Point(c.X - r, c.Y - r * s), EndPoint = new Point(c.X + r, c.Y + r * s), Stroke = Art.Brush(HitColor), StrokeThickness = _cell * 0.13, StrokeLineCap = PenLineCap.Round });
-                break;
-            default:
-                _canvas.Children.Add(Art.Circle(c.X, c.Y, r, null, Art.Brush(Gold), 2));
+                foreach (int k in new[] { -1, 1 })
+                    s.Children.Add(new Line { StartPoint = new Point(-r, -r * k), EndPoint = new Point(r, r * k), Stroke = Art.Brush(HitColor), StrokeThickness = _cell * 0.13, StrokeLineCap = PenLineCap.Round });
                 break;
         }
-        if (fresh) _canvas.Children.Add(Art.Circle(c.X, c.Y, _cell * 0.46, null, Art.Brush(Gold), 1.5));
+        return s;
     }
 
     static Control Place(Control c, double x, double y)
