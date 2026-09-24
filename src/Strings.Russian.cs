@@ -946,6 +946,8 @@ public static partial class Strings
 
 
         // ---- 1.8.0: Linux overlay
+        ["No tray icon on this desktop"] = "На этом рабочем столе нет значка в трее",
+        ["the ☰ button on the scoreboard has the menu"] = "меню находится под кнопкой ☰ на табло",
 
 
         // ---- 1.8.0: pets
