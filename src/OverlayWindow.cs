@@ -520,7 +520,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _lastTick = now;
 
         UpdatePointer();
-        bool busy = _captured || HudBusy;
+        bool busy = _captured || _hud.IsPressed; // an open menu takes the mouse but needs no frames
         if (Current != null && !_paused)
         {
             bool playing = Current.Update(dt) || _captured;

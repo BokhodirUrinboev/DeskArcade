@@ -61,23 +61,22 @@ public sealed class RaceMode
         _rivalActive = false;
         _cpus.Clear();
         _cpuWinStreak = _cpuLossStreak = 0;
-        if (Game != null)
-        {
-            _timer.Start();
-            Tick();
-        }
-        else
-        {
-            _timer.Stop();
-            _w.SetRaceLabel(null);
-        }
+        _shown = false;
+        _timer.Stop();
+        if (Game != null) Tick(); // shows the idle line; over the LAN the tick keeps the timer going
+        else _w.SetRaceLabel(null);
     }
 
     /// <summary>A setting changed (race the computer on or off): start or stop without disturbing a race that goes on.</summary>
     public void Refresh()
     {
-        if (Game != null != _timer.IsEnabled) Reset();
+        if (Game == null ? _timer.IsEnabled : !_shown) Reset();
     }
+
+    bool _shown; // the label is up for the current game
+
+    /// <summary>The timer has work while the LAN is on or a computer round is still running or waiting for its verdict.</summary>
+    bool Working => LanOn || _cpus.Count > 0 || _mine.Keys.Any(r => !_announced.Contains(r));
 
     /// <summary>The current game started a round: count it, and unless the rival asked for it, start theirs too.</summary>
     public void LocalStart()
@@ -115,6 +114,7 @@ public sealed class RaceMode
             return;
         }
         var (score, active) = race;
+        _shown = true;
         string rival;
         if (LanOn)
         {
@@ -153,7 +153,7 @@ public sealed class RaceMode
                 if (cpu.Tick(TickSeconds) && round == _round) MarkCpu(cpu);
                 if (cpu.Done) _theirs[round] = cpu.Score;
             }
-            foreach (int round in _cpus.Keys.Where(r => _cpus[r].Done && r < _round - 1).ToList()) _cpus.Remove(round);
+            foreach (int round in _cpus.Keys.Where(r => _cpus[r].Done && _theirs.ContainsKey(r) && (_announced.Contains(r) || r < _round - 1)).ToList()) _cpus.Remove(round);
             if (_cpus.TryGetValue(_round, out var current))
             {
                 string level = L.T(MiniGame.LevelNames[current.Level - 1]);
@@ -183,6 +183,10 @@ public sealed class RaceMode
             _w.RaceResult(tie ? L.T("DEAD HEAT") : won ? L.T("YOU WIN THE RACE!") : L.F("{0} WINS THE RACE", rival),
                 sub, won ? Color.FromRgb(255, 209, 102) : Colors.White, won, LanOn ? 0 : 96);
         }
+
+        // four ticks a second only while there is something to pace or announce; otherwise the label sits still
+        if (Working) { if (!_timer.IsEnabled) _timer.Start(); }
+        else _timer.Stop();
     }
 
     /// <summary>Two wins in a row move the computer up a level, two losses in a row move it down, like the board games.</summary>

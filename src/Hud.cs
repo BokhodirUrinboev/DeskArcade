@@ -272,8 +272,11 @@ public sealed class Hud : Border
 
     public bool IsExpanded => _expanded;
 
-    /// <summary>True while a press or drag on the scoreboard is in progress, or its menu is open.</summary>
+    /// <summary>True while a press or drag on the scoreboard is in progress, or its menu is open (the overlay then takes the whole mouse).</summary>
     public bool IsInteracting => _pressed || _menuOpen;
+
+    /// <summary>True only while a press or drag is in progress: an open menu needs the mouse, not frames.</summary>
+    public bool IsPressed => _pressed;
 
     public ClaudeStatus Status => _status;
 
@@ -329,6 +332,7 @@ public sealed class Hud : Border
     /// <summary>The chip after the score: "CPU · Hard", "vs Alice", or whose turn it is when the game has turns.</summary>
     void SetOpponent(Opponent? opp)
     {
+        if (opp == _opponent) return; // records compare by value: nothing to rebuild
         bool myTurnNow = opp?.MyTurn == true && (_opponent?.MyTurn != true || _opponent.Name != opp.Name);
         _opponent = opp;
         _oppChip.IsVisible = _pillOpp.IsVisible = opp != null;
