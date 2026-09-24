@@ -70,14 +70,16 @@ public sealed class LastCardView
 /// runs its rooms. The host runs the game and sends each player only their own view ("ls|json"); players send
 /// their moves ("la|seq|kind|card|colour") in order and re-send them until the host's view acknowledges them.
 /// Computer players fill empty seats and take over for anyone who drops out. Room setup happens in
-/// <see cref="RoomWindow"/>.
+/// <see cref="RoomWindow"/>. The table has a grip (or right-drag it) and remembers where it was put; the cards
+/// are laid out in table coordinates and slide to their places (<see cref="TableCards"/>).
 /// </summary>
 public sealed class LastCardGame : MiniGame, IRoomGame
 {
     public const double CardW = 62, CardH = 92;
-    const double CpuDelay = 0.9, SendEvery = 0.25, ResendEvery = 0.3, CpuCallChance = 0.85;
+    const double CpuDelay = 0.9, SendEvery = 0.25, ResendEvery = 0.3, CpuCallChance = 0.85, BackScale = 0.5;
     static readonly Color Gold = Avalonia.Media.Color.FromRgb(255, 209, 102);
     static readonly Color Felt = Avalonia.Media.Color.FromRgb(38, 44, 70);
+    static readonly IBrush GoldBrush = Art.Brush(Gold);
     static readonly Color[] CardColors =
     {
         Avalonia.Media.Color.FromRgb(222, 56, 56), Avalonia.Media.Color.FromRgb(246, 196, 32),
@@ -87,13 +89,17 @@ public sealed class LastCardGame : MiniGame, IRoomGame
 
     enum Mode { Idle, Solo, Hosting, Guest }
 
-    readonly Canvas _canvas = new();
+    readonly Canvas _root = new(), _canvas = new(), _top = new();
+    readonly TranslateTransform _rootTr = new();
+    readonly ScaleTransform _lastCardScale = new();
+    readonly TableCards _cards;
+    readonly DragHandle _handle;
     readonly List<(Rect Box, Action Click)> _clickables = new();
     readonly RoomLink _room = new() { Game = "lastcard" };
 
     Mode _mode;
     LastCardRules? _rules;
-    LastCardView? _view;
+    LastCardView? _view, _shown;
     string[] _names = Array.Empty<string>();
     bool[] _cpu = Array.Empty<bool>();
     int[] _seatOfGuest = Array.Empty<int>(); // host: room seat → game seat (−1: not playing)
@@ -103,15 +109,29 @@ public sealed class LastCardGame : MiniGame, IRoomGame
     readonly Avalonia.Threading.DispatcherTimer _hostTimer = new() { Interval = TimeSpan.FromMilliseconds(100) };
     readonly System.Diagnostics.Stopwatch _hostClock = new();
     int _game, _nextSeq, _drawnVersion = -1, _pendingWild = -1, _seenCatches, _seenTop = -1;
+    int _under = -1;     // the card left under the top of the discard until the new top has landed
+    int _pickerFor = -1; // the wild the colour buttons last fanned out for
+    bool _lastCardShown;
     double _cpuT, _sendT, _resendT, _demoT, _inviteT;
     string _drawnPanel = "";
     int _bridgedSession = -1;
     bool _announced, _demo;
-    Rect _area;
+    Rect _area;  // the table on the screen
+    Rect _table; // the same, in table coordinates (everything is drawn in these and the root is moved)
+    Vec2 _origin;
+    Size _drawnSize;
 
     public LastCardGame(IGameHost host) : base(host)
     {
-        Layer.Children.Add(_canvas);
+        _cards = new TableCards(Anims);
+        _root.RenderTransformOrigin = RelativePoint.TopLeft;
+        _root.RenderTransform = _rootTr;
+        _root.Children.Add(_canvas);
+        _root.Children.Add(_cards.Layer);
+        _root.Children.Add(_top);
+        Layer.Children.Add(_root);
+        _handle = new DragHandle(host, Id, Title);
+        Layer.Children.Add(_handle.Visual);
         _room.Changed += () => Avalonia.Threading.Dispatcher.UIThread.Post(Changed);
         _room.MessageArrived += () => Avalonia.Threading.Dispatcher.UIThread.Post(Host.Wake);
         _hostTimer.Tick += (_, _) => HostTick();
@@ -137,6 +157,11 @@ public sealed class LastCardGame : MiniGame, IRoomGame
         _view == null ? "—" : _view.Hand.Count.ToString(CultureInfo.InvariantCulture),
         Status(),
         L.F("Wins {0}", Host.Stats.Get("lastcard.wins")));
+
+    /// <summary>The scoreboard's chip: the computer, or in a room whose turn it is (the next player round the table when it is mine).</summary>
+    public override Opponent? Opponent => _view is { } v && _mode != Mode.Idle
+        ? CardTable.Chip(v.Names, _mode == Mode.Solo, v.Over ? -1 : v.Turn, CardTable.NextSeat(v.Seat, v.Players, v.Direction), v.Over ? null : v.MyTurn)
+        : null;
 
     string Name(int seat) => _view != null && seat >= 0 && seat < _view.Names.Length ? _view.Names[seat] : "?";
 
@@ -284,6 +309,7 @@ public sealed class LastCardGame : MiniGame, IRoomGame
             Host.Fx.Popup(at, L.T("YOU WIN!"), Gold, 42, 2.6, L.T("first to play their last card"));
             Host.Fx.Burst(at, Themes.Current.Confetti, 40, 520, 700, 7, 1.0);
             Host.Sound.Play("best", 0.8);
+            _cards.Wave();
         }
         else
         {
@@ -349,12 +375,18 @@ public sealed class LastCardGame : MiniGame, IRoomGame
 
     public override bool Update(double dt)
     {
+        if (_handle.Dragging)
+        {
+            _origin = _handle.Move(Host.Pointer, _area.Size);
+            Layout();
+        }
         bool inviting = LanBridge(dt);
         if (_mode == Mode.Guest) GuestUpdate(dt);
         else if (_mode == Mode.Solo) CpuTurns(dt); // a room's host plays on its own timer (HostTick)
         if (_view != null ? _view.Version != _drawnVersion : PanelKey() != _drawnPanel) Draw();
         if (_view != null) Announce(_view);
-        return inviting || _mode switch
+        bool animating = Anims.Update(dt);
+        return _handle.Dragging || animating || inviting || _mode switch
         {
             Mode.Solo => _rules is { Over: false } || _demo,
             Mode.Guest => _room.State == RoomState.Joining || _outbox.Count > 0 || _demo && _room.State == RoomState.Joined,
@@ -538,28 +570,49 @@ public sealed class LastCardGame : MiniGame, IRoomGame
         else SendAction(v.Drew ? "pass" : "draw", -1, -1);
     }
 
-    public override void Deactivate() => _pendingWild = -1;
+    // ------------------------------------------------------------------ layout and input
 
-    // ------------------------------------------------------------------ layout and drawing
-
+    /// <summary>The table sits along the bottom of the screen until it is dragged somewhere, which is remembered.</summary>
     public override void Layout()
     {
         var a = Host.Arena;
         double w = Math.Min(a.Width - 40, 920), h = Math.Min(a.Height - 40, 560);
-        _area = new Rect(a.Center.X - w / 2, a.Bottom - h - 16, w, h);
-        Draw();
+        if (!_handle.Dragging) _origin = _handle.Saved() ?? new Vec2(a.Center.X - w / 2, a.Bottom - h - 16);
+        _origin = ClampOrigin(_origin, new Size(w, h));
+        _area = new Rect(_origin.X, _origin.Y, w, h);
+        _table = new Rect(0, 0, w, h);
+        _rootTr.X = _origin.X;
+        _rootTr.Y = _origin.Y;
+        _handle.Show(_area);
+        if (_drawnSize != _area.Size) Draw();
         Host.HudChanged();
+    }
+
+    Vec2 ClampOrigin(Vec2 o, Size size)
+    {
+        var a = Host.Arena;
+        double top = a.Top + DragHandle.Height + 10;
+        return new Vec2(
+            Clamp(o.X, a.Left + 4, Math.Max(a.Left + 4, a.Right - size.Width - 4)),
+            Clamp(o.Y, top, Math.Max(top, a.Bottom - size.Height - 4)));
     }
 
     public override void CollectHitShapes(List<HitShape> into)
     {
-        foreach (var (box, _) in _clickables) into.Add(HitShape.Box(box));
+        into.Add(HitShape.Box(_area));
+        into.Add(_handle.Hit);
     }
 
     public override bool PointerDown(Vec2 p, bool right)
     {
+        if (right || _handle.Contains(p))
+        {
+            _handle.Begin(p, _origin, anywhere: true); // the grip, or a right-drag anywhere on the table
+            return true;
+        }
+        var q = (p - _origin).ToPoint();
         for (int i = _clickables.Count - 1; i >= 0; i--)
-            if (_clickables[i].Box.Contains(p.ToPoint()))
+            if (_clickables[i].Box.Contains(q))
             {
                 _clickables[i].Click();
                 Draw();
@@ -568,17 +621,41 @@ public sealed class LastCardGame : MiniGame, IRoomGame
         return false;
     }
 
-    public override void Summon(Vec2 p) => Layout();
+    public override void PointerUp(Vec2 p) => _handle.End(_origin);
+
+    public override void PointerCancel() => _handle.Cancel();
+
+    public override void Summon(Vec2 p)
+    {
+        _handle.Save(ClampOrigin(new Vec2(p.X - _table.Width / 2, p.Y - _table.Height / 2), _area.Size));
+        Layout();
+    }
+
+    public override void Deactivate()
+    {
+        _pendingWild = -1;
+        _handle.Cancel();
+        Anims.Finish();
+    }
+
+    // ------------------------------------------------------------------ drawing
 
     string PanelKey() => $"{_mode}|{_room.State}|{_room.Code}|{string.Join(",", _room.Seats().Select(s => s.Name + s.Connected))}";
 
+    /// <summary>
+    /// Lays the table out for the current view. The static parts are drawn afresh; the cards are placed through
+    /// <see cref="TableCards"/>, which compares with what is on the table already, so dealt and drawn cards come
+    /// from the pile and a played card flies from its hand onto the discard.
+    /// </summary>
     void Draw()
     {
         _drawnVersion = _view?.Version ?? -1;
         _drawnPanel = _view == null ? PanelKey() : "";
+        _drawnSize = _area.Size;
         _canvas.Children.Clear();
+        _top.Children.Clear();
         _clickables.Clear();
-        var a = _area;
+        var a = _table;
         _canvas.Children.Add(Art.At(new Border
         {
             Width = a.Width, Height = a.Height, CornerRadius = new CornerRadius(22), Opacity = 0.94,
@@ -592,19 +669,33 @@ public sealed class LastCardGame : MiniGame, IRoomGame
 
         if (_view == null)
         {
+            _cards.Clear();
+            _shown = null;
+            _under = -1;
+            _lastCardShown = false;
             DrawStartPanel();
             return;
         }
         var v = _view;
-        DrawOpponents(v);
-        DrawPiles(v);
-        DrawHand(v);
+        var prev = _shown;
+        _shown = v;
+        bool newDeal = prev == null || prev.Game != v.Game;
+        if (newDeal)
+        {
+            _cards.Clear();
+            _under = -1;
+        }
+        _cards.Begin();
+        DrawOpponents(v, newDeal);
+        DrawHand(v, newDeal);
+        DrawPiles(v, prev, newDeal);
         DrawButtons(v);
+        foreach (var card in _cards.End()) Leave(card, v, prev);
     }
 
     void DrawStartPanel()
     {
-        var a = _area;
+        var a = _table;
         Label(L.T(Title), a.Center.X, a.Top + 70, 40, Colors.White, center: true);
         Label(L.T("Match the colour or the number · the first to play their last card wins"), a.Center.X, a.Top + 128, 16, Avalonia.Media.Color.FromRgb(200, 208, 235), center: true);
         if (_mode is Mode.Guest or Mode.Hosting) Label(Status(), a.Center.X, a.Top + 170, 16, Gold, center: true);
@@ -643,10 +734,34 @@ public sealed class LastCardGame : MiniGame, IRoomGame
     /// <summary>Raised when the player asks to host or join a room; the overlay opens the setup window.</summary>
     public event Action? SetupRequested;
 
-    void DrawOpponents(LastCardView v)
+    // ---- places on the table (card centres, table coordinates)
+
+    double PilesY => _table.Top + _table.Height * 0.44;
+    Vec2 PilePos => new(_table.Center.X - CardW - 36 + CardW / 2, PilesY);
+    Vec2 DiscardPos => new(_table.Center.X + 20 + CardW / 2, PilesY);
+    Vec2 HandPos => new(_table.Center.X, _table.Bottom - CardH / 2 - 22);
+
+    static List<int> Others(LastCardView v) => Enumerable.Range(1, v.Players - 1).Select(i => (v.Seat + i) % v.Players).ToList();
+
+    /// <summary>The middle of another player's cards, by their place along the top of the table.</summary>
+    Vec2 SeatPos(LastCardView v, int seat)
     {
-        var a = _area;
-        var others = Enumerable.Range(1, v.Players - 1).Select(i => (v.Seat + i) % v.Players).ToList();
+        var others = Others(v);
+        double slot = _table.Width / Math.Max(1, others.Count);
+        return new Vec2(_table.Left + slot * (Math.Max(0, others.IndexOf(seat)) + 0.5), _table.Top + 52 + CardH * BackScale / 2);
+    }
+
+    static int BackKey(int seat, int k) => -1 - (seat * 16 + k);
+
+    static double Stagger(double delay) => Fx.ReducedMotion ? 0 : delay;
+
+    /// <summary>The slight tilt each card lands with on the discard.</summary>
+    static double Tilt(int card) => card % 7 - 3;
+
+    void DrawOpponents(LastCardView v, bool newDeal)
+    {
+        var a = _table;
+        var others = Others(v);
         double slot = a.Width / Math.Max(1, others.Count);
         for (int i = 0; i < others.Count; i++)
         {
@@ -655,18 +770,28 @@ public sealed class LastCardGame : MiniGame, IRoomGame
             bool turn = !v.Over && v.Turn == s;
             Label(v.Names[s] + (v.Cpu[s] && _mode != Mode.Solo ? " · " + L.T("CPU") : ""), cx, a.Top + 12, 15, turn ? Gold : Colors.White, center: true);
             if (turn) Label(L.T("playing…"), cx, a.Top + 32, 12, Gold, center: true);
-            int n = v.Counts[s];
-            for (int k = 0; k < Math.Min(n, 10); k++)
-                Place(CardBack(CardW * 0.5, CardH * 0.5), cx - Math.Min(n, 10) * 6 + k * 12 - CardW * 0.25, a.Top + 52);
-            Label(n.ToString(CultureInfo.InvariantCulture), cx + Math.Min(n, 10) * 6 + 20, a.Top + 66, 14, Colors.White);
+            int n = v.Counts[s], shown = Math.Min(n, 10);
+            int fresh = 0;
+            for (int k = 0; k < shown; k++)
+            {
+                int key = BackKey(s, k);
+                var at = new Vec2(cx - shown * 6 + k * 12 - CardW * 0.25 + CardW * BackScale / 2, a.Top + 52 + CardH * BackScale / 2);
+                if (_cards.Has(key)) _cards.Place(key, () => CardBack(CardW, CardH), at, 0, BackScale);
+                else
+                {
+                    double delay = newDeal ? CardTable.DealDelay(s, k, v.Players) : fresh++ * CardTable.DealGap;
+                    _cards.Place(key, () => CardBack(CardW, CardH), at, 0, BackScale, from: PilePos, seconds: CardTable.DealSeconds, ease: Ease.OutCubic, delay: Stagger(delay));
+                }
+            }
+            Label(n.ToString(CultureInfo.InvariantCulture), cx + shown * 6 + 20, a.Top + 66, 14, Colors.White);
             if (n == 1 && v.Called[s]) Label(L.T("LAST CARD!"), cx, a.Top + 104, 14, Avalonia.Media.Color.FromRgb(255, 120, 120), center: true);
         }
     }
 
-    void DrawPiles(LastCardView v)
+    void DrawPiles(LastCardView v, LastCardView? prev, bool newDeal)
     {
-        var a = _area;
-        double cy = a.Top + a.Height * 0.44, cx = a.Center.X;
+        var a = _table;
+        double cy = PilesY, cx = a.Center.X;
         // the draw pile: click it on your turn to draw
         double px = cx - CardW - 36, py = cy - CardH / 2;
         if (v.Deck > 1) Place(CardBack(CardW, CardH), px + 3, py + 3);
@@ -683,72 +808,144 @@ public sealed class LastCardGame : MiniGame, IRoomGame
         double dx = cx + 20, dy = cy - CardH / 2;
         var ring = CardColors[Math.Clamp(v.Color, 0, ColorCount - 1)];
         _canvas.Children.Add(Art.At(new Rectangle { Width = CardW + 16, Height = CardH + 16, RadiusX = 12, RadiusY = 12, Fill = Art.Brush(Avalonia.Media.Color.FromArgb(90, ring.R, ring.G, ring.B)), Stroke = Art.Brush(ring), StrokeThickness = 3, IsHitTestVisible = false }, dx - 8, dy - 8));
-        var top = CardFace(v.Top, CardW, CardH);
-        top.RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative);
-        top.RenderTransform = new RotateTransform(v.Top % 7 - 3);
-        Place(top, dx, dy);
+
+        // the card played last stays under the new top until it has landed
+        bool landed = prev != null && !newDeal && prev.Top != v.Top;
+        if (landed && _under != prev!.Top)
+        {
+            if (_under >= 0) _cards.Remove(_under, seconds: 0.1);
+            _under = prev.Top;
+        }
+        if (_under >= 0 && _under != v.Top) PlaceFace(_under, DiscardPos, Tilt(_under));
+        int top = v.Top;
+        Action? onLanded = landed ? () => Landed(top) : null;
+        if (_cards.Has(top)) _cards.Place(top, () => CardFace(top, CardW, CardH), DiscardPos, Tilt(top), seconds: CardTable.PlaySeconds, ease: Ease.OutBack, done: onLanded);
+        else if (newDeal || prev == null)
+            _cards.Place(top, () => CardFace(top, CardW, CardH), DiscardPos, Tilt(top), from: PilePos, seconds: CardTable.DealSeconds, ease: Ease.OutCubic,
+                delay: Stagger(CardTable.DealDelay(0, HandSize, v.Players)));
+        else
+        {
+            int by = PlayedBy(v, prev);
+            _cards.Place(top, () => CardFace(top, CardW, CardH), DiscardPos, Tilt(top), from: by == v.Seat ? HandPos : SeatPos(v, by), fromScale: by == v.Seat ? 1 : BackScale,
+                seconds: CardTable.PlaySeconds, ease: Ease.OutBack, done: onLanded);
+        }
         Label(ColorName(v.Color), dx + CardW / 2, dy + CardH + 12, 13, ring, center: true);
         Label(v.Direction > 0 ? "↻" : "↺", dx + CardW + 30, cy - 18, 28, Avalonia.Media.Color.FromRgb(200, 208, 235));
     }
 
-    void DrawHand(LastCardView v)
+    TableCards.Card PlaceFace(int card, Vec2 at, double angle) => _cards.Place(card, () => CardFace(card, CardW, CardH), at, angle);
+
+    /// <summary>A new top has landed on the pile: the card under it goes, and a Skip, Reverse or draw card makes a show of itself.</summary>
+    void Landed(int top)
     {
-        var a = _area;
+        if (_under >= 0 && _under != top)
+        {
+            _cards.Remove(_under, seconds: 0.1);
+            _under = -1;
+        }
+        if (_cards.Get(top) is not { } card) return;
+        switch (KindOf(top))
+        {
+            case Kind.Reverse: _cards.Spin(card); break;
+            case Kind.Skip: _cards.Flash(card, 0.16); break;
+            case Kind.DrawTwo or Kind.WildDrawFour: _cards.Flash(card, 0.26); break;
+        }
+    }
+
+    /// <summary>Who played the card that is now on top: whoever has fewer cards than before, else whose turn it was.</summary>
+    int PlayedBy(LastCardView v, LastCardView prev)
+    {
+        for (int s = 0; s < v.Players && s < prev.Counts.Length; s++)
+            if (s != v.Seat && v.Counts[s] < prev.Counts[s]) return s;
+        return prev.Turn;
+    }
+
+    void DrawHand(LastCardView v, bool newDeal)
+    {
+        var a = _table;
         var hand = v.Hand.OrderBy(c => IsWild(c) ? ColorCount : ColorOf(c)).ThenBy(c => (int)KindOf(c)).ThenBy(NumberOf).ToList();
-        if (hand.Count == 0) return;
-        double maxW = a.Width - 260, step = Math.Min(CardW + 6, (maxW - CardW) / Math.Max(1, hand.Count - 1));
-        double total = CardW + step * (hand.Count - 1);
-        double x0 = a.Center.X - total / 2, y = a.Bottom - CardH - 22;
+        double y = a.Bottom - CardH - 22;
+        var xs = CardTable.Fan(hand.Count, CardW, a.Width - 260, a.Center.X);
+        int fresh = 0;
         for (int i = 0; i < hand.Count; i++)
         {
             int card = hand[i];
-            double x = x0 + i * step;
-            bool playable = v.CanPlay(card);
+            double x = xs[i];
+            bool playable = v.CanPlay(card), pending = card == _pendingWild;
             double cy = playable ? y - 14 : y;
-            var face = CardFace(card, CardW, CardH);
-            if (card == _pendingWild)
+            if (pending) cy -= 10;
+            var at = new Vec2(x + CardW / 2, cy + CardH / 2);
+            if (card == _under) _under = -1; // the pile was reshuffled and it came back to us
+            TableCards.Card c;
+            if (_cards.Has(card)) c = _cards.Place(card, () => CardFace(card, CardW, CardH), at);
+            else
             {
-                face.BorderBrush = Art.Brush(Gold);
-                face.BorderThickness = new Thickness(3);
-                cy -= 10;
+                double delay = newDeal ? CardTable.DealDelay(v.Seat, i, v.Players) : fresh++ * CardTable.DealGap;
+                c = _cards.Place(card, () => CardFace(card, CardW, CardH), at, from: PilePos, seconds: CardTable.DealSeconds, ease: Ease.OutCubic, delay: Stagger(delay));
             }
-            if (!playable && v.MyTurn) face.Opacity = 0.7;
-            Place(face, x, cy);
-            double width = i == hand.Count - 1 ? CardW : step;
+            var face = (Border)c.Visual;
+            face.BorderBrush = pending ? GoldBrush : Brushes.White;
+            face.BorderThickness = new Thickness(pending ? 3 : 2.5);
+            face.Opacity = !playable && v.MyTurn ? 0.7 : 1;
+            double width = i == hand.Count - 1 ? CardW : xs[i + 1] - xs[i];
             _clickables.Add((new Rect(x, cy, width, CardH), () => HandCardClicked(card)));
         }
         if (_pendingWild >= 0) DrawColorPicker(y - 70);
+        else _pickerFor = -1;
     }
 
+    /// <summary>The four colours to choose for a wild, fanning out from the middle when they appear.</summary>
     void DrawColorPicker(double y)
     {
-        double cx = _area.Center.X, r = 22;
+        double cx = _table.Center.X, r = 22;
+        bool fan = _pickerFor != _pendingWild;
+        _pickerFor = _pendingWild;
         for (int c = 0; c < ColorCount; c++)
         {
             int color = c;
             double x = cx + (c - 1.5) * 64;
-            _canvas.Children.Add(Art.Circle(x, y, r, Art.Brush(CardColors[c]), Brushes.White, 3));
-            ColorMark(_canvas, c, x, y, 8, Brushes.White);
+            var disc = new Canvas { Width = r * 2, Height = r * 2, RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative), IsHitTestVisible = false };
+            disc.Children.Add(Art.Circle(r, r, r, Art.Brush(CardColors[c]), Brushes.White, 3));
+            ColorMark(disc, c, r, r, 8, Brushes.White);
+            var sc = new ScaleTransform();
+            var tr = new TranslateTransform();
+            disc.RenderTransform = new TransformGroup { Children = { sc, tr } };
+            Place(disc, x - r, y - r, _top);
             _clickables.Add((new Rect(x - r, y - r, r * 2, r * 2), () =>
             {
                 int wild = _pendingWild;
                 _pendingWild = -1;
                 Do("play", wild, color);
             }));
+            if (!fan) continue;
+            sc.ScaleX = sc.ScaleY = 0.01;
+            tr.X = cx - x;
+            Anims.Add(0.28, k =>
+            {
+                sc.ScaleX = sc.ScaleY = Math.Max(0.01, k);
+                tr.X = (cx - x) * (1 - k);
+            }, Ease.OutBack, delay: Stagger(c * 0.04));
         }
+    }
+
+    /// <summary>A card that is no longer shown: a card gone from the hand heads for the pile, the rest just go.</summary>
+    void Leave(TableCards.Card card, LastCardView v, LastCardView? prev)
+    {
+        if (card.Key >= 0 && prev != null && prev.Hand.Contains(card.Key)) _cards.Remove(card.Key, DiscardPos, 1, CardTable.PlaySeconds, Ease.OutBack);
+        else _cards.Remove(card.Key, seconds: 0.12);
     }
 
     void DrawButtons(LastCardView v)
     {
-        var a = _area;
+        var a = _table;
         double y = a.Bottom - CardH - 78;
-        Label(Status(), a.Center.X, y - 34, 15, Gold, center: true);
+        Label(Status(), a.Center.X, y - 34, 15, Gold, center: true, into: _top);
+        bool lastCard = false;
         if (_mode == Mode.Guest && _room.State == RoomState.Lost)
         {
             Button(L.T("Leave the room"), a.Center.X, y, 200, LeaveRoom);
-            return;
         }
-        if (v.Over)
+        else if (v.Over)
         {
             if (_mode != Mode.Guest || _room.State == RoomState.Joined) Button(L.T("New game"), a.Center.X - 110, y, 180, NewGameClicked);
             Button(_mode == Mode.Solo ? L.T("Other games…") : L.T("Leave the room"), a.Center.X + 110, y, 180, () =>
@@ -756,13 +953,24 @@ public sealed class LastCardGame : MiniGame, IRoomGame
                 if (_mode == Mode.Solo) { _rules = null; _view = null; _mode = Mode.Idle; Changed(); }
                 else LeaveRoom();
             });
-            return;
         }
-        // "last card!": on your turn with two cards, or right after going down to one
-        int mine = v.Hand.Count;
-        if (!v.Called[v.Seat] && (mine == 1 || mine == 2 && v.MyTurn))
-            Button(L.T("Last card!"), a.Left + 120, y + 40, 170, () => Do("call", -1, -1), hot: true);
-        if (v.MyTurn && v.Drew) Button(L.T("Pass"), a.Right - 110, y + 40, 150, () => Do("pass", -1, -1));
+        else
+        {
+            // "last card!": on your turn with two cards, or right after going down to one; it pulses to be noticed
+            int mine = v.Hand.Count;
+            lastCard = !v.Called[v.Seat] && (mine == 1 || mine == 2 && v.MyTurn);
+            if (lastCard)
+            {
+                var b = Button(L.T("Last card!"), a.Left + 120, y + 40, 170, () => Do("call", -1, -1), hot: true);
+                b.RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative);
+                b.RenderTransform = _lastCardScale;
+                if (!_lastCardShown && !Fx.ReducedMotion)
+                    for (int i = 0; i < 4; i++)
+                        Anims.Add(0.6, k => _lastCardScale.ScaleX = _lastCardScale.ScaleY = 1 + 0.08 * k, Ease.Pulse, delay: 0.2 + i * 0.9);
+            }
+            if (v.MyTurn && v.Drew) Button(L.T("Pass"), a.Right - 110, y + 40, 150, () => Do("pass", -1, -1));
+        }
+        _lastCardShown = lastCard;
     }
 
     // ------------------------------------------------------------------ cards
@@ -872,9 +1080,10 @@ public sealed class LastCardGame : MiniGame, IRoomGame
 
     // ------------------------------------------------------------------ pieces
 
-    void Place(Control c, double x, double y) => _canvas.Children.Add(Art.At(c, x, y));
+    /// <summary>Adds a static piece to the table (below the cards), or to <paramref name="into"/>.</summary>
+    void Place(Control c, double x, double y, Canvas? into = null) => (into ?? _canvas).Children.Add(Art.At(c, x, y));
 
-    void Label(string text, double x, double y, double size, Color color, bool center = false)
+    void Label(string text, double x, double y, double size, Color color, bool center = false, Canvas? into = null)
     {
         var t = new TextBlock { Text = text, FontFamily = Fx.Font, FontSize = size, FontWeight = FontWeight.Bold, Foreground = Art.Brush(color), IsHitTestVisible = false };
         if (center)
@@ -882,10 +1091,11 @@ public sealed class LastCardGame : MiniGame, IRoomGame
             t.Measure(Size.Infinity);
             x -= t.DesiredSize.Width / 2;
         }
-        Place(t, x, y);
+        Place(t, x, y, into);
     }
 
-    void Button(string text, double cx, double y, double width, Action click, bool hot = false)
+    /// <summary>A button, drawn above the cards.</summary>
+    Border Button(string text, double cx, double y, double width, Action click, bool hot = false)
     {
         var b = new Border
         {
@@ -898,7 +1108,8 @@ public sealed class LastCardGame : MiniGame, IRoomGame
                 HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center,
             },
         };
-        Place(b, cx - width / 2, y);
+        Place(b, cx - width / 2, y, _top);
         _clickables.Add((new Rect(cx - width / 2, y, width, 40), click));
+        return b;
     }
 }

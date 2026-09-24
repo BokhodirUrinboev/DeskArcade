@@ -28,6 +28,10 @@ public sealed partial class GolfGame
 
     bool DuelOn => Host.Lan.Connected;
     string Rival => Host.Lan.PeerName;
+    bool Waiting => DuelOn && !_match.Over && !_match.MyTurn;
+
+    /// <summary>The scoreboard's chip in a match: the other player, and whose putt it is.</summary>
+    public override Opponent? Opponent => DuelOn ? new(Rival, false, 0, _match.Over ? null : _match.MyTurn) : null;
 
     void DuelSetup()
     {
@@ -109,6 +113,7 @@ public sealed partial class GolfGame
 
     void DuelUpdate(double dt)
     {
+        WaitingLook();
         if (!DuelOn)
         {
             _rivalBall.Hide();
@@ -159,11 +164,22 @@ public sealed partial class GolfGame
                 r > 0 ? Gold : Colors.White, 30, 1.8, L.F("holes {0}–{1}", _match.MyHoles, _match.TheirHoles));
             if (_match.Over) DuelOver();
         }
-        else if (!byMe && !wasMyTurn && _match.MyTurn)
-        {
-            Host.Sound.Play("pop", 0.4, 1.4); // your putt
-        }
+        else if (!byMe && !wasMyTurn && _match.MyTurn) TurnCue();
         Changed();
+    }
+
+    /// <summary>The putt has come round to this player: the ball swells once, with a soft sound.</summary>
+    void TurnCue()
+    {
+        Host.Sound.Play("pop", 0.4, 1.4);
+        Anims.Add(0.5, k => _ballSprite.Scale = 1 + 0.3 * k, Ease.Pulse, () => _ballSprite.Scale = 1);
+    }
+
+    /// <summary>While the other player putts, our ball sits dimmed a little, so it is clear whose go it is.</summary>
+    void WaitingLook()
+    {
+        double opacity = Waiting ? 0.7 : 1;
+        if (_ballSprite.Opacity != opacity) _ballSprite.Opacity = opacity;
     }
 
     void DuelOver()

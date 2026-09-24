@@ -280,6 +280,7 @@ public sealed partial class GolfGame : MiniGame
         if (busy) UpdateCloth(_time);
         Draw();
         DuelUpdate(dt);
+        busy |= Anims.Update(dt);
         return busy || DuelOn;
     }
 
@@ -384,7 +385,7 @@ public sealed partial class GolfGame : MiniGame
         _ballSprite.Set(_ball.Pos, _ball.Angle);
         _flag.Set(_cup);
         _ring.Set(_ball.Pos);
-        _ring.IsVisible = BallReady;
+        _ring.IsVisible = BallReady && !Waiting;
     }
 
     void UpdateCloth(double t)
