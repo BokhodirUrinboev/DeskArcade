@@ -30,6 +30,10 @@ public sealed partial class ArcheryGame
     bool DuelOn => Host.Lan.Connected;
     bool DuelHost => Host.Lan.Role != LanRole.Guest;
     string Rival => Host.Lan.PeerName;
+    bool Waiting => DuelOn && !_match.Over && !_match.MyTurn;
+
+    /// <summary>The scoreboard's chip in a match: the other player, and whose shot it is.</summary>
+    public override Opponent? Opponent => DuelOn ? new(Rival, false, 0, _match.Over ? null : _match.MyTurn) : null;
 
     void DuelSetup()
     {
@@ -64,6 +68,21 @@ public sealed partial class ArcheryGame
         _match = new ArcheryMatch(iShootFirst: (round % 2 == 1) == DuelHost);
         _shotOpen = false;
         NewRound(wind);
+        if (_match.MyTurn) TurnCue();
+    }
+
+    /// <summary>The shot has come round to this player: the bow swells once, with a soft sound.</summary>
+    void TurnCue()
+    {
+        Host.Sound.Play("pop", 0.4, 1.4);
+        Anims.Add(0.5, k => _bow.Scale = 1 + 0.15 * k, Ease.Pulse, () => _bow.Scale = 1);
+    }
+
+    /// <summary>While the other player shoots, our bow sits dimmed a little, so it is clear whose go it is.</summary>
+    void WaitingLook()
+    {
+        double opacity = Waiting ? 0.7 : 1;
+        if (_bow.Opacity != opacity) _bow.Opacity = opacity;
     }
 
     /// <summary>False (with a hint) when it isn't this player's shot.</summary>
@@ -102,6 +121,7 @@ public sealed partial class ArcheryGame
 
     void DuelUpdate(double dt)
     {
+        WaitingLook();
         if (!DuelOn)
         {
             _rivalArrow.Hide();
@@ -142,7 +162,7 @@ public sealed partial class ArcheryGame
             Host.Fx.Popup(_bowPos - new Vec2(0, GrabR + 40), points > 0 ? L.F("{0}: +{1}", Rival, points) : L.F("{0} missed", Rival),
                 points > 0 ? Gold : Colors.White, 22, 1.3);
         if (_match.Over) DuelOver();
-        else if (!byMe && !wasMyTurn && _match.MyTurn) Host.Sound.Play("pop", 0.4, 1.4); // your shot
+        else if (!byMe && !wasMyTurn && _match.MyTurn) TurnCue();
         Changed();
     }
 

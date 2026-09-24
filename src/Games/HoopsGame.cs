@@ -36,7 +36,7 @@ public sealed partial class HoopsGame : MiniGame
     readonly List<(double t, Vec2 p)> _trail = new();
     readonly Dictionary<string, double> _lastSound = new();
 
-    double _boardX, _rimY, _dir = -1, _bob, _time, _acc, _flameTimer;
+    double _boardX, _rimY, _dir = -1, _bob, _time, _acc, _flameTimer, _hoopPulse = 1;
     double _netSwing, _netSwingV, _netStretch, _netStretchV;
     bool _placed, _holding, _draggingHoop, _throwLive, _scored, _touched, _bestAnnounced;
     Vec2 _grabOffset;
@@ -140,9 +140,17 @@ public sealed partial class HoopsGame : MiniGame
         _boardX = Clamp(_boardX, a.Left + 60, a.Right - 60);
         _rimY = Clamp(_rimY, a.Top + BoardUp + 20, a.Bottom - NetDepth - 80);
         _dir = _boardX > a.Left + a.Width / 2 ? -1 : 1;
-        _backSc.ScaleX = _frontSc.ScaleX = _dir;
+        SetHoopPulse(_hoopPulse);
         _backTr.X = _frontTr.X = _boardX;
         _backTr.Y = _frontTr.Y = RimY;
+    }
+
+    /// <summary>The hoop's size: mirrored to face the court, and swollen a little by the turn cue.</summary>
+    void SetHoopPulse(double pulse)
+    {
+        _hoopPulse = pulse;
+        _backSc.ScaleX = _frontSc.ScaleX = _dir * pulse;
+        _backSc.ScaleY = _frontSc.ScaleY = pulse;
     }
 
     Rect HoopRect()
@@ -319,6 +327,7 @@ public sealed partial class HoopsGame : MiniGame
         busy |= AnimateNet(dt);
         _ballSprite.Set(_ball.Pos, _ball.Angle);
         HorseUpdate(dt);
+        busy |= Anims.Update(dt);
         return busy || HorseOn;
     }
 
