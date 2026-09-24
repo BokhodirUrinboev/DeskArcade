@@ -4,6 +4,7 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
+using Avalonia.Layout;
 using Avalonia.Media;
 using DeskArcade.Engine;
 
@@ -11,11 +12,15 @@ namespace DeskArcade.Games;
 
 /// <summary>
 /// Bug Squash: bugs crawl along the taskbar and the tops of your windows. Click them before they fly
-/// away. Quick successive squashes build a combo; ladybugs are features, not bugs.
+/// away. Quick successive squashes build a combo; ladybugs are features, not bugs. A 30-second round is
+/// one race round against the computer or a co-worker.
 /// </summary>
 public sealed class BugsGame : MiniGame
 {
     const double RoundSeconds = 30, HitR = 26, Gravity = 1500, BodyLift = 11, ComboWindow = 1.2;
+
+    /// <summary>What a decent round scores: a couple of dozen squashes with a few combos among them.</summary>
+    public const int Baseline = 40;
 
     static readonly string[] BugNames =
     {
@@ -34,7 +39,12 @@ public sealed class BugsGame : MiniGame
         public required Control LegsA;
         public required Control LegsB;
         public required Control Wings;
+        public required ScaleTransform Flat;      // the squash: flattened toward the feet
+        public required TranslateTransform Shift;
+        public Control? Shine;                    // the golden bug's highlight
+        public RotateTransform? Sparkle;
         public Kind Kind;
+        public double Foot; // from the body's center down to the feet
         public Vec2 Pos; // feet, on the surface
         public double Dir = 1, Speed, Vy, Age, Life, LegT, EscapeT;
         public IntPtr Hwnd;
@@ -52,6 +62,10 @@ public sealed class BugsGame : MiniGame
     readonly Canvas _bugLayer = new() { IsHitTestVisible = false };
     readonly List<Bug> _bugs = new();
     readonly List<Splat> _splats = new();
+    readonly Border _banner;
+    readonly TextBlock _bannerTitle, _bannerSub;
+    Anims.Tween? _bannerIn, _bannerOut;
+    double _bannerRest;
 
     bool _roundActive;
     double _roundLeft, _spawnIn, _time, _lastSquash = -10, _sleeperIn = -1;
@@ -61,6 +75,24 @@ public sealed class BugsGame : MiniGame
     {
         Layer.Children.Add(_splatLayer);
         Layer.Children.Add(_bugLayer);
+        _bannerTitle = new TextBlock
+        {
+            FontFamily = Fx.Font, FontSize = 30, FontWeight = FontWeight.Black, HorizontalAlignment = HorizontalAlignment.Center,
+        };
+        _bannerSub = new TextBlock
+        {
+            FontFamily = Fx.Font, FontSize = 14, FontWeight = FontWeight.Bold, Foreground = Art.Brush("#E4E8EF"),
+            HorizontalAlignment = HorizontalAlignment.Center, Margin = new Thickness(0, 2, 0, 0),
+        };
+        var stack = new StackPanel();
+        stack.Children.Add(_bannerTitle);
+        stack.Children.Add(_bannerSub);
+        _banner = new Border
+        {
+            Child = stack, CornerRadius = new CornerRadius(16), Padding = new Thickness(26, 10, 26, 12), IsVisible = false,
+            Background = Art.Brush(222, 18, 20, 28), BorderThickness = new Thickness(1.5), IsHitTestVisible = false,
+        };
+        Layer.Children.Add(_banner);
     }
 
     public override string Id => "bugs";
@@ -68,10 +100,10 @@ public sealed class BugsGame : MiniGame
 
     public override Sprite CreateIcon()
     {
-        var icon = MakeBug(Kind.Beetle, out _, out var legsB, out _);
-        legsB.IsVisible = false;
-        icon.Scale = 0.72;
-        return icon;
+        var bug = MakeBug(Kind.Beetle);
+        bug.LegsB.IsVisible = false;
+        bug.Sprite.Scale = 0.72;
+        return bug.Sprite;
     }
 
     public override HudInfo Hud => new(
@@ -94,6 +126,7 @@ public sealed class BugsGame : MiniGame
             if (b.Pos.Y > a.Bottom) b.Pos.Y = a.Bottom;
             Draw(b);
         }
+        if (_banner.IsVisible) Canvas.SetLeft(_banner, a.Center.X - _banner.DesiredSize.Width / 2);
         if (!_roundActive && _sleeperIn < 0 && !_bugs.Any(b => b.Sleeping)) SpawnSleeper();
         Host.HudChanged();
     }
@@ -112,13 +145,35 @@ public sealed class BugsGame : MiniGame
         Draw(bug);
     }
 
+    public override bool SupportsLan => true;
+    public override (int Score, bool Active)? Race => (_score, _roundActive);
+    public override int RaceBaseline => Baseline;
+    public override int RaceBest => Host.Settings.BestBugs;
+    public override double RaceSeconds => RoundSeconds;
+
+    /// <summary>The rival started a round: the sleeper wakes and flies off, and the clock starts.</summary>
+    public override void StartRace()
+    {
+        if (_roundActive) return;
+        foreach (var b in _bugs.Where(b => b.Sleeping))
+        {
+            b.Sleeping = false;
+            b.Escaping = true;
+            b.EscapeT = 0;
+        }
+        StartRound();
+        Host.Wake();
+    }
+
     void StartRound()
     {
         _roundActive = true;
+        Host.RoundStarted();
         _roundLeft = RoundSeconds;
         _score = _squashed = _escaped = _combo = 0;
         _spawnIn = 0.3;
         _shownSecond = -1;
+        ShowBanner(L.T("GO!"), L.F("{0} seconds · spare the ladybugs", (int)RoundSeconds), Gold, 1.3);
         Host.Sound.Play("fire", 0.6);
         Host.HudChanged();
     }
@@ -126,6 +181,7 @@ public sealed class BugsGame : MiniGame
     void EndRound()
     {
         _roundActive = false;
+        Host.RoundEnded(_score);
         foreach (var b in _bugs.Where(b => !b.Escaping).ToList())
         {
             b.Escaping = true; // everyone flies home; doesn't count as escaped
@@ -142,8 +198,8 @@ public sealed class BugsGame : MiniGame
         }
         var a = Host.Arena;
         var at = new Vec2(a.Center.X, a.Top + a.Height * 0.3);
-        Host.Fx.Popup(at, best ? L.T("NEW BEST!") : L.T("TIME!"), best ? Gold : Colors.White, 38, 2.4,
-            L.F("{0} points · {1} squashed · {2} got away", _score, _squashed, _escaped));
+        ShowBanner(best ? L.T("NEW BEST!") : L.T("TIME!"), L.F("{0} points · {1} squashed · {2} got away", _score, _squashed, _escaped),
+            best ? Gold : Colors.White, 2.4);
         if (best)
         {
             Host.Fx.Burst(at, new[] { Gold, Colors.White, Color.FromRgb(6, 214, 160) }, 40, 520, 700, 7, 1.1);
@@ -155,6 +211,28 @@ public sealed class BugsGame : MiniGame
         }
         _sleeperIn = 2.5;
         Host.HudChanged();
+    }
+
+    /// <summary>The round's banner slides down from above the screen, holds, and slides back up out of sight.</summary>
+    void ShowBanner(string title, string sub, Color color, double hold)
+    {
+        _bannerTitle.Text = title;
+        _bannerTitle.Foreground = Art.Brush(Art.Safe(color));
+        _bannerSub.Text = sub;
+        _banner.BorderBrush = Art.Brush(Color.FromArgb(150, color.R, color.G, color.B));
+        _banner.IsVisible = true;
+        _banner.Measure(Size.Infinity);
+        double w = _banner.DesiredSize.Width, h = _banner.DesiredSize.Height;
+        var a = Host.Arena;
+        double hidden = a.Top - h - 12;
+        _bannerRest = a.Top + a.Height * 0.3 - h / 2;
+        Canvas.SetLeft(_banner, a.Center.X - w / 2);
+        Canvas.SetTop(_banner, hidden);
+        _bannerIn?.Cancel();
+        _bannerOut?.Cancel();
+        _bannerIn = Anims.Add(0.5, k => Canvas.SetTop(_banner, hidden + (_bannerRest - hidden) * k), Ease.OutBack);
+        _bannerOut = Anims.Add(0.35, k => Canvas.SetTop(_banner, _bannerRest + (hidden - _bannerRest) * k), Ease.InCubic,
+            () => _banner.IsVisible = false, hold);
     }
 
     void Spawn()
@@ -192,9 +270,8 @@ public sealed class BugsGame : MiniGame
 
     Bug NewBug(Kind kind)
     {
-        var sprite = MakeBug(kind, out var legsA, out var legsB, out var wings);
-        var bug = new Bug { Sprite = sprite, LegsA = legsA, LegsB = legsB, Wings = wings, Kind = kind };
-        _bugLayer.Children.Add(sprite);
+        var bug = MakeBug(kind);
+        _bugLayer.Children.Add(bug.Sprite);
         _bugs.Add(bug);
         return bug;
     }
@@ -203,6 +280,21 @@ public sealed class BugsGame : MiniGame
     {
         _bugLayer.Children.Remove(b.Sprite);
         _bugs.Remove(b);
+    }
+
+    /// <summary>A squashed bug leaves the game at once, but its picture flattens onto the surface and fades.</summary>
+    void Flatten(Bug b)
+    {
+        _bugs.Remove(b);
+        b.LegsA.IsVisible = b.LegsB.IsVisible = b.Wings.IsVisible = false;
+        var sprite = b.Sprite;
+        Anims.Add(0.14, k =>
+        {
+            b.Flat.ScaleY = 1 - 0.72 * k;
+            b.Flat.ScaleX = 1 + 0.4 * k;
+            b.Shift.Y = b.Foot * 0.72 * k;
+        }, Ease.OutQuad);
+        Anims.Add(0.4, k => sprite.Opacity = 1 - k, Ease.InQuad, () => _bugLayer.Children.Remove(sprite), 0.3);
     }
 
     // ------------------------------------------------------------------ input
@@ -237,7 +329,7 @@ public sealed class BugsGame : MiniGame
     {
         var at = BodyCenter(b);
         bool starts = b.Sleeping && !_roundActive;
-        Remove(b);
+        Flatten(b);
         AddSplat(at, b.Kind == Kind.Ladybug ? Color.FromRgb(215, 38, 61) : Goo[0]);
         if (starts) StartRound();
 
@@ -245,6 +337,7 @@ public sealed class BugsGame : MiniGame
         {
             _score = Math.Max(0, _score - 5);
             _combo = 0;
+            Host.ShareAction(at, -5);
             Host.Fx.Popup(at - new Vec2(0, 40), "−5", Color.FromRgb(255, 110, 110), 30, 1.3, L.T("that was a feature!"));
             Host.Sound.Play("buzzer", 0.35);
         }
@@ -258,6 +351,7 @@ public sealed class BugsGame : MiniGame
             _squashed++;
             Host.Stats.Add("bugs.squashed");
             Host.Stats.Max("bugs.combo", mult);
+            Host.ShareAction(at, pts);
             Host.Fx.Popup(at - new Vec2(0, 36), mult > 1 ? $"+{pts}  ×{mult}" : $"+{pts}", b.Kind == Kind.Golden ? Gold : Colors.White,
                 b.Kind == Kind.Golden ? 32 : 26, 1.0, BugNames[Rng.Next(BugNames.Length)]);
             Host.Fx.Burst(at, Goo, 12, 260, 700, 5, 0.5);
@@ -282,7 +376,7 @@ public sealed class BugsGame : MiniGame
     public override bool Update(double dt)
     {
         _time += dt;
-        bool busy = false;
+        bool busy = Anims.Update(dt);
 
         if (_roundActive)
         {
@@ -352,7 +446,10 @@ public sealed class BugsGame : MiniGame
             bool phase = (int)(b.LegT * 6) % 2 == 0;
             b.LegsA.IsVisible = phase && !b.Falling;
             b.LegsB.IsVisible = !phase && !b.Falling;
-            Draw(b);
+            Shimmer(b);
+            // the scurry: the body rocks and bobs in step with the legs
+            double stride = Math.Sin(b.LegT * Math.PI * 2);
+            Draw(b, b.Falling ? 0 : ScurryTilt(b.LegT), b.Falling ? 0 : Math.Abs(stride) * 1.5);
         }
 
         for (int i = _splats.Count - 1; i >= 0; i--)
@@ -368,6 +465,17 @@ public sealed class BugsGame : MiniGame
             busy = true;
         }
         return busy;
+    }
+
+    /// <summary>How far a walking bug's body rocks, in degrees, at a point in its stride: a few degrees each way, once per step.</summary>
+    public static double ScurryTilt(double legT) => Math.Sin(legT * Math.PI * 2) * 3;
+
+    /// <summary>The golden bug's highlight glows and dims, and its sparkle turns.</summary>
+    void Shimmer(Bug b)
+    {
+        if (b.Shine == null) return;
+        b.Shine.Opacity = 0.35 + 0.65 * Math.Abs(Math.Sin(b.Age * 5));
+        if (b.Sparkle != null) b.Sparkle.Angle = b.Age * 120;
     }
 
     void Walk(Bug b, double dt)
@@ -444,9 +552,9 @@ public sealed class BugsGame : MiniGame
 
     // ------------------------------------------------------------------ visuals
 
-    void Draw(Bug b, double angle = 0)
+    void Draw(Bug b, double angle = 0, double bob = 0)
     {
-        b.Sprite.Set(BodyCenter(b), angle);
+        b.Sprite.Set(BodyCenter(b) - new Vec2(0, bob), angle);
         b.Sprite.FlipX = b.Dir;
     }
 
@@ -465,8 +573,8 @@ public sealed class BugsGame : MiniGame
         _splats.Add(new Splat { Sprite = s });
     }
 
-    /// <summary>Side view of a bug facing +x, body centered on the origin.</summary>
-    static Sprite MakeBug(Kind kind, out Control legsA, out Control legsB, out Control wings)
+    /// <summary>Side view of a bug facing +x, body centered on the origin, with the parts the game animates.</summary>
+    static Bug MakeBug(Kind kind)
     {
         (Color shell, Color dark, double len, double hgt) = kind switch
         {
@@ -478,36 +586,53 @@ public sealed class BugsGame : MiniGame
         string F(double v) => Art.F(v);
         double foot = hgt / 2 + 6;
         var s = new Sprite { IsHitTestVisible = false };
+        var flat = new ScaleTransform(1, 1);
+        var shift = new TranslateTransform();
+        var body = new Canvas { RenderTransformOrigin = RelativePoint.TopLeft, RenderTransform = new TransformGroup { Children = { flat, shift } } };
+        s.Rotor.Children.Add(body);
         var legBrush = Art.Brush(dark);
 
-        legsA = Art.PathOf($"M-8,3 L-12,{F(foot)} M0,3 L2,{F(foot)} M8,3 L12,{F(foot)}", null, legBrush, 1.6);
-        legsB = Art.PathOf($"M-8,3 L-5,{F(foot)} M0,3 L-3,{F(foot)} M8,3 L5,{F(foot)}", null, legBrush, 1.6);
-        s.Rotor.Children.Add(legsA);
-        s.Rotor.Children.Add(legsB);
+        var legsA = Art.PathOf($"M-8,3 L-12,{F(foot)} M0,3 L2,{F(foot)} M8,3 L12,{F(foot)}", null, legBrush, 1.6);
+        var legsB = Art.PathOf($"M-8,3 L-5,{F(foot)} M0,3 L-3,{F(foot)} M8,3 L5,{F(foot)}", null, legBrush, 1.6);
+        body.Children.Add(legsA);
+        body.Children.Add(legsB);
 
-        var body = new RadialGradientBrush { GradientOrigin = new RelativePoint(0.4, 0.2, RelativeUnit.Relative) };
-        body.GradientStops.Add(new GradientStop(Art.Blend(shell, Colors.White, 0.35), 0));
-        body.GradientStops.Add(new GradientStop(shell, 0.55));
-        body.GradientStops.Add(new GradientStop(Art.Blend(shell, Colors.Black, 0.35), 1));
-        s.Rotor.Children.Add(Art.At(new Ellipse { Width = len, Height = hgt, Fill = body, Stroke = legBrush, StrokeThickness = 1 }, -len / 2, -hgt / 2));
-        s.Rotor.Children.Add(Art.PathOf($"M{F(-len / 2 + 3)},0 Q0,{F(-hgt / 2 - 2)} {F(len / 2 - 3)},0", null, Art.Brush(Art.Blend(shell, Colors.Black, 0.45)), 1));
+        var shellFill = new RadialGradientBrush { GradientOrigin = new RelativePoint(0.4, 0.2, RelativeUnit.Relative) };
+        shellFill.GradientStops.Add(new GradientStop(Art.Blend(shell, Colors.White, 0.35), 0));
+        shellFill.GradientStops.Add(new GradientStop(shell, 0.55));
+        shellFill.GradientStops.Add(new GradientStop(Art.Blend(shell, Colors.Black, 0.35), 1));
+        body.Children.Add(Art.At(new Ellipse { Width = len, Height = hgt, Fill = shellFill, Stroke = legBrush, StrokeThickness = 1 }, -len / 2, -hgt / 2));
+        body.Children.Add(Art.PathOf($"M{F(-len / 2 + 3)},0 Q0,{F(-hgt / 2 - 2)} {F(len / 2 - 3)},0", null, Art.Brush(Art.Blend(shell, Colors.Black, 0.45)), 1));
 
+        Control? shine = null;
+        RotateTransform? sparkle = null;
         if (kind == Kind.Ladybug)
             foreach (var (x, y) in new[] { (-5.0, -3.0), (2.0, -4.0), (-1.0, 2.0) })
-                s.Rotor.Children.Add(Art.Circle(x, y, 2.2, legBrush));
+                body.Children.Add(Art.Circle(x, y, 2.2, legBrush));
         if (kind == Kind.Golden)
-            s.Rotor.Children.Add(Art.At(new Ellipse { Width = 9, Height = 4, Fill = Art.Brush(150, 255, 255, 255) }, -6, -hgt / 2 + 2));
+        {
+            shine = Art.At(new Ellipse { Width = 9, Height = 4, Fill = Art.Brush(150, 255, 255, 255) }, -6, -hgt / 2 + 2);
+            body.Children.Add(shine);
+            sparkle = new RotateTransform();
+            var star = Art.PathOf(Art.StarPath(0, 0, 4.5, 1.8), Art.Brush(230, 255, 255, 255));
+            star.RenderTransformOrigin = RelativePoint.TopLeft;
+            star.RenderTransform = sparkle;
+            body.Children.Add(Art.At(star, 6, -hgt / 2 - 2));
+        }
 
-        s.Rotor.Children.Add(Art.Circle(len / 2 + 3, 1, hgt * 0.32, legBrush));
-        s.Rotor.Children.Add(Art.Circle(len / 2 + 5, -1, 1.3, Brushes.White));
-        s.Rotor.Children.Add(Art.PathOf($"M{F(len / 2 + 5)},-3 Q{F(len / 2 + 12)},-12 {F(len / 2 + 16)},-9", null, legBrush, 1.2));
+        body.Children.Add(Art.Circle(len / 2 + 3, 1, hgt * 0.32, legBrush));
+        body.Children.Add(Art.Circle(len / 2 + 5, -1, 1.3, Brushes.White));
+        body.Children.Add(Art.PathOf($"M{F(len / 2 + 5)},-3 Q{F(len / 2 + 12)},-12 {F(len / 2 + 16)},-9", null, legBrush, 1.2));
 
-        var wingCanvas = new Canvas { IsVisible = false };
-        wingCanvas.Children.Add(Art.At(new Ellipse { Width = 22, Height = 10, Fill = Art.Brush(140, 220, 235, 255), RenderTransform = new RotateTransform(-25) }, -16, -hgt / 2 - 10));
-        wingCanvas.Children.Add(Art.At(new Ellipse { Width = 18, Height = 8, Fill = Art.Brush(110, 220, 235, 255), RenderTransform = new RotateTransform(-45) }, -8, -hgt / 2 - 12));
-        s.Rotor.Children.Add(wingCanvas);
-        wings = wingCanvas;
-        return s;
+        var wings = new Canvas { IsVisible = false };
+        wings.Children.Add(Art.At(new Ellipse { Width = 22, Height = 10, Fill = Art.Brush(140, 220, 235, 255), RenderTransform = new RotateTransform(-25) }, -16, -hgt / 2 - 10));
+        wings.Children.Add(Art.At(new Ellipse { Width = 18, Height = 8, Fill = Art.Brush(110, 220, 235, 255), RenderTransform = new RotateTransform(-45) }, -8, -hgt / 2 - 12));
+        body.Children.Add(wings);
+        return new Bug
+        {
+            Sprite = s, LegsA = legsA, LegsB = legsB, Wings = wings, Flat = flat, Shift = shift, Shine = shine, Sparkle = sparkle,
+            Kind = kind, Foot = foot,
+        };
     }
 
     public override void DemoTick()
