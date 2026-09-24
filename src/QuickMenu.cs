@@ -51,11 +51,7 @@ public static class QuickMenu
             themes.Items.Add(Radio(L.T(name), w.Settings.Theme == t, () => w.SetTheme(t)));
         }
         themes.Items.Add(new Separator());
-        themes.Items.Add(Check(L.T("Theme decorations"), Themes.DecorEnabled, () =>
-        {
-            Themes.DecorEnabled = !Themes.DecorEnabled;
-            w.Wake();
-        }));
+        themes.Items.Add(Check(L.T("Theme decorations"), w.Settings.ThemeDecor, () => w.SetThemeDecor(!w.Settings.ThemeDecor)));
         yield return themes;
 
         var lan = Sub(L.T("Play over LAN"));

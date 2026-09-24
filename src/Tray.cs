@@ -108,12 +108,7 @@ public sealed class Tray : IDisposable
         foreach (var (id, name) in Engine.Themes.Choices)
             themes.Add(Radio(L.T(name), () => _w.SetTheme(id), () => _w.Settings.Theme == id));
         themes.Add(new NativeMenuItemSeparator());
-        themes.Add(Check(L.T("Theme decorations"), () =>
-        {
-            Engine.Themes.DecorEnabled = !Engine.Themes.DecorEnabled;
-            _w.Wake();
-            Refresh();
-        }, () => Engine.Themes.DecorEnabled));
+        themes.Add(Check(L.T("Theme decorations"), () => _w.SetThemeDecor(!_w.Settings.ThemeDecor), () => _w.Settings.ThemeDecor));
         menu.Add(new NativeMenuItem(L.T("Theme")) { Menu = themes });
 
         var breaks = new NativeMenu();

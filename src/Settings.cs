@@ -60,6 +60,8 @@ public sealed class Settings
     public Dictionary<string, int> Levels { get; set; } = new();
     /// <summary>Race the computer in round-based games when nobody is on the LAN: a computer rival plays a round alongside.</summary>
     public bool CpuRival { get; set; } = true;
+    /// <summary>Snow, leaves, petals and the like drifting over the desktop while a game moves (tray → Theme → Theme decorations).</summary>
+    public bool ThemeDecor { get; set; } = true;
     /// <summary>Remind the player to take a break after this many minutes of play; 0 turns it off.</summary>
     public int BreakMinutes { get; set; }
     /// <summary>When Claude finishes while you were playing, say "back to work" instead of "your turn".</summary>

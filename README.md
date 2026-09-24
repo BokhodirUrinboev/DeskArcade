@@ -53,7 +53,8 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
   H-O-R-S-E, Mini Golf and Archery duels, board games, Sea Battle and score races in twenty-one games. You see
   what the other player does: their ball, arrow or puck, and a marker wherever they pop, whack or stack.
 - **Office leaderboard** (opt-in): today's best scores of everyone on the network who shares theirs.
-- **Themes** (including seasonal ones), a **break reminder**, and twelve desktop pets that fetch, beg for treats and
+- **Thirteen themes** (including a seasonal one) that dress the scoreboard, boards, tables, pieces and pet, with light
+  decorations drifting over the desktop; a **break reminder**; and twelve desktop pets that fetch, beg for treats and
   visit each other over the LAN.
 - **No assets to download.** Every sound is synthesized and all artwork is drawn in code.
 
@@ -138,7 +139,7 @@ for the other side). The score pops when it changes. **Click it** to open the fu
 game; it shrinks back shortly after the mouse leaves. Drag it anywhere.
 
 The **☰** at the end of the pill (and of the tabs) opens a menu with the essentials of the tray menu: game,
-pet, CPU difficulty, play over LAN, stats, shortcuts, reset positions, hide, exit. It is the way in on desktops
+pet, CPU difficulty, theme, sound, accessibility, language, play over LAN, stats, shortcuts, updates, hide, exit. It is the way in on desktops
 without a tray (GNOME without the AppIndicator extension, a bare window manager), and it never leaves the overlay.
 
 **Race the computer:** in round-based games (Bubble Pop, Whack-a-Bug, Tower Stack and the others that race
@@ -169,7 +170,7 @@ broadcasts your user name and today's scores on UDP port 47821 every 20 seconds,
 | **Ctrl+Alt+B** | Bring the ball, bow, paddle or pet to the cursor (a penalty stroke in Mini Golf) |
 | Click the scoreboard | Open the game tabs |
 | Drag the scoreboard | Move it |
-| ☰ on the scoreboard | The quick menu: game, pet, CPU difficulty, LAN, stats, hide, exit |
+| ☰ on the scoreboard | The quick menu: game, pet, CPU difficulty, theme, sound, LAN, stats, hide, exit |
 | Drag the grip above a board or table (or right-drag the board) | Move it; the place is remembered (**tray → Reset positions** forgets it) |
 | Tray icon, left-click | Show or hide |
 | Tray icon menu | Game, pet, CPU difficulty (every game with a computer opponent, and the race toggle), theme, break reminder, office leaderboard, volume, language, Claude Code options, updates, stats, monitor, reset, exit |
@@ -177,8 +178,18 @@ broadcasts your user name and today's scores on UDP port 47821 every 20 seconds,
 On macOS the shortcuts are **Control+Option+G/N/B**. **Tray → Shortcuts…** changes the modifier keys and the
 letters (Windows applies them at once; Linux and macOS from the next start).
 
-**Tray → Theme** recolours the mallets, paddles, puck and balls: Classic, Neon, Retro, Halloween, Winter,
-or **Seasonal** (Halloween in October, Winter in December and January, Classic the rest of the year).
+**Tray → Theme** (also in the ☰ menu) dresses the whole overlay: the scoreboard, the grips above boards and
+tables, the chess and checkers boards, the card tables' felt and card backs, the mallets, paddles, puck and
+balls, the gold of popups and confetti, and the pet, which wears a scarf in Winter, a pumpkin hat in Halloween,
+a flower in Spring and sunglasses in Ocean. Thirteen themes: Classic, Neon, Retro, Halloween, Winter, Ocean,
+Forest, Sunset, Candy, Mono (black, white and one red), Spring, Autumn and Midnight, or **Seasonal**, which
+follows the calendar: Spring from March to May, Ocean over the summer, Autumn in September and October
+(Halloween in its last week), Forest in November, Winter in December and January, Midnight in February.
+Picking one shows its name and mood with a burst of confetti. Most themes also drift a few light decorations
+over the desktop while a game is moving: snow that settles on window tops and the taskbar for a moment,
+leaves, petals, bubbles, fireflies, stars, embers or confetti. They only appear while something is already
+moving and fade out within a couple of seconds when the game goes idle, so an idle overlay still costs
+nothing; **Theme decorations** in the same menu turns them off, and Reduce motion does too.
 
 **Tray → Break reminder** nudges you after 15 to 60 minutes of play (five minutes away counts as a break),
 and can make the "Claude is done" notice say **back to work** when you were playing while Claude worked.

@@ -148,6 +148,7 @@ public sealed class OverlayWindow : Window, IGameHost
         Platforms.Enabled = Settings.Platforms;
         Fx.ReducedMotion = Settings.ReducedMotion;
         Engine.Art.ColorBlind = Settings.ColorBlind;
+        Themes.DecorEnabled = Settings.ThemeDecor;
         Themes.Apply(Settings.Theme, DateTime.Today);
         OnThemeChanged(); // the pieces built before the games (the race label, the decor) take the theme too
         _board = new OfficeBoard(() => _boardEntry);
@@ -1308,6 +1309,16 @@ public sealed class OverlayWindow : Window, IGameHost
         Sound.Play("attention", 0.6);
         Notice(L.F("You've played {0} minutes", Settings.BreakMinutes), L.T("time for a short break · stretch and look away from the screen"),
             Color.FromRgb(120, 200, 255));
+    }
+
+    /// <summary>Snow, leaves and the other theme decorations on or off.</summary>
+    public void SetThemeDecor(bool on)
+    {
+        Settings.ThemeDecor = on;
+        Themes.DecorEnabled = on;
+        SaveSettings();
+        _tray?.Refresh();
+        Wake();
     }
 
     public void SetTheme(string id)

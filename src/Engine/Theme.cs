@@ -185,35 +185,7 @@ public static class Themes
 
     // The decorations toggle lives beside the settings file as a marker (present = off), so it needs no field in
     // Settings; it is read once and kept.
-    static bool? _decor;
 
-    static string DecorOffPath => Path.Combine(Settings.DataDirectory, "decor-off");
-
-    /// <summary>Tray → Theme → Theme decorations: whether the theme's particles drift over the desktop (on by default).</summary>
-    public static bool DecorEnabled
-    {
-        get
-        {
-            if (_decor == null)
-            {
-                try { _decor = !File.Exists(DecorOffPath); }
-                catch { _decor = true; }
-            }
-            return _decor.Value;
-        }
-        set
-        {
-            _decor = value;
-            try
-            {
-                if (value) File.Delete(DecorOffPath);
-                else
-                {
-                    Directory.CreateDirectory(Settings.DataDirectory);
-                    File.WriteAllText(DecorOffPath, "");
-                }
-            }
-            catch { /* best effort, like the settings file */ }
-        }
-    }
+    /// <summary>Whether the theme's decorations drift over the desktop; the overlay keeps it in the settings (Settings.ThemeDecor).</summary>
+    public static bool DecorEnabled { get; set; } = true;
 }
