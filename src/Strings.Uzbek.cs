@@ -1021,6 +1021,24 @@ public static partial class Strings
 
 
         // ---- 1.8.0: Linux updates
+        ["Update {0}%"] = "Yangilanish {0}%",
+        ["then PolicyKit asks for your password to install it"] = "keyin PolicyKit o'rnatish uchun parolingizni so'raydi",
+        ["This release has no checksum"] = "Bu relizda nazorat yig'indisi yo'q",
+        ["installing the download unverified"] = "yuklab olingan fayl tekshiruvsiz o'rnatilmoqda",
+        ["a Flatpak updates with flatpak update · opening the release page"] = "Flatpak flatpak update bilan yangilanadi · reliz sahifasi ochilmoqda",
+        ["The update did not install · press Enter to close this window"] = "Yangilanish o'rnatilmadi · bu oynani yopish uchun Enter bosing",
+        ["Update {0} downloaded"] = "{0} yangilanishi yuklab olindi",
+        ["no pkexec or terminal to install it · it is in {0}"] = "o'rnatish uchun pkexec ham, terminal ham yo'q · fayl {0} ichida",
+        ["Finishing the update in a terminal"] = "Yangilanish terminalda yakunlanmoqda",
+        ["enter your password there · the game restarts when it is done"] = "parolingizni o'sha yerda kiriting · tugagach o'yin qayta ishga tushadi",
+        ["if it did not install, it is in {0}"] = "agar o'rnatilmagan bo'lsa, fayl {0} ichida",
+        ["Installed {0} · restarting"] = "{0} o'rnatildi · qayta ishga tushmoqda",
+        ["the new version starts in a moment"] = "yangi versiya birozdan keyin ishga tushadi",
+        ["saved in {0} · double-click the .deb to install it"] = "{0} ichida saqlandi · o'rnatish uchun .deb faylini ikki marta bosing",
+        ["Update failed · exit code {0}"] = "Yangilanish muvaffaqiyatsiz · chiqish kodi {0}",
+        ["couldn't replace the running file · the new one is {0}"] = "ishlayotgan faylni almashtirib bo'lmadi · yangisi: {0}",
+        ["Installed {0}"] = "{0} o'rnatildi",
+        ["start Desk Arcade again to play it"] = "o'ynash uchun Desk Arcade'ni qayta ishga tushiring",
 
 
         // ---- 1.8.0: themes

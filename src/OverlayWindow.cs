@@ -876,27 +876,147 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public void PlayDaily() => SwitchGame(Daily.For(Daily.Today).GameId);
 
+    bool _installingUpdate;
+
     /// <summary>
-    /// Windows installs: downloads the new installer and runs it silently. The installer asks this copy to
-    /// quit and starts the new version afterwards. Elsewhere, or if anything fails, opens the release page.
+    /// Installs the update this copy can install. A Windows setup is downloaded and run silently; it asks this copy to
+    /// quit and starts the new version afterwards. A Linux .deb goes through PolicyKit and an AppImage replaces its own
+    /// file (<see cref="Platform.Linux.LinuxUpdate"/>); both come back as the same profile. A Flatpak is told to use
+    /// flatpak, and a manual copy, or anything that fails, gets the release page.
     /// </summary>
     public async void InstallUpdate()
     {
-        if (_update is not UpdateInfo u) return;
+        if (_update is not UpdateInfo u || _installingUpdate) return;
+        if (UpdateChecker.InstallKind == InstallKind.Flatpak)
+        {
+            Notice(L.F("Desk Arcade {0} is available", u.Version.ToString(3)), L.T("a Flatpak updates with flatpak update · opening the release page"), Color.FromRgb(255, 209, 102));
+            UpdateChecker.OpenInBrowser(u.Url);
+            return;
+        }
         if (!UpdateChecker.CanInstall)
         {
             UpdateChecker.OpenInBrowser(u.Url);
             return;
         }
-        SetOverlayVisible(true);
-        Notice(L.F("Downloading version {0}…", u.Version.ToString(3)), L.T("the game restarts when it is done"), Color.FromRgb(77, 163, 255));
-        string? installer = await UpdateChecker.DownloadInstallerAsync(u);
-        if (installer == null)
+        _installingUpdate = true;
+        try
+        {
+            SetOverlayVisible(true);
+            var file = await DownloadUpdateAsync(u);
+            if (file == null) return;
+            switch (UpdateChecker.InstallKind)
+            {
+                case InstallKind.Deb: await InstallDebAsync(u, file); break;
+                case InstallKind.AppImage: await InstallAppImageAsync(u, file); break;
+                default: RunWindowsSetup(u, file.Path); break;
+            }
+        }
+        finally
+        {
+            _installingUpdate = false;
+        }
+    }
+
+    /// <summary>Downloads the asset for this copy, with the percentage on the scoreboard's task chip when it is free, else in a notice every 25%.</summary>
+    async System.Threading.Tasks.Task<DownloadedUpdate?> DownloadUpdateAsync(UpdateInfo u)
+    {
+        string version = u.Version.ToString(3);
+        var blue = Color.FromRgb(77, 163, 255);
+        Notice(L.F("Downloading version {0}…", version),
+            UpdateChecker.InstallKind == InstallKind.Deb ? L.T("then PolicyKit asks for your password to install it") : L.T("the game restarts when it is done"), blue);
+        bool chip = _hud.Task == TaskStatus.None && _taskSince == null, done = false;
+        int shown = 0;
+        var progress = new Progress<int>(percent =>
+        {
+            if (done) return; // a late report must not bring the chip back
+            if (chip && _taskSince == null) _hud.SetTask(TaskStatus.Running, L.F("Update {0}%", percent));
+            else if (UpdateChecker.CrossedProgressStep(shown, percent)) Notice(L.F("Downloading version {0}…", version), L.F("{0}%", percent), blue);
+            shown = percent;
+        });
+        var file = await UpdateChecker.DownloadInstallerAsync(u, progress);
+        done = true;
+        if (chip && _taskSince == null) _hud.SetTask(TaskStatus.None);
+        if (file == null)
         {
             Notice(L.T("Couldn't download the update"), L.T("opening the download page instead"), Color.FromRgb(255, 107, 107));
             UpdateChecker.OpenInBrowser(u.Url);
+        }
+        else if (!file.Verified)
+        {
+            Notice(L.T("This release has no checksum"), L.T("installing the download unverified"), Color.FromRgb(255, 209, 102));
+        }
+        return file;
+    }
+
+    /// <summary>
+    /// The PolicyKit (or terminal and sudo) install of a downloaded .deb. The package closes this copy while it runs, so the
+    /// wrapper shell is what starts the new version; this copy only reports what it still sees.
+    /// </summary>
+    async System.Threading.Tasks.Task InstallDebAsync(UpdateInfo u, DownloadedUpdate file)
+    {
+        string version = u.Version.ToString(3), dir = Path.GetDirectoryName(file.Path) ?? ".", folder = Platform.Linux.LinuxUpdate.Tidy(dir);
+        var gold = Color.FromRgb(255, 209, 102);
+        SaveSettings();
+        Stats.Save(); // nothing stays only in memory when the package's prerm closes the game
+        var install = Platform.Linux.LinuxUpdate.StartDebInstall(file.Path, Program.Profile, L.T("The update did not install · press Enter to close this window"));
+        if (install == null)
+        {
+            Notice(L.F("Update {0} downloaded", version), L.F("no pkexec or terminal to install it · it is in {0}", folder), gold);
+            if (!UpdateChecker.OpenFolder(dir)) UpdateChecker.OpenInBrowser(u.Url);
             return;
         }
+        if (install.ViaTerminal)
+            Notice(L.T("Finishing the update in a terminal"), L.T("enter your password there · the game restarts when it is done"), Color.FromRgb(77, 163, 255));
+        int? code = await install.ExitCode;
+        if (code == null)
+        {
+            Notice(L.F("Update {0} downloaded", version), L.F("if it did not install, it is in {0}", folder), gold);
+            return;
+        }
+        switch (Platform.Linux.LinuxUpdate.Classify(code.Value))
+        {
+            case Platform.Linux.LinuxUpdate.Outcome.Installed:
+                Notice(L.F("Installed {0} · restarting", version), L.T("the new version starts in a moment"), Color.FromRgb(61, 220, 132));
+                await System.Threading.Tasks.Task.Delay(1500);
+                Quit();
+                break;
+            case Platform.Linux.LinuxUpdate.Outcome.Dismissed:
+                Notice(L.F("Update {0} downloaded", version), L.F("saved in {0} · double-click the .deb to install it", folder), gold);
+                if (!UpdateChecker.OpenFolder(dir)) UpdateChecker.OpenInBrowser(u.Url);
+                break;
+            default:
+                Notice(L.F("Update failed · exit code {0}", code.Value), L.T("opening the download page instead"), Color.FromRgb(255, 107, 107));
+                UpdateChecker.OpenInBrowser(u.Url);
+                break;
+        }
+    }
+
+    /// <summary>Replaces the running AppImage with the download and starts the new file; when that is not possible the download is kept and the player told where.</summary>
+    async System.Threading.Tasks.Task InstallAppImageAsync(UpdateInfo u, DownloadedUpdate file)
+    {
+        string version = u.Version.ToString(3);
+        string running = Environment.GetEnvironmentVariable("APPIMAGE") ?? Program.LaunchPath;
+        var result = await System.Threading.Tasks.Task.Run(() => Platform.Linux.LinuxUpdate.InstallAppImage(file.Path, running));
+        if (!result.Replaced)
+        {
+            Notice(L.F("Update {0} downloaded", version), L.F("couldn't replace the running file · the new one is {0}", Platform.Linux.LinuxUpdate.Tidy(result.Path)), Color.FromRgb(255, 209, 102));
+            if (!UpdateChecker.OpenFolder(Path.GetDirectoryName(result.Path) ?? ".")) UpdateChecker.OpenInBrowser(u.Url);
+            return;
+        }
+        SaveSettings();
+        if (!Platform.Linux.LinuxUpdate.Relaunch(result.Path, Program.Profile))
+        {
+            Notice(L.F("Installed {0}", version), L.T("start Desk Arcade again to play it"), Color.FromRgb(61, 220, 132));
+            return;
+        }
+        Notice(L.F("Installed {0} · restarting", version), L.T("the new version starts in a moment"), Color.FromRgb(61, 220, 132));
+        await System.Threading.Tasks.Task.Delay(1500);
+        Quit();
+    }
+
+    /// <summary>Runs the downloaded Windows installer silently; it closes this copy and starts the new version.</summary>
+    void RunWindowsSetup(UpdateInfo u, string installer)
+    {
         try
         {
             Process.Start(new ProcessStartInfo(installer, "/SILENT /SUPPRESSMSGBOXES /NORESTART") { UseShellExecute = true });
