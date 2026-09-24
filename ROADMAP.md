@@ -3,7 +3,9 @@
 1.7.0 shipped on 2026-09-21 with natural pet voices and animal behaviour (the 1.6.0 and 1.7.0 roadmap is
 in the git history). The next three months are about **getting Desk Arcade in front of people**: package
 managers, Flathub, a real Mac test, and the visibility SignPath asked for before it signs Windows builds.
-Eight new games came early and shipped in 1.7.1, and four more with `--while` and the first LAN races in 1.7.2.
+Eight new games came early and shipped in 1.7.1, four more with `--while` and the first LAN races in 1.7.2, and
+1.8.0 turned every game into a two-player game: a computer rival or a co-worker in each of them, twelve pets,
+animation everywhere, and an overlay that behaves on a real Ubuntu desktop.
 
 Each item says how it will be verified. "Demo" means copies on one PC (`--profile`) playing by themselves
 (`--demo`).
@@ -12,9 +14,9 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 |---|---|---|
 | 1.7.1 | 2026-09-22 | Eight new games; Durak with a co-worker joins one room |
 | 1.7.2 | 2026-09-24 | `--while`, Solitaire, Last Card, Interns, Blockfall; Pinball and Paper Toss races |
-| 1.8.0 | late October | Package managers, Fetch for the pet |
-| 1.9.0 | late November | Flathub, a real Mac, LAN play for the new games |
-| 2.0.0 | mid December | Signed Windows builds, a winter event |
+| 1.8.0 | 2026-09-24 | Somebody to play against in every game, twelve pets, animation, the Ubuntu overlay, the ☰ menu |
+| 1.9.0 | late October | Package managers, a feel pass by hand, Flathub |
+| 2.0.0 | mid December | Signed Windows builds, a real Mac, a winter event |
 
 ## 1.7.1: eight new games (shipped 2026-09-22)
 
@@ -70,30 +72,71 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
   miss, is one race. *Verified: two copies over loopback playing by themselves: two Pinball games each and five
   Paper Toss races decided on both sides.*
 
-## 1.8.0: package managers (October)
+## 1.8.0: somebody to play against, everywhere (shipped 2026-09-24)
 
+- [x] **Race the computer.** Every round-based game (21 of them: Bubble Pop, Whack-a-Bug, Tower Stack, Bowling, Fishing,
+  Pinball, Paper Toss, Blockfall, Keepy-Uppy, Bug Squash, Can Knockdown, Brick Breaker, Clay Shooting, Plinko,
+  Slingshot, Darts, Pool, Memory, Code Breaker, Solitaire, Interns) races a computer rival when nobody is on the LAN:
+  it plays a round of its own at the game's CPU level, aiming at a fair round or your best, paced over a typical
+  round, with red rings where it scores; the level moves up after two wins in a row and down after two losses.
+  Fewer-is-better games (Darts, Pool, Memory, Code Breaker) count the other way. *Verified: unit tests for the
+  rival's pacing, levels and fewer-is-better; demo runs of every race game with `race.cpuwins` in the stats.*
+- [x] **LAN races for the thirteen games that had none** (Keepy-Uppy, Bug Squash, Can Knockdown, Brick Breaker, Clay
+  Shooting, Plinko, Slingshot, Darts, Pool, Memory, Code Breaker, Solitaire, Interns), with the rival's live score
+  and rings. *Verified: two copies over loopback on each, playing by themselves, with `lan.wins` on both sides.*
+- [x] **CPU difficulty in every game with a computer opponent**, one setting per game (tray → CPU difficulty, or the ☰
+  menu): the board games as before, Sea Battle with four new shooters (random, hunt-and-target, checkerboard, density),
+  Air Hockey and Pong with four base strengths under the session ratchet, and every race game. *Verified: unit tests
+  for the shooters, the table strengths and the level steps.*
+- [x] **The scoreboard shows who you play and whose turn it is**: a chip with "CPU · Hard", "vs Alice", "Your turn" or
+  "Alice's turn" (the dot breathes while you wait) on the pill and the board; the score pops when it changes; a
+  **☰ menu** on the scoreboard with the essentials of the tray menu. *Verified: screenshots under Xvfb of the chips,
+  the menu and a live CPU race.*
+- [x] **Boards and tables move**: a grip above chess, checkers, Connect Four, Tic-tac-toe, Sea Battle, Durak, Last Card,
+  Plinko, Darts, Pool, Memory, Code Breaker and Solitaire (right-drag still works), remembered per game and cleared by
+  Reset positions. *Verified: an xdotool drag under Xvfb, the place kept across a restart.*
+- [x] **Animation in every game** on a small tween engine (`Engine/Anim.cs`): games rise into place when switched to;
+  pieces slide and captures fade on the boards; cards deal, fly and re-fan; discs bounce, bricks fall in, cans drop,
+  pins wobble, bumpers pulse, rows collapse, shells arc, clays shatter, and wins celebrate. Reduced motion jumps
+  every tween to its end and keeps the timing. *Verified: demo runs of all 34 games without a crash; unit tests for
+  the tween list, the easing curves, the board move planner and the deal plans.*
+- [x] **Twelve pets**: hamster, turtle, parrot, frog, owl and a small dragon join the six, each with its own art,
+  voices, walk, habits and trick; and for all of them fetch (a ball, thrown and brought back, each animal its own
+  way), a treat jar and begging, a thought bubble, night-time drowsiness and a morning stretch, keeping you company
+  on the window nearest the cursor, and **pet visits over the LAN** (the co-worker's pet walks your desktop as a
+  ghost and the two say hello). Three new achievements. *Verified: unit tests for the tables and the visit
+  messages; demo runs as six kinds and a loopback visit with `pet.visits` counted.*
+- [x] **The overlay on a real Ubuntu desktop**: EWMH states (above, sticky, skip taskbar and pager, all workspaces)
+  set as properties and sent as client messages on every show, keyboard focus handed straight back if a window
+  manager gives it to us, a session-bus check for the tray with a one-time notice pointing at the ☰ menu when stock
+  GNOME has none, a cheaper window enumeration, a stale-pointer rule under XWayland, and the .deb's missing X11
+  dependencies. *Verified: the hints read back from the live X window under Xvfb; unit tests for the message
+  bodies and the packaging files. Not yet run on a real GNOME session (see below).*
+
+## 1.9.0: package managers and a feel pass (October)
+
+- [ ] **A feel pass by hand** on the 1.8.0 work, on Windows and Ubuntu: the computer rival's pacing and levels in each
+  race game, the pets' fetch and treats, the grips, the animations at 60 Hz. *Verified: an afternoon with a real
+  mouse, notes here.*
+- [ ] **The Ubuntu overlay on real desktops**: GNOME on Wayland and Xorg, KDE Plasma 6, XFCE: always on top, every
+  workspace, focus never taken, the tray notice on stock GNOME. *Verified: a checklist run on each, recorded here.*
 - [ ] **winget.** Sign the Microsoft CLA on
   [winget-pkgs#437055](https://github.com/microsoft/winget-pkgs/pull/437055) and see the first submission
-  through moderator review, then submit 1.7.0. *Verified: `winget install ImperiumGames.DeskArcade` on a
+  through moderator review, then submit 1.8.0. *Verified: `winget install ImperiumGames.DeskArcade` on a
   clean Windows Sandbox.*
 - [ ] **Automatic package updates.** After the GitHub Release is published, the release workflow stamps the
   Homebrew cask and the Scoop manifest and pushes them to
   [homebrew-tap](https://github.com/BokhodirUrinboev/homebrew-tap) and
   [scoop-bucket](https://github.com/BokhodirUrinboev/scoop-bucket), and opens the winget update with
-  `wingetcreate update --submit`. Needs a fine-grained token as a repository secret. *Verified: the 1.8.0
+  `wingetcreate update --submit`. Needs a fine-grained token as a repository secret. *Verified: the 1.9.0
   tag updates all three without a hand-made commit.*
-- [ ] **Release dry run** with the Node 24 action versions from #18, before the 1.8.0 tag. *Verified:
+- [ ] **Release dry run** with the Node 24 action versions from #18, before the 1.9.0 tag. *Verified:
   Actions → Release → Run workflow builds every package.*
-- [ ] **Fetch.** Throw a ball for the pet: it runs after it, jumps between windows to reach it and brings it
-  back to the cursor. Dogs fetch eagerly, cats only sometimes, ducks not at all. *Verified: unit test for the
-  chase path; demo run.*
 - [ ] **Pet voice tuning** after a listen on real speakers, and a volume slider for the pet alone.
   *Verified: listened to on speakers and headphones.*
 
-## 1.9.0: Linux and macOS (November)
+## 2.0.0: Linux, macOS and the season (November to December)
 
-- [ ] **Darts and Pool turn by turn over the LAN** (the other player's darts and shots as ghosts). Both count
-  fewest-is-best, so a score race doesn't fit them. *Verified: two copies over loopback, then two PCs.*
 - [ ] **Flathub.** Pick the app id (`io.github.BokhodirUrinboev.DeskArcade` unless the `imperiumgames.com`
   domain can be verified), attach a `linux-x64` publish tarball to each release for an `archive` source, add
   screenshots to the metainfo, and replace the `xdg-config/autostart` permission with the Background portal.
@@ -102,9 +145,6 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 - [ ] **A real Mac.** Run the macOS build on Apple Silicon and Intel: click-through, the window list, hotkeys,
   sound, the tray. Fix what breaks, and decide on an Apple Developer ID for notarization (needed for
   homebrew/cask itself). *Verified: a checklist run on both Macs, recorded here.*
-
-## 2.0.0: signed and seasonal (December)
-
 - [ ] **Reapply to SignPath Foundation** (declined on 2026-09-18 for too little visibility) once the package
   managers and Flathub listings, a README with screenshots and a short demo GIF, and download numbers from
   1.8 and 1.9 are in place. With the certificate, Windows builds stop tripping SmartScreen. *Verified: the
@@ -120,7 +160,9 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 | What | Needs |
 |---|---|
 | Durak and Last Card rooms across real PCs, played by people | Two to four PCs on one network |
-| How the pet voices sound; the new pet behaviours on screen | Speakers and a look on screen |
+| How the pet voices sound (twelve of them now); fetch, treats and visits on screen | Speakers and a look on screen |
+| The 1.8.0 overlay hints on real GNOME, KDE and XFCE sessions; the tray notice on stock GNOME | An Ubuntu desktop |
+| The computer rival's pacing and levels with a real mouse; the grips and animations at full frame rate | Someone playing |
 | How the eight new games, Solitaire, Last Card and Interns feel with a real mouse (none of the last three was played by hand) | Someone playing them |
 | macOS: click-through, window list, hotkeys, sound | A Mac |
 | The Node 24 action versions in the release workflow | A release dry run |
@@ -136,3 +178,48 @@ and using the windows and taskbar as the playing field. LAN notes say how each c
 | **Curling** | Slide stones along the taskbar toward a target painted on the floor; knock the rival's stones away | Turns with ghost stones, like the golf duel |
 | **More card games** | Fool's cousins on the same room code: Perevodnoy (pass the attack on), Blackjack against the house, Crazy Eights | Rooms, like Durak |
 | **Asteroids** | Rocks drift and bounce around the closed box; steer a ship with the mouse and click to fire | Co-op: two ships, one field |
+| **Window Jenga** | A tower of blocks stands on a window top; pull one block out with a drag and set it on top; the tower leans with every window move | Turns, ghost hands |
+| **Paper Planes** | Fold (click) and throw a paper plane from the corner; it glides through gaps between windows to a landing strip on the taskbar; thermals rise off warm (busy) windows | Distance race |
+| **Marble Run** | Drop a marble at the top; it rolls down the window tops like ramps; place a few bumpers and flippers to steer it to a cup | Race: same run, first to the cup |
+| **Kite** | Fly a kite from the taskbar on a string held by the cursor; the wind gusts with the desk fan; catch the clouds and dodge the windows | Two kites, tangle to cut the other's string |
+| **Sheep Herding** | Sheep wander along the window tops; the cursor is the dog; drive the flock into a pen on the taskbar before the timer runs out | Co-op: two dogs |
+| **Ping-Pong Cups** | Beer-pong with water cups on a window top; flick the ball from the bottom edge; the cups go down one by one | Turns, ghost balls |
+| **Cannon Castles** | Two castles on two windows; take turns setting an angle and power to lob cannonballs across the desk; wind between the windows | Turns, the classic |
+| **Rope Bridge** | Interns need a bridge between two windows; drag planks into place before they walk off the edge | Co-op |
+| **Snakes on Windows** | A snake crawls along the edges of windows; steer it with the cursor to apples; do not cross your own tail | Two snakes, one desktop |
+| **Bingo of Work** | A card of everyday desk events ("a build passes", "Claude needs you", "10 minutes without a click"); the overlay ticks them off; first line wins | Office board |
+| **Reversi / Othello** | The last of the classic boards; flips animate | Turns, like chess |
+| **Backgammon** | Dice and checkers; doubling cube optional | Turns |
+| **Dominoes** | Tiles laid along the taskbar in a line that bends up the window edges | Rooms for 2–4 |
+| **Sudoku / Minesweeper** | Puzzle pads for the quiet minutes; a mouse-only number pad | Daily challenge race: same puzzle, first to finish |
+| **Gomoku** | Five in a row on a 15×15 board; the CPU levels from BoardGame carry over | Turns |
+| **Mancala** | Seeds in pits along the taskbar; a calm sowing game | Turns |
+| **Battleship Salvo** | Sea Battle with three shots a turn, bigger fleets, a fog of war that lifts | Rooms for 3 |
+
+## Ideas for the pets
+
+| Idea | What happens |
+|---|---|
+| **Pet families** | Two pets at once (a cat and a dog, or two hamsters); they play together, share the treat jar and squabble over the ball |
+| **Costumes** | Hats and scarves per season (the winter scarf from 2.0.0, a pumpkin hat in October, a party hat on the day the stats say you first ran Desk Arcade) |
+| **Pet mail** | A co-worker on the LAN can send your pet a treat or a toy; a little parcel drops from the top of the screen |
+| **Growing up** | A pet that is played with a lot over weeks gets a slightly bigger body and a new trick; the stats window shows its age |
+| **Pet cam** | The pet takes a "photo" (a PNG of the overlay) when it does a trick and you have not looked at it for a while |
+| **Pet garden** | A flowerpot on a window top that the pet waters; flowers bloom over days of play |
+| **Pet vs games** | The pet joins in: it bats a Hoops ball back, chases the Pong ball, hides from the Whack bugs, and steals a fish in Fishing |
+| **Sound reactions** | The pet reacts to the game sounds (a buzzer scares it, a "best" cheer makes it dance) |
+| **Nap spots** | The pet remembers its favourite window (by title) and goes back to sleep on it |
+| **Voice tuning** | A volume slider for the pet alone, and quieter calls in the evening |
+
+## Ideas for the overlay
+
+| Idea | What happens |
+|---|---|
+| **Tournaments** | Best-of-N series across several games over the LAN, with a bracket in the lobby |
+| **Ghost replays** | Your own best run of a race game plays back as a ghost the next time |
+| **Spectator mode** | A third copy on the LAN watches two players' Pong or Air Hockey |
+| **Achievements over LAN** | A pop-up on the co-worker's screen when you unlock one |
+| **Themes from the wallpaper** | Pick the theme colours from the desktop wallpaper's dominant colours |
+| **Native Wayland** | A layer-shell overlay once Avalonia grows a Wayland backend, for window tops of native Wayland apps too |
+| **Controller support** | A gamepad for the paddle games |
+| **A tiny level editor** | Place bumpers, cups and targets by hand and share the layout as a code |
