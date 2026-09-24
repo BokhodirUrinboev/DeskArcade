@@ -12,13 +12,20 @@ namespace DeskArcade.Games;
 
 /// <summary>
 /// Brick Breaker: bounce the ball off the paddle into a wall of bricks. The screen is a closed box,
-/// so the ball rebounds off both sides and the top; only touching the floor loses a ball.
+/// so the ball rebounds off both sides and the top; only touching the floor loses a ball. A game, from
+/// the first launch to the last ball lost, is one race round against the computer or a co-worker.
 /// </summary>
 public sealed class BricksGame : MiniGame
 {
     const double BallR = 10, PaddleW = 150, PaddleH = 16, PaddleLift = 34, BrickW = 66, BrickH = 24, Gap = 6;
     const double StartSpeed = 720, MaxSpeed = 1350, Step = 1.0 / 240, LaneH = 130, MaxBounceDeg = 62;
     const int StartBalls = 3;
+
+    /// <summary>What a decent game scores: most of the first wall and its bonus.</summary>
+    public const int Baseline = 150;
+
+    /// <summary>About how long such a game takes, in seconds.</summary>
+    public const double GameSeconds = 60;
 
     static readonly Color Gold = Color.FromRgb(255, 209, 102);
     static readonly Color Steel = Color.FromRgb(170, 180, 195);
@@ -31,19 +38,22 @@ public sealed class BricksGame : MiniGame
 
     sealed class Brick
     {
-        public required Rectangle El;
+        public required Canvas Holder;
+        public required ScaleTransform Scale;
+        public required TranslateTransform Shake;
         public Rect Box;
         public Color Color;
         public int Hits, Points;
         public bool IsGold, Broken;
-        public double Fade;
     }
 
     readonly Canvas _brickLayer = new() { IsHitTestVisible = false };
+    readonly ScaleTransform _paddleStretch = new(1, 1);
     readonly Rectangle _paddle = new()
     {
         Width = PaddleW, Height = PaddleH, RadiusX = 8, RadiusY = 8, IsHitTestVisible = false,
         Fill = Vertical(Color.FromRgb(235, 241, 248), Color.FromRgb(120, 134, 152)), Stroke = Art.Brush("#3B4654"), StrokeThickness = 1,
+        RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative),
     };
     readonly Rectangle _glow = new()
     {
@@ -53,14 +63,16 @@ public sealed class BricksGame : MiniGame
     readonly Sprite _ballSprite = MakeBall(BallR);
     readonly List<Brick> _bricks = new();
     readonly Dictionary<string, double> _lastSound = new();
+    Anims.Tween? _stretch;
 
     Vec2 _ball, _vel;
-    double _paddleX, _time, _acc, _speed, _nextIn = -1;
-    int _score, _balls, _level;
-    bool _placed, _live, _gameOver, _beatBest, _demo;
+    double _paddleX, _time, _acc, _speed, _nextIn = -1, _wallLeft, _wallTop;
+    int _score, _balls, _level, _build, _wallCols, _wallRows;
+    bool _placed, _live, _gameOver, _beatBest, _demo, _roundActive, _building, _launchWhenBuilt;
 
     public BricksGame(IGameHost host) : base(host)
     {
+        _paddle.RenderTransform = _paddleStretch;
         Layer.Children.Add(_brickLayer);
         Layer.Children.Add(_glow);
         Layer.Children.Add(_paddle);
@@ -122,6 +134,30 @@ public sealed class BricksGame : MiniGame
         ParkBall();
     }
 
+    public override bool SupportsLan => true;
+    public override (int Score, bool Active)? Race => (_score, _roundActive);
+    public override int RaceBaseline => Baseline;
+    public override int RaceBest => Host.Settings.BestBricks;
+    public override double RaceSeconds => GameSeconds;
+
+    /// <summary>The rival started a game: launch (once the wall has settled), a fresh game if the last one is over.</summary>
+    public override void StartRace()
+    {
+        if (_live || _roundActive) return;
+        if (_gameOver) NewGame();
+        BeginRound();
+        if (_building) _launchWhenBuilt = true;
+        else Launch();
+        Host.Wake();
+    }
+
+    void BeginRound()
+    {
+        if (_roundActive) return;
+        _roundActive = true;
+        Host.RoundStarted();
+    }
+
     void NewGame()
     {
         _score = 0;
@@ -141,18 +177,37 @@ public sealed class BricksGame : MiniGame
         Host.HudChanged();
     }
 
+    /// <summary>Rows in the wall of a level: four to start with, one more per level, eight at most.</summary>
+    public static int WallRows(int level) => Math.Min(3 + level, 8);
+
+    /// <summary>Bricks across a wall on a screen <paramref name="arenaWidth"/> wide: as many as fit in 1180 px, four at the least.</summary>
+    public static int WallColumns(double arenaWidth) => Math.Max(4, (int)((Math.Min(arenaWidth - 80, 1180) + Gap) / (BrickW + Gap)));
+
+    /// <summary>When a brick starts falling in at level start: row by row from the top, rippling left to right within a row.</summary>
+    public static double FallDelay(int row, int col) => row * 0.1 + col * 0.005;
+
+    /// <summary>When the level-clear wave reaches a column of the wall.</summary>
+    public static double WaveDelay(int col) => col * 0.035;
+
+    /// <summary>The level's bricks drop in from above the screen, row by row, and settle into the wall.</summary>
     void BuildWall()
     {
-        foreach (var b in _bricks) _brickLayer.Children.Remove(b.El);
+        foreach (var b in _bricks) _brickLayer.Children.Remove(b.Holder);
         _bricks.Clear();
 
         var a = Host.Arena;
-        int rows = Math.Min(3 + _level, 8);
-        double wallW = Math.Min(a.Width - 80, 1180);
-        int cols = Math.Max(4, (int)((wallW + Gap) / (BrickW + Gap)));
+        int rows = WallRows(_level), cols = WallColumns(a.Width);
         double left = a.Center.X - (cols * (BrickW + Gap) - Gap) / 2;
         double top = a.Top + Math.Max(60, a.Height * 0.09);
         var hud = Host.HudBounds.Inflate(12);
+        _wallLeft = left;
+        _wallTop = top;
+        _wallCols = cols;
+        _wallRows = rows;
+        int build = ++_build;
+        _building = true;
+        double lastDelay = -1;
+        Brick? last = null;
 
         for (int r = 0; r < rows; r++)
         {
@@ -163,22 +218,59 @@ public sealed class BricksGame : MiniGame
                 bool steel = _level >= 2 && (r * 3 + c) % 7 == 0;
                 bool gold = !steel && Rng.NextDouble() < 0.06;
                 var color = gold ? Gold : steel ? Steel : RowColors[r % RowColors.Length];
-                var el = new Rectangle
+                var scale = new ScaleTransform(1, 1);
+                var shake = new TranslateTransform();
+                var holder = new Canvas
                 {
-                    Width = BrickW, Height = BrickH, RadiusX = 4, RadiusY = 4, IsHitTestVisible = false,
+                    Width = BrickW, Height = BrickH, IsHitTestVisible = false,
+                    RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative),
+                    RenderTransform = new TransformGroup { Children = { scale, shake } },
+                };
+                holder.Children.Add(new Rectangle
+                {
+                    Width = BrickW, Height = BrickH, RadiusX = 4, RadiusY = 4,
                     Fill = Vertical(Art.Blend(color, Colors.White, 0.3), Art.Blend(color, Colors.Black, 0.25)),
                     Stroke = Art.Brush(Art.Blend(color, Colors.Black, 0.5)), StrokeThickness = 1,
-                };
-                Canvas.SetLeft(el, box.X);
-                Canvas.SetTop(el, box.Y);
-                _brickLayer.Children.Add(el);
-                _bricks.Add(new Brick
-                {
-                    El = el, Box = box, Color = color, IsGold = gold,
-                    Hits = steel ? 2 : 1, Points = gold ? 10 : steel ? 3 : rows - r,
                 });
+                Canvas.SetLeft(holder, box.X);
+                Canvas.SetTop(holder, a.Top - BrickH - 10);
+                _brickLayer.Children.Add(holder);
+                var brick = new Brick
+                {
+                    Holder = holder, Scale = scale, Shake = shake, Box = box, Color = color, IsGold = gold,
+                    Hits = steel ? 2 : 1, Points = gold ? 10 : steel ? 3 : rows - r,
+                };
+                _bricks.Add(brick);
+                double delay = FallDelay(r, c);
+                if (delay > lastDelay)
+                {
+                    lastDelay = delay;
+                    last = brick;
+                }
             }
         }
+
+        foreach (var b in _bricks)
+        {
+            double from = a.Top - BrickH - 10, to = b.Box.Y;
+            int col = (int)Math.Round((b.Box.X - left) / (BrickW + Gap)), row = (int)Math.Round((b.Box.Y - top) / (BrickH + Gap));
+            bool isLast = b == last;
+            Anims.Add(0.45, k => Canvas.SetTop(b.Holder, from + (to - from) * k), Ease.OutBack,
+                isLast ? () => WallSettled(build) : null, FallDelay(row, col));
+        }
+        if (last == null) WallSettled(build);
+    }
+
+    void WallSettled(int build)
+    {
+        if (build != _build) return; // another wall has been built since
+        _building = false;
+        if (_launchWhenBuilt)
+        {
+            _launchWhenBuilt = false;
+            if (!_live && !_gameOver) Launch();
+        }
+        Draw();
     }
 
     void ParkBall()
@@ -193,6 +285,7 @@ public sealed class BricksGame : MiniGame
         _speed = Math.Min(MaxSpeed, StartSpeed + (_level - 1) * 60);
         _vel = new Vec2(Math.Sin(angle), -Math.Cos(angle)) * _speed;
         _live = true;
+        BeginRound();
         Host.Sound.Play("kick", 0.6, 1.5);
         Host.HudChanged();
     }
@@ -214,6 +307,8 @@ public sealed class BricksGame : MiniGame
         if (_balls <= 0)
         {
             _gameOver = true;
+            _roundActive = false;
+            Host.RoundEnded(_score);
             var a = Host.Arena;
             var at = new Vec2(a.Center.X, a.Top + a.Height * 0.35);
             Host.Fx.Popup(at, _beatBest ? L.T("NEW BEST!") : L.T("GAME OVER"), _beatBest ? Gold : Colors.White, 38, 2.4, L.F("{0} points · level {1}", _score, _level));
@@ -235,12 +330,29 @@ public sealed class BricksGame : MiniGame
         int bonus = 25 * _level;
         AddScore(bonus);
         var at = new Vec2(Host.Arena.Center.X, Host.Arena.Top + Host.Arena.Height * 0.35);
+        Host.ShareAction(at, bonus);
         Host.Fx.Popup(at, L.T("LEVEL CLEAR!"), Gold, 40, 1.8, L.F("+{0} bonus", bonus));
         Host.Fx.Burst(at, Confetti, 36, 500, 700, 7, 1.0);
         Host.Sound.Play("fire", 0.8);
+        Wave();
         _nextIn = 1.4;
         ParkBall();
         Host.HudChanged();
+    }
+
+    /// <summary>A wave of rings and confetti rolls across where the wall stood, column by column.</summary>
+    void Wave()
+    {
+        double y = _wallTop + (_wallRows * (BrickH + Gap) - Gap) / 2;
+        for (int c = 0; c < _wallCols; c++)
+        {
+            var at = new Vec2(_wallLeft + c * (BrickW + Gap) + BrickW / 2, y);
+            Anims.After(WaveDelay(c), () =>
+            {
+                Host.Fx.Marker(at, Gold, 8, 48, 0.5);
+                Host.Fx.Burst(at, Confetti, 4, 220, 700, 5, 0.6);
+            });
+        }
     }
 
     // ------------------------------------------------------------------ input
@@ -255,9 +367,9 @@ public sealed class BricksGame : MiniGame
 
     public override bool PointerDown(Vec2 p, bool right)
     {
-        if (_live || _nextIn > 0 || !LaunchArea.Contains(p.ToPoint())) return false;
-        if (_gameOver) NewGame();
-        Launch();
+        if (_live || _nextIn > 0 || _building || !LaunchArea.Contains(p.ToPoint())) return false;
+        if (_gameOver) NewGame(); // the new wall drops in first; the paddle glows again once it can launch
+        else Launch();
         return false;
     }
 
@@ -276,7 +388,7 @@ public sealed class BricksGame : MiniGame
     {
         _time += dt;
         var a = Host.Arena;
-        bool busy = _live;
+        bool busy = _live | Anims.Update(dt);
 
         if (_live)
         {
@@ -302,18 +414,6 @@ public sealed class BricksGame : MiniGame
                 _nextIn = -1;
                 NextLevel();
             }
-        }
-
-        for (int i = _bricks.Count - 1; i >= 0; i--)
-        {
-            var b = _bricks[i];
-            if (!b.Broken) continue;
-            busy = true;
-            b.Fade += dt;
-            b.El.Opacity = Math.Max(0, 1 - b.Fade / 0.25);
-            if (b.Fade < 0.25) continue;
-            _brickLayer.Children.Remove(b.El);
-            _bricks.RemoveAt(i);
         }
 
         Draw();
@@ -344,6 +444,7 @@ public sealed class BricksGame : MiniGame
             _speed = Math.Min(MaxSpeed, _speed + 8);
             _vel = new Vec2(Math.Sin(angle), -Math.Cos(angle)) * _speed;
             _ball.Y = top - BallR;
+            Stretch();
             PlayThrottled("board", 0.6, 1.1);
         }
 
@@ -351,6 +452,18 @@ public sealed class BricksGame : MiniGame
             if (!b.Broken && HitBrick(b)) break;
 
         if (_ball.Y + BallR >= a.Bottom) LoseBall();
+    }
+
+    /// <summary>The paddle gives under the ball: wider and flatter for a moment, then back.</summary>
+    void Stretch()
+    {
+        _stretch?.Cancel();
+        _stretch = Anims.Add(0.32, k =>
+        {
+            double p = Ease.Pulse(k);
+            _paddleStretch.ScaleX = 1 + 0.22 * p;
+            _paddleStretch.ScaleY = 1 - 0.3 * p;
+        }, Ease.OutQuad, () => _paddleStretch.ScaleX = _paddleStretch.ScaleY = 1);
     }
 
     /// <summary>Stops the ball from getting stuck bouncing almost horizontally between the walls.</summary>
@@ -401,7 +514,7 @@ public sealed class BricksGame : MiniGame
     {
         if (--b.Hits > 0)
         {
-            b.El.Opacity = 0.6;
+            Crack(b);
             PlayThrottled("rim", 0.5, 1.5);
             return;
         }
@@ -409,13 +522,38 @@ public sealed class BricksGame : MiniGame
         Host.Stats.Add("bricks.broken");
         AddScore(b.Points);
         var center = new Vec2(b.Box.Center.X, b.Box.Center.Y);
+        Host.ShareAction(center, b.Points);
         Host.Fx.Burst(center, new[] { b.Color, Colors.White }, b.IsGold ? 20 : 8, 260, 900, 5, 0.5);
         if (b.IsGold) Host.Fx.Popup(center - new Vec2(0, 20), $"+{b.Points}", Gold, 26, 0.9);
         PlayThrottled("pop", b.IsGold ? 0.9 : 0.6, 0.8 + Rng.NextDouble() * 0.5);
+        Pop(b);
         _speed = Math.Min(MaxSpeed, _speed + 6);
         _vel = _vel.Normalized() * _speed;
         Host.HudChanged();
         if (BricksLeft == 0) LevelCleared();
+    }
+
+    /// <summary>A steel brick takes the first hit with a crack and a shudder.</summary>
+    void Crack(Brick b)
+    {
+        b.Holder.Children.Add(Art.PathOf("M30,-1 L36,7 L30,12 L38,20 L34,25 M36,7 L45,4 M30,12 L21,15", null, Art.Brush(210, 34, 40, 50), 1.6));
+        b.Holder.Opacity = 0.75;
+        Anims.Add(0.3, k => b.Shake.X = 3 * Math.Sin(k * Math.PI * 5) * (1 - k), Ease.Linear, () => b.Shake.X = 0);
+    }
+
+    /// <summary>A broken brick shrinks away to nothing.</summary>
+    void Pop(Brick b)
+    {
+        Anims.Add(0.28, k =>
+        {
+            double s = Math.Max(0, 1 - k);
+            b.Scale.ScaleX = b.Scale.ScaleY = s;
+            b.Holder.Opacity = s;
+        }, Ease.OutBack, () =>
+        {
+            _brickLayer.Children.Remove(b.Holder);
+            _bricks.Remove(b);
+        });
     }
 
     // ------------------------------------------------------------------ visuals
@@ -426,7 +564,7 @@ public sealed class BricksGame : MiniGame
         Canvas.SetTop(_paddle, PaddleTop);
         Canvas.SetLeft(_glow, _paddleX - PaddleW / 2 - 10);
         Canvas.SetTop(_glow, PaddleTop - 9);
-        _glow.IsVisible = !_live && _nextIn <= 0;
+        _glow.IsVisible = !_live && _nextIn <= 0 && !_building;
         _ballSprite.Set(_ball);
     }
 
@@ -464,8 +602,8 @@ public sealed class BricksGame : MiniGame
     public override void DemoTick()
     {
         _demo = true;
-        if (_live || _nextIn > 0) return;
+        if (_live || _nextIn > 0 || _building) return;
         if (_gameOver) NewGame();
-        Launch();
+        else Launch();
     }
 }

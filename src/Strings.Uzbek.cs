@@ -960,6 +960,8 @@ public static partial class Strings
 
 
         // ---- 1.8.0: races, part 1 (Keepy-Uppy, Bug Squash, Can Knockdown, Brick Breaker)
+        ["GO!"] = "BOSHLANDI!",
+        ["{0} seconds · spare the ladybugs"] = "{0} soniya · xonqizlarga tegmang",
 
 
         // ---- 1.8.0: races, part 2 (Clay Shooting, Plinko, Slingshot, Darts)
