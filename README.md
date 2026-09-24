@@ -20,6 +20,7 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 - [Installation](#installation)
 - [Updating](#updating)
 - [Claude Code integration](#claude-code-integration)
+- [Play while a command runs](#play-while-a-command-runs)
 - [Building from source](#building-from-source)
 - [Project structure](#project-structure)
 - [Troubleshooting](#troubleshooting)
@@ -38,8 +39,10 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 - **Never steals focus.** You can keep typing in the terminal while you play.
 - **Window tops are platforms.** Balls, bugs, pets and towers sit on the top edges of your windows and
   ride along when you drag one. You can turn this off in the tray menu.
+- **Play while it builds.** `arcade dotnet test` (or `deskarcade --while make`) runs your command as usual
+  and shows it on the scoreboard, then chimes when it passes or fails.
 - **Idle means idle.** When nothing is moving, rendering stops and CPU use drops to almost zero.
-- **30 games, 71 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
+- **30 games, 72 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
 - **Play with the person at the next desk** over the local network: Air Hockey (best of 3), Pong,
   H-O-R-S-E, Mini Golf and Archery duels, board games, Sea Battle and score races. You see what the other
   player does: their ball, arrow or puck, and a marker wherever they pop, whack or stack.
@@ -123,7 +126,7 @@ board with a tab for every game; it shrinks back shortly after the mouse leaves.
 with your progress; click it to jump to the game. Finish it on consecutive days to build a streak.
 
 **Stats & achievements** in the tray menu (or `DeskArcade --signal stats`) opens a window with time
-played and best score per game, and all 56 achievements with their progress. Stats live in
+played and best score per game, and all 72 achievements with their progress. Stats live in
 `stats.json` next to your settings and can be reset from the tray.
 
 **Office leaderboard:** **tray → Office leaderboard** shows today's best hoops streak, baskets, Air Hockey
@@ -279,6 +282,33 @@ when Claude finishes or needs you, or just **pause the game** until you click it
 sums up the session: "Claude worked 12:03, you played 4:10". Playing while Claude works earns the
 "Pair programmer" achievement.
 
+## Play while a command runs
+
+Put `arcade` in front of a build, a test run or a deploy. The command runs in your terminal as usual, with
+its output and exit code, while the overlay comes up and the scoreboard shows it running ("dotnet test ·
+1:12"). When it ends you get a chime and **Passed** or **Failed** with the exit code, how long it took and
+how long you played.
+
+```powershell
+arcade dotnet test                           # Windows: the installer's "arcade" command (or Scoop's)
+arcade "npm run build && npm test"           # quote a line with && or | to run it as one command
+```
+
+```bash
+deskarcade --while make -j8                  # Linux and macOS
+deskarcade --while "npm run build && npm test"
+```
+
+On Windows, **Add the "arcade" command to PATH** is a setup option (on by default); `arcade.cmd` sits next to
+`DeskArcade.exe` either way. It is needed because Windows terminals do not wait for a program with a window
+like Desk Arcade: `arcade.cmd` waits for it and passes the exit code on. The command's output goes straight
+to the console window, so on Windows it cannot be piped (`arcade make | tee log` shows the output but
+captures none of it). The Flatpak runs commands inside its sandbox, where your tools are missing: use the
+`.deb` or the AppImage for this.
+
+The scoreboard shows the command next to Claude Code's status, so you can use both at once. Playing when a
+command finishes earns the "It's compiling" achievement.
+
 ## Building from source
 
 **Requirements:** the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0). The Windows
@@ -324,6 +354,7 @@ Releases are built and published by GitHub Actions when a `vX.Y.Z` tag is pushed
 | `src/Loc.cs`, `src/Strings.*.cs` | Translation lookup and the Uzbek and Russian tables |
 | `src/Stats.cs`, `src/Achievements.cs`, `src/StatsWindow.cs` | Counters, achievements and the stats window |
 | `src/OverlayWindow.cs` | The transparent, topmost window: frame loop, input, signals |
+| `src/TaskRunner.cs`, `packaging/windows/arcade.cmd` | `--while`: runs a command and reports it to the overlay |
 | `tests/DeskArcade.Tests`, `tests/smoke.sh` | Unit tests; the start-and-quit check CI runs on real hardware |
 | `installer/`, `packaging/` | Inno Setup script, `.deb`, AppImage, Flatpak, winget, Homebrew, Scoop and macOS packaging |
 | `.github/workflows` | CI on every pull request, releases on version tags |

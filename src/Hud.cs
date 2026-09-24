@@ -15,6 +15,9 @@ namespace DeskArcade;
 
 public enum ClaudeStatus { Unknown, Working, Done, Attention }
 
+/// <summary>A command run with "DeskArcade --while".</summary>
+public enum TaskStatus { None, Running, Passed, Failed }
+
 /// <summary>
 /// Scoreboard. A compact pill (game icon, score, best) until you click it; then the full board with
 /// game tabs, which shrinks back shortly after the mouse leaves. Drag either form to move it.
@@ -28,7 +31,7 @@ public sealed class Hud : Border
     readonly Dictionary<string, Border> _tabs = new();
 
     // full board
-    readonly Grid _board = new() { RowDefinitions = new RowDefinitions("Auto,Auto,Auto,Auto") };
+    readonly Grid _board = new() { RowDefinitions = new RowDefinitions("Auto,Auto,Auto,Auto,Auto") };
     readonly TextBlock _score = Text(30, FontWeight.Black, "#FFFFFF");
     readonly TextBlock _title = Text(11, FontWeight.Bold, "#9AA4B2");
     readonly TextBlock _best = Text(12, FontWeight.SemiBold, "#FFD166");
@@ -36,6 +39,9 @@ public sealed class Hud : Border
     readonly Border _chip;
     readonly Ellipse _chipDot = new() { Width = 8, Height = 8 };
     readonly TextBlock _chipText = Text(11, FontWeight.SemiBold, "#FFFFFF");
+    readonly Border _taskChip;
+    readonly Ellipse _taskDot = new() { Width = 8, Height = 8 };
+    readonly TextBlock _taskText = Text(11, FontWeight.SemiBold, "#FFFFFF");
 
     // compact pill
     readonly StackPanel _pill = new() { Orientation = Orientation.Horizontal };
@@ -43,6 +49,7 @@ public sealed class Hud : Border
     readonly TextBlock _pillScore = Text(18, FontWeight.Black, "#FFFFFF");
     readonly TextBlock _pillBest = Text(11, FontWeight.SemiBold, "#FFD166");
     readonly Ellipse _pillDot = new() { Width = 8, Height = 8, IsVisible = false };
+    readonly Ellipse _pillTaskDot = new() { Width = 8, Height = 8, IsVisible = false };
 
     readonly TranslateTransform _pos = new();
     readonly DispatcherTimer _collapseTimer = new() { Interval = TimeSpan.FromMilliseconds(650) };
@@ -52,6 +59,11 @@ public sealed class Hud : Border
     int _flashes;
     DateTime? _claudeSince;
     TimeSpan? _waited;
+    TaskStatus _task;
+    string _taskLabel = "";
+    DateTime? _taskSince;
+    TimeSpan? _taskTook;
+    int _taskCode, _taskFlashes;
     bool _expanded, _pressed, _dragging;
     Vec2 _pressAt, _dragOffset;
 
@@ -123,6 +135,18 @@ public sealed class Hud : Border
         };
         Grid.SetRow(_chip, 3);
         _board.Children.Add(_chip);
+
+        _taskDot.Margin = new Thickness(0, 0, 5, 0);
+        _taskDot.VerticalAlignment = VerticalAlignment.Center;
+        _taskText.TextTrimming = TextTrimming.CharacterEllipsis;
+        _taskChip = new Border
+        {
+            CornerRadius = new CornerRadius(9), Padding = new Thickness(7, 2, 8, 3), Margin = new Thickness(0, 6, 0, 0),
+            HorizontalAlignment = HorizontalAlignment.Left, IsVisible = false,
+            Child = new StackPanel { Orientation = Orientation.Horizontal, Children = { _taskDot, _taskText } },
+        };
+        Grid.SetRow(_taskChip, 4);
+        _board.Children.Add(_taskChip);
         _board.Transitions = new Transitions
         {
             new DoubleTransition { Property = OpacityProperty, Duration = TimeSpan.FromMilliseconds(140) },
@@ -140,6 +164,9 @@ public sealed class Hud : Border
         _pill.Children.Add(_pillScore);
         _pill.Children.Add(_pillBest);
         _pill.Children.Add(_pillDot);
+        _pillTaskDot.Margin = new Thickness(6, 0, 0, 0);
+        _pillTaskDot.VerticalAlignment = VerticalAlignment.Center;
+        _pill.Children.Add(_pillTaskDot);
 
         Child = new Panel { Children = { _pill, _board } };
         ApplyState();
@@ -183,6 +210,8 @@ public sealed class Hud : Border
     public bool IsInteracting => _pressed;
 
     public ClaudeStatus Status => _status;
+
+    public TaskStatus Task => _task;
 
     // ------------------------------------------------------------------ content
 
@@ -258,6 +287,47 @@ public sealed class Hud : Border
         ToolTip.SetTip(_pillDot, text);
     }
 
+    /// <param name="label">The command, as the scoreboard shows it.</param>
+    /// <param name="since">When it started (shows a running timer).</param>
+    /// <param name="took">How long it ran (shown once it has ended).</param>
+    /// <param name="exitCode">How it ended, shown when it failed.</param>
+    public void SetTask(TaskStatus status, string label = "", DateTime? since = null, TimeSpan? took = null, int exitCode = 0)
+    {
+        _task = status;
+        _taskLabel = label;
+        _taskSince = since;
+        _taskTook = took;
+        _taskCode = exitCode;
+        _taskFlashes = status is TaskStatus.Passed or TaskStatus.Failed && !Fx.ReducedMotion ? 8 : 0;
+        (string dot, string bg) = status switch
+        {
+            TaskStatus.Running => ("#4DA3FF", "#132A45"),
+            TaskStatus.Passed => ("#3DDC84", "#113A24"),
+            TaskStatus.Failed => ("#FF5C5C", "#3F1616"),
+            _ => ("#888888", "#222222"),
+        };
+        _taskChip.IsVisible = _pillTaskDot.IsVisible = status != TaskStatus.None;
+        _taskDot.Fill = _pillTaskDot.Fill = Art.Brush(Art.Safe(Color.Parse(dot)));
+        _taskChip.Background = Art.Brush(bg);
+        _taskChip.Opacity = _pillTaskDot.Opacity = 1;
+        UpdateTaskText();
+    }
+
+    void UpdateTaskText()
+    {
+        string text = _task switch
+        {
+            TaskStatus.Running when _taskSince is DateTime since => $"{_taskLabel} · {FormatWait(DateTime.UtcNow - since)}",
+            TaskStatus.Passed when _taskTook is TimeSpan t => L.F("{0} passed · {1}", _taskLabel, FormatWait(t)),
+            TaskStatus.Passed => L.F("{0} passed", _taskLabel),
+            TaskStatus.Failed => L.F("{0} failed · exit {1}", _taskLabel, _taskCode),
+            _ => _taskLabel,
+        };
+        _taskText.Text = text;
+        _taskText.MaxWidth = ExpandedWidth - 50;
+        ToolTip.SetTip(_pillTaskDot, text);
+    }
+
     /// <summary>"4:05" or "1:02:03".</summary>
     public static string FormatWait(TimeSpan t) =>
         t.TotalHours >= 1 ? $"{(int)t.TotalHours}:{t.Minutes:00}:{t.Seconds:00}" : $"{(int)t.TotalMinutes}:{t.Seconds:00}";
@@ -279,6 +349,21 @@ public sealed class Hud : Border
         else
         {
             _chipDot.Opacity = _chip.Opacity = _pillDot.Opacity = 1;
+        }
+
+        if (_task == TaskStatus.Running)
+        {
+            _taskDot.Opacity = _pillTaskDot.Opacity = _blinkOn ? 1 : 0.35;
+            UpdateTaskText();
+        }
+        else if (_taskFlashes > 0)
+        {
+            _taskFlashes--;
+            _taskChip.Opacity = _pillTaskDot.Opacity = _blinkOn ? 1 : 0.3;
+        }
+        else
+        {
+            _taskDot.Opacity = _taskChip.Opacity = _pillTaskDot.Opacity = 1;
         }
     }
 

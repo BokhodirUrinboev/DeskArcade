@@ -50,6 +50,18 @@ public static partial class Strings
         ["{0}h {1}m"] = "{0} ч {1} мин",
         ["{0}m"] = "{0} мин",
 
+        // ---- commands run with --while
+        ["{0} passed · {1}"] = "{0} прошло · {1}",
+        ["{0} passed"] = "{0} прошло",
+        ["{0} failed · exit {1}"] = "{0} упало · код {1}",
+        ["{0} · took {1}"] = "{0} · заняло {1}",
+        ["{0} · exit code {1}"] = "{0} · код выхода {1}",
+        ["{0} · you played {1}"] = "{0} · вы играли {1}",
+        ["Passed"] = "Готово",
+        ["Failed"] = "Ошибка",
+        ["It's compiling"] = "Оно компилируется",
+        ["Be playing when a --while command finishes 10 times"] = "Играйте в момент, когда команда --while завершится, 10 раз",
+
         // ---- Claude Code
         ["Claude working"] = "Claude работает",
         ["Claude working · {0}"] = "Claude работает · {0}",

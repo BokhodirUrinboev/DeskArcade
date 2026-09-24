@@ -4,3 +4,6 @@ packaging/linux/*    text eol=lf
 
 *.png binary
 *.ico binary
+
+# cmd.exe needs CRLF in batch files
+*.cmd                text eol=crlf

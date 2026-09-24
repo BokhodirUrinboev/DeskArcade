@@ -14,7 +14,7 @@
         }
     },
     "innosetup": true,
-    "bin": "DeskArcade.exe",
+    "bin": ["DeskArcade.exe", "arcade.cmd"],
     "shortcuts": [["DeskArcade.exe", "Desk Arcade"]],
     "checkver": "github",
     "autoupdate": {

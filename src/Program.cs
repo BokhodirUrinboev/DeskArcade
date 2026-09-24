@@ -34,6 +34,11 @@ public static class Program
     [STAThread]
     public static int Main(string[] args)
     {
+        // everything after --while belongs to the command, so only the options before it count
+        int run = Array.FindIndex(args, a => a.Equals("--while", StringComparison.OrdinalIgnoreCase));
+        string[] command = run >= 0 ? args[(run + 1)..] : Array.Empty<string>();
+        if (run >= 0) args = args[..run];
+
         int pi = Array.FindIndex(args, a => a.Equals("--profile", StringComparison.OrdinalIgnoreCase));
         if (pi >= 0 && pi + 1 < args.Length)
             Profile = new string(args[pi + 1].Where(c => char.IsAsciiLetterOrDigit(c) || c is '-' or '_').Take(32).ToArray());
@@ -46,6 +51,9 @@ public static class Program
             Ipc.Send(sig + 1 < args.Length ? args[sig + 1] : "show");
             return 0; // never fail a hook just because the game is closed
         }
+
+        //   DeskArcade --while <command> [arguments...]   runs the command and shows it on the scoreboard
+        if (run >= 0) return TaskRunner.Run(command);
 
         using var mutex = new Mutex(true, MutexBaseName + InstanceSuffix, out bool isFirst);
         if (!isFirst)

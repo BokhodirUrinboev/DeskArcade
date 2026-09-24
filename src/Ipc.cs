@@ -45,7 +45,9 @@ public static class Ipc
                     string? line;
                     while ((line = await reader.ReadLineAsync(ct)) != null)
                     {
-                        var msg = line.Trim().ToLowerInvariant();
+                        var msg = line.Trim();
+                        // a --while label keeps the command's own spelling
+                        if (!msg.StartsWith("task:", StringComparison.OrdinalIgnoreCase)) msg = msg.ToLowerInvariant();
                         if (msg.Length > 0) onMessage(msg);
                     }
                 }

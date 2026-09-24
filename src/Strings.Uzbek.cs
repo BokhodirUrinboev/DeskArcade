@@ -50,6 +50,18 @@ public static partial class Strings
         ["{0}h {1}m"] = "{0} soat {1} daq",
         ["{0}m"] = "{0} daq",
 
+        // ---- commands run with --while
+        ["{0} passed · {1}"] = "{0} o'tdi · {1}",
+        ["{0} passed"] = "{0} o'tdi",
+        ["{0} failed · exit {1}"] = "{0} xato · kod {1}",
+        ["{0} · took {1}"] = "{0} · {1} davom etdi",
+        ["{0} · exit code {1}"] = "{0} · chiqish kodi {1}",
+        ["{0} · you played {1}"] = "{0} · siz {1} o'ynadingiz",
+        ["Passed"] = "Tayyor",
+        ["Failed"] = "Xato",
+        ["It's compiling"] = "Kompilyatsiya ketyapti",
+        ["Be playing when a --while command finishes 10 times"] = "--while buyrug'i tugaganda 10 marta o'yin o'ynayotgan bo'ling",
+
         // ---- Claude Code
         ["Claude working"] = "Claude ishlayapti",
         ["Claude working · {0}"] = "Claude ishlayapti · {0}",

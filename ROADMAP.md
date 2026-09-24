@@ -50,6 +50,12 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
   tag updates all three without a hand-made commit.*
 - [ ] **Release dry run** with the Node 24 action versions from #18, before the 1.8.0 tag. *Verified:
   Actions → Release → Run workflow builds every package.*
+- [x] **Play while a command runs.** `arcade dotnet test` (Windows, `arcade.cmd` on PATH from setup or Scoop)
+  or `deskarcade --while make` runs the command in the terminal, shows it on the scoreboard and chimes when
+  it passes or fails; the exit code and output come through. *Verified: unit tests for the quoting and the
+  label; on Windows 11 the output reached the console, exit codes 0, 3 and 4 came through, and the scoreboard
+  dot turned blue, then green. On Ubuntu 24.04 (WSL) arguments kept their spacing, output piped and exit
+  codes came through. The installer script compiles.*
 - [ ] **Fetch.** Throw a ball for the pet: it runs after it, jumps between windows to reach it and brings it
   back to the cursor. Dogs fetch eagerly, cats only sometimes, ducks not at all. *Verified: unit test for the
   chase path; demo run.*
@@ -90,6 +96,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 | How the eight new games feel with a real mouse | Someone playing them |
 | macOS: click-through, window list, hotkeys, sound | A Mac |
 | The Node 24 action versions in the release workflow | A release dry run |
+| The setup's "arcade" PATH option (added, then removed on uninstall); `--while` with the overlay on a Linux desktop and on macOS | Windows Sandbox; a Linux PC and a Mac |
 
 ## Ideas for more mini games
 
