@@ -290,6 +290,13 @@ public sealed class OverlayWindow : Window, IGameHost
             }, TimeSpan.FromSeconds(2.2));
         }
 
+        if (OperatingSystem.IsLinux())
+            DispatcherTimer.RunOnce(() =>
+            {
+                if (!_platform.HasTray)
+                    Notice(L.T("No tray icon on this desktop"), L.T("the ☰ button on the scoreboard has the menu"), Color.FromRgb(255, 209, 102));
+            }, TimeSpan.FromSeconds(8));
+
         if (_demo)
         {
             _demoTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(150) };

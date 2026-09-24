@@ -7,7 +7,7 @@ Exec=deskarcade
 Icon=deskarcade
 Terminal=false
 Categories=Game;ArcadeGame;
-Keywords=basketball;archery;overlay;game;
+Keywords=basketball;archery;chess;checkers;pool;darts;bowling;solitaire;overlay;game;
 StartupNotify=false
 Actions=Toggle;Next;
 
