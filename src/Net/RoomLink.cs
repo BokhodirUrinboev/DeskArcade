@@ -12,8 +12,8 @@ namespace DeskArcade.Net;
 
 public enum RoomState { Off, Hosting, Joining, Joined, Lost }
 
-/// <summary>A room found on the network by <see cref="RoomLink.FindRooms"/>.</summary>
-public sealed record RoomInfo(string Code, string Host, int Players, int Seats, bool Open, IPEndPoint Address);
+/// <summary>A room found on the network by <see cref="RoomLink.FindRooms"/>, and the game it plays.</summary>
+public sealed record RoomInfo(string Code, string Host, int Players, int Seats, bool Open, IPEndPoint Address, string Game = RoomLink.Durak);
 
 /// <summary>One seat in a room: 0 is the host.</summary>
 public sealed record RoomSeat(int Seat, string Name, bool Connected);
@@ -23,15 +23,19 @@ public sealed record RoomSeat(int Seat, string Name, bool Connected);
 /// <see cref="LanLink"/>. The host picks a short room code; players join by the code (or pick the room from
 /// a list), so several rooms can run on one network. The host relays everything: guests only talk to the
 /// host. A small listener on UDP <see cref="Port"/> (shared by every room on a PC) answers "find" and
-/// "join"; the room itself runs on its own socket.
-/// Wire format (after "DA1|"): rfind; rhere|code|host|players|seats|open; rjoin|code|name|id (the random
-/// id makes the broadcast and loopback copies of one join count once); rok|code|seat; rno|code|reason;
+/// "join"; the room itself runs on its own socket. Each room plays one game (<see cref="Game"/>).
+/// Wire format (after "DA1|"): rfind; rhere|code|host|players|seats|open[|game]; rjoin|code|name|id[|game]
+/// (the random id makes the broadcast and loopback copies of one join count once); rok|code|seat; rno|code|reason;
 /// rr|code|name,name,…|connected flags (the roster, also the host's heartbeat); rg|code|seat|body
 /// (guest → host); rh|code|body (host → guest); rbye|code|seat; rend|code.
+/// A Durak room leaves the game out of "rhere" and "rjoin", as copies before 1.7.2 did, so they still see and
+/// join each other's Durak rooms; every other game names itself, which older copies never list.
 /// </summary>
 public sealed class RoomLink : IDisposable
 {
     public const int Port = 47822, MaxSeats = 4;
+    /// <summary>The game of a room that doesn't name one.</summary>
+    public const string Durak = "durak";
     const string Magic = "DA1";
     const double TimeoutSeconds = 6;
     const string CodeLetters = "ABCDEFGHJKLMNPQRSTUVWXYZ"; // no I or O, which look like 1 and 0
@@ -65,6 +69,8 @@ public sealed class RoomLink : IDisposable
     /// <summary>Hosts accept new players only while open; closing happens when the game starts.</summary>
     public bool Open { get; set; } = true;
     public string MyName { get; set; } = LanLink.MyName;
+    /// <summary>The game this room plays: a host only lets in players of the same game.</summary>
+    public string Game { get; init; } = Durak;
 
     /// <summary>Raised on a background thread when the state or the roster changes.</summary>
     public event Action? Changed;
@@ -185,8 +191,8 @@ public sealed class RoomLink : IDisposable
             {
                 var r = await udp.ReceiveAsync(cts.Token);
                 var f = Encoding.UTF8.GetString(r.Buffer).Split('|');
-                if (f.Length == 7 && f[0] == Magic && f[1] == "rhere" && int.TryParse(f[4], out int n) && int.TryParse(f[5], out int seats))
-                    rooms[f[2]] = new RoomInfo(f[2], f[3], n, seats, f[6] == "1", r.RemoteEndPoint);
+                if (f.Length is 7 or 8 && f[0] == Magic && f[1] == "rhere" && int.TryParse(f[4], out int n) && int.TryParse(f[5], out int seats))
+                    rooms[f[2]] = new RoomInfo(f[2], f[3], n, seats, f[6] == "1", r.RemoteEndPoint, f.Length == 8 ? f[7] : Durak);
             }
         }
         catch (OperationCanceledException) { }
@@ -285,7 +291,7 @@ public sealed class RoomLink : IDisposable
         {
             int count;
             lock (_gate) count = 1 + _guests.Count(g => g.Value.Connected);
-            TrySend(udp, from, $"rhere|{Code}|{Clean(MyName)}|{count}|{MaxSeats}|{(Open ? 1 : 0)}");
+            TrySend(udp, from, $"rhere|{Code}|{Clean(MyName)}|{count}|{MaxSeats}|{(Open ? 1 : 0)}{GameField}");
             return;
         }
         if (kind == "rjoin" && f.Length >= 4)
@@ -293,7 +299,13 @@ public sealed class RoomLink : IDisposable
             if (f[1] != Code) return; // another room's player
             int seat = -1;
             string? refusal = null;
-            string nonce = f[3];
+            var tail = f[3].Split('|'); // id, then the game unless it's Durak
+            string nonce = tail[0];
+            if ((tail.Length > 1 ? tail[1] : Durak) != Game)
+            {
+                TrySend(udp, from, $"rno|{Code}|game"); // the same code, but a room for another game
+                return;
+            }
             var replyTo = from;
             lock (_gate)
             {
@@ -401,7 +413,10 @@ public sealed class RoomLink : IDisposable
         }
     }
 
-    /// <summary>Why the host turned us away or the room ended: "full", "started", "kicked", "closed" or "timeout".</summary>
+    /// <summary>"|game" on "rhere" and "rjoin", left out for Durak (see the class summary).</summary>
+    string GameField => Game == Durak ? "" : "|" + Game;
+
+    /// <summary>Why the host turned us away or the room ended: "full", "started", "kicked", "game" (another game's room), "closed" or "timeout".</summary>
     public string Refusal { get; private set; } = "";
 
     void SendRoster()
@@ -433,7 +448,7 @@ public sealed class RoomLink : IDisposable
             switch (State)
             {
                 case RoomState.Joining:
-                    foreach (var to in Targets(_target)) TrySend(udp, to, $"rjoin|{Code}|{Clean(MyName)}|{_nonce}");
+                    foreach (var to in Targets(_target)) TrySend(udp, to, $"rjoin|{Code}|{Clean(MyName)}|{_nonce}{GameField}");
                     if ((now - _lastHeard).TotalSeconds > TimeoutSeconds * 1.5)
                     {
                         Refusal = "notfound";

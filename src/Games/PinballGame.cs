@@ -97,6 +97,25 @@ public sealed class PinballGame : MiniGame
 
     // ------------------------------------------------------------------ game flow
 
+    /// <summary>A LAN race is one three-ball game: it starts with the first serve and ends at game over.</summary>
+    public override bool SupportsLan => true;
+    public override (int Score, bool Active)? Race => (_table.Score, _inGame);
+
+    public override void StartRace()
+    {
+        if (_inGame) return;
+        if (_gameOver) NewGame();
+        BeginGame(); // the ball waits at the plunger for its first serve
+    }
+
+    void BeginGame()
+    {
+        _inGame = true;
+        Host.RoundStarted();
+    }
+
+    bool _inGame;
+
     public override void Layout()
     {
         var a = Host.Arena;
@@ -133,6 +152,7 @@ public sealed class PinballGame : MiniGame
     void Serve()
     {
         if (_gameOver) NewGame();
+        if (!_inGame) BeginGame();
         _table.Serve();
         Host.Sound.Play("whoosh", 0.5, 1.2);
         Host.HudChanged();
@@ -158,6 +178,8 @@ public sealed class PinballGame : MiniGame
     {
         _gameOver = true;
         int score = _table.Score;
+        _inGame = false;
+        Host.RoundEnded(score);
         long before = Host.Stats.Get("pinball.best");
         Host.Stats.Add("pinball.games");
         Host.Stats.Max("pinball.best", score);

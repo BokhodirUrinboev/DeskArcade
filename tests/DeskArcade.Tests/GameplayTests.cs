@@ -609,6 +609,29 @@ public class RoomLinkTests
         Assert.True(WaitFor(() => guest.State == RoomState.Lost, 12000));
         Assert.Equal("notfound", guest.Refusal);
     }
+
+    [Fact]
+    public async System.Threading.Tasks.Task EachRoomPlaysOneGame()
+    {
+        using var durak = new RoomLink();
+        durak.Host("DURK");
+        using var lastCard = new RoomLink { Game = "lastcard" };
+        lastCard.Host("LAST");
+
+        // the list names each room's game; a Durak room still answers without one, as older copies expect
+        var found = await RoomLink.FindRooms(TimeSpan.FromSeconds(0.8));
+        Assert.Equal(RoomLink.Durak, Assert.Single(found, r => r.Code == "DURK").Game);
+        Assert.Equal("lastcard", Assert.Single(found, r => r.Code == "LAST").Game);
+
+        using var wrong = new RoomLink(); // a Durak player typing the Last Card room's code
+        wrong.Join("LAST");
+        Assert.True(WaitFor(() => wrong.State == RoomState.Lost));
+        Assert.Equal("game", wrong.Refusal);
+
+        using var right = new RoomLink { Game = "lastcard" };
+        right.Join("LAST");
+        Assert.True(WaitFor(() => right.State == RoomState.Joined));
+    }
 }
 
 public class PetVoiceTests

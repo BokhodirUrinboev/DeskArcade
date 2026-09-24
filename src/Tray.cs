@@ -69,6 +69,7 @@ public sealed class Tray : IDisposable
         lan.Add(Item(L.T("Join a game"), () => _w.JoinLan()));
         lan.Add(Item(L.T("Find games / join by address…"), () => _w.OpenLobby()));
         lan.Add(Item(L.T("Durak with co-workers…"), () => _w.OpenDurakRooms()));
+        lan.Add(Item(L.T("Last Card with co-workers…"), () => _w.OpenLastCardRooms()));
         var emotes = new NativeMenu();
         for (int i = 0; i < Net.LanLink.Emotes.Length; i++)
         {

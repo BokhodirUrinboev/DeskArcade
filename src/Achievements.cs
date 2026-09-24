@@ -95,6 +95,23 @@ public static class Achievements
         new("durak-ten", "durak", "Card shark", "Escape being the durak 10 times", "durak.wins", 10),
         new("memory-win", "memory", "Total recall", "Clear a Memory board", "memory.wins", 1),
         new("memory-pairs", "memory", "Matchmaker", "Find 100 pairs", "memory.pairs", 100),
+
+        new("solitaire-win", "solitaire", "Patience", "Solve a game of Solitaire", "solitaire.wins", 1),
+        new("solitaire-10", "solitaire", "Patience of a saint", "Solve 10 games of Solitaire", "solitaire.wins", 10),
+        new("solitaire-cards", "solitaire", "Homeward bound", "Send 500 cards home", "solitaire.cards", 500),
+
+        new("lastcard-win", "lastcard", "Out first", "Win a game of Last Card", "lastcard.wins", 1),
+        new("lastcard-10", "lastcard", "Empty-handed", "Win 10 games of Last Card", "lastcard.wins", 10),
+        new("lastcard-plus4", "lastcard", "No hard feelings", "Play 20 Wild Draw Fours", "lastcard.plusfours", 20),
+
+        new("interns-1", "interns", "Onboarding", "Clear the first level of Interns", "interns.level", 1),
+        new("interns-10", "interns", "Head of department", "Clear level 10 of Interns", "interns.level", 10),
+        new("interns-100", "interns", "Mentor", "Get 100 interns to the exit", "interns.saved", 100),
+        new("interns-perfect", "interns", "Nobody left behind", "Save every intern on a level", "interns.perfect", 1),
+
+        new("blockfall-four", "blockfall", "Four at once", "Clear four lines with one piece", "blockfall.fours", 1),
+        new("blockfall-lines", "blockfall", "Line manager", "Clear 200 lines", "blockfall.lines", 200),
+        new("blockfall-10k", "blockfall", "Stacked", "Score 10,000 points in one game", "blockfall.best", 10000),
         new("codebreaker-win", "codebreaker", "Code cracked", "Break a code", "codebreaker.wins", 1),
         new("codebreaker-fast", "codebreaker", "Mind reader", "Break a code in 4 guesses or fewer", "codebreaker.fast", 1),
         new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),

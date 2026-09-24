@@ -13,15 +13,16 @@ using DeskArcade.Net;
 namespace DeskArcade;
 
 /// <summary>
-/// Sets up a Durak game with co-workers: create a room (its code appears for the others to type), or join
-/// one from the list of rooms on the network or by its code, optionally at an IP address when the network
-/// blocks broadcasts. The host picks how many seats to play with; computer players fill the empty ones.
+/// Sets up a room game (Durak, Last Card) with co-workers: create a room (its code appears for the others to
+/// type), or join one from the list of rooms on the network or by its code, optionally at an IP address when
+/// the network blocks broadcasts. The host picks how many seats to play with; computer players fill the empty
+/// ones. One window at a time, for one game.
 /// </summary>
-public sealed class DurakRoomWindow : Window
+public sealed class RoomWindow : Window
 {
-    static DurakRoomWindow? _open;
+    static RoomWindow? _open;
 
-    readonly DurakGame _durak;
+    readonly IRoomGame _game;
     readonly OverlayWindow _overlay;
     readonly StackPanel _rooms = new() { Spacing = 6 };
     readonly StackPanel _players = new() { Spacing = 4 };
@@ -35,23 +36,24 @@ public sealed class DurakRoomWindow : Window
     bool _searching;
     int _tick;
 
-    public static void ShowFor(OverlayWindow overlay, DurakGame durak)
+    public static void ShowFor(OverlayWindow overlay, IRoomGame game)
     {
-        if (_open != null)
+        if (_open != null && _open._game == game)
         {
             _open.Activate();
             return;
         }
-        _open = new DurakRoomWindow(overlay, durak);
+        _open?.Close();
+        _open = new RoomWindow(overlay, game);
         _open.Closed += (_, _) => _open = null;
         _open.Show();
     }
 
-    DurakRoomWindow(OverlayWindow overlay, DurakGame durak)
+    RoomWindow(OverlayWindow overlay, IRoomGame game)
     {
         _overlay = overlay;
-        _durak = durak;
-        Title = L.T("Durak with co-workers");
+        _game = game;
+        Title = L.F("{0} with co-workers", L.T(game.Title));
         Width = 480;
         Height = 620;
         MinWidth = 380;
@@ -70,13 +72,13 @@ public sealed class DurakRoomWindow : Window
         var create = new Button { Content = L.T("Create a room") };
         create.Click += (_, _) =>
         {
-            _durak.HostRoom();
+            _game.HostRoom();
             Refresh();
         };
         _start.Click += (_, _) =>
         {
-            _durak.StartRoom(_seats.SelectedIndex + 2);
-            _overlay.SwitchGame(_durak.Id);
+            _game.StartRoom(_seats.SelectedIndex + 2);
+            _overlay.SwitchGame(_game.Id);
             Close();
         };
         var join = new Button { Content = L.T("Join") };
@@ -88,7 +90,7 @@ public sealed class DurakRoomWindow : Window
         var leave = new Button { Content = L.T("Leave the room") };
         leave.Click += (_, _) =>
         {
-            _durak.LeaveRoom();
+            _game.LeaveRoom();
             Refresh();
         };
 
@@ -113,8 +115,8 @@ public sealed class DurakRoomWindow : Window
         _joinPanel.Children.Add(create);
 
         var panel = new StackPanel { Margin = new Thickness(22, 18), Spacing = 10 };
-        panel.Children.Add(Text(L.T("Durak with co-workers"), 22, "#FFFFFF", FontWeight.Bold));
-        panel.Children.Add(Text(L.T("Two to four players on the same network. Everyone needs Desk Arcade 1.6 or newer."), 12, "#AAB3C0"));
+        panel.Children.Add(Text(Title, 22, "#FFFFFF", FontWeight.Bold));
+        panel.Children.Add(Text(L.F("Two to four players on the same network. Everyone needs Desk Arcade {0} or newer.", game.MinVersion), 12, "#AAB3C0"));
         panel.Children.Add(_status);
         panel.Children.Add(_hostPanel);
         panel.Children.Add(_joinPanel);
@@ -131,7 +133,7 @@ public sealed class DurakRoomWindow : Window
 
     void Refresh()
     {
-        var room = _durak.Room;
+        var room = _game.Room;
         bool hosting = room.State == RoomState.Hosting;
         _hostPanel.IsVisible = hosting;
         _joinPanel.IsVisible = !hosting && room.State is RoomState.Off or RoomState.Lost;
@@ -144,6 +146,7 @@ public sealed class DurakRoomWindow : Window
                 "full" => L.T("That room is full."),
                 "started" => L.T("That game has already started."),
                 "notfound" => L.T("No room with that code answered. Check the code, or add the host's IP address."),
+                "game" => L.T("That room is playing another game."),
                 _ => L.T("The room closed."),
             },
             _ => "",
@@ -154,7 +157,7 @@ public sealed class DurakRoomWindow : Window
             _players.Children.Clear();
             foreach (var s in room.Seats())
                 _players.Children.Add(Text((s.Seat == 0 ? L.F("{0} (you, host)", s.Name) : s.Name) + (s.Connected ? "" : " · " + L.T("disconnected")), 14, s.Connected ? "#FFFFFF" : "#777777"));
-            _start.IsEnabled = !_durak.Playing;
+            _start.IsEnabled = !_game.Playing;
             // nobody has joined yet: say so, rather than quietly dealing a game against the computer
             _start.Content = room.Seats().Count(s => s.Connected) < 2 ? L.T("Start with computers only") : L.T("Start the game");
         }
@@ -167,7 +170,7 @@ public sealed class DurakRoomWindow : Window
         _searching = true;
         try
         {
-            var found = await RoomLink.FindRooms(TimeSpan.FromSeconds(0.7));
+            var found = (await RoomLink.FindRooms(TimeSpan.FromSeconds(0.7))).Where(r => r.Game == _game.Id).ToList();
             _rooms.Children.Clear();
             foreach (var r in found)
             {
@@ -211,8 +214,8 @@ public sealed class DurakRoomWindow : Window
 
     void Join(string code, System.Net.IPEndPoint? address)
     {
-        _durak.JoinRoom(code, address);
-        _overlay.SwitchGame(_durak.Id);
+        _game.JoinRoom(code, address);
+        _overlay.SwitchGame(_game.Id);
         Refresh();
     }
 

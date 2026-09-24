@@ -39,6 +39,10 @@ public sealed class Daily
         new("pool", "pool.potted", 15, "Pot {0} balls in Pool"),
         new("memory", "memory.pairs", 12, "Find {0} pairs in Memory"),
         new("codebreaker", "codebreaker.wins", 2, "Break {0} codes in Code Breaker"),
+        new("solitaire", "solitaire.cards", 30, "Send {0} cards home in Solitaire"),
+        new("lastcard", "lastcard.played", 25, "Play {0} cards in Last Card"),
+        new("interns", "interns.saved", 15, "Get {0} interns to the exit"),
+        new("blockfall", "blockfall.lines", 20, "Clear {0} lines in Blockfall"),
         new("pinball", "pinball.bumpers", 60, "Hit {0} bumpers in Pinball"),
     };
 

@@ -56,6 +56,27 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
   label; on Windows 11 the output reached the console, exit codes 0, 3 and 4 came through, and the scoreboard
   dot turned blue, then green. On Ubuntu 24.04 (WSL) arguments kept their spacing, output piped and exit
   codes came through. The installer script compiles.*
+- [x] **Solitaire** (`solitaire`): Klondike, draw one, on a felt over the desktop; click a card to send it where
+  it fits or drag it, undo, and the last cards go home by themselves. *Verified: unit tests for the deal, every
+  move rule, undo and one-click moves, and a simple player that solves some of 300 deals without a card lost;
+  a demo run on Windows 11.*
+- [x] **Last Card** (`lastcard`), an UNO-style game for 2–4: colours and numbers, Skip, Reverse, +2, Wild and
+  Wild +4, and a "Last card!" button to press in time. Against computer players, or co-workers in a room like
+  Durak's; the room window is now shared, and each room names its game so the lists stay apart (Durak rooms
+  keep the old format, so 1.7.1 copies still see them). *Verified: unit tests for the deck, every card's
+  effect, drawing, the call and the catch, and computer players finishing 300 games of 2, 3 and 4; two copies
+  on one PC (`--profile`, `--demo`) played a room of host, guest and a computer through two games, and both
+  saw the same games end.*
+- [x] **Interns** (`interns`): lead office interns from a trapdoor to the exit on the taskbar, over window tops and
+  past manholes, with umbrellas, blockers and builders; dragging a window carries everyone on it. *Verified:
+  unit tests for walking, turning, manholes, high falls and umbrellas, stairs over a manhole, blockers,
+  riding a moving window and running out of tools; a demo run on Windows 11 cleared level 1 and bridged
+  both manholes of level 2.*
+- [x] **Blockfall** (`blockfall`), the "Window Tetris" idea: falling blocks steered with the mouse (the piece
+  follows the pointer's column; click turns, hold drops faster, right-click drops), a well that stands on a
+  window top and rides along with it, and a LAN score race. *Verified: unit tests for the bags, turning and
+  wall nudges, drops, line clears and scoring, levels and game over, and 5,000 random moves that never lose a
+  cell; a demo run on Windows 11 cleared four lines at once.*
 - [ ] **Fetch.** Throw a ball for the pet: it runs after it, jumps between windows to reach it and brings it
   back to the cursor. Dogs fetch eagerly, cats only sometimes, ducks not at all. *Verified: unit test for the
   chase path; demo run.*
@@ -64,8 +85,11 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 
 ## 1.9.0: Linux and macOS (November)
 
-- [ ] **LAN for the new games:** Darts and Pool turn by turn (the other player's darts and shots as ghosts),
-  Pinball and Paper Toss as score races. *Verified: two copies over loopback, then two PCs.*
+- [x] **Pinball and Paper Toss as LAN score races** (came early): a three-ball game, or a run until the first
+  miss, is one race. *Verified: two copies over loopback playing by themselves: two Pinball games each and five
+  Paper Toss races decided on both sides.*
+- [ ] **Darts and Pool turn by turn over the LAN** (the other player's darts and shots as ghosts). Both count
+  fewest-is-best, so a score race doesn't fit them. *Verified: two copies over loopback, then two PCs.*
 - [ ] **Flathub.** Pick the app id (`io.github.BokhodirUrinboev.DeskArcade` unless the `imperiumgames.com`
   domain can be verified), attach a `linux-x64` publish tarball to each release for an `archive` source, add
   screenshots to the metainfo, and replace the `xdg-config/autostart` permission with the Background portal.
@@ -91,9 +115,9 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 
 | What | Needs |
 |---|---|
-| Durak rooms across real PCs, played by people | Two to four PCs on one network |
+| Durak and Last Card rooms across real PCs, played by people | Two to four PCs on one network |
 | How the pet voices sound; the new pet behaviours on screen | Speakers and a look on screen |
-| How the eight new games feel with a real mouse | Someone playing them |
+| How the eight new games, Solitaire, Last Card and Interns feel with a real mouse (none of the last three was played by hand) | Someone playing them |
 | macOS: click-through, window list, hotkeys, sound | A Mac |
 | The Node 24 action versions in the release workflow | A release dry run |
 | The setup's "arcade" PATH option (added, then removed on uninstall); `--while` with the overlay on a Linux desktop and on macOS | Windows Sandbox; a Linux PC and a Mac |
@@ -106,6 +130,5 @@ and using the windows and taskbar as the playing field. LAN notes say how each c
 | Idea | How it plays | LAN |
 |---|---|---|
 | **Curling** | Slide stones along the taskbar toward a target painted on the floor; knock the rival's stones away | Turns with ghost stones, like the golf duel |
-| **Window Tetris** | Blocks fall from the top and settle on window tops as well as the taskbar | Race; cleared lines send garbage to the rival |
 | **More card games** | Fool's cousins on the same room code: Perevodnoy (pass the attack on), Blackjack against the house, Crazy Eights | Rooms, like Durak |
 | **Asteroids** | Rocks drift and bounce around the closed box; steer a ship with the mouse and click to fire | Co-op: two ships, one field |

@@ -63,10 +63,10 @@ public sealed class DurakView
 /// re-send them until the host's view acknowledges them; the host takes each player's moves strictly in
 /// sequence, so none is lost or applied twice. The host's game runs on its own timer, so it goes on for
 /// everyone even while the host's overlay is hidden or showing another game. Computer players fill empty seats and take over the seat
-/// of anyone who drops out. Room setup happens in <see cref="DurakRoomWindow"/>, since typing a room code
+/// of anyone who drops out. Room setup happens in <see cref="RoomWindow"/>, since typing a room code
 /// needs a window that can take the keyboard.
 /// </summary>
-public sealed class DurakGame : MiniGame
+public sealed class DurakGame : MiniGame, IRoomGame
 {
     public const double CardW = 66, CardH = 94;
     const double CpuDelay = 0.8, SendEvery = 0.25, ResendEvery = 0.3;
@@ -123,6 +123,7 @@ public sealed class DurakGame : MiniGame
     public override string Id => "durak";
     public override string Title => "Durak";
     public RoomLink Room => _room;
+    public string MinVersion => "1.6";
 
     /// <summary>Over the two-player link the host's table opens a room that the other player joins (see <see cref="LanBridge"/>).</summary>
     public override bool SupportsLan => true;
@@ -756,14 +757,16 @@ public sealed class DurakGame : MiniGame
 
     static Color SuitColor(int suit) => suit >= 2 ? Color.FromRgb(208, 40, 52) : Color.FromRgb(25, 25, 30);
 
-    static string RankText(int rank) => rank switch { 11 => "J", 12 => "Q", 13 => "K", 14 => "A", _ => rank.ToString(CultureInfo.InvariantCulture) };
+    static string RankText(int rank) => rank switch { 1 or 14 => "A", 11 => "J", 12 => "Q", 13 => "K", _ => rank.ToString(CultureInfo.InvariantCulture) };
 
-    public static Border CardFace(int card, double w, double h)
+    public static Border CardFace(int card, double w, double h) => CardFace(DurakRules.Suit(card), DurakRules.Rank(card), w, h);
+
+    /// <summary>A card face for any game: suits ♠ 0, ♣ 1, ♦ 2, ♥ 3; ranks 2–10, J 11, Q 12, K 13 and the ace as 1 or 14.</summary>
+    public static Border CardFace(int suit, int rank, double w, double h)
     {
-        int suit = DurakRules.Suit(card);
         var color = Art.Brush(SuitColor(suit));
         var inner = new Canvas { Width = w, Height = h };
-        string label = RankText(DurakRules.Rank(card));
+        string label = RankText(rank);
         inner.Children.Add(Art.At(new TextBlock { Text = label, FontFamily = Fx.Font, FontSize = h * 0.2, FontWeight = FontWeight.Bold, Foreground = color }, 5, 1));
         inner.Children.Add(Art.At(new TextBlock { Text = SuitGlyphs[suit], FontSize = h * 0.17, Foreground = color }, 6, h * 0.22));
         var big = new TextBlock { Text = SuitGlyphs[suit], FontSize = h * 0.42, Foreground = color };
