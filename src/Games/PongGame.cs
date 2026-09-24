@@ -13,7 +13,9 @@ namespace DeskArcade.Games;
 
 /// <summary>
 /// Pong on the screen edges: drag your paddle up and down the left edge and get the ball past the
-/// computer's paddle on the right. First to 7; each win makes the computer sharper. Over the LAN the other
+/// computer's paddle on the right. First to 7. The computer plays at the level set in tray → CPU difficulty
+/// (two straight wins move it up, two straight losses down), and within a session each win makes it a
+/// little sharper on top. Over the LAN the other
 /// player's paddle replaces the computer, like Air Hockey: the host runs the ball and sends the state
 /// ("ps|…"), the guest sends its paddle ("pp|y") and draws everything mirrored, so both play from the left.
 /// The physics live in <see cref="PongTable"/>.
@@ -21,8 +23,8 @@ namespace DeskArcade.Games;
 public sealed class PongGame : MiniGame
 {
     const double BallR = PongTable.BallR, PaddleW = PongTable.PaddleW, PaddleH = PongTable.PaddleH, Grab = 30;
-    const double SendEvery = 1.0 / 60, ServeDelay = 1.0;
-    const int WinPoints = 7;
+    const double SendEvery = 1.0 / 60, ServeDelay = 1.0, TrailMinSpeed = 300;
+    const int WinPoints = 7, TrailLength = 5, TrailGap = 2;
 
     static readonly Color Gold = Color.FromRgb(255, 209, 102);
 
@@ -31,6 +33,12 @@ public sealed class PongGame : MiniGame
     readonly Rectangle _mePaddle = new() { Width = PaddleW, Height = PaddleH, RadiusX = 7, RadiusY = 7, IsHitTestVisible = false };
     readonly Rectangle _themPaddle = new() { Width = PaddleW, Height = PaddleH, RadiusX = 7, RadiusY = 7, IsHitTestVisible = false };
     readonly Ellipse _ball = new() { Width = BallR * 2, Height = BallR * 2, IsHitTestVisible = false };
+    readonly ScaleTransform _meSquash = new(), _themSquash = new();
+    readonly Rectangle _goalFlash = new() { Width = 26, Fill = Brushes.White, Opacity = 0, IsHitTestVisible = false };
+    readonly Ellipse _serveRing = new() { StrokeThickness = 3, IsVisible = false, IsHitTestVisible = false };
+    readonly Ellipse[] _trail = new Ellipse[TrailLength];
+    readonly Vec2[] _ballHistory = new Vec2[TrailLength * TrailGap + 1];
+    readonly Dictionary<ScaleTransform, Anims.Tween> _squashes = new();
     readonly TextBlock _scoreText = new()
     {
         FontFamily = Fx.Font, FontSize = 15, FontWeight = FontWeight.Bold, Foreground = Brushes.White, TextAlignment = TextAlignment.Center,
@@ -38,7 +46,7 @@ public sealed class PongGame : MiniGame
     readonly Border _scorePanel;
     readonly Dictionary<string, double> _lastSound = new();
 
-    int _myPoints, _theirPoints, _serveTo = -1;
+    int _myPoints, _theirPoints, _serveTo = -1, _winStreak, _lossStreak, _historyN;
     double _time, _serveIn = ServeDelay, _grabOffset, _sendT, _remoteY = double.NaN;
     bool _placed, _holding, _matchOver, _demo, _wasLan;
 
@@ -46,16 +54,30 @@ public sealed class PongGame : MiniGame
     {
         _t = new PongTable(host.Arena, Rng);
         _t.Point += Point;
-        _t.Hit += (name, vol, pitch) => PlayThrottled(name, vol, pitch);
+        _t.Hit += (name, vol, pitch) =>
+        {
+            PlayThrottled(name, vol, pitch);
+            if (name == "board") Squash(_t.BallVel.X > 0 ? _meSquash : _themSquash); // the ball leaves the paddle that hit it
+        };
+        _mePaddle.RenderTransformOrigin = _themPaddle.RenderTransformOrigin = RelativePoint.Center;
+        _mePaddle.RenderTransform = _meSquash;
+        _themPaddle.RenderTransform = _themSquash;
         _scorePanel = new Border
         {
             Width = 190, CornerRadius = new CornerRadius(10), Background = Art.Brush(200, 18, 20, 28), Padding = new Thickness(8, 3),
             Child = _scoreText, IsHitTestVisible = false,
         };
         Layer.Children.Add(_net);
+        Layer.Children.Add(_goalFlash);
         Layer.Children.Add(_scorePanel);
+        Layer.Children.Add(_serveRing);
         Layer.Children.Add(_mePaddle);
         Layer.Children.Add(_themPaddle);
+        for (int i = 0; i < _trail.Length; i++)
+        {
+            _trail[i] = new Ellipse { IsVisible = false, IsHitTestVisible = false };
+            Layer.Children.Add(_trail[i]);
+        }
         Layer.Children.Add(_ball);
         ThemeChanged();
     }
@@ -70,6 +92,9 @@ public sealed class PongGame : MiniGame
     string Rival => LanOn ? Host.Lan.PeerName : L.T("CPU");
     static Theme Th => Themes.Current;
 
+    public override bool HasCpuLevels => true;
+    public override Opponent? Opponent => new(Rival, !LanOn, LanOn ? 0 : CpuLevel, null);
+
     public override Sprite CreateIcon()
     {
         var s = new Sprite();
@@ -83,7 +108,7 @@ public sealed class PongGame : MiniGame
         $"{_myPoints}–{_theirPoints}",
         _matchOver ? L.T("Match over · grab your paddle for a rematch")
             : LanOn ? L.F("First to {0} vs {1} · drag your paddle", WinPoints, Host.Lan.PeerName)
-            : L.F("First to {0} · CPU level {1} · drag your paddle", WinPoints, _t.Level),
+            : L.F("First to {0} · CPU {1} · drag your paddle", WinPoints, L.T(LevelNames[CpuLevel - 1])),
         L.F("Wins {0}", Host.Stats.Get("pong.wins")));
 
     public override void ThemeChanged()
@@ -94,6 +119,8 @@ public sealed class PongGame : MiniGame
         _ball.Fill = Art.Brush(Th.GolfBall);
         _ball.Stroke = Art.Brush(90, 0, 0, 0);
         _ball.StrokeThickness = 1;
+        _serveRing.Stroke = Art.Brush(Color.FromArgb(200, Th.Line.R, Th.Line.G, Th.Line.B));
+        foreach (var ghost in _trail) ghost.Fill = Art.Brush(Color.FromArgb(110, Th.GolfBall.R, Th.GolfBall.G, Th.GolfBall.B));
     }
 
     // ------------------------------------------------------------------ match flow
@@ -134,6 +161,7 @@ public sealed class PongGame : MiniGame
         _t.Ball = new Vec2(Host.Arena.Center.X, Host.Arena.Center.Y);
         _serveTo = -1;
         _serveIn = ServeDelay;
+        if (!IsGuest) ServePulse(ServeDelay);
         UpdateScoreText();
         Host.HudChanged();
     }
@@ -146,6 +174,7 @@ public sealed class PongGame : MiniGame
         _serveTo = mine ? 1 : -1; // serve toward whoever just lost the point
         _serveIn = ServeDelay;
         if (_myPoints >= WinPoints || _theirPoints >= WinPoints) MatchOver();
+        else ServePulse(ServeDelay);
         UpdateScoreText();
         Host.HudChanged();
     }
@@ -153,6 +182,7 @@ public sealed class PongGame : MiniGame
     void PointFx(bool mine)
     {
         var a = Host.Arena;
+        FlashGoal(mine);
         var at = new Vec2(mine ? a.Right - 120 : a.Left + 120, Clamp(_t.Ball.Y, a.Top + 80, a.Bottom - 80));
         Host.Fx.Popup(at, mine ? L.T("POINT!") : L.F("{0} scores", Rival), mine ? Gold : Colors.White, 30, 1.1);
         Host.Sound.Play(mine ? "score" : "buzzer", mine ? 0.7 : 0.3);
@@ -173,17 +203,42 @@ public sealed class PongGame : MiniGame
                 _t.Level++;
                 Host.Stats.Max("pong.level", _t.Level);
             }
-            Host.Fx.Popup(at, L.T("YOU WIN!"), Gold, 42, 2.6, LanOn ? L.F("{0}–{1} vs {2}", _myPoints, _theirPoints, Rival)
-                : L.F("{0}–{1} · the CPU gets sharper", _myPoints, _theirPoints));
+            string sub = LanOn ? L.F("{0}–{1} vs {2}", _myPoints, _theirPoints, Rival) : L.F("{0}–{1} · the CPU gets sharper", _myPoints, _theirPoints);
+            if (!LanOn && LevelStep(won: true) is string up) sub = L.F("{0}–{1}", _myPoints, _theirPoints) + " · " + up;
+            Host.Fx.Popup(at, L.T("YOU WIN!"), Gold, 42, 2.6, sub);
             Host.Fx.Burst(at, Th.Confetti, 44, 540, 700, 7, 1.1);
             Host.Sound.Play("best", 0.8);
         }
         else
         {
-            Host.Fx.Popup(at, LanOn ? L.F("{0} WINS", Rival) : L.T("CPU WINS"), Colors.White, 38, 2.4,
-                L.F("{0}–{1} · grab your paddle for a rematch", _myPoints, _theirPoints));
+            string sub = L.F("{0}–{1} · grab your paddle for a rematch", _myPoints, _theirPoints);
+            if (!LanOn && LevelStep(won: false) is string down)
+                sub = L.F("{0}–{1}", _myPoints, _theirPoints) + " · " + down + " · " + L.T("grab your paddle for a rematch");
+            Host.Fx.Popup(at, LanOn ? L.F("{0} WINS", Rival) : L.T("CPU WINS"), Colors.White, 38, 2.4, sub);
             Host.Sound.Play("buzzer", 0.45);
         }
+    }
+
+    /// <summary>
+    /// Two straight wins move the CPU up a level and two straight losses move it down, like the board games;
+    /// the line to say so, or null when the level stays. Demo matches leave the player's setting alone.
+    /// </summary>
+    string? LevelStep(bool won)
+    {
+        if (_demo) return null;
+        if (won)
+        {
+            _lossStreak = 0;
+            if (++_winStreak < 2 || CpuLevel >= LevelNames.Length) return null;
+            _winStreak = 0;
+            CpuLevel++;
+            return L.F("the CPU moves up to {0}", L.T(LevelNames[CpuLevel - 1]));
+        }
+        _winStreak = 0;
+        if (++_lossStreak < 2 || CpuLevel <= 1) return null;
+        _lossStreak = 0;
+        CpuLevel--;
+        return L.F("the CPU goes easier: {0}", L.T(LevelNames[CpuLevel - 1]));
     }
 
     // ------------------------------------------------------------------ input
@@ -220,6 +275,8 @@ public sealed class PongGame : MiniGame
     {
         _time += dt;
         _t.Arena = Host.Arena;
+        _t.Skill = CpuLevel;
+        bool anim = Anims.Update(dt);
         if (IsGuest) return GuestUpdate(dt);
         if (IsLanHost) ReadGuest();
 
@@ -233,7 +290,7 @@ public sealed class PongGame : MiniGame
         if (!_t.BallInPlay && !_matchOver && (_serveIn -= dt) <= 0) _t.Serve(_serveTo);
         Draw();
         if (IsLanHost) SendState(dt);
-        return !_matchOver || _holding || _demo || LanOn; // idle only between matches
+        return !_matchOver || _holding || _demo || LanOn || anim; // idle only between matches
     }
 
     double DemoPaddle(double dt)
@@ -340,6 +397,68 @@ public sealed class PongGame : MiniGame
         Canvas.SetLeft(_ball, _t.Ball.X - BallR);
         Canvas.SetTop(_ball, _t.Ball.Y - BallR);
         _ball.IsVisible = _t.BallInPlay;
+        DrawTrail();
+    }
+
+    // ------------------------------------------------------------------ animation
+
+    /// <summary>A short trail of fading ghosts behind a fast ball, from where it was on the last few frames.</summary>
+    void DrawTrail()
+    {
+        _ballHistory[_historyN++ % _ballHistory.Length] = _t.Ball;
+        bool show = _t.BallInPlay && !Fx.ReducedMotion && _t.BallVel.Length > TrailMinSpeed && _historyN > _ballHistory.Length;
+        for (int i = 0; i < _trail.Length; i++)
+        {
+            var ghost = _trail[i];
+            ghost.IsVisible = show;
+            if (!show) continue;
+            var p = _ballHistory[(_historyN - 1 - (i + 1) * TrailGap + _ballHistory.Length) % _ballHistory.Length];
+            double r = BallR * (0.9 - 0.12 * i);
+            ghost.Width = ghost.Height = r * 2;
+            ghost.Opacity = 0.5 * (1 - (double)i / _trail.Length);
+            Canvas.SetLeft(ghost, p.X - r);
+            Canvas.SetTop(ghost, p.Y - r);
+        }
+    }
+
+    /// <summary>The edge the ball just went out over lights up and fades: the right edge for my point, the left for theirs.</summary>
+    void FlashGoal(bool mine)
+    {
+        var a = Host.Arena;
+        Canvas.SetLeft(_goalFlash, mine ? a.Right - _goalFlash.Width : a.Left);
+        Canvas.SetTop(_goalFlash, a.Top);
+        _goalFlash.Height = a.Height;
+        Anims.Add(0.55, k => _goalFlash.Opacity = 0.8 * (1 - k), Ease.OutQuad, () => _goalFlash.Opacity = 0);
+    }
+
+    /// <summary>A paddle that just returned the ball squashes flat for an instant.</summary>
+    void Squash(ScaleTransform paddle)
+    {
+        if (_squashes.TryGetValue(paddle, out var old)) old.Cancel();
+        _squashes[paddle] = Anims.Add(0.18, k =>
+        {
+            paddle.ScaleX = 1 - 0.3 * k;
+            paddle.ScaleY = 1 + 0.12 * k;
+        }, Ease.Pulse, () => paddle.ScaleX = paddle.ScaleY = 1);
+    }
+
+    /// <summary>A ring at the net that pulses for as long as the next serve takes.</summary>
+    void ServePulse(double seconds)
+    {
+        var a = Host.Arena;
+        Canvas.SetLeft(_serveRing, a.Center.X - BallR * 2);
+        Canvas.SetTop(_serveRing, a.Center.Y - BallR * 2);
+        _serveRing.Width = _serveRing.Height = BallR * 4;
+        _serveRing.RenderTransformOrigin = RelativePoint.Center;
+        var sc = new ScaleTransform();
+        _serveRing.RenderTransform = sc;
+        _serveRing.IsVisible = true;
+        Anims.Add(seconds, k =>
+        {
+            double beat = Ease.Pulse(k * 2 % 1); // two beats
+            sc.ScaleX = sc.ScaleY = 0.5 + 0.5 * beat;
+            _serveRing.Opacity = 0.25 + 0.75 * beat;
+        }, Ease.Linear, () => _serveRing.IsVisible = false);
     }
 
     void UpdateScoreText() => _scoreText.Text = LanOn

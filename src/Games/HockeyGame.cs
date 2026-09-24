@@ -13,7 +13,9 @@ namespace DeskArcade.Games;
 
 /// <summary>
 /// Air Hockey against the computer. Your whole screen is the table: the puck bounces off every edge,
-/// except the goal mouths cut into the left (yours) and right (the CPU's) sides. First to 7 wins.
+/// except the goal mouths cut into the left (yours) and right (the CPU's) sides. First to 7 wins. The CPU
+/// plays at the level set in tray → CPU difficulty (two straight wins move it up, two straight losses down),
+/// and within a session every match it loses makes it a little faster on top.
 /// Over the LAN the other player's mallet replaces the CPU and matches form a best-of-3 series: the host
 /// runs the physics and sends the state; the guest sends only its mallet and draws the host's state
 /// mirrored, so both play from the left. Positions cross the wire as fractions of the host's arena, so the
@@ -22,7 +24,8 @@ namespace DeskArcade.Games;
 public sealed class HockeyGame : MiniGame
 {
     const double PuckR = HockeyTable.PuckR, MalletR = HockeyTable.MalletR, PostR = HockeyTable.PostR, Reach = MalletR + 12;
-    const int WinGoals = 7, SeriesWins = 2;
+    const double TrailMinSpeed = 260, ServeDelay = 0.9;
+    const int WinGoals = 7, SeriesWins = 2, TrailLength = 5, TrailGap = 2;
 
     static readonly Color Gold = Color.FromRgb(255, 209, 102);
 
@@ -40,10 +43,15 @@ public sealed class HockeyGame : MiniGame
     readonly Sprite _puckSprite = new() { IsHitTestVisible = false };
     readonly Sprite _meSprite = new() { IsHitTestVisible = false };
     readonly Sprite _cpuSprite = new() { IsHitTestVisible = false };
+    readonly Rectangle _goalFlash = new() { Width = 28, Fill = Brushes.White, Opacity = 0, IsHitTestVisible = false };
+    readonly Ellipse _serveRing = new() { StrokeThickness = 3, IsVisible = false, IsHitTestVisible = false };
+    readonly Ellipse[] _trail = new Ellipse[TrailLength];
+    readonly Vec2[] _puckHistory = new Vec2[TrailLength * TrailGap + 1];
     readonly Dictionary<string, double> _lastSound = new();
+    readonly Dictionary<Sprite, Anims.Tween> _thumps = new();
 
     Vec2 _grabOffset;
-    int _myGoals, _cpuGoals, _serveSide = -1, _seriesMine, _seriesTheirs;
+    int _myGoals, _cpuGoals, _serveSide = -1, _seriesMine, _seriesTheirs, _winStreak, _lossStreak, _historyN;
     double _time, _serveIn = -1, _puckAge;
     bool _placed, _holding, _matchOver, _demo;
 
@@ -57,7 +65,11 @@ public sealed class HockeyGame : MiniGame
     {
         _t = new HockeyTable(host.Arena, Rng);
         _t.Goal += Goal;
-        _t.Hit += (name, vol, pitch) => PlayThrottled(name, vol, pitch);
+        _t.Hit += (name, vol, pitch) =>
+        {
+            PlayThrottled(name, vol, pitch);
+            if (name == "board") Thump((_t.Puck - _t.Me).Length <= (_t.Puck - _t.Cpu).Length ? _meSprite : _cpuSprite);
+        };
         _scorePanel = new Border
         {
             Width = 190, CornerRadius = new CornerRadius(10), Background = Art.Brush(200, 18, 20, 28), Padding = new Thickness(8, 3),
@@ -73,7 +85,14 @@ public sealed class HockeyGame : MiniGame
             _posts[i].Children.Add(Art.Circle(0, 0, PostR, Art.Brush("#D9DEE5"), Art.Brush("#4A5260"), 1.5));
             Layer.Children.Add(_posts[i]);
         }
+        Layer.Children.Add(_goalFlash);
         Layer.Children.Add(_scorePanel);
+        Layer.Children.Add(_serveRing);
+        for (int i = 0; i < _trail.Length; i++)
+        {
+            _trail[i] = new Ellipse { IsVisible = false, IsHitTestVisible = false };
+            Layer.Children.Add(_trail[i]);
+        }
         Layer.Children.Add(_puckSprite);
         Layer.Children.Add(_cpuSprite);
         Layer.Children.Add(_meSprite);
@@ -90,6 +109,9 @@ public sealed class HockeyGame : MiniGame
     string Rival => LanOn ? Host.Lan.PeerName : L.T("CPU");
     static Theme Th => Themes.Current;
 
+    public override bool HasCpuLevels => true;
+    public override Opponent? Opponent => new(Rival, !LanOn, LanOn ? 0 : CpuLevel, null);
+
     public override Sprite CreateIcon()
     {
         var s = new Sprite();
@@ -103,7 +125,7 @@ public sealed class HockeyGame : MiniGame
         $"{_myGoals}–{_cpuGoals}",
         _matchOver ? L.T("Match over · grab your mallet for a rematch")
             : LanOn ? L.F("First to {0} · best of 3 vs {1} · drag your blue mallet", WinGoals, Host.Lan.PeerName)
-            : L.F("First to {0} · CPU level {1} · drag your blue mallet", WinGoals, _t.Level),
+            : L.F("First to {0} · CPU {1} · drag your blue mallet", WinGoals, L.T(LevelNames[CpuLevel - 1])),
         L.F("Wins {0}", Host.Settings.HockeyWins));
 
     public override void ThemeChanged()
@@ -113,6 +135,8 @@ public sealed class HockeyGame : MiniGame
         _centerCircle.Stroke = line;
         _myGoal.Fill = Art.Brush(Color.FromArgb(210, Th.Mine.R, Th.Mine.G, Th.Mine.B));
         _cpuGoal.Fill = Art.Brush(Color.FromArgb(210, Th.Rival.R, Th.Rival.G, Th.Rival.B));
+        _serveRing.Stroke = Art.Brush(Color.FromArgb(200, Th.Line.R, Th.Line.G, Th.Line.B));
+        foreach (var ghost in _trail) ghost.Fill = Art.Brush(Color.FromArgb(120, Th.Puck.R, Th.Puck.G, Th.Puck.B));
         Paint(_puckSprite, MakePuck());
         Paint(_meSprite, MakeMallet(Th.Mine));
         Paint(_cpuSprite, MakeMallet(Th.Rival));
@@ -187,15 +211,17 @@ public sealed class HockeyGame : MiniGame
         GoalFx(playerScored, mouth);
 
         _serveSide = playerScored ? 1 : -1; // whoever conceded gets the puck
-        _serveIn = 0.9;
+        _serveIn = ServeDelay;
         _puckSprite.IsVisible = false;
         if (_myGoals >= WinGoals || _cpuGoals >= WinGoals) MatchOver();
+        else ServePulse(_t.ServeSpot(_serveSide), ServeDelay);
         UpdateScoreText();
         Host.HudChanged();
     }
 
     void GoalFx(bool playerScored, Vec2 mouth)
     {
+        FlashGoal(playerScored);
         Host.Fx.Burst(mouth, playerScored ? new[] { Th.Mine, Gold, Colors.White } : new[] { Th.Rival, Colors.White }, 30, 480, 500, 6, 0.8);
         Host.Fx.Popup(mouth + new Vec2(playerScored ? -90 : 90, -60), L.T("GOAL!"), playerScored ? Gold : Th.Rival, 38, 1.3,
             playerScored ? L.T("you score") : LanOn ? L.F("{0} scores", Rival) : L.T("CPU scores"));
@@ -221,15 +247,42 @@ public sealed class HockeyGame : MiniGame
             Host.Stats.Add("hockey.wins");
             Host.Stats.Max("hockey.level", _t.Level);
             Host.SaveSettings();
-            Host.Fx.Popup(at, L.T("YOU WIN!"), Gold, 42, 2.6, L.F("{0}–{1} · the CPU gets faster", _myGoals, _cpuGoals));
+            string sub = L.F("{0}–{1} · the CPU gets faster", _myGoals, _cpuGoals);
+            if (LevelStep(won: true) is string up) sub = L.F("{0}–{1}", _myGoals, _cpuGoals) + " · " + up;
+            Host.Fx.Popup(at, L.T("YOU WIN!"), Gold, 42, 2.6, sub);
             Host.Fx.Burst(at, Th.Confetti, 44, 540, 700, 7, 1.1);
             Host.Sound.Play("best", 0.8);
         }
         else
         {
-            Host.Fx.Popup(at, L.T("CPU WINS"), Colors.White, 38, 2.4, L.F("{0}–{1} · grab your mallet for a rematch", _myGoals, _cpuGoals));
+            string sub = L.F("{0}–{1} · grab your mallet for a rematch", _myGoals, _cpuGoals);
+            if (LevelStep(won: false) is string down)
+                sub = L.F("{0}–{1}", _myGoals, _cpuGoals) + " · " + down + " · " + L.T("grab your mallet for a rematch");
+            Host.Fx.Popup(at, L.T("CPU WINS"), Colors.White, 38, 2.4, sub);
             Host.Sound.Play("buzzer", 0.45);
         }
+    }
+
+    /// <summary>
+    /// Two straight wins move the CPU up a level and two straight losses move it down, like the board games;
+    /// the line to say so, or null when the level stays. Demo matches leave the player's setting alone.
+    /// </summary>
+    string? LevelStep(bool won)
+    {
+        if (_demo) return null;
+        if (won)
+        {
+            _lossStreak = 0;
+            if (++_winStreak < 2 || CpuLevel >= LevelNames.Length) return null;
+            _winStreak = 0;
+            CpuLevel++;
+            return L.F("the CPU moves up to {0}", L.T(LevelNames[CpuLevel - 1]));
+        }
+        _winStreak = 0;
+        if (++_lossStreak < 2 || CpuLevel <= 1) return null;
+        _lossStreak = 0;
+        CpuLevel--;
+        return L.F("the CPU goes easier: {0}", L.T(LevelNames[CpuLevel - 1]));
     }
 
     /// <summary>A LAN match is over; the series counts already include it.</summary>
@@ -297,6 +350,8 @@ public sealed class HockeyGame : MiniGame
     {
         _time += dt;
         _t.Arena = Host.Arena;
+        _t.Skill = CpuLevel;
+        bool anim = Anims.Update(dt);
         if (IsGuest) return GuestUpdate(dt);
         if (IsLanHost) ReadGuest();
         Vec2 cpuFrom = _t.Cpu;
@@ -321,7 +376,7 @@ public sealed class HockeyGame : MiniGame
         _puckAge += dt;
         Draw();
         if (IsLanHost) SendState(dt);
-        return busy || LanOn;
+        return busy || anim || LanOn;
     }
 
     // ------------------------------------------------------------------ LAN
@@ -446,6 +501,63 @@ public sealed class HockeyGame : MiniGame
         _puckSprite.Scale = Math.Max(0.01, Math.Min(1, _puckAge / 0.25));
         _meSprite.Set(_t.Me);
         _cpuSprite.Set(_t.Cpu);
+        DrawTrail();
+    }
+
+    // ------------------------------------------------------------------ animation
+
+    /// <summary>A short trail of fading ghosts behind a fast puck, from where it was on the last few frames.</summary>
+    void DrawTrail()
+    {
+        _puckHistory[_historyN++ % _puckHistory.Length] = _t.Puck;
+        bool show = _puckSprite.IsVisible && !Fx.ReducedMotion && _t.PuckVel.Length > TrailMinSpeed && _historyN > _puckHistory.Length;
+        for (int i = 0; i < _trail.Length; i++)
+        {
+            var ghost = _trail[i];
+            ghost.IsVisible = show;
+            if (!show) continue;
+            var p = _puckHistory[(_historyN - 1 - (i + 1) * TrailGap + _puckHistory.Length) % _puckHistory.Length];
+            double r = PuckR * (0.9 - 0.12 * i);
+            ghost.Width = ghost.Height = r * 2;
+            ghost.Opacity = 0.5 * (1 - (double)i / _trail.Length);
+            Canvas.SetLeft(ghost, p.X - r);
+            Canvas.SetTop(ghost, p.Y - r);
+        }
+    }
+
+    /// <summary>The goal mouth that was just scored on lights up and fades.</summary>
+    void FlashGoal(bool playerScored)
+    {
+        var a = Host.Arena;
+        Canvas.SetLeft(_goalFlash, playerScored ? a.Right - _goalFlash.Width : a.Left);
+        Canvas.SetTop(_goalFlash, _t.GoalTop);
+        _goalFlash.Height = _t.GoalBottom - _t.GoalTop;
+        Anims.Add(0.55, k => _goalFlash.Opacity = 0.95 * (1 - k), Ease.OutQuad, () => _goalFlash.Opacity = 0);
+    }
+
+    /// <summary>A mallet that just struck the puck gives a little thump.</summary>
+    void Thump(Sprite mallet)
+    {
+        if (_thumps.TryGetValue(mallet, out var old)) old.Cancel();
+        _thumps[mallet] = Anims.Add(0.16, k => mallet.Scale = 1 - 0.14 * k, Ease.Pulse, () => mallet.Scale = 1);
+    }
+
+    /// <summary>A ring that pulses where the puck is about to be served, for as long as the serve takes.</summary>
+    void ServePulse(Vec2 at, double seconds)
+    {
+        Canvas.SetLeft(_serveRing, at.X - PuckR * 2);
+        Canvas.SetTop(_serveRing, at.Y - PuckR * 2);
+        _serveRing.Width = _serveRing.Height = PuckR * 4;
+        _serveRing.RenderTransformOrigin = RelativePoint.Center;
+        var sc = new ScaleTransform();
+        _serveRing.RenderTransform = sc;
+        _serveRing.IsVisible = true;
+        Anims.Add(seconds, k =>
+        {
+            double beat = Ease.Pulse(k * 2 % 1); // two beats
+            sc.ScaleX = sc.ScaleY = 0.5 + 0.5 * beat;
+            _serveRing.Opacity = 0.25 + 0.75 * beat;
+        }, Ease.Linear, () => _serveRing.IsVisible = false);
     }
 
     void UpdateScoreText() => _scoreText.Text = LanOn

@@ -967,6 +967,10 @@ public static partial class Strings
 
 
         // ---- 1.8.0: animation pass (Bubbles, Whack, Tower, Bowling, Fishing, Pinball, Paper Toss, Blockfall, Hockey, Pong)
+        ["First to {0} · CPU {1} · drag your blue mallet"] = "До {0} голов · компьютер: {1} · двигайте синюю биту",
+        ["First to {0} · CPU {1} · drag your paddle"] = "До {0} · компьютер: {1} · двигайте ракетку",
+        ["grab your mallet for a rematch"] = "возьмите биту для реванша",
+        ["grab your paddle for a rematch"] = "возьмите ракетку для реванша",
 
 
     };

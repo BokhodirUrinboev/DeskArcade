@@ -15,8 +15,13 @@ namespace DeskArcade.Games;
 /// </summary>
 public sealed class WhackGame : MiniGame
 {
-    const double Step = 1.0 / 240, RoundSeconds = 30, Slide = 0.15, StayStart = 1.1, StayEnd = 0.5;
-    const double ComboWindow = 0.8, Depth = 60, HitR = 22, SquashTime = 0.3, SinkTime = 0.2, StarGravity = 700;
+    /// <summary>A round is 30 seconds.</summary>
+    public const double RoundSeconds = 30;
+    /// <summary>A fair round for a decent player: two dozen whacks with a few combos among them.</summary>
+    public const int FairRound = 50;
+    const double Step = 1.0 / 240, Slide = 0.15, StayStart = 1.1, StayEnd = 0.5, Settle = 0.12;
+    const double ComboWindow = 0.8, Depth = 60, HitR = 22, SquashTime = 0.3, SpinOffTime = 0.55, StarGravity = 700;
+    const double MeterW = 84, MeterH = 14;
     const int MaxCombo = 3, MaxVisible = 3, LadybugPenalty = 5;
 
     static readonly Color Gold = Color.FromRgb(255, 209, 102);
@@ -43,7 +48,7 @@ public sealed class WhackGame : MiniGame
         public IntPtr Hwnd;
         public int SeenGen = -1;
         public double T, Stay, WhackT = -1, WhackFrac;
-        public bool Sleeping, Leaving;
+        public bool Sleeping, Leaving, Flying;
     }
 
     sealed class Spark
@@ -57,15 +62,21 @@ public sealed class WhackGame : MiniGame
     readonly Canvas _sparkLayer = new() { IsHitTestVisible = false };
     readonly List<Bug> _bugs = new();
     readonly List<Spark> _sparks = new();
+    readonly Canvas _meter = new() { IsHitTestVisible = false, IsVisible = false, Opacity = 0 };
+    readonly Rectangle[] _meterCells = new Rectangle[MaxCombo];
+    readonly ScaleTransform _meterScale = new();
+    Anims.Tween? _meterTween, _meterFade;
 
     bool _active;
-    double _acc, _time, _roundLeft, _spawnIn, _lastHit = -10, _lastSound = -10, _sleeperIn = -1;
+    double _acc, _time, _roundLeft, _spawnIn, _lastHit = -10, _lastSound = -10, _sleeperIn = -1, _meterLevel;
     int _score, _hits, _combo, _shownSecond = -1;
 
     public WhackGame(IGameHost host) : base(host)
     {
         Layer.Children.Add(_bugLayer);
         Layer.Children.Add(_sparkLayer);
+        BuildMeter();
+        Layer.Children.Add(_meter);
     }
 
     public override string Id => "whack";
@@ -107,11 +118,13 @@ public sealed class WhackGame : MiniGame
             Draw(b);
         }
         if (!_active && _sleeperIn < 0 && !_bugs.Any(b => b.Sleeping)) SpawnSleeper();
+        PlaceMeter();
         Host.HudChanged();
     }
 
     public override void Deactivate()
     {
+        Anims.Clear();
         foreach (var b in _bugs) _bugLayer.Children.Remove(b.Holder);
         _bugs.Clear();
         foreach (var s in _sparks) _sparkLayer.Children.Remove(s.Sprite);
@@ -120,6 +133,10 @@ public sealed class WhackGame : MiniGame
         _sleeperIn = -1;
         _combo = 0;
         _acc = 0;
+        _meterTween = _meterFade = null;
+        _meterLevel = 0;
+        _meter.IsVisible = false;
+        _meter.Opacity = 0;
     }
 
     void SpawnSleeper()
@@ -143,6 +160,9 @@ public sealed class WhackGame : MiniGame
 
     public override bool SupportsLan => true;
     public override (int Score, bool Active)? Race => (_score, _active);
+    public override int RaceBaseline => FairRound;
+    public override int RaceBest => (int)Host.Stats.Get("whack.best");
+    public override double RaceSeconds => RoundSeconds;
 
     public override void StartRace()
     {
@@ -158,6 +178,7 @@ public sealed class WhackGame : MiniGame
         _lastHit = -10;
         _spawnIn = 0.5;
         _shownSecond = -1;
+        PlaceMeter();
         Host.Sound.Play("fire", 0.6);
         Host.HudChanged();
     }
@@ -167,6 +188,7 @@ public sealed class WhackGame : MiniGame
         _active = false;
         Host.RoundEnded(_score);
         _combo = 0;
+        SetMeter(0);
         foreach (var b in _bugs)
             if (b.WhackT < 0) Leave(b);
 
@@ -285,7 +307,7 @@ public sealed class WhackGame : MiniGame
         return 1 - (1 - u) * (1 - u);
     }
 
-    static bool Whackable(Bug b) => b.WhackT < 0 && !b.Leaving && OutFrac(b) >= 0.5;
+    static bool Whackable(Bug b) => b.WhackT < 0 && !b.Leaving && !b.Flying && OutFrac(b) >= 0.5;
 
     // kept about a radius away from the edge, so the circle barely reaches behind it
     static Vec2 HitCenter(Bug b) => b.Anchor + b.Out * Math.Max(HitR - 2, 26 - Depth * (1 - OutFrac(b)));
@@ -338,6 +360,7 @@ public sealed class WhackGame : MiniGame
         {
             _score = Math.Max(0, _score - LadybugPenalty);
             _combo = 0;
+            SetMeter(0);
             Host.ShareAction(at, -LadybugPenalty);
             Host.Fx.Popup(popAt, L.F("−{0}", LadybugPenalty), Color.FromRgb(255, 110, 110), 28, 1.3, L.T("that was a feature!"));
             PlaySound("buzzer", 0.35, 1);
@@ -346,6 +369,7 @@ public sealed class WhackGame : MiniGame
         {
             _combo = _time - _lastHit <= ComboWindow ? Math.Min(_combo + 1, MaxCombo) : 1;
             _lastHit = _time;
+            SetMeter(_combo);
             int pts = (b.Kind == Kind.Golden ? 5 : b.Kind == Kind.Fast ? 2 : 1) * _combo;
             _score += pts;
             _hits++;
@@ -400,11 +424,12 @@ public sealed class WhackGame : MiniGame
             if (_shownSecond is > 0 and <= 3) Host.Sound.Play("rim", 0.25, 2.5);
         }
 
-        bool busy = _active || _sleeperIn > 0 || _sparks.Count > 0;
+        bool busy = Anims.Update(dt) || _active || _sleeperIn > 0 || _sparks.Count > 0;
+        if (_meterLevel > 0 && _meterTween == null && _time - _lastHit > ComboWindow) SetMeter(0); // the combo window closed
         foreach (var b in _bugs)
         {
             Draw(b);
-            busy |= !b.Sleeping || b.T < Slide;
+            busy |= !b.Sleeping || b.T < Slide + Settle;
         }
         foreach (var s in _sparks)
         {
@@ -435,7 +460,7 @@ public sealed class WhackGame : MiniGame
             b.T += h;
             if (b.WhackT >= 0)
             {
-                if ((b.WhackT += h) >= SquashTime + SinkTime) Remove(b);
+                if (!b.Flying && (b.WhackT += h) >= SquashTime) SpinOff(b);
             }
             else if (!b.Sleeping && b.T >= Slide * 2 + b.Stay)
             {
@@ -516,14 +541,111 @@ public sealed class WhackGame : MiniGame
 
     void Draw(Bug b)
     {
-        double frac = b.WhackT >= 0
-            ? b.WhackFrac * (1 - Math.Clamp((b.WhackT - SquashTime) / SinkTime, 0, 1))
-            : OutFrac(b);
+        if (b.Flying) return; // its spin-off tween has it
+        double frac = b.WhackT >= 0 ? b.WhackFrac : OutFrac(b);
         double angle = b.Out.X > 0.5 ? 90 : b.Out.X < -0.5 ? -90 : 0;
         b.Sprite.Set(b.Anchor - b.Out * (Depth * (1 - frac)), angle);
-        double k = b.WhackT < 0 ? 0 : Math.Min(1, b.WhackT / 0.06);
-        b.Squash.ScaleX = 1 + 0.35 * k;
-        b.Squash.ScaleY = 1 - 0.62 * k;
+        double sx = 1, sy = 1;
+        if (b.WhackT >= 0)
+        {
+            double k = Math.Min(1, b.WhackT / 0.06); // flattened by the whack
+            sx = 1 + 0.35 * k;
+            sy = 1 - 0.62 * k;
+        }
+        else if (!Fx.ReducedMotion && !b.Leaving && b.T < Slide + Settle)
+        {
+            // peeking out: stretched tall on the way up, then a squash as it stops
+            double u = b.T < Slide ? Math.Sin(Math.PI * b.T / Slide) : 0;
+            double settle = b.T < Slide ? 0 : Math.Sin(Math.PI * (b.T - Slide) / Settle);
+            sx = 1 - 0.14 * u + 0.16 * settle;
+            sy = 1 + 0.22 * u - 0.14 * settle;
+        }
+        b.Squash.ScaleX = sx;
+        b.Squash.ScaleY = sy;
+    }
+
+    // ------------------------------------------------------------------ animation
+
+    /// <summary>A flattened bug peels off its edge and spins away, unflattening as it goes, then is gone.</summary>
+    void SpinOff(Bug b)
+    {
+        b.Flying = true;
+        b.Holder.Clip = null; // it leaves the edge behind
+        var a = Host.Arena;
+        var from = b.Anchor - b.Out * (Depth * (1 - b.WhackFrac));
+        double baseAngle = b.Out.X > 0.5 ? 90 : b.Out.X < -0.5 ? -90 : 0;
+        double side = Rng.NextDouble() < 0.5 ? -1 : 1;
+        var across = new Vec2(-b.Out.Y, b.Out.X) * side;
+        Anims.Add(SpinOffTime, k =>
+        {
+            var p = from + b.Out * (130 * k) + across * (70 * k);
+            p = new Vec2(Clamp(p.X, a.Left + 24, a.Right - 24), Clamp(p.Y, a.Top + 24, a.Bottom - 24)); // closed box
+            b.Sprite.Set(p, baseAngle + side * 540 * k);
+            b.Sprite.Opacity = 1 - k * k;
+            b.Squash.ScaleX = 1.35 - 0.35 * k;
+            b.Squash.ScaleY = 0.38 + 0.62 * k;
+        }, Ease.OutQuad, () => Remove(b));
+    }
+
+    /// <summary>Three cells that light up as the combo builds, above the middle of the screen (or beside the HUD).</summary>
+    void BuildMeter()
+    {
+        _meter.RenderTransformOrigin = RelativePoint.TopLeft;
+        _meter.RenderTransform = _meterScale;
+        _meter.Children.Add(Art.At(new Rectangle
+        {
+            Width = MeterW, Height = MeterH, RadiusX = 7, RadiusY = 7, Fill = Art.Brush(200, 18, 20, 28), Stroke = Art.Brush(60, 255, 255, 255), StrokeThickness = 1,
+        }, -MeterW / 2, -MeterH / 2));
+        double cellW = (MeterW - 8 - 2 * (MaxCombo - 1)) / MaxCombo;
+        for (int i = 0; i < MaxCombo; i++)
+        {
+            _meterCells[i] = new Rectangle { Width = cellW, Height = MeterH - 6, RadiusX = 3, RadiusY = 3, Fill = Art.Brush(Gold), Opacity = 0 };
+            _meter.Children.Add(Art.At(_meterCells[i], -MeterW / 2 + 4 + i * (cellW + 2), -MeterH / 2 + 3));
+        }
+    }
+
+    void PlaceMeter()
+    {
+        var a = Host.Arena;
+        var hud = Host.HudBounds.Inflate(12);
+        foreach (double f in new[] { 0.5, 0.25, 0.75 })
+        {
+            var at = new Vec2(a.Left + a.Width * f, a.Top + 34);
+            if (new Rect(at.X - MeterW / 2, at.Y - MeterH / 2, MeterW, MeterH).Intersects(hud)) continue;
+            Canvas.SetLeft(_meter, at.X);
+            Canvas.SetTop(_meter, at.Y);
+            return;
+        }
+        Canvas.SetLeft(_meter, a.Center.X);
+        Canvas.SetTop(_meter, a.Bottom - Depth - 30);
+    }
+
+    /// <summary>Fills the meter to <paramref name="combo"/> cells (0 drains it and it fades away); a full meter gives a little jump.</summary>
+    void SetMeter(int combo)
+    {
+        double from = _meterLevel, to = Math.Clamp(combo, 0, MaxCombo);
+        _meterTween?.Cancel();
+        _meterFade?.Cancel();
+        _meterFade = null;
+        if (to > 0)
+        {
+            _meter.IsVisible = true;
+            _meter.Opacity = 1;
+        }
+        _meterTween = Anims.Add(0.25, k => ShowMeter(from + (to - from) * k), to > from ? Ease.OutBack : Ease.OutQuad, () =>
+        {
+            _meterTween = null;
+            ShowMeter(to);
+            if (to == 0) _meterFade = Anims.Add(0.3, k => _meter.Opacity = 1 - k, Ease.OutQuad, () => _meter.IsVisible = false);
+        });
+        if (to >= MaxCombo)
+            Anims.Add(0.3, k => _meterScale.ScaleX = _meterScale.ScaleY = 1 + 0.18 * k, Ease.Pulse, () => _meterScale.ScaleX = _meterScale.ScaleY = 1);
+    }
+
+    void ShowMeter(double level)
+    {
+        _meterLevel = level;
+        for (int i = 0; i < _meterCells.Length; i++) _meterCells[i].Opacity = Math.Clamp(level - i, 0, 1);
     }
 
     void SpawnStars(Vec2 at, Vec2 dir, int count)

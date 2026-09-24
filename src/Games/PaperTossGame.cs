@@ -21,6 +21,12 @@ public sealed class PaperTossGame : MiniGame
 {
     const double R = PaperFlight.R, Step = PaperFlight.Step, Reach = R + 14, MinThrow = 250, ThrowTimeout = 5;
     const double SpotInset = 130, ZoneHalfW = 100, ZoneH = 280, FanInset = 34, FanHub = 52, MinBinDist = 380, BinMargin = 110;
+    const double FanSpinAfterWind = 1.2, FanSpinDown = 0.8;
+
+    /// <summary>A fair run for a decent player: five or six baskets before the miss, a swish or two among them.</summary>
+    public const int FairRound = 6;
+    /// <summary>About how long such a run takes, in seconds.</summary>
+    public const double TypicalRoundSeconds = 30;
 
     static readonly Color Gold = Color.FromRgb(255, 209, 102);
     static readonly Color[] Confetti = { Gold, Colors.White, Color.FromRgb(142, 201, 240), Color.FromRgb(6, 214, 160) };
@@ -56,7 +62,8 @@ public sealed class PaperTossGame : MiniGame
     Vec2 _spot, _bin, _grabOffset;
     IntPtr _binHwnd;
     int _binGen = -1, _score, _streak;
-    double _wind, _time, _acc, _sinceThrow, _stillT, _resetIn = -1, _bladeAngle;
+    double _wind, _time, _acc, _sinceThrow, _stillT, _resetIn = -1, _bladeAngle, _bladeSpin, _binAngle;
+    Anims.Tween? _spinTween, _rockTween;
     long _bestBefore;
     bool _placed, _holding, _inFlight, _touched, _scored, _runOver, _onLeft, _fanLeft;
 
@@ -135,6 +142,7 @@ public sealed class PaperTossGame : MiniGame
     {
         _holding = false;
         _zone.IsVisible = false;
+        Anims.Finish();
         if (_resetIn >= 0)
         {
             _resetIn = -1;
@@ -173,6 +181,7 @@ public sealed class PaperTossGame : MiniGame
         _wind = Math.Round((Rng.NextDouble() * 2 - 1) * max, 1);
         if (_wind != 0) _fanLeft = _wind > 0; // the fan blows away from its own edge
         PlaceFan();
+        SpinFan();
     }
 
     /// <summary>After a basket the bin moves; after a miss a new run starts, maybe from the other corner.</summary>
@@ -205,8 +214,13 @@ public sealed class PaperTossGame : MiniGame
         Host.Stats.Max("toss.best", _score); // saved as it grows, so quitting mid-run keeps it
 
         var at = new Vec2(_bin.X, _bin.Y - PaperFlight.BinH - 50);
+        Host.ShareAction(PaperFlight.Opening(_bin), pts);
         Host.Fx.Popup(at, swish ? L.T("Swish!") : L.T("In!"), swish ? Gold : Colors.White, swish ? 34 : 30, 1.2, $"+{pts}");
-        if (swish) Host.Fx.Burst(at + new Vec2(0, 30), Confetti, 18, 360, 700, 5, 0.8);
+        if (swish)
+        {
+            SwishFlash();
+            Host.Fx.Burst(at + new Vec2(0, 30), Confetti, 18, 360, 700, 5, 0.8);
+        }
         Host.Sound.Play(swish ? "swish" : "score", swish ? 0.8 : 0.5);
         if (swish) Host.Sound.Play("score", 0.45);
         _resetIn = 1.0;
@@ -218,6 +232,7 @@ public sealed class PaperTossGame : MiniGame
         _inFlight = false;
         _runOver = true;
         _inRun = false;
+        Host.ShareAction(_paper.Pos, 0);
         Host.RoundEnded(_score);
         long before = _score > 0 ? _bestBefore : Host.Stats.Get("toss.best");
         bool best = _score > before;
@@ -380,6 +395,9 @@ public sealed class PaperTossGame : MiniGame
     /// <summary>A LAN race is one run: it starts with the first throw and ends at the first miss.</summary>
     public override bool SupportsLan => true;
     public override (int Score, bool Active)? Race => (_score, _inRun);
+    public override int RaceBaseline => FairRound;
+    public override int RaceBest => (int)Host.Stats.Get("toss.best");
+    public override double RaceSeconds => TypicalRoundSeconds;
 
     public override void StartRace()
     {
@@ -472,8 +490,13 @@ public sealed class PaperTossGame : MiniGame
             _sinceThrow += dt;
             _stillT = _paper.Vel.Length < 20 ? _stillT + dt : 0;
             if ((_paper.Asleep && _sinceThrow > 0.3) || _stillT > 0.5 || _sinceThrow > ThrowTimeout) Miss();
+        }
 
-            _bladeAngle = (_bladeAngle + dt * (360 + Math.Abs(_wind) * 200) * (_fanLeft ? 1 : -1)) % 360;
+        // the fan runs at the wind's speed: while the paper flies, and for a moment after a new wind is called
+        double spin = _inFlight ? 1 : _bladeSpin;
+        if (spin > 0 && !Fx.ReducedMotion && _wind != 0)
+        {
+            _bladeAngle = (_bladeAngle + dt * spin * (120 + Math.Abs(_wind) * 160) * (_fanLeft ? 1 : -1)) % 360;
             _blades.Set(new Vec2(0, -FanHub), _bladeAngle);
         }
 
@@ -487,7 +510,7 @@ public sealed class PaperTossGame : MiniGame
             }
         }
 
-        busy |= !_paper.Asleep;
+        busy |= !_paper.Asleep || Anims.Update(dt);
         Draw();
         return busy;
     }
@@ -504,6 +527,7 @@ public sealed class PaperTossGame : MiniGame
         if (hit.Rim > 30)
         {
             if (_inFlight) _touched = true;
+            Rock();
             PlayThrottled("rim", Math.Min(0.7, hit.Rim / 900), 1.25 + Rng.NextDouble() * 0.15);
         }
         if (hit.Wall > 30)
@@ -519,12 +543,65 @@ public sealed class PaperTossGame : MiniGame
 
     // ------------------------------------------------------------------ visuals
 
-    void Draw() => _paperSprite.Set(_paper.Pos, _paper.Angle);
+    void Draw()
+    {
+        _paperSprite.Set(_paper.Pos, _paper.Angle);
+        // in the air the ball crumples and uncrumples a little, like paper does
+        _paperSprite.Scale = _inFlight && !Fx.ReducedMotion ? 1 + 0.07 * Math.Sin(_sinceThrow * 16) : 1;
+    }
 
     void DrawBin()
     {
-        _binBack.Set(_bin);
-        _binFront.Set(_bin);
+        _binBack.Set(_bin, _binAngle);
+        _binFront.Set(_bin, _binAngle);
+    }
+
+    // ------------------------------------------------------------------ animation
+
+    /// <summary>The blades run at the wind's speed for a moment after a new wind is called, then wind down.</summary>
+    void SpinFan()
+    {
+        _spinTween?.Cancel();
+        _bladeSpin = 1;
+        _spinTween = Anims.Add(FanSpinDown, k => _bladeSpin = 1 - k, Ease.OutQuad, () =>
+        {
+            _bladeSpin = 0;
+            _spinTween = null;
+        }, FanSpinAfterWind);
+    }
+
+    /// <summary>A rim hit rocks the bin on its base, away from the side that was struck.</summary>
+    void Rock()
+    {
+        double dir = _paper.Pos.X < _bin.X ? 1 : -1;
+        _rockTween?.Cancel();
+        _rockTween = Anims.Add(0.5, k =>
+        {
+            _binAngle = dir * 9 * Math.Sin(k * Math.PI * 3) * (1 - k);
+            DrawBin();
+        }, Ease.Linear, () =>
+        {
+            _binAngle = 0;
+            DrawBin();
+            _rockTween = null;
+        });
+    }
+
+    /// <summary>A swish: a gold ring bursts out of the bin's opening.</summary>
+    void SwishFlash()
+    {
+        var opening = PaperFlight.Opening(_bin);
+        var ring = new Ellipse { Stroke = Art.Brush(Gold), StrokeThickness = 3, Fill = Art.Brush(60, 255, 209, 102), IsHitTestVisible = false };
+        Layer.Children.Add(ring);
+        Anims.Add(0.45, k =>
+        {
+            double w = (PaperFlight.BinTopW + 10) * (1 + 0.8 * k), h = 16 * (1 + 0.8 * k);
+            ring.Width = w;
+            ring.Height = h;
+            Canvas.SetLeft(ring, opening.X - w / 2);
+            Canvas.SetTop(ring, opening.Y - 2 - h / 2);
+            ring.Opacity = 1 - k;
+        }, Ease.OutCubic, () => Layer.Children.Remove(ring));
     }
 
     void PlayThrottled(string name, double vol, double pitch = 1)
@@ -575,8 +652,8 @@ public sealed class PaperTossGame : MiniGame
         double t = PaperFlight.BinTopW / 2, b = PaperFlight.BinBottomW / 2, h = PaperFlight.BinH;
         string F(double v) => Art.F(v);
         var s = new Sprite { IsHitTestVisible = false };
-        s.Children.Add(Art.PathOf($"M{F(-t)},{F(-h)} L{F(t)},{F(-h)} L{F(b)},0 L{F(-b)},0 Z", Art.Brush(150, 40, 46, 54)));
-        s.Children.Add(Art.PathOf($"M{F(-t)},{F(-h)} A{F(t)},5 0 0 1 {F(t)},{F(-h)}", null, Art.Brush("#8A939E"), 3.5));
+        s.Rotor.Children.Add(Art.PathOf($"M{F(-t)},{F(-h)} L{F(t)},{F(-h)} L{F(b)},0 L{F(-b)},0 Z", Art.Brush(150, 40, 46, 54)));
+        s.Rotor.Children.Add(Art.PathOf($"M{F(-t)},{F(-h)} A{F(t)},5 0 0 1 {F(t)},{F(-h)}", null, Art.Brush("#8A939E"), 3.5));
         return s;
     }
 
@@ -597,12 +674,12 @@ public sealed class PaperTossGame : MiniGame
             mesh.Append($"M{F(-half)},{F(-h + h * k)} L{F(half)},{F(-h + h * k)} ");
         }
         var s = new Sprite { IsHitTestVisible = false };
-        s.Children.Add(Art.PathOf(mesh.ToString(), null, Art.Brush(200, 154, 163, 173), 1.2));
-        s.Children.Add(Art.PathOf($"M{F(-t)},{F(-h)} L{F(-b)},0 M{F(t)},{F(-h)} L{F(b)},0", null, Art.Brush("#6E7782"), PaperFlight.WallThick));
-        s.Children.Add(Art.At(new Rectangle { Width = b * 2, Height = 5, RadiusX = 1.5, RadiusY = 1.5, Fill = Art.Brush("#6E7782") }, -b, -5));
-        s.Children.Add(Art.PathOf($"M{F(-t)},{F(-h)} A{F(t)},5 0 0 0 {F(t)},{F(-h)}", null, Art.Brush("#C9D0D8"), 3.5));
-        s.Children.Add(Art.Circle(-t, -h, PaperFlight.LipR, Art.Brush("#DDE3EA")));
-        s.Children.Add(Art.Circle(t, -h, PaperFlight.LipR, Art.Brush("#DDE3EA")));
+        s.Rotor.Children.Add(Art.PathOf(mesh.ToString(), null, Art.Brush(200, 154, 163, 173), 1.2));
+        s.Rotor.Children.Add(Art.PathOf($"M{F(-t)},{F(-h)} L{F(-b)},0 M{F(t)},{F(-h)} L{F(b)},0", null, Art.Brush("#6E7782"), PaperFlight.WallThick));
+        s.Rotor.Children.Add(Art.At(new Rectangle { Width = b * 2, Height = 5, RadiusX = 1.5, RadiusY = 1.5, Fill = Art.Brush("#6E7782") }, -b, -5));
+        s.Rotor.Children.Add(Art.PathOf($"M{F(-t)},{F(-h)} A{F(t)},5 0 0 0 {F(t)},{F(-h)}", null, Art.Brush("#C9D0D8"), 3.5));
+        s.Rotor.Children.Add(Art.Circle(-t, -h, PaperFlight.LipR, Art.Brush("#DDE3EA")));
+        s.Rotor.Children.Add(Art.Circle(t, -h, PaperFlight.LipR, Art.Brush("#DDE3EA")));
         return s;
     }
 
