@@ -13,8 +13,9 @@ namespace DeskArcade;
 /// other's starts too, both see the rival's live score, and when both rounds are over the higher score wins (the
 /// lower one where fewer is better); only scores cross the link. Alone, with "Race the computer" on, a
 /// <see cref="CpuRival"/> plays a round of its own at the game's CPU level, marks its scoring on screen, and the level
-/// moves up when the player keeps winning and down when they keep losing. Games report their rounds through
-/// <see cref="IGameHost.RoundStarted"/> and <see cref="IGameHost.RoundEnded"/>.
+/// moves up when the player keeps winning and down when they keep losing. Like a co-worker, the computer finishes its
+/// own round in its own time: a round the player ends in seconds still waits for the computer's score. Games report
+/// their rounds through <see cref="IGameHost.RoundStarted"/> and <see cref="IGameHost.RoundEnded"/>.
 /// </summary>
 public sealed class RaceMode
 {
@@ -29,7 +30,7 @@ public sealed class RaceMode
     readonly Random _rng = new();
     int _round, _rivalRound = -1, _rivalScore;
     bool _rivalActive, _remoteStart;
-    CpuRival? _cpu;
+    readonly Dictionary<int, CpuRival> _cpus = new(); // the computer's rounds, by my round number, until they finish
     int _cpuWinStreak, _cpuLossStreak, _cpuShown;
     double _lastMark;
 
@@ -58,7 +59,7 @@ public sealed class RaceMode
         _announced.Clear();
         _rivalScore = 0;
         _rivalActive = false;
-        _cpu = null;
+        _cpus.Clear();
         _cpuWinStreak = _cpuLossStreak = 0;
         if (Game != null)
         {
@@ -88,7 +89,10 @@ public sealed class RaceMode
             if (!_remoteStart) _w.Lan.Send($"go|{_round}");
             return;
         }
-        _cpu = new CpuRival(game.CpuLevel, Math.Max(game.RaceBaseline, game.RaceBest), game.RaceLowerIsBetter, game.RaceSeconds, _rng);
+        // the computer aims at the player's best when there is one, else at the game's baseline
+        int reference = game.RaceBest <= 0 ? game.RaceBaseline
+            : game.RaceLowerIsBetter ? Math.Min(game.RaceBaseline, game.RaceBest) : Math.Max(game.RaceBaseline, game.RaceBest);
+        _cpus[_round] = new CpuRival(game.CpuLevel, reference, game.RaceLowerIsBetter, game.RaceSeconds, _rng);
         _lastMark = 0;
         _cpuShown = 0;
         Tick();
@@ -98,11 +102,6 @@ public sealed class RaceMode
     {
         if (Game == null || _round == 0) return; // a round from before the race began doesn't count
         _mine[_round] = score;
-        if (_cpu is { } cpu)
-        {
-            cpu.Finish();
-            _theirs[_round] = cpu.Score;
-        }
         Tick();
     }
 
@@ -148,13 +147,19 @@ public sealed class RaceMode
         else
         {
             rival = L.T("CPU");
-            string level = L.T(MiniGame.LevelNames[game.CpuLevel - 1]);
-            if (_cpu is { } cpu)
+            foreach (var (round, cpu) in _cpus.ToList())
             {
-                if (active && !cpu.Done && cpu.Tick(TickSeconds)) MarkCpu(cpu);
-                _w.SetRaceLabel(cpu.LowerIsBetter && !cpu.Done
-                    ? L.F("CPU ({0}) is heading for {1}", level, cpu.Target)
-                    : L.F("CPU ({0}): {1}", level, cpu.Score) + (cpu.Done ? " · " + L.T("done") : ""));
+                if (cpu.Done) continue;
+                if (cpu.Tick(TickSeconds) && round == _round) MarkCpu(cpu);
+                if (cpu.Done) _theirs[round] = cpu.Score;
+            }
+            foreach (int round in _cpus.Keys.Where(r => _cpus[r].Done && r < _round - 1).ToList()) _cpus.Remove(round);
+            if (_cpus.TryGetValue(_round, out var current))
+            {
+                string level = L.T(MiniGame.LevelNames[current.Level - 1]);
+                _w.SetRaceLabel(current.LowerIsBetter && !current.Done
+                    ? L.F("CPU ({0}) is heading for {1}", level, current.Target)
+                    : L.F("CPU ({0}): {1}", level, current.Score) + (current.Done ? " · " + L.T("done") : ""));
             }
             else _w.SetRaceLabel(L.T("Race the computer: start a round and it plays one too"));
         }
