@@ -12,7 +12,7 @@ namespace DeskArcade.Games;
 /// <summary>
 /// Slingshot: pull the stone back and knock down a tower of wood and glass blocks standing on a window top
 /// (or on a plinth on the floor). Clear a tower to get a bigger one; run out of stones with blocks still
-/// standing and the game is over.
+/// standing and the game is over. Each tower is a race against the computer, or a co-worker over the LAN.
 /// </summary>
 public sealed class SlingshotGame : MiniGame
 {
@@ -21,8 +21,8 @@ public sealed class SlingshotGame : MiniGame
     const double ForkH = 132, PouchH = 124, ForkHalf = 22;
     const double CrateS = 40, PostW = 16, PostH = 48, PlankW = 88, PlankH = 16, PlinthH = 46;
     const double StoneWake = 45, BlockWake = 120, GlassBreakStone = 520, GlassBreakBlock = 650, GlassBreakLand = 800;
-    const double DemoPullTime = 0.45;
-    const int PointsPerBlock = 10, PointsPerStone = 50, MaxBlocks = 15;
+    const double DemoPullTime = 0.45, SnapTime = 0.6, HopTime = 0.7;
+    const int PointsPerBlock = 10, PointsPerStone = 50, MaxBlocks = 15, FairTower = 100;
 
     static readonly Color Gold = Color.FromRgb(255, 209, 102);
     static readonly Color[] Confetti = { Gold, Color.FromRgb(239, 71, 111), Color.FromRgb(6, 214, 160), Colors.White };
@@ -32,10 +32,11 @@ public sealed class SlingshotGame : MiniGame
     {
         public required Sprite Sprite;
         public required Vec2[] Circles; // local centers of the round approximation used against other blocks
-        public double W, H, R, Bound, Mass, Inertia, SurfaceY, Delay;
+        public double W, H, R, Bound, Mass, Inertia, SurfaceY, DropY;
         public Vec2 Pos, Vel, RestPos;
-        public double Angle, Spin, RestAngle, StillT, DynT, FadeT, Age;
+        public double Angle, Spin, RestAngle, StillT, DynT, FadeT;
         public bool Glass, Dynamic, Resting, Down, Touching;
+        public Anims.Tween? Drop; // while it is coming down into place at the start
         public bool Moving => Dynamic && !Resting;
     }
 
@@ -62,13 +63,13 @@ public sealed class SlingshotGame : MiniGame
     readonly List<Block> _blocks = new();
     readonly Dictionary<string, double> _lastSound = new();
 
-    double _slingX, _moveOffset, _time, _acc, _sinceShot, _slowT, _stoneFade = -1, _clearIn = -1, _judgeIn = -1, _snap;
+    double _slingX, _moveOffset, _time, _acc, _sinceShot, _slowT, _stoneFade = -1, _clearIn = -1, _judgeIn = -1, _snapK = 1, _hop;
     double _demoHold = -1, _gameOverAt, _baseY, _baseX1, _baseX2, _towerX, _towerW;
-    int _tower, _stones, _score, _towerBlocks, _seenGen = -1;
+    int _tower, _stones, _score, _towerBlocks, _seenGen = -1, _towerStart;
     long _bestAtStart;
-    bool _placed, _loaded, _inFlight, _pulling, _moving, _gameOver, _collapsed, _onPlinth;
+    bool _placed, _loaded, _inFlight, _pulling, _moving, _gameOver, _collapsed, _onPlinth, _roundOn;
     IntPtr _baseHwnd;
-    Vec2 _pull, _demoPull;
+    Vec2 _pull, _demoPull, _snapDir;
 
     public SlingshotGame(IGameHost host) : base(host)
     {
@@ -94,6 +95,38 @@ public sealed class SlingshotGame : MiniGame
 
     public override string Id => "slingshot";
     public override string Title => "Slingshot";
+
+    // One tower is the race: its blocks and the spare stones score, and the computer or the co-worker takes on a tower alongside.
+    public override bool SupportsLan => true;
+    public override (int Score, bool Active)? Race => (_score - _towerStart, _roundOn);
+    public override int RaceBaseline => FairTower;
+    public override int RaceBest => (int)Host.Stats.Get("slingshot.tower");
+    public override double RaceSeconds => 22;
+
+    public override void StartRace()
+    {
+        if (_gameOver) NewGame();
+        BeginRound();
+    }
+
+    /// <summary>The tower's round starts with the first stone (or with the rival's start, in a race).</summary>
+    void BeginRound()
+    {
+        if (_roundOn) return;
+        _roundOn = true;
+        _towerStart = _score;
+        Host.RoundStarted();
+    }
+
+    /// <summary>The tower is cleared or the stones are gone: what this tower scored is the round's result.</summary>
+    void EndRound()
+    {
+        if (!_roundOn) return;
+        _roundOn = false;
+        int points = _score - _towerStart;
+        Host.Stats.Max("slingshot.tower", points);
+        Host.RoundEnded(points);
+    }
 
     public override Sprite CreateIcon()
     {
@@ -144,6 +177,7 @@ public sealed class SlingshotGame : MiniGame
         _pulling = _moving = false;
         _demoHold = -1;
         _pull = default;
+        Anims.Finish(); // blocks still coming down land at once
         HideGuide();
         Draw();
     }
@@ -189,7 +223,11 @@ public sealed class SlingshotGame : MiniGame
 
     void BuildTower()
     {
-        foreach (var b in _blocks) _blockLayer.Children.Remove(b.Sprite);
+        foreach (var b in _blocks)
+        {
+            b.Drop?.Cancel();
+            _blockLayer.Children.Remove(b.Sprite);
+        }
         _blocks.Clear();
         _collapsed = false;
         _clearIn = _judgeIn = -1;
@@ -203,10 +241,26 @@ public sealed class SlingshotGame : MiniGame
             var b = NewBlock(piece.W, piece.H, Rng.NextDouble() < glass);
             b.Pos = b.RestPos = new Vec2(_towerX + piece.X, _baseY - piece.Bottom - piece.H / 2);
             b.SurfaceY = _baseY - piece.Bottom;
-            b.Delay = piece.Storey * 0.06;
-            b.Sprite.Scale = 0.01;
-            b.Sprite.Set(b.Pos, 0);
+            DropIn(b, piece.Storey);
         }
+    }
+
+    /// <summary>A block comes down from above and lands with a bounce, the lower storeys first.</summary>
+    void DropIn(Block b, int storey)
+    {
+        double from = SlingshotMaths.DropHeight(storey);
+        b.DropY = -from;
+        b.Sprite.IsVisible = false; // out of sight until its turn comes
+        b.Sprite.Set(b.Pos + new Vec2(0, b.DropY), 0);
+        b.Drop = Anims.Add(0.45, k =>
+        {
+            b.Sprite.IsVisible = true;
+            b.DropY = -from * (1 - k);
+        }, Ease.OutBounce, () =>
+        {
+            b.Drop = null;
+            b.DropY = 0;
+        }, storey * 0.09);
     }
 
     /// <summary>Storeys of posts with a plank on top, or crates side by side; wide at the bottom for big towers.</summary>
@@ -361,6 +415,7 @@ public sealed class SlingshotGame : MiniGame
         if (_collapsed) return; // the window took the tower away: nobody earned these
         AddScore(PointsPerBlock);
         Host.Stats.Add("slingshot.blocks");
+        Host.ShareAction(b.Pos, PointsPerBlock);
         Host.Fx.Popup(b.Pos - new Vec2(0, 30), L.F("+{0}", PointsPerBlock), b.Glass ? Color.FromRgb(190, 230, 255) : Colors.White, 22, 0.8);
         Host.HudChanged();
         if (_clearIn < 0 && BlocksLeft == 0) _clearIn = 1.0;
@@ -386,9 +441,13 @@ public sealed class SlingshotGame : MiniGame
         AddScore(bonus);
         Host.Stats.Add("slingshot.cleared");
         var at = new Vec2(_towerX, Math.Max(Host.Arena.Top + 80, _baseY - 160));
+        if (bonus > 0) Host.ShareAction(at, bonus);
         Host.Fx.Popup(at, L.T("CLEAR!"), Gold, 40, 1.8, bonus > 0 ? L.F("+{0} · spare stones {1}", bonus, _stones) : L.T("next tower"));
         Host.Fx.Burst(at, Confetti, 36, 500, 700, 7, 1.0);
+        Host.Fx.Burst(new Vec2(_slingX, Host.Arena.Bottom - ForkH), Confetti, 18, 360, 700, 6, 0.9);
+        Anims.Add(HopTime, k => _hop = SlingshotMaths.Hop(k), Ease.Linear); // the slingshot jumps for joy
         Host.Sound.Play("fire", 0.8);
+        EndRound();
         NextTower();
     }
 
@@ -402,6 +461,7 @@ public sealed class SlingshotGame : MiniGame
         Host.Fx.Popup(at, best ? L.T("NEW BEST!") : L.T("GAME OVER"), best ? Gold : Colors.White, 38, 2.4, L.F("{0} points · tower {1}", _score, _tower));
         if (best) Host.Fx.Burst(at, Confetti, 40, 520, 700, 7, 1.1);
         Host.Sound.Play(best ? "best" : "buzzer", best ? 0.8 : 0.4);
+        EndRound();
         Reload(); // a stone in the pouch invites the next game
         Host.HudChanged();
     }
@@ -505,8 +565,10 @@ public sealed class SlingshotGame : MiniGame
         _loaded = false;
         _inFlight = true;
         _sinceShot = _slowT = 0;
+        BeginRound();
         _stones--;
-        _snap = 1;
+        _snapDir = dir;
+        Anims.Add(SnapTime, k => _snapK = k, Ease.Linear); // the bands snap forward and twang
         _stone.Place(from, dir * LaunchSpeed(len / MaxPull));
         _stone.Spin = dir.X * 400;
         Host.Sound.Play("twang", 0.5 + 0.4 * len / MaxPull);
@@ -609,13 +671,6 @@ public sealed class SlingshotGame : MiniGame
         for (int i = _blocks.Count - 1; i >= 0; i--)
         {
             var b = _blocks[i];
-            if (b.Age < b.Delay + 0.25)
-            {
-                b.Age += dt;
-                double k = Clamp((b.Age - b.Delay) / 0.22, 0, 1);
-                b.Sprite.Scale = Math.Max(0.01, 1 - (1 - k) * (1 - k));
-                busy = true;
-            }
             if (b.Moving)
             {
                 b.DynT += dt;
@@ -652,11 +707,7 @@ public sealed class SlingshotGame : MiniGame
             }
         }
         if (_collapsed && _blocks.Count == 0) RebuildTower();
-        if (_snap > 0)
-        {
-            _snap = Math.Max(0, _snap - dt * 4);
-            busy = true;
-        }
+        busy |= Anims.Update(dt);
 
         Draw();
         return busy;
@@ -955,11 +1006,11 @@ public sealed class SlingshotGame : MiniGame
 
     void Draw()
     {
-        double floor = Host.Arena.Bottom;
+        double floor = Host.Arena.Bottom - _hop; // the whole slingshot hops when a tower is cleared
         _sling.Set(new Vec2(_slingX, floor));
-        var rest = PouchRest;
+        var rest = new Vec2(_slingX, floor - PouchH);
         var pouch = _pulling ? rest + _pull : rest;
-        if (_snap > 0 && !_pulling) pouch.Y += Math.Sin(_snap * 28) * 7 * _snap; // the bands twang after a shot
+        if (!_pulling) pouch += _snapDir * SlingshotMaths.BandWobble(_snapK); // the bands snap past the rest and twang
         if (_loaded) _stone.Pos = pouch;
 
         _stoneSprite.IsVisible = _loaded || _inFlight || _stoneFade >= 0;
@@ -973,7 +1024,17 @@ public sealed class SlingshotGame : MiniGame
         double angle = toFork.LengthSquared > 1 ? Math.Atan2(toFork.Y, toFork.X) * 180 / Math.PI + 90 : 0;
         _pouch.Set(pouch, angle);
 
-        foreach (var b in _blocks) b.Sprite.Set(b.Pos, b.Angle);
+        foreach (var b in _blocks)
+        {
+            if (b.Drop != null && b.Moving)
+            {
+                b.Drop.Cancel(); // hit on the way down: it lands where the physics says
+                b.Drop = null;
+                b.DropY = 0;
+                b.Sprite.IsVisible = true;
+            }
+            b.Sprite.Set(b.Pos + new Vec2(0, b.DropY), b.Angle);
+        }
     }
 
     void UpdateGuide()
@@ -1130,7 +1191,7 @@ public sealed class SlingshotGame : MiniGame
             return;
         }
         if (!_loaded || _inFlight || _clearIn >= 0 || _judgeIn >= 0 || _collapsed) return;
-        if (_blocks.Any(b => (b.Moving && !b.Down) || b.Age < b.Delay + 0.25)) return;
+        if (_blocks.Any(b => (b.Moving && !b.Down) || b.Drop != null)) return;
         var target = _blocks.Where(b => !b.Down).OrderByDescending(b => b.Pos.Y).ThenBy(b => Math.Abs(b.Pos.X - _slingX)).FirstOrDefault();
         if (target == null) return;
 
@@ -1171,4 +1232,28 @@ public sealed class SlingshotGame : MiniGame
         pull = default;
         return false;
     }
+}
+
+/// <summary>The bits of the slingshot's motion that are plain arithmetic, so they can be tested.</summary>
+public static class SlingshotMaths
+{
+    /// <summary>
+    /// How far the pouch is from its rest, along the shot, for progress <paramref name="k"/> (0 → 1) of the twang
+    /// after a shot: it snaps forward first, then swings back and forth with less and less each time.
+    /// </summary>
+    public static double BandWobble(double k)
+    {
+        if (k <= 0 || k >= 1) return 0;
+        return Math.Sin(k * 4.5 * Math.PI) * 9 * (1 - k) * (1 - k);
+    }
+
+    /// <summary>How high the slingshot is off the floor for progress <paramref name="k"/> of its celebration: two hops, the second smaller.</summary>
+    public static double Hop(double k)
+    {
+        if (k <= 0 || k >= 1) return 0;
+        return Math.Abs(Math.Sin(k * 2 * Math.PI)) * 16 * (1 - k);
+    }
+
+    /// <summary>How far above its place a block of the given storey starts when the tower assembles.</summary>
+    public static double DropHeight(int storey) => 150 + Math.Max(0, storey) * 24;
 }
