@@ -930,5 +930,44 @@ public static partial class Strings
         ["Bumper cars"] = "Bamper poygasi",
         ["Hit 500 bumpers"] = "Bamperlarga 500 marta tegizing",
         ["Hit {0} bumpers in Pinball"] = "Pinbolda bamperlarga {0} marta tegizing",
+        // ---- 1.8.0: scoreboard, races against the computer, movable boards
+        ["Your turn"] = "Sizning navbatingiz",
+        ["CPU · {0}"] = "Kompyuter · {0}",
+        ["Menu"] = "Menyu",
+        ["Hide overlay"] = "O'yinni yashirish",
+        ["Drag to move"] = "Ko'chirish uchun torting",
+        ["Race the computer in solo rounds"] = "Yakka raundlarda kompyuter bilan poyga",
+        ["CPU ({0}): {1}"] = "Kompyuter ({0}): {1}",
+        ["CPU ({0}) is heading for {1}"] = "Kompyuter ({0}) {1} ga intilmoqda",
+        ["Race the computer: start a round and it plays one too"] = "Kompyuter bilan poyga: raund boshlang, u ham o'ynaydi",
+        ["the CPU goes easier: {0}"] = "kompyuter yengillashdi: {0}",
+        ["Pacesetter"] = "Sur'at beruvchi",
+        ["Beat the computer in 10 races"] = "Kompyuterni 10 poygada yutib chiqing",
+
+
+        // ---- 1.8.0: Linux overlay
+
+
+        // ---- 1.8.0: pets
+
+
+        // ---- 1.8.0: board and turn games
+
+
+        // ---- 1.8.0: duels and card tables (Durak, Last Card, Golf, Archery, Hoops)
+
+
+        // ---- 1.8.0: races, part 1 (Keepy-Uppy, Bug Squash, Can Knockdown, Brick Breaker)
+
+
+        // ---- 1.8.0: races, part 2 (Clay Shooting, Plinko, Slingshot, Darts)
+
+
+        // ---- 1.8.0: races, part 3 (Pool, Memory, Code Breaker, Solitaire, Interns)
+
+
+        // ---- 1.8.0: animation pass (Bubbles, Whack, Tower, Bowling, Fishing, Pinball, Paper Toss, Blockfall, Hockey, Pong)
+
+
     };
 }

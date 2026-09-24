@@ -13,6 +13,7 @@ public static class Achievements
         new("explorer", "general", "Explorer", "Play 6 different games", "play.games", 6),
         new("pair-programmer", "general", "Pair programmer", "Be playing when Claude finishes 10 times", "claude.done", 10),
         new("its-compiling", "general", "It's compiling", "Be playing when a --while command finishes 10 times", "task.done", 10),
+        new("race-cpu", "general", "Pacesetter", "Beat the computer in 10 races", "race.cpuwins", 10),
 
         new("hoops-100", "hoops", "Hundred baskets", "Score 100 baskets", "hoops.baskets", 100),
         new("hoops-swish", "hoops", "Nothing but net", "Score 25 swishes", "hoops.swishes", 25),

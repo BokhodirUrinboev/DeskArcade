@@ -50,6 +50,9 @@ public sealed class Fx
 
     public Canvas Layer { get; } = new() { IsHitTestVisible = false };
 
+    /// <summary>Tweens that belong to the overlay rather than to one game (a game's entrance, the scoreboard).</summary>
+    public Anims Anims { get; } = new();
+
     /// <summary>Reduced motion: no particle bursts or trails, and popups appear in place without bouncing or drifting.</summary>
     public static bool ReducedMotion { get; set; }
 
@@ -171,6 +174,7 @@ public sealed class Fx
 
     public bool Update(double dt)
     {
+        bool animating = Anims.Update(dt);
         for (int i = _pops.Count - 1; i >= 0; i--)
         {
             var pop = _pops[i];
@@ -220,7 +224,7 @@ public sealed class Fx
             Place(ring, ring.Age / ring.Life);
         }
 
-        return _pops.Count > 0 || _parts.Count > 0 || _rings.Count > 0;
+        return _pops.Count > 0 || _parts.Count > 0 || _rings.Count > 0 || animating;
     }
 
     public void Clear()

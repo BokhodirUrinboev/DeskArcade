@@ -43,10 +43,7 @@ public sealed class Tray : IDisposable
         }
         menu.Add(new NativeMenuItem(L.T("Game")) { Menu = games });
         var pets = new NativeMenu();
-        foreach (var (kind, name) in new[]
-                 {
-                     ("cat", L.T("Cat")), ("dog", L.T("Dog")), ("duck", L.T("Duck")), ("bunny", L.T("Bunny")), ("penguin", L.T("Penguin")), ("fox", L.T("Fox")),
-                 })
+        foreach (var (kind, name) in PetChoices())
             pets.Add(Radio(name, () => _w.SetPet(kind), () => _w.Settings.PetKind == kind));
         menu.Add(new NativeMenuItem(L.T("Pet")) { Menu = pets });
         menu.Add(Item(L.T("Next game") + "   (" + Shortcuts.Label(HotkeyAction.NextGame) + ")", () => _w.NextGame()));
@@ -93,15 +90,17 @@ public sealed class Tray : IDisposable
         menu.Add(new NativeMenuItem(L.T("Volume")) { Menu = volume });
 
         var levels = new NativeMenu();
-        foreach (var boardGame in _w.Games.OfType<Games.BoardGame>().Where(g => g.HasLevels))
+        levels.Add(Check(L.T("Race the computer in solo rounds"), () => _w.SetCpuRival(!_w.Settings.CpuRival), () => _w.Settings.CpuRival));
+        levels.Add(new NativeMenuItemSeparator());
+        foreach (var game in _w.Games.Where(g => g.HasCpuLevels))
         {
             var sub = new NativeMenu();
-            for (int level = 1; level <= Games.BoardGame.LevelNames.Length; level++)
+            for (int level = 1; level <= Engine.MiniGame.LevelNames.Length; level++)
             {
                 int l = level;
-                sub.Add(Radio(L.T(Games.BoardGame.LevelNames[l - 1]), () => { boardGame.Level = l; Refresh(); }, () => boardGame.Level == l));
+                sub.Add(Radio(L.T(Engine.MiniGame.LevelNames[l - 1]), () => { game.CpuLevel = l; Refresh(); }, () => game.CpuLevel == l));
             }
-            levels.Add(new NativeMenuItem(L.T(boardGame.Title)) { Menu = sub });
+            levels.Add(new NativeMenuItem(L.T(game.Title)) { Menu = sub });
         }
         menu.Add(new NativeMenuItem(L.T("CPU difficulty")) { Menu = levels });
 
@@ -166,6 +165,12 @@ public sealed class Tray : IDisposable
         _icon.Menu = menu;
         Refresh();
     }
+
+    /// <summary>The pets to choose from, as setting values and display names (shared with the scoreboard's menu).</summary>
+    public static IEnumerable<(string Kind, string Name)> PetChoices() => new[]
+    {
+        ("cat", L.T("Cat")), ("dog", L.T("Dog")), ("duck", L.T("Duck")), ("bunny", L.T("Bunny")), ("penguin", L.T("Penguin")), ("fox", L.T("Fox")),
+    };
 
     void Toggle(Action<Settings> change)
     {

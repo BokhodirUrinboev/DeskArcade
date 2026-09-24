@@ -231,6 +231,13 @@ public sealed class OverlayWindow : Window, IGameHost
             SaveSettings();
             PushHitShapes();
         };
+        _hud.MenuItems = () => QuickMenu.Build(this);
+        _hud.InteractionEnded += () =>
+        {
+            PushHitShapes();
+            Wake();
+        };
+        _hud.Animating += Wake;
         _hud.SizeChanged += (_, e) =>
         {
             // expand toward the middle of the screen, so a board near the right edge stays on screen
@@ -518,6 +525,7 @@ public sealed class OverlayWindow : Window, IGameHost
             busy |= playing;
         }
         busy |= Fx.Update(dt);
+        busy |= _hud.Update(dt);
         PushHitShapes();
 
         if (busy) _idle = 0;
@@ -531,8 +539,11 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public void HudChanged()
     {
-        if (Current != null) _hud.Show(Current.Hud);
+        if (Current != null) _hud.Show(Current.Hud, Current.Opponent ?? _race.Opponent);
     }
+
+    /// <summary>Seconds since the overlay started, for pacing things that live outside the games.</summary>
+    public double Clock => _clock.Elapsed.TotalSeconds;
 
     public void SaveSettings() => Settings.Save();
 
@@ -591,6 +602,7 @@ public sealed class OverlayWindow : Window, IGameHost
         Current = next;
         _gameLayer.Children.Add(next.Layer);
         next.Activate();
+        IntroAnimation(next);
 
         Settings.Game = next.Id;
         SaveSettings();
@@ -604,6 +616,26 @@ public sealed class OverlayWindow : Window, IGameHost
                 Color.FromRgb(255, 209, 102), 46, 1.8, HintFor(next.Id));
         PushHitShapes();
         Wake();
+    }
+
+    /// <summary>The new game rises into place with a short fade, so a switch reads as a change rather than a jump.</summary>
+    void IntroAnimation(MiniGame game)
+    {
+        if (!IsVisible) return;
+        var layer = game.Layer;
+        var shift = new TranslateTransform();
+        layer.RenderTransformOrigin = RelativePoint.TopLeft;
+        layer.RenderTransform = shift;
+        layer.Opacity = 0.05;
+        Fx.Anims.Add(0.34, k =>
+        {
+            layer.Opacity = 0.05 + 0.95 * k;
+            shift.Y = 16 * (1 - k);
+        }, Ease.OutCubic, () =>
+        {
+            layer.Opacity = 1;
+            if (layer.RenderTransform == shift) layer.RenderTransform = null;
+        });
     }
 
     public void NextGame()
@@ -656,9 +688,20 @@ public sealed class OverlayWindow : Window, IGameHost
             if (_hud.Task != TaskStatus.None) _hud.SetTask(_hud.Task, _taskLabel, _taskSince);
         }
         RefreshPlatforms();
+        _race.Refresh();
         SaveSettings();
         _tray?.Refresh();
         Wake();
+    }
+
+    /// <summary>Race the computer in solo rounds, or play them alone.</summary>
+    public void SetCpuRival(bool on)
+    {
+        Settings.CpuRival = on;
+        SaveSettings();
+        _race.Refresh();
+        HudChanged();
+        _tray?.Refresh();
     }
 
     public void MoveToNextMonitor()
@@ -678,6 +721,7 @@ public sealed class OverlayWindow : Window, IGameHost
         Settings.ResetPositions();
         SaveSettings();
         PlaceHud();
+        foreach (var game in _games) game.PositionsReset();
         Current?.Layout();
         PushHitShapes();
         Wake();
@@ -902,7 +946,8 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public void RoundEnded(int score) => _race.LocalEnd(score);
 
-    static readonly Color RivalColor = Color.FromRgb(255, 92, 108);
+    /// <summary>The other side's colour: a co-worker's ghost markers, and the computer rival's.</summary>
+    public static readonly Color RivalColor = Color.FromRgb(255, 92, 108);
 
     public void ShareAction(Vec2 at, int points)
     {
@@ -930,9 +975,10 @@ public sealed class OverlayWindow : Window, IGameHost
         Canvas.SetTop(_raceLabel, b.Bottom + 6 < Arena.Bottom - 30 ? b.Bottom + 6 : b.Top - 30);
     }
 
-    public void RaceResult(string title, string sub, Color color, bool won)
+    /// <param name="down">How far below the usual spot to show it, when another popup is due there at the same time.</param>
+    public void RaceResult(string title, string sub, Color color, bool won, double down = 0)
     {
-        var at = new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.3);
+        var at = new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.3 + down);
         Fx.Popup(at, title, color, 40, 2.6, sub);
         if (won) Fx.Burst(at, new[] { color, Colors.White }, 40, 520, 650, 7, 1.0);
         Sound.Play(won ? "best" : "buzzer", won ? 0.8 : 0.4);

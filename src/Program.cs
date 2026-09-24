@@ -70,6 +70,11 @@ public static class Program
     public static AppBuilder BuildAvaloniaApp() =>
         AppBuilder.Configure<App>()
             .UsePlatformDetect()
+            // popups (the scoreboard's ☰ menu, tooltips) are drawn inside the overlay instead of as windows of their
+            // own, which would fight the click-through shape and, on X11, the focus rules
+            .With(new X11PlatformOptions { OverlayPopups = true })
+            .With(new Win32PlatformOptions { OverlayPopups = true })
+            .With(new AvaloniaNativePlatformOptions { OverlayPopups = true })
             .LogToTrace();
 
     public static void LogCrash(object error)

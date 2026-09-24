@@ -930,5 +930,44 @@ public static partial class Strings
         ["Bumper cars"] = "Автодром",
         ["Hit 500 bumpers"] = "Попадите в бамперы 500 раз",
         ["Hit {0} bumpers in Pinball"] = "Попадите в бамперы {0} раз в пинболе",
+        // ---- 1.8.0: scoreboard, races against the computer, movable boards
+        ["Your turn"] = "Ваш ход",
+        ["CPU · {0}"] = "Компьютер · {0}",
+        ["Menu"] = "Меню",
+        ["Hide overlay"] = "Скрыть оверлей",
+        ["Drag to move"] = "Перетащите, чтобы переместить",
+        ["Race the computer in solo rounds"] = "Гонка с компьютером в одиночных раундах",
+        ["CPU ({0}): {1}"] = "Компьютер ({0}): {1}",
+        ["CPU ({0}) is heading for {1}"] = "Компьютер ({0}) идёт к {1}",
+        ["Race the computer: start a round and it plays one too"] = "Гонка с компьютером: начните раунд, и он сыграет свой",
+        ["the CPU goes easier: {0}"] = "компьютер становится слабее: {0}",
+        ["Pacesetter"] = "Задающий темп",
+        ["Beat the computer in 10 races"] = "Обыграйте компьютер в 10 гонках",
+
+
+        // ---- 1.8.0: Linux overlay
+
+
+        // ---- 1.8.0: pets
+
+
+        // ---- 1.8.0: board and turn games
+
+
+        // ---- 1.8.0: duels and card tables (Durak, Last Card, Golf, Archery, Hoops)
+
+
+        // ---- 1.8.0: races, part 1 (Keepy-Uppy, Bug Squash, Can Knockdown, Brick Breaker)
+
+
+        // ---- 1.8.0: races, part 2 (Clay Shooting, Plinko, Slingshot, Darts)
+
+
+        // ---- 1.8.0: races, part 3 (Pool, Memory, Code Breaker, Solitaire, Interns)
+
+
+        // ---- 1.8.0: animation pass (Bubbles, Whack, Tower, Bowling, Fishing, Pinball, Paper Toss, Blockfall, Hockey, Pong)
+
+
     };
 }

@@ -53,7 +53,6 @@ public abstract class BoardGame : MiniGame
     const double CpuDelay = 0.6, SyncEvery = 0.4;
     /// <summary>How often the CPU plays a random move instead of its best one, per level (Easy … Expert).</summary>
     static readonly double[] Blunders = { 0.45, 0.2, 0.05, 0 };
-    public static readonly string[] LevelNames = { "Easy", "Medium", "Hard", "Expert" };
 
     protected static readonly Color Gold = Color.FromRgb(255, 209, 102);
 
@@ -61,15 +60,16 @@ public abstract class BoardGame : MiniGame
     readonly Canvas _pieces = new() { IsHitTestVisible = false };
     readonly Border _frame = new() { CornerRadius = new CornerRadius(6), Background = Art.Brush(230, 60, 40, 28), IsHitTestVisible = false };
     readonly Rectangle[] _cells;
+    readonly DragHandle _handle;
 
     IBoardRules _game;
-    Vec2 _origin, _dragOffset;
+    Vec2 _origin;
     double _cpuIn = -1, _syncT;
     int _selected = -1, _gameNo, _lastFrom = -1, _lastTo = -1, _myWins, _theirWins;
     readonly List<int> _via = new(); // landings clicked so far, when several capture routes start alike
     int[]? _pending; // guest: our move, re-sent until the host's board contains it
     int _lossStreak;
-    bool _placed, _dragging, _over, _demo, _wasLan;
+    bool _placed, _over, _demo, _wasLan;
 
     protected BoardGame(IGameHost host, Color light, Color dark) : base(host)
     {
@@ -85,6 +85,8 @@ public abstract class BoardGame : MiniGame
         Layer.Children.Add(squares);
         Layer.Children.Add(_marks);
         Layer.Children.Add(_pieces);
+        _handle = new DragHandle(host, Id, Title);
+        Layer.Children.Add(_handle.Visual);
     }
 
     public override bool SupportsLan => true;
@@ -119,16 +121,16 @@ public abstract class BoardGame : MiniGame
     /// <summary>The CPU level, 1 (Easy) to 4 (Expert); it goes up when you win and down when you keep losing.</summary>
     public int Level
     {
-        get => Math.Clamp(Host.Settings.BoardLevels.TryGetValue(Id, out int l) ? l : 1, 1, LevelNames.Length);
-        set
-        {
-            Host.Settings.BoardLevels[Id] = Math.Clamp(value, 1, LevelNames.Length);
-            Host.SaveSettings();
-            Host.HudChanged();
-        }
+        get => CpuLevel;
+        set => CpuLevel = value;
     }
 
     public bool HasLevels => LevelDepths != null;
+    public override bool HasCpuLevels => LevelDepths != null;
+    /// <summary>Easy starts every new player off gently.</summary>
+    protected override int DefaultCpuLevel => 1;
+
+    public override Opponent? Opponent => new(Rival, !LanOn, HasLevels && !LanOn ? Level : 0, _over ? null : MyTurn);
 
     int[] CpuMove()
     {
@@ -164,7 +166,7 @@ public abstract class BoardGame : MiniGame
         if (!_placed)
         {
             _placed = true;
-            _origin = new Vec2(a.Center.X - w / 2, a.Center.Y - h / 2);
+            _origin = _handle.Saved() ?? new Vec2(a.Center.X - w / 2, a.Center.Y - h / 2);
         }
         _origin = new Vec2(Clamp(_origin.X, a.Left + 10, a.Right - w - 10), Clamp(_origin.Y, a.Top + 10, a.Bottom - h - 10));
         if (LanOn != _wasLan)
@@ -176,7 +178,11 @@ public abstract class BoardGame : MiniGame
         Draw();
     }
 
-    public override void Deactivate() => _dragging = false;
+    public override void Deactivate() => _handle.Cancel();
+
+    public override void PointerCancel() => _handle.Cancel();
+
+    public override void PositionsReset() => _placed = false;
 
     void NewGame()
     {
@@ -208,14 +214,17 @@ public abstract class BoardGame : MiniGame
 
     // ------------------------------------------------------------------ input
 
-    public override void CollectHitShapes(List<HitShape> into) => into.Add(HitShape.Box(BoardRect.Inflate(8)));
+    public override void CollectHitShapes(List<HitShape> into)
+    {
+        into.Add(HitShape.Box(BoardRect.Inflate(8)));
+        into.Add(_handle.Hit);
+    }
 
     public override bool PointerDown(Vec2 p, bool right)
     {
-        if (right)
+        if (right || _handle.Contains(p))
         {
-            _dragging = true;
-            _dragOffset = _origin - p;
+            _handle.Begin(p, _origin, anywhere: true); // the grip, or a right-drag anywhere on the board
             return true;
         }
         if (_over)
@@ -287,12 +296,13 @@ public abstract class BoardGame : MiniGame
         return false;
     }
 
-    public override void PointerUp(Vec2 p) => _dragging = false;
+    public override void PointerUp(Vec2 p) => _handle.End(_origin);
 
     public override void Summon(Vec2 p)
     {
         _origin = p - new Vec2(Cell * 4, Cell * 4);
         Layout();
+        _handle.Save(_origin);
     }
 
     // ------------------------------------------------------------------ play
@@ -393,9 +403,9 @@ public abstract class BoardGame : MiniGame
 
     public override bool Update(double dt)
     {
-        if (_dragging)
+        if (_handle.Dragging)
         {
-            _origin = Host.Pointer + _dragOffset;
+            _origin = _handle.Move(Host.Pointer, new Size(Cell * Cols, Cell * Rows));
             Layout();
         }
         if (LanOn) Network(dt);
@@ -405,7 +415,7 @@ public abstract class BoardGame : MiniGame
             if (!_over && _game.Turn != Me) PlayAny(CpuMove());
         }
         if (_demo && MyTurn && _pending == null && _cpuIn < 0) Play(_game.BestMove(Rng));
-        return _dragging || _cpuIn > 0 || LanOn;
+        return _handle.Dragging || _cpuIn > 0 || LanOn;
     }
 
     public override void DemoTick() => _demo = true;
@@ -475,6 +485,7 @@ public abstract class BoardGame : MiniGame
         Canvas.SetTop(_frame, b.Top - 8);
         _frame.Width = b.Width + 16;
         _frame.Height = b.Height + 16;
+        _handle.Show(new Rect(b.Left - 8, b.Top - 8, b.Width + 16, b.Height + 16));
         for (int sq = 0; sq < _cells.Length; sq++)
         {
             var c = Center(sq);
