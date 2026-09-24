@@ -954,6 +954,7 @@ public static partial class Strings
 
 
         // ---- 1.8.0: board and turn games
+        ["the CPU goes easier: {0} · click a grid for a rematch"] = "kompyuter osonlashdi: {0} · qayta o'ynash uchun maydonni bosing",
 
 
         // ---- 1.8.0: duels and card tables (Durak, Last Card, Golf, Archery, Hoops)

@@ -9,7 +9,36 @@ using DeskArcade.Engine;
 
 namespace DeskArcade.Games;
 
-/// <summary>Tic-tac-toe against the CPU (which slips now and then) or over the LAN. Click a square.</summary>
+/// <summary>The line that won a "get N in a row" game, so the board can light it up. UI-free, so it can be tested.</summary>
+public static class LineArt
+{
+    static readonly (int, int)[] Dirs = { (0, 1), (1, 0), (1, 1), (1, -1) };
+
+    /// <summary>The squares of the first run of <paramref name="need"/> in a row on the board, or null while nobody has one.</summary>
+    public static int[]? WinningLine(sbyte[] board, int cols, int rows, int need)
+    {
+        for (int sq = 0; sq < board.Length; sq++)
+        {
+            int side = board[sq];
+            if (side == 0) continue;
+            foreach (var (dr, dc) in Dirs)
+            {
+                var line = new List<int> { sq };
+                int r = sq / cols + dr, c = sq % cols + dc;
+                while (line.Count < need && r >= 0 && r < rows && c >= 0 && c < cols && board[r * cols + c] == side)
+                {
+                    line.Add(r * cols + c);
+                    r += dr;
+                    c += dc;
+                }
+                if (line.Count == need) return line.ToArray();
+            }
+        }
+        return null;
+    }
+}
+
+/// <summary>Tic-tac-toe against the CPU (which slips now and then) or over the LAN. Click a square; the mark pops in.</summary>
 public sealed class TicTacToeGame : BoardGame
 {
     static readonly Color Paper = Color.FromRgb(246, 243, 235);
@@ -25,6 +54,7 @@ public sealed class TicTacToeGame : BoardGame
     protected override bool FlipForGuest => false;
     protected override string Score => SessionScore;
     protected override string YourMove => L.T("Your move · click a square · right-drag moves the board");
+    protected override int[]? WinningLine => LineArt.WinningLine(Game.Board, Cols, Rows, 3);
 
     public override Sprite CreateIcon()
     {
@@ -40,23 +70,20 @@ public sealed class TicTacToeGame : BoardGame
 
     protected override string DrawReason(IBoardRules game) => L.T("The board is full");
 
-    protected override void DrawEmpty(Canvas into, Vec2 c, double cell) => GridLines(into, c, cell);
-
-    protected override void DrawPiece(Canvas into, sbyte piece, Vec2 c, double cell)
-    {
-        GridLines(into, c, cell);
-        if (piece > 0)
-            foreach (var shape in Cross(c, cell * 0.3, Ink, cell * 0.09)) into.Children.Add(shape);
-        else into.Children.Add(Art.Circle(c.X, c.Y, cell * 0.3, null, Ink2, cell * 0.09));
-    }
-
     /// <summary>The right and bottom edge of each cell, skipping the board's outer edge.</summary>
-    void GridLines(Canvas into, Vec2 c, double cell)
+    protected override void DrawSquare(Canvas into, int sq, Vec2 c, double cell)
     {
         double h = cell / 2;
         var box = new Rect(c.X - h, c.Y - h, cell, cell);
-        if (c.X + cell < Center(8).X + h) into.Children.Add(Stroke(box.TopRight, box.BottomRight));
-        if (c.Y + cell < Center(8).Y + h) into.Children.Add(Stroke(box.BottomLeft, box.BottomRight));
+        if (sq % Cols < Cols - 1) into.Children.Add(Stroke(box.TopRight, box.BottomRight));
+        if (sq / Cols < Rows - 1) into.Children.Add(Stroke(box.BottomLeft, box.BottomRight));
+    }
+
+    protected override void DrawPiece(Canvas into, sbyte piece, Vec2 c, double cell)
+    {
+        if (piece > 0)
+            foreach (var shape in Cross(c, cell * 0.3, Ink, cell * 0.09)) into.Children.Add(shape);
+        else into.Children.Add(Art.Circle(c.X, c.Y, cell * 0.3, null, Ink2, cell * 0.09));
     }
 
     static Line Stroke(Point a, Point b) => new() { StartPoint = a, EndPoint = b, Stroke = Grid, StrokeThickness = 3, IsHitTestVisible = false };
@@ -68,7 +95,7 @@ public sealed class TicTacToeGame : BoardGame
     };
 }
 
-/// <summary>Connect Four against the CPU or over the LAN. Click a column to drop a disc; four in a row wins.</summary>
+/// <summary>Connect Four against the CPU or over the LAN. Click a column to drop a disc, which falls and bounces into place; four in a row wins.</summary>
 public sealed class ConnectFourGame : BoardGame
 {
     static readonly Color Frame = Color.FromRgb(38, 84, 196);
@@ -84,6 +111,7 @@ public sealed class ConnectFourGame : BoardGame
     protected override bool FlipForGuest => false; // discs fall down on both screens
     protected override string Score => SessionScore;
     protected override string YourMove => L.T("Your move · click a square · right-drag moves the board");
+    protected override int[]? WinningLine => LineArt.WinningLine(Game.Board, Cols, Rows, 4);
 
     public override Sprite CreateIcon()
     {
@@ -104,7 +132,10 @@ public sealed class ConnectFourGame : BoardGame
     /// <summary>A click anywhere in a column drops a disc into it.</summary>
     protected override int[]? PlacementAt(int sq, List<int[]> moves) => moves.FirstOrDefault(m => m[0] % Cols == sq % Cols);
 
-    protected override void DrawEmpty(Canvas into, Vec2 c, double cell) =>
+    /// <summary>The disc falls in from above the frame; the lower the row, the longer the fall.</summary>
+    protected override (Vec2 From, double Seconds)? DropFrom(int sq) => (new Vec2(Local(sq).X, -Cell * 0.7), 0.3 + 0.05 * (sq / Cols + 1));
+
+    protected override void DrawSquare(Canvas into, int sq, Vec2 c, double cell) =>
         into.Children.Add(Art.Circle(c.X, c.Y, cell * 0.38, Art.Brush("#141A2A"), Art.Brush(Art.Blend(Frame, Colors.Black, 0.4)), 2));
 
     protected override void DrawPiece(Canvas into, sbyte piece, Vec2 c, double cell)
