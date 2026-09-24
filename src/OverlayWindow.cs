@@ -971,7 +971,9 @@ public sealed class OverlayWindow : Window, IGameHost
         if (text == null) return;
         _raceLabel.Text = text;
         var b = _hud.Area;
-        Canvas.SetLeft(_raceLabel, b.Left);
+        _raceLabel.Measure(Size.Infinity); // keep the whole line on screen when the scoreboard sits near the right edge
+        double width = _raceLabel.DesiredSize.Width;
+        Canvas.SetLeft(_raceLabel, Math.Max(Arena.Left + 4, Math.Min(b.Left, Arena.Right - width - 4)));
         Canvas.SetTop(_raceLabel, b.Bottom + 6 < Arena.Bottom - 30 ? b.Bottom + 6 : b.Top - 30);
     }
 
