@@ -170,6 +170,7 @@ public sealed class Tray : IDisposable
     public static IEnumerable<(string Kind, string Name)> PetChoices() => new[]
     {
         ("cat", L.T("Cat")), ("dog", L.T("Dog")), ("duck", L.T("Duck")), ("bunny", L.T("Bunny")), ("penguin", L.T("Penguin")), ("fox", L.T("Fox")),
+        ("hamster", L.T("Hamster")), ("turtle", L.T("Turtle")), ("parrot", L.T("Parrot")), ("frog", L.T("Frog")), ("owl", L.T("Owl")), ("dragon", L.T("Dragon")),
     };
 
     void Toggle(Action<Settings> change)

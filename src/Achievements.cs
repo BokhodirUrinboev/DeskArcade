@@ -56,6 +56,9 @@ public static class Achievements
         new("pet-friend", "pet", "Best friends", "Pet your desktop pet 50 times", "pet.pets", 50),
         new("pet-taxi", "pet", "Taxi", "Carry your pet 10 times", "pet.carries", 10),
         new("pet-tricks", "pet", "Show-off", "Watch your pet do 25 tricks", "pet.tricks", 25),
+        new("pet-fetch", "pet", "Fetch!", "Have your pet bring the ball back 20 times", "pet.fetches", 20),
+        new("pet-treats", "pet", "Treat time", "Feed your pet 30 treats", "pet.treats", 30),
+        new("pet-visit", "pet", "Playdate", "Meet a co-worker's pet over the LAN", "pet.visits", 1),
 
         new("tower-15", "tower", "Skyscraper", "Build a tower 15 blocks high", "tower.height", 15),
         new("tower-perfect", "tower", "Perfectionist", "Make 10 perfect drops", "tower.perfect", 10),

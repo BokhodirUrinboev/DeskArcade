@@ -7,6 +7,7 @@ namespace DeskArcade;
 /// folds) whose pitch never sits perfectly still, shaped by three resonances of the throat and mouth (the
 /// formants). Moving the formants while the sound plays is what turns a tone into a "mi-a-ow" or a "wow".
 /// Every animal has several calls, so the pet can greet, complain, beg for attention or chatter at the cursor.
+/// Whistles and hisses are the exceptions: a whistle is one pure sliding tone and a hiss is breath with no voice in it.
 /// </summary>
 public sealed partial class Sound
 {
@@ -71,6 +72,49 @@ public sealed partial class Sound
             t => (Arc(t / 0.85, 800, 1150, 700), Arc(t / 0.85, 2000, 1850, 1300), 3300),
             breath: 0.22, rasp: 0.45, jitter: 0.03, vibrato: 7, depth: 0.03, bright: 0.75);
 
+        // hamster: thin high squeaks and a fast, teeth-chattering chitter
+        _clips["hsqueak"] = Hsq(0.09, 3000);
+        _clips["hsqueak2"] = Seq(0.03, Hsq(0.06, 3100), Amp(Hsq(0.05, 3500), 0.85));
+        var chitter = new float[8][];
+        for (int i = 0; i < chitter.Length; i++) chitter[i] = Amp(Chit(2400 + (i * 53 % 400)), 0.75 + 0.25 * ((i * 7 % 3) / 2.0));
+        _clips["chitter"] = Seq(0.02, chitter);
+
+        // turtle: a slow, breathy hiss with no voice in it, and a tiny grunt from deep in the shell
+        _clips["thiss"] = Normalize(Vocal(0.9, _ => 90, t => Math.Min(1, t / 0.25) * Math.Pow(Math.Max(0, 1 - t / 0.9), 1.2),
+            _ => (1800, 3200, 5200), breath: 1, voice: 0, width: 3), 0.4);
+        _clips["tgrunt"] = Amp(Vocal(0.16, t => 150 - 30 * t / 0.16, t => Swell(t, 0.16, 0.02), _ => (450, 1000, 2200),
+            breath: 0.4, rasp: 0.4, jitter: 0.04, bright: 0.5), 0.6);
+
+        // parrot: a harsh squawk, a sliding whistle and a nasal two-note "hel-lo"
+        _clips["squawk"] = Vocal(0.28, t => Arc(t / 0.28, 900, 1400, 800), t => Math.Min(1, t / 0.01) * Math.Pow(Math.Max(0, 1 - t / 0.28), 0.5),
+            _ => (1300, 2600, 4200), breath: 0.25, rasp: 0.7, jitter: 0.05, bright: 0.9, width: 1.3);
+        _clips["whistle"] = Whistle(0.45, 1500, 2600, 1900);
+        _clips["hello"] = Seq(0.04,
+            Vocal(0.14, t => 520 + 80 * t / 0.14, t => Swell(t, 0.14, 0.01), _ => (600, 1900, 2600), breath: 0.1, rasp: 0.3, bright: 0.7, width: 0.9),
+            Vocal(0.2, t => Arc(t / 0.2, 480, 620, 380), t => Swell(t, 0.2, 0.01), _ => (450, 900, 2500), breath: 0.1, rasp: 0.3, bright: 0.7, width: 0.9));
+
+        // frog: a two-pulse "rib-bit" and a deep croak that rolls at about 24 pulses a second
+        _clips["ribbit"] = Seq(0.03,
+            Vocal(0.09, t => 380 - 80 * t / 0.09, t => Swell(t, 0.09, 0.008), _ => (500, 1200, 2400), breath: 0.15, rasp: 0.5, jitter: 0.03, bright: 0.8),
+            Vocal(0.13, t => 300 + 120 * t / 0.13, t => Swell(t, 0.13, 0.008), _ => (550, 1300, 2500), breath: 0.15, rasp: 0.5, jitter: 0.03, bright: 0.8));
+        _clips["croak"] = Vocal(0.55, t => 110 + 15 * Math.Sin(2 * Math.PI * 8 * t),
+            t => Swell(t, 0.55, 0.05) * (0.6 + 0.4 * Math.Abs(Math.Sin(2 * Math.PI * 24 * t))), _ => (380, 900, 2100),
+            breath: 0.2, rasp: 0.6, jitter: 0.05, bright: 0.8);
+
+        // owl: round, soft hoots ("hoo", "hoo-hoooo") and a rolling trill
+        _clips["hoot"] = Hoot(0.4, 440);
+        _clips["hoots"] = Seq(0.09, Amp(Hoot(0.22, 450), 0.8), Hoot(0.5, 430));
+        _clips["trill"] = Vocal(0.5, t => 700 + 90 * Math.Sin(2 * Math.PI * 22 * t), t => Swell(t, 0.5, 0.04), _ => (900, 1800, 3000),
+            breath: 0.1, bright: 0.3, width: 0.8);
+
+        // dragon: a chest-deep rumble, a puff of breath (also its fire) and a short roar
+        _clips["rumble"] = Normalize(Vocal(1.0, t => 55 + 10 * Math.Sin(2 * Math.PI * 2 * t), t => Swell(t, 1.0, 0.15), _ => (250, 700, 1800),
+            breath: 0.2, rasp: 0.6, jitter: 0.06, bright: 0.8), 0.5);
+        _clips["huff"] = Normalize(Filtered(0.3, 0.12, 0.35, t => Math.Min(1, t / 0.02) * Math.Exp(-t * 9)), 0.5);
+        _clips["roar"] = Amp(Vocal(0.7, t => Arc(t / 0.7, 140, 220, 120), t => Math.Min(1, t / 0.04) * Math.Pow(Math.Max(0, 1 - t / 0.7), 0.8),
+            t => (Arc(t / 0.7, 500, 800, 450), Arc(t / 0.7, 1200, 1500, 1000), 2600),
+            breath: 0.3, rasp: 0.5, jitter: 0.05, vibrato: 9, depth: 0.03, bright: 0.85), 0.7);
+
         // shared by every animal, played at a pitch that suits its size
         _clips["yawn"] = Amp(Vocal(1.0, t => Arc(t, 540, 430, 230), t => Math.Min(1, t / 0.2) * Math.Pow(Math.Max(0, 1 - t), 0.7),
             t => (Arc(t, 450, 1000, 420), Arc(t, 1400, 1450, 800), 2600), breath: 0.45, voice: 0.6, jitter: 0.03, bright: 0.4), 0.7);
@@ -122,6 +166,30 @@ public sealed partial class Sound
 
     float[] Gek(double f) => Vocal(0.045, t => f * (1 - 3 * t), t => Swell(t, 0.045, 0.004), _ => (800, 1500, 2700),
         breath: 0.3, rasp: 0.6, jitter: 0.04, bright: 0.7);
+
+    float[] Hsq(double len, double f) => Vocal(len, t => Arc(t / len, f * 0.85, f * 1.1, f * 0.9), t => Swell(t, len, 0.004), _ => (3000, 4800, 6500),
+        breath: 0.1, jitter: 0.03, bright: 0.3);
+
+    float[] Chit(double f) => Vocal(0.03, t => f * (1 - 2 * t), t => Swell(t, 0.03, 0.003), _ => (2600, 4200, 6000),
+        breath: 0.2, rasp: 0.2, bright: 0.4);
+
+    float[] Hoot(double len, double f) => Vocal(len, t => Arc(t / len, f * 0.95, f * 1.06, f * 0.86), t => Swell(t, len, 0.06),
+        _ => (480, 1000, 2300), breath: 0.15, voice: 0.8, bright: 0.15, width: 0.7);
+
+    /// <summary>A whistle: one pure tone whose pitch slides from a through b to c, with a hint of breath.</summary>
+    float[] Whistle(double len, double a, double b, double c)
+    {
+        var buf = Buf(len);
+        double phase = 0;
+        for (int i = 0; i < buf.Length; i++)
+        {
+            double t = (double)i / Rate;
+            phase += Arc(t / len, a, b, c) / Rate;
+            double env = Math.Min(1, t / 0.02) * Math.Pow(Math.Max(0, 1 - t / len), 0.5);
+            buf[i] = (float)((Math.Sin(2 * Math.PI * phase) + Math.Sin(4 * Math.PI * phase) * 0.12 + Noise() * 0.03) * env);
+        }
+        return Normalize(buf, 0.5);
+    }
 
     float[] Sniff() => Vocal(0.06, _ => 200, t => Swell(t, 0.06, 0.01), _ => (2400, 4200, 6500), breath: 1, voice: 0, width: 2.5);
 
