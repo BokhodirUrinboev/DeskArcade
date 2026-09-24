@@ -621,27 +621,35 @@ public sealed class DurakGame : MiniGame, IRoomGame
         if (_view != null ? _view.Version != _drawnVersion : PanelKey() != _drawnPanel) Draw();
         if (_view is { Over: true }) GameOverFx();
         bool animating = Anims.Update(dt);
-        // frames are needed only while something is due; arriving messages wake the overlay
+        // frames are needed only while something is due (a computer's turn, a slide, a drag, an invitation); a table
+        // waiting on the player is still, and Changed() wakes the overlay when anything happens, as do arriving messages
         return _handle.Dragging || animating || inviting || _mode switch
         {
-            Mode.Solo => _rules is { Over: false } || _demo,
+            Mode.Solo => _rules is { Over: false } && _cpuT > 0 || _demo,
             Mode.Guest => _room.State == RoomState.Joining || _outbox.Count > 0 || _demo && _room.State == RoomState.Joined,
             _ => false,
         };
     }
 
+    /// <summary>
+    /// A computer player's turn once <see cref="_cpuT"/> runs out. Alone, the timer is set only by a move (a player's,
+    /// a computer's, a new deal): when no computer has anything to do, the table waits on the player and nothing is
+    /// due, so the overlay's frames stop; in a room the host keeps looking, as a seat becomes the computer's when its
+    /// player drops out.
+    /// </summary>
     void CpuTurns(double dt)
     {
-        if (_rules is not { Over: false } r || (_cpuT -= dt) > 0) return;
-        _cpuT = CpuDelay * (0.7 + Rng.NextDouble() * 0.6);
+        if (_rules is not { Over: false } r || _cpuT <= 0 || (_cpuT -= dt) > 0) return;
+        _cpuT = _mode == Mode.Solo && !_demo ? 0 : CpuDelay * (0.7 + Rng.NextDouble() * 0.6);
         // the defender answers first, then attackers from the main attacker round the table
         var order = new[] { r.Defender }.Concat(Enumerable.Range(0, r.Players).Select(i => (r.Attacker + i) % r.Players));
         foreach (int seat in order.Where(s => _cpu[s] || _demo && s == MySeat))
         {
             if (r.CpuAction(seat) is not { } a) continue;
             r.Act(seat, a.Kind, a.Card, a.Index);
+            _cpuT = CpuDelay * (0.7 + Rng.NextDouble() * 0.6); // the next computer turn, if any, after a pause
             Host.Sound.Play(a.Kind == "take" ? "whoosh" : "board", 0.35, 1.3 + Rng.NextDouble() * 0.3);
-            RefreshView();
+            RefreshView(); // Changed() wakes the overlay, so the pause is timed
             return;
         }
     }
@@ -799,7 +807,7 @@ public sealed class DurakGame : MiniGame, IRoomGame
         _rootTr.Y = _origin.Y;
         _handle.Show(_area);
         if (_drawnSize != _area.Size) Draw();
-        Host.HudChanged();
+        if (!_handle.Dragging) Host.HudChanged(); // the scoreboard's text does not depend on where the table is
     }
 
     Vec2 ClampOrigin(Vec2 o, Size size)

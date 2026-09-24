@@ -145,6 +145,7 @@ public sealed class PetGame : MiniGame
     readonly DispatcherTimer _brain = new() { Interval = TimeSpan.FromSeconds(3) };
     readonly Stopwatch _clock = Stopwatch.StartNew();
     readonly Thing _ball, _treat;
+    readonly Thing[] _things; // the two, for the per-frame loops
     readonly Sprite _jar, _fly;
     readonly Canvas _bubbleBox = new() { IsHitTestVisible = false, IsVisible = false };
     readonly TranslateTransform _bubbleAt = new();
@@ -165,6 +166,8 @@ public sealed class PetGame : MiniGame
     double _lastStir, _sleptAt;
     bool _placed, _active, _pressed, _recheck, _recheckThings, _decide, _hopAtEdge, _thrown, _demo, _night;
     string _shownLine = "";
+    HudState _hudState;
+    string _kind = "cat";
     string _act = "", _afterLand = "";       // the running action (a trick or a habit), and one to do on landing
     double _actT, _actLen, _actX, _actMark;
     double _speed = 1;                       // walking speed factor: more than 1 during zoomies
@@ -200,6 +203,7 @@ public sealed class PetGame : MiniGame
 
     public PetGame(IGameHost host) : base(host)
     {
+        RefreshKind();
         _art = BuildPet(Kind);
         _art.Root.IsHitTestVisible = false;
         Layer.Children.Add(_visitLayer);
@@ -211,6 +215,7 @@ public sealed class PetGame : MiniGame
         _thingLayer.Children.Add(_jar);
         _ball = BuildBall();
         _treat = BuildTreat();
+        _things = new[] { _ball, _treat };
         _fly = BuildFly();
         _fly.IsVisible = false;
         _thingLayer.Children.Add(_fly);
@@ -226,7 +231,10 @@ public sealed class PetGame : MiniGame
     /// <summary>Settings.PetKind values.</summary>
     public static readonly string[] Kinds = { "cat", "dog", "duck", "bunny", "penguin", "fox", "hamster", "turtle", "parrot", "frog", "owl", "dragon" };
 
-    string Kind => Array.IndexOf(Kinds, Host.Settings.PetKind) >= 0 ? Host.Settings.PetKind : "cat";
+    string Kind => _kind;
+
+    /// <summary>Reads the kind from the settings: at the start, in <see cref="Rebuild"/> (the tray changed it) and on <see cref="Layout"/>.</summary>
+    void RefreshKind() => _kind = Array.IndexOf(Kinds, Host.Settings.PetKind) >= 0 ? Host.Settings.PetKind : "cat";
 
     /// <summary>The owl and the parrot fly: they jump further, fall slower with their wings out, and fly to the ball.</summary>
     public static bool IsFlyer(string kind) => kind is "parrot" or "owl";
@@ -448,6 +456,7 @@ public sealed class PetGame : MiniGame
     /// <summary>Redraws the pet after the kind changes in the tray.</summary>
     public void Rebuild()
     {
+        RefreshKind();
         int at = Layer.Children.IndexOf(_art.Root);
         Layer.Children.Remove(_art.Root);
         _art = BuildPet(Kind);
@@ -511,18 +520,34 @@ public sealed class PetGame : MiniGame
             : L.T("Click to pet · right-click for a trick · throw the ball · click the jar for a treat");
     }
 
+    /// <summary>Everything <see cref="StateLine"/> looks at, so a frame can tell whether the line could have changed without building it.</summary>
+    readonly record struct HudState(Mode Mode, string Kind, string Act, string Fetch, string Goal, bool Begging, bool Zoomies, bool Gliding,
+        bool Thrown, bool WatchBall, bool Company, bool WantsPlay, bool WantsAttention, IntPtr Hwnd, ThingState Ball, bool Visiting, string Peer, string VisitKind);
+
+    HudState HudNow() => new(_mode, _kind, _act, _fetch, _goal, _begging, _speed > 1, Gliding, _thrown, _watchBall, _company,
+        _wantsPlay && Now - _wantsPlayAt < 20, Now - _lastStir > AttentionAfter, _hwnd, _ball.State,
+        _visiting && Host.Lan.Connected, Host.Lan.PeerName, _visit.Kind);
+
     void UpdateHud()
     {
+        _hudState = HudNow();
         string line = StateLine();
         if (line == _shownLine) return;
         _shownLine = line;
         Host.HudChanged();
     }
 
+    /// <summary>Once a frame: the line is built again only when one of the things it depends on changed (the timed ones included).</summary>
+    void UpdateHudIfChanged()
+    {
+        if (HudNow() != _hudState) UpdateHud();
+    }
+
     // ------------------------------------------------------------------ life cycle
 
     public override void Layout()
     {
+        RefreshKind();
         var a = Host.Arena;
         if (!_placed)
         {
@@ -538,7 +563,7 @@ public sealed class PetGame : MiniGame
         _seenGen = _thingGen = Host.Platforms.Generation;
         _recheck = Grounded && _hwnd != IntPtr.Zero;
         _recheckThings = true;
-        foreach (var o in new[] { _ball, _treat })
+        foreach (var o in _things)
         {
             o.P.X = Clamp(o.P.X, a.Left + o.R, a.Right - o.R);
             o.P.Y = Clamp(o.P.Y, a.Top + o.R, a.Bottom - o.R);
@@ -1847,7 +1872,7 @@ public sealed class PetGame : MiniGame
         bool changed = plats.Generation != _thingGen;
         _thingGen = plats.Generation;
         var a = Host.Arena;
-        foreach (var o in new[] { _ball, _treat })
+        foreach (var o in _things)
         {
             if (o.State != ThingState.Resting) continue;
             if (o.Hwnd == IntPtr.Zero)
@@ -1967,7 +1992,7 @@ public sealed class PetGame : MiniGame
     {
         if (_ball.State == ThingState.Carried)
             _ball.P = FetchStyleOf(Kind) == FetchStyle.Push ? new Vec2(_pos.X + _face * 21, _pos.Y - BallR) : Mouth + new Vec2(_face * 4, 2);
-        foreach (var o in new[] { _ball, _treat })
+        foreach (var o in _things)
         {
             bool shown = o.State != ThingState.Hidden;
             o.Sprite.IsVisible = shown;
@@ -2039,7 +2064,7 @@ public sealed class PetGame : MiniGame
         bool tweens = Anims.Update(dt);
         DrawThings();
         Draw(dt);
-        UpdateHud();
+        UpdateHudIfChanged();
         // sitting and sleeping are still: no frames needed until the behaviour timer or the user wakes us
         return _pressed || _ballHeld || (_mode is Mode.Walk or Mode.Air or Mode.Carried) || _happyT > 0 || _squashT > 0 || hearts || acting
             || things || bubble || visit || tweens || _goal.Length > 0 || _fetch.Length > 0 || _flyShown || Host.Lan.Connected;

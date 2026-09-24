@@ -386,9 +386,11 @@ public sealed class LastCardGame : MiniGame, IRoomGame
         if (_view != null ? _view.Version != _drawnVersion : PanelKey() != _drawnPanel) Draw();
         if (_view != null) Announce(_view);
         bool animating = Anims.Update(dt);
+        // frames are needed only while something is due (a computer's turn, a slide, the "last card" pulse, a drag, an
+        // invitation); a table waiting on the player is still, and Changed() wakes the overlay when anything happens
         return _handle.Dragging || animating || inviting || _mode switch
         {
-            Mode.Solo => _rules is { Over: false } || _demo,
+            Mode.Solo => _rules is { Over: false } && _cpuT > 0 || _demo,
             Mode.Guest => _room.State == RoomState.Joining || _outbox.Count > 0 || _demo && _room.State == RoomState.Joined,
             _ => false,
         };
@@ -399,18 +401,24 @@ public sealed class LastCardGame : MiniGame, IRoomGame
     /// <summary>How long the computers wait after a person's move: longer while that person could still say "last card".</summary>
     double DelayAfter(int seat) => _rules is { } r && r.Hands[seat].Count == 1 && !r.Called[seat] ? CpuDelay * 2.5 : CpuDelay;
 
+    /// <summary>
+    /// The computer's turn once <see cref="_cpuT"/> runs out. Alone, the timer is set only by a move (a player's, a
+    /// computer's, a new deal): on the player's turn nothing is due, so the overlay's frames stop; in a room the host
+    /// keeps looking, as a seat becomes the computer's when its player drops out.
+    /// </summary>
     void CpuTurns(double dt)
     {
-        if (_rules is not { Over: false } r || (_cpuT -= dt) > 0) return;
-        _cpuT = CpuDelay * (0.7 + Rng.NextDouble() * 0.6);
+        if (_rules is not { Over: false } r || _cpuT <= 0 || (_cpuT -= dt) > 0) return;
+        _cpuT = _mode == Mode.Solo && !_demo ? 0 : CpuDelay * (0.7 + Rng.NextDouble() * 0.6);
         int seat = r.Turn;
         if (!_cpu[seat] && !(_demo && seat == MySeat)) return;
         if (r.CpuAction(seat) is not { } a) return;
         r.Act(seat, a.Kind, a.Card, a.Color);
         // computers say "last card" most of the time; now and then one forgets and gets caught
         if (r.Hands[seat].Count == 1 && !r.Called[seat] && Rng.NextDouble() < CpuCallChance) r.Act(seat, "call");
+        _cpuT = CpuDelay * (0.7 + Rng.NextDouble() * 0.6); // the next computer turn, if any, after a pause
         Host.Sound.Play(a.Kind == "draw" ? "whoosh" : "board", 0.35, 1.3 + Rng.NextDouble() * 0.3);
-        RefreshView();
+        RefreshView(); // Changed() wakes the overlay, so the pause is timed
     }
 
     void RefreshView()
@@ -585,7 +593,7 @@ public sealed class LastCardGame : MiniGame, IRoomGame
         _rootTr.Y = _origin.Y;
         _handle.Show(_area);
         if (_drawnSize != _area.Size) Draw();
-        Host.HudChanged();
+        if (!_handle.Dragging) Host.HudChanged(); // the scoreboard's text does not depend on where the table is
     }
 
     Vec2 ClampOrigin(Vec2 o, Size size)
