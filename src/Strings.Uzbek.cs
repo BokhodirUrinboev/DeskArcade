@@ -964,6 +964,8 @@ public static partial class Strings
 
 
         // ---- 1.8.0: races, part 3 (Pool, Memory, Code Breaker, Solitaire, Interns)
+        ["Click a card to flip it · find all the pairs · right-drag moves the cards"] = "Kartani ochish uchun ustiga bosing · barcha juftlarni toping · kartalarni o'ng tugma bilan suring",
+        ["Click the stock to turn a card · click or drag cards to move them · right-drag moves the felt"] = "Kartani ochish uchun to'plamni bosing · kartalarni bosing yoki suring · stolni o'ng tugma bilan suring",
 
 
         // ---- 1.8.0: animation pass (Bubbles, Whack, Tower, Bowling, Fishing, Pinball, Paper Toss, Blockfall, Hockey, Pong)

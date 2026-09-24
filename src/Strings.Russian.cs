@@ -964,6 +964,8 @@ public static partial class Strings
 
 
         // ---- 1.8.0: races, part 3 (Pool, Memory, Code Breaker, Solitaire, Interns)
+        ["Click a card to flip it · find all the pairs · right-drag moves the cards"] = "Нажмите на карту, чтобы открыть её · найдите все пары · правой кнопкой можно сдвинуть карты",
+        ["Click the stock to turn a card · click or drag cards to move them · right-drag moves the felt"] = "Нажмите на колоду, чтобы открыть карту · нажимайте на карты или перетаскивайте их · правой кнопкой можно сдвинуть стол",
 
 
         // ---- 1.8.0: animation pass (Bubbles, Whack, Tower, Bowling, Fishing, Pinball, Paper Toss, Blockfall, Hockey, Pong)
