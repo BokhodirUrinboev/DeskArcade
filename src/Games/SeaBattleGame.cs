@@ -30,6 +30,8 @@ public sealed class SeaBattleGame : MiniGame
 
     enum Phase { Setup, Playing, Over }
 
+    readonly Canvas _board = new() { IsHitTestVisible = false };  // the layers below, in board coordinates, carried to _origin by _boardTr
+    readonly TranslateTransform _boardTr = new();
     readonly Canvas _canvas = new() { IsHitTestVisible = false }; // the frame, labels, grids and my ships
     readonly Canvas _marks = new() { IsHitTestVisible = false };  // one sprite per square that was shot at
     readonly Canvas _reveal = new() { IsHitTestVisible = false }; // the enemy's ships, once the game is over
@@ -52,7 +54,10 @@ public sealed class SeaBattleGame : MiniGame
 
     public SeaBattleGame(IGameHost host) : base(host)
     {
-        foreach (var layer in new[] { _canvas, _marks, _reveal, _hints, _air }) Layer.Children.Add(layer);
+        foreach (var layer in new[] { _canvas, _marks, _reveal, _hints, _air }) _board.Children.Add(layer);
+        _board.RenderTransformOrigin = RelativePoint.TopLeft;
+        _board.RenderTransform = _boardTr;
+        Layer.Children.Add(_board);
         _handle = new DragHandle(host, Id, Title);
         Layer.Children.Add(_handle.Visual);
     }
@@ -91,27 +96,45 @@ public sealed class SeaBattleGame : MiniGame
 
     // ------------------------------------------------------------------ layout
 
-    Rect MyGrid => new(_origin.X, _origin.Y + _cell, _cell * N, _cell * N);
-    Rect EnemyGrid => new(_origin.X + _cell * (N + 1.5), _origin.Y + _cell, _cell * N, _cell * N);
-    Rect Whole => new(_origin.X - 8, _origin.Y - 4, _cell * (2 * N + 1.5) + 16, _cell * (N + 1) + 12);
+    // Board coordinates: the grids are laid out from (0, 0) and drawn once at a size; _boardTr carries the whole board to
+    // _origin, so a drag moves one transform. Screen() converts for hit shapes, the pointer, the grip and the effects.
+    Rect MyGrid => new(0, _cell, _cell * N, _cell * N);
+    Rect EnemyGrid => new(_cell * (N + 1.5), _cell, _cell * N, _cell * N);
+    Rect Whole => new(-8, -4, _cell * (2 * N + 1.5) + 16, _cell * (N + 1) + 12);
+
+    Vec2 Screen(Vec2 board) => board + _origin;
+    Rect Screen(Rect board) => new(board.X + _origin.X, board.Y + _origin.Y, board.Width, board.Height);
 
     public override void Layout()
     {
         var a = Host.Arena;
-        _cell = Math.Floor(Math.Min(Math.Min(a.Width * 0.8 / (2 * N + 1.5), a.Height * 0.7 / (N + 1)), 32));
-        double w = _cell * (2 * N + 1.5), h = _cell * (N + 1);
+        double cell = Math.Floor(Math.Min(Math.Min(a.Width * 0.8 / (2 * N + 1.5), a.Height * 0.7 / (N + 1)), 32));
+        double w = cell * (2 * N + 1.5), h = cell * (N + 1);
         if (!_placed)
         {
             _placed = true;
             _origin = _handle.Saved() ?? new Vec2(a.Center.X - w / 2, a.Center.Y - h / 2);
         }
         _origin = new Vec2(Clamp(_origin.X, a.Left + 10, a.Right - w - 10), Clamp(_origin.Y, a.Top + 10, a.Bottom - h - 10));
+        bool redraw = cell != _cell; // the grids are drawn again only at a new size; a move is the transform's
+        _cell = cell;
         if (LanOn != _wasLan)
         {
             _wasLan = LanOn;
             _gameNo = 1;
-            NewGame();
+            NewGame(); // which draws
+            redraw = false;
         }
+        _boardTr.X = _origin.X;
+        _boardTr.Y = _origin.Y;
+        _handle.Show(Screen(Whole));
+        if (redraw) Draw();
+    }
+
+    /// <summary>Switched to: placed, and drawn again, as the labels (the language, the rival's name) may have changed meanwhile.</summary>
+    public override void Activate()
+    {
+        Layout();
         Draw();
     }
 
@@ -174,7 +197,7 @@ public sealed class SeaBattleGame : MiniGame
 
     public override void CollectHitShapes(List<HitShape> into)
     {
-        into.Add(HitShape.Box(Whole));
+        into.Add(HitShape.Box(Screen(Whole)));
         into.Add(_handle.Hit);
     }
 
@@ -185,7 +208,7 @@ public sealed class SeaBattleGame : MiniGame
             _handle.Begin(p, _origin, anywhere: true); // the grip, or a right-drag anywhere on the grids
             return true;
         }
-        int mine = CellAt(MyGrid, _cell, p), theirs = CellAt(EnemyGrid, _cell, p);
+        int mine = CellAt(MyGrid, _cell, p - _origin), theirs = CellAt(EnemyGrid, _cell, p - _origin);
         switch (_phase)
         {
             case Phase.Over when mine >= 0 || theirs >= 0:
@@ -303,7 +326,7 @@ public sealed class SeaBattleGame : MiniGame
     /// <summary>The shell landed: its mark appears, a sunk ship darkens square by square, and the last one ends the game.</summary>
     void Land(bool atMe, int sq, ShotResult r)
     {
-        ShotFx(atMe ? MyCenter(sq) : EnemyCenter(sq), r, byMe: !atMe);
+        ShotFx(Screen(atMe ? MyCenter(sq) : EnemyCenter(sq)), r, byMe: !atMe);
         SetMark(atMe, sq, r.Kind == ShotKind.Miss ? SeaChart.Miss : SeaChart.Hit, pop: true);
         double t = 0;
         if (r.Kind is ShotKind.Sunk or ShotKind.Win)
@@ -386,7 +409,7 @@ public sealed class SeaBattleGame : MiniGame
     void GameOverFx(bool won)
     {
         if (_quiet) return;
-        var b = Whole;
+        var b = Screen(Whole);
         var at = new Vec2(b.Center.X, b.Top + b.Height * 0.3);
         if (won)
         {
@@ -430,7 +453,7 @@ public sealed class SeaBattleGame : MiniGame
 
     void DemoStep()
     {
-        if (_phase == Phase.Setup && !_meReady) PointerDown(new Vec2(EnemyGrid.Center.X, EnemyGrid.Center.Y), false);
+        if (_phase == Phase.Setup && !_meReady) PointerDown(Screen(new Vec2(EnemyGrid.Center.X, EnemyGrid.Center.Y)), false);
         else if (_phase == Phase.Playing && _myTurn && _pendingSq < 0 && _cpuIn < 0 && _flights == 0)
             Fire(SeaChart.NextShot(_chart, Rng));
     }
@@ -509,7 +532,7 @@ public sealed class SeaBattleGame : MiniGame
 
     Vec2 EnemyCenter(int sq) => new(EnemyGrid.Left + (sq % N + 0.5) * _cell, EnemyGrid.Top + (sq / N + 0.5) * _cell);
 
-    /// <summary>Draws everything afresh at the current place and size; marks and the reveal appear at once.</summary>
+    /// <summary>Draws everything afresh at the current size, in board coordinates; marks and the reveal appear at once.</summary>
     void Draw()
     {
         _canvas.Children.Clear();
@@ -530,7 +553,6 @@ public sealed class SeaBattleGame : MiniGame
                 Fill = Art.Brush(ShipColor), Stroke = Art.Brush("#2A2F3A"), StrokeThickness = 1.5,
             }, left - _cell * 0.35, top - _cell * 0.35));
         }
-        _handle.Show(whole);
         SyncMarks(force: true);
         DrawReveal(animate: false);
         DrawHints();

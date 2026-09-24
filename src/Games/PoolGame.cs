@@ -42,7 +42,8 @@ public sealed class PoolGame : MiniGame
     }
 
     readonly DiscTable _table = new() { Restitution = 0.95, CushionRestitution = 0.75, Friction = 110, Damping = 0.3 };
-    readonly Canvas _tableLayer = new() { IsHitTestVisible = false };
+    readonly Canvas _tableLayer = new() { IsHitTestVisible = false }; // the art, drawn around a felt at the origin
+    readonly TranslateTransform _tableTr = new();                     // and carried to where the felt is
     readonly Canvas _fxLayer = new() { IsHitTestVisible = false };
     readonly Canvas _ballLayer = new() { IsHitTestVisible = false };
     readonly Canvas _aimLayer = new() { IsHitTestVisible = false };
@@ -85,6 +86,8 @@ public sealed class PoolGame : MiniGame
         _aimLayer.IsVisible = false;
         _stick.IsVisible = false;
         _handle = new DragHandle(host, Id, Title);
+        _tableLayer.RenderTransformOrigin = RelativePoint.TopLeft;
+        _tableLayer.RenderTransform = _tableTr;
 
         Layer.Children.Add(_tableLayer);
         Layer.Children.Add(_fxLayer);
@@ -197,7 +200,11 @@ public sealed class PoolGame : MiniGame
     /// <summary>The rails, cushions and pockets around the felt: the panel the grip moves.</summary>
     Rect Outer => _felt.Inflate(Frame);
 
-    /// <summary>Sets the felt (moved or resized): the physics, the pockets, every ball's place on it, and the drawing.</summary>
+    /// <summary>
+    /// Sets the felt (moved or resized): the physics, the pockets and every ball's place on it. The table art is drawn
+    /// once around a felt at the origin and a transform carries it to the felt, so a drag only moves that transform,
+    /// the pockets and the balls; the art (and the ball sprites) are rebuilt only when the felt or the balls change size.
+    /// </summary>
     void MoveTable(Rect felt)
     {
         var old = _felt;
@@ -206,13 +213,10 @@ public sealed class PoolGame : MiniGame
         _r = Math.Clamp(_felt.Width / 92, 8, 12);
         _table.Bounds = _felt;
         _table.Pockets.Clear();
-        double r = _r, f = _felt.X, t = _felt.Y, w = _felt.Width, h = _felt.Height;
-        foreach (var (x, y) in new[] { (f - r * 0.5, t - r * 0.5), (f + w + r * 0.5, t - r * 0.5), (f - r * 0.5, t + h + r * 0.5), (f + w + r * 0.5, t + h + r * 0.5) })
-            _table.Pockets.Add(new DiscTable.Pocket(new Vec2(x, y), r * 2));
-        _table.Pockets.Add(new DiscTable.Pocket(new Vec2(f + w / 2, t - r * 0.9), r * 1.75));
-        _table.Pockets.Add(new DiscTable.Pocket(new Vec2(f + w / 2, t + h + r * 0.9), r * 1.75));
+        _table.Pockets.AddRange(PocketsOf(_felt, _r));
+        bool resized = old.Size != _felt.Size;
 
-        foreach (var b in _balls) b.Body.R = r;
+        foreach (var b in _balls) b.Body.R = _r;
         if (!_racked)
         {
             _racked = true;
@@ -228,12 +232,29 @@ public sealed class PoolGame : MiniGame
                 b.Body.Pos = new Vec2(_felt.X + (b.Body.Pos.X - old.X) * k, _felt.Y + (b.Body.Pos.Y - old.Y) * k);
                 b.Body.Vel *= k;
             }
-            _table.Separate(); // the radius shrinks less than the table, so pull apart any that now overlap
+            if (resized) _table.Separate(); // the radius shrinks less than the table, so pull apart any that now overlap
         }
         if (oldR != _r) RebuildBalls();
-        DrawTable();
+        if (resized) DrawTable();
+        _tableTr.X = _felt.X;
+        _tableTr.Y = _felt.Y;
         Draw();
         _handle.Show(Outer);
+    }
+
+    /// <summary>The six pockets of a felt: one in each corner, one in the middle of each long rail (in that order).</summary>
+    public static DiscTable.Pocket[] PocketsOf(Rect felt, double r)
+    {
+        double f = felt.X, t = felt.Y, w = felt.Width, h = felt.Height;
+        return new[]
+        {
+            new DiscTable.Pocket(new Vec2(f - r * 0.5, t - r * 0.5), r * 2),
+            new DiscTable.Pocket(new Vec2(f + w + r * 0.5, t - r * 0.5), r * 2),
+            new DiscTable.Pocket(new Vec2(f - r * 0.5, t + h + r * 0.5), r * 2),
+            new DiscTable.Pocket(new Vec2(f + w + r * 0.5, t + h + r * 0.5), r * 2),
+            new DiscTable.Pocket(new Vec2(f + w / 2, t - r * 0.9), r * 1.75),
+            new DiscTable.Pocket(new Vec2(f + w / 2, t + h + r * 0.9), r * 1.75),
+        };
     }
 
     public override void Deactivate()
@@ -638,10 +659,11 @@ public sealed class PoolGame : MiniGame
         }
     }
 
+    /// <summary>Draws the rails, cushions, felt, spots, diamonds and pockets around a felt at the origin; <see cref="_tableTr"/> places them.</summary>
     void DrawTable()
     {
         _tableLayer.Children.Clear();
-        var felt = _felt;
+        var felt = new Rect(0, 0, _felt.Width, _felt.Height);
         var cushion = felt.Inflate(CushionW);
         var outer = cushion.Inflate(RailW);
 
@@ -685,7 +707,7 @@ public sealed class PoolGame : MiniGame
         }
 
         // pockets over the rails
-        foreach (var p in _table.Pockets)
+        foreach (var p in PocketsOf(felt, _r))
         {
             _tableLayer.Children.Add(Art.Circle(p.Pos.X, p.Pos.Y, p.R + 3, Art.Brush("#2B2B2B")));
             _tableLayer.Children.Add(Art.Circle(p.Pos.X, p.Pos.Y, p.R, Art.Brush("#050506")));
