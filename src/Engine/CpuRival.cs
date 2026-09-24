@@ -22,13 +22,19 @@ public sealed class CpuRival
     /// <param name="reference">The score it measures itself against: the player's best, or the game's baseline.</param>
     /// <param name="lowerIsBetter">Fewer is better (darts thrown, moves made).</param>
     /// <param name="seconds">About how long a round lasts; the computer spreads its scoring over that time.</param>
-    public CpuRival(int level, int reference, bool lowerIsBetter, double seconds, Random rng)
+    /// <param name="min">The lowest possible round score; a fewer-is-better computer aims at least one above it.</param>
+    /// <param name="max">The highest possible round score; a higher-is-better computer aims at least one below it.</param>
+    public CpuRival(int level, int reference, bool lowerIsBetter, double seconds, Random rng, int min = 0, int max = int.MaxValue)
     {
         Level = Math.Clamp(level, 1, MiniGame.LevelNames.Length);
         LowerIsBetter = lowerIsBetter;
         _seconds = Math.Max(3, seconds * (0.85 + rng.NextDouble() * 0.3));
         double factor = (lowerIsBetter ? LowerFactors : Factors)[Level - 1] * (0.88 + rng.NextDouble() * 0.24);
         Target = Math.Max(lowerIsBetter ? 1 : 0, (int)Math.Round(Math.Max(1, reference) * factor));
+        // stay inside what the game can score, and leave the perfect round to the player
+        int lo = lowerIsBetter ? min + 1 : min, hi = lowerIsBetter || max == int.MaxValue ? max : max - 1;
+        if (hi < lo) hi = lo;
+        Target = Math.Clamp(Target, lo, hi);
         // now and then the computer has an off day, more often at the easy levels
         double offDay = Level == 1 ? 0.3 : Level == 2 ? 0.15 : 0.05;
         _slump = rng.NextDouble() < offDay ? 0.4 + rng.NextDouble() * 0.3 : 1;

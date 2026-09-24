@@ -92,6 +92,7 @@ public sealed class DartsGame : MiniGame
     public override (int Score, bool Active)? Race => (_leg.DartsUsed, _legOn);
     public override bool RaceLowerIsBetter => true;
     public override int RaceBaseline => FairLeg;
+    public override int RaceMin => 9;
     public override int RaceBest => (int)Host.Stats.Get("darts.best");
     public override double RaceSeconds => 80;
 

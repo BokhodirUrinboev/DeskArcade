@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Avalonia.Controls;
 using DeskArcade.Engine;
+using DeskArcade.Platform;
 
 namespace DeskArcade;
 
@@ -54,15 +55,64 @@ public static class QuickMenu
         lan.Items.Add(Item(L.T("Leave"), w.LeaveLan));
         yield return lan;
 
+        yield return Item(L.T("Next game") + "   (" + Shortcuts.Label(HotkeyAction.NextGame) + ")", w.NextGame);
+        yield return Item(L.T("Bring to cursor") + "   (" + Shortcuts.Label(HotkeyAction.Summon) + ")", w.SummonToCursor);
+        yield return Item(w.DailyLine, w.PlayDaily);
+
+        var sound = Sub(L.T("Sound"));
+        sound.Items.Add(Check(L.T("Sound"), w.Settings.Sound, () => Toggle(w, s => s.Sound = !s.Sound)));
+        sound.Items.Add(new Separator());
+        foreach (double level in new[] { 0.25, 0.5, 0.75, 1.0 })
+        {
+            double v = level;
+            sound.Items.Add(Radio($"{(int)(v * 100)}%", Math.Abs(w.Settings.Volume - v) < 0.126, () => w.SetVolume(v)));
+        }
+        yield return sound;
+
+        var look = Sub(L.T("Accessibility"));
+        look.Items.Add(Check(L.T("Reduce motion"), w.Settings.ReducedMotion, () => Toggle(w, s => s.ReducedMotion = !s.ReducedMotion)));
+        look.Items.Add(Check(L.T("Colour-blind friendly colours"), w.Settings.ColorBlind, () => Toggle(w, s => s.ColorBlind = !s.ColorBlind)));
+        look.Items.Add(Check(L.T("Bounce on window tops"), w.Settings.Platforms, () => Toggle(w, s => s.Platforms = !s.Platforms)));
+        yield return look;
+
+        var language = Sub(L.T("Language"));
+        foreach (var (code, name) in L.Languages)
+        {
+            string c = code;
+            language.Items.Add(Radio(c == "auto" ? L.T(name) : name, w.Settings.Language == c, () => w.SetLanguage(c)));
+        }
+        yield return language;
+
+        var claude = Sub("Claude Code");
+        claude.Items.Add(Check(L.T("Alerts when Claude finishes"), w.Settings.ClaudeNotify, () => Toggle(w, s => s.ClaudeNotify = !s.ClaudeNotify)));
+        claude.Items.Add(Check(L.T("Show the overlay when Claude starts working"), w.Settings.ClaudeAutoShow, () => Toggle(w, s => s.ClaudeAutoShow = !s.ClaudeAutoShow)));
+        claude.Items.Add(Check(L.T("Hide the overlay when Claude finishes or needs you"), w.Settings.ClaudeAutoHide, () => Toggle(w, s => s.ClaudeAutoHide = !s.ClaudeAutoHide)));
+        claude.Items.Add(Check(L.T("Pause the game when Claude finishes or needs you"), w.Settings.ClaudePause, () => Toggle(w, s => s.ClaudePause = !s.ClaudePause)));
+        claude.Items.Add(new Separator());
+        claude.Items.Add(Item(L.T("Copy Claude Code hook config"), w.CopyHookConfig));
+        yield return claude;
+
+        var board = Sub(L.T("Office leaderboard"));
+        board.Items.Add(Item(L.T("Show the leaderboard…"), w.OpenLeaderboard));
+        board.Items.Add(Check(L.T("Share my scores on the local network"), w.Settings.ShareLeaderboard, () => w.SetShareLeaderboard(!w.Settings.ShareLeaderboard)));
+        yield return board;
+
         yield return Item(L.T("Stats & achievements…"), w.OpenStats);
         yield return Item(L.T("Shortcuts…"), w.OpenShortcuts);
+        yield return Item(L.T("Move to next monitor"), w.MoveToNextMonitor);
         yield return Item(L.T("Reset positions"), w.ResetPositions);
         if (w.AvailableUpdate is { } update)
             yield return Item(UpdateChecker.CanInstall ? L.F("Install version {0}", update.Version.ToString(3)) : L.F("Download version {0}…", update.Version.ToString(3)), w.InstallUpdate);
         else yield return Item(L.T("Check for updates"), () => w.CheckForUpdates(manual: true));
         yield return new Separator();
-        yield return Item(L.T("Hide overlay"), () => w.SetOverlayVisible(false));
+        yield return Item(L.T("Hide overlay") + "   (" + Shortcuts.Label(HotkeyAction.ToggleOverlay) + ")", w.HideFromMenu);
         yield return Item(L.T("Exit"), w.Quit);
+    }
+
+    static void Toggle(OverlayWindow w, Action<Settings> change)
+    {
+        change(w.Settings);
+        w.ApplySettings();
     }
 
     static MenuItem Sub(string header) => new() { Header = header };

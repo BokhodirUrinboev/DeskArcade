@@ -138,6 +138,7 @@ public sealed class PoolGame : MiniGame
     public override (int Score, bool Active)? Race => (_shots, _racing);
     public override bool RaceLowerIsBetter => true;
     public override int RaceBaseline => 30;
+    public override int RaceMin => 10;
     public override int RaceBest => (int)Host.Stats.Get("pool.best");
     public override double RaceSeconds => 150;
 

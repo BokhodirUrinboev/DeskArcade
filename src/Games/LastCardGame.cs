@@ -159,7 +159,7 @@ public sealed class LastCardGame : MiniGame, IRoomGame
         L.F("Wins {0}", Host.Stats.Get("lastcard.wins")));
 
     /// <summary>The scoreboard's chip: the computer, or in a room whose turn it is (the next player round the table when it is mine).</summary>
-    public override Opponent? Opponent => _view is { } v && _mode != Mode.Idle
+    public override Opponent? Opponent => _view is { } v && _mode != Mode.Idle && !(_mode == Mode.Guest && _room.State == RoomState.Lost)
         ? CardTable.Chip(v.Names, _mode == Mode.Solo, v.Over ? -1 : v.Turn, CardTable.NextSeat(v.Seat, v.Players, v.Direction), v.Over ? null : v.MyTurn)
         : null;
 

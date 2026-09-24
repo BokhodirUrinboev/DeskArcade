@@ -92,7 +92,7 @@ public sealed class RaceMode
         // the computer aims at the player's best when there is one, else at the game's baseline
         int reference = game.RaceBest <= 0 ? game.RaceBaseline
             : game.RaceLowerIsBetter ? Math.Min(game.RaceBaseline, game.RaceBest) : Math.Max(game.RaceBaseline, game.RaceBest);
-        _cpus[_round] = new CpuRival(game.CpuLevel, reference, game.RaceLowerIsBetter, game.RaceSeconds, _rng);
+        _cpus[_round] = new CpuRival(game.CpuLevel, reference, game.RaceLowerIsBetter, game.RaceSeconds, _rng, game.RaceMin, game.RaceMax);
         _lastMark = 0;
         _cpuShown = 0;
         Tick();
@@ -188,7 +188,7 @@ public sealed class RaceMode
     /// <summary>Two wins in a row move the computer up a level, two losses in a row move it down, like the board games.</summary>
     string AdjustLevel(MiniGame game, bool won, bool tie, string sub)
     {
-        if (tie) return sub;
+        if (tie || _w.Demo) return sub; // a demo playing itself must not move the player's level
         if (won)
         {
             _cpuLossStreak = 0;

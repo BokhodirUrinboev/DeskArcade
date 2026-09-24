@@ -126,6 +126,7 @@ public sealed class SolitaireGame : MiniGame
     public override bool SupportsLan => true;
     public override (int Score, bool Active)? Race => (_rules.OnFoundations, _racing);
     public override int RaceBaseline => 26;
+    public override int RaceMax => SolitaireRules.DeckSize;
     public override int RaceBest => (int)Host.Stats.Get("solitaire.home");
     public override double RaceSeconds => 240;
 

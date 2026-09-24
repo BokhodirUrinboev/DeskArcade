@@ -143,9 +143,11 @@ public sealed class Hud : Border
         _board.Children.Add(tabs);
 
         var mid = new DockPanel { Margin = new Thickness(2, 0, 0, 0) };
-        var right = new StackPanel { VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Right };
+        var right = new StackPanel { VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Right, MaxWidth = ExpandedWidth - 120 };
         _title.HorizontalAlignment = HorizontalAlignment.Right;
+        _title.TextTrimming = TextTrimming.CharacterEllipsis;
         _best.HorizontalAlignment = HorizontalAlignment.Right;
+        _best.TextTrimming = TextTrimming.CharacterEllipsis; // long lines ("Best 17 darts · …") must not squeeze the score out
         right.Children.Add(_title);
         right.Children.Add(_best);
         DockPanel.SetDock(right, Dock.Right);
@@ -159,6 +161,8 @@ public sealed class Hud : Border
         Grid.SetRow(_line, 2);
         _board.Children.Add(_line);
 
+        _oppText.TextTrimming = TextTrimming.CharacterEllipsis;
+        _oppText.MaxWidth = ExpandedWidth - 60;
         _oppChip = Chip(_oppDot, _oppText);
         Grid.SetRow(_oppChip, 3);
         _board.Children.Add(_oppChip);
@@ -189,7 +193,7 @@ public sealed class Hud : Border
         _pillOpp = new Border
         {
             CornerRadius = new CornerRadius(8), Padding = new Thickness(6, 1, 7, 2), Margin = new Thickness(9, 0, 0, 0),
-            VerticalAlignment = VerticalAlignment.Center, IsVisible = false, IsHitTestVisible = false,
+            VerticalAlignment = VerticalAlignment.Center, IsVisible = false, // hit-testable, so its tooltip can show the whole line
             RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative), RenderTransform = _oppScale,
             Child = new StackPanel { Orientation = Orientation.Horizontal, Children = { _pillOppDot, _pillOppText } },
         };
@@ -315,6 +319,9 @@ public sealed class Hud : Border
             break;
         }
         _pillBest.Text = "★ " + shown;
+        ToolTip.SetTip(_best, info.Best);
+        ToolTip.SetTip(_line, info.Line);
+        ToolTip.SetTip(_pillBest, info.Best);
         if (scored) Bump(_scoreScale, 0.3);
         SetOpponent(opponent);
     }
@@ -328,11 +335,19 @@ public sealed class Hud : Border
         if (opp == null) return;
 
         string name = opp.IsCpu ? L.T("CPU") : Short(opp.Name, 12);
-        string who = opp.IsCpu && opp.Level > 0 ? L.F("CPU · {0}", L.T(MiniGame.LevelNames[opp.Level - 1])) : name;
+        string level = opp.IsCpu && opp.Level > 0 ? L.T(MiniGame.LevelNames[opp.Level - 1]) : "";
+        string who = level.Length > 0 ? L.F("CPU · {0}", level) : name;
         string turn = opp.MyTurn switch { true => L.T("Your turn"), false => L.F("{0}'s turn", name), _ => "" };
-        _oppText.Text = turn.Length > 0 ? L.F("vs {0}", who) + " · " + turn : L.F("vs {0}", who);
+        // the board line names the other side once: "vs CPU · Hard · Your turn", "CPU's turn · Hard", "vs Alice"
+        _oppText.Text = opp.MyTurn switch
+        {
+            true => L.F("vs {0}", who) + " · " + turn,
+            false => level.Length > 0 ? turn + " · " + level : turn,
+            _ => L.F("vs {0}", who),
+        };
         _pillOppText.Text = turn.Length > 0 ? turn : who;
-        ToolTip.SetTip(_pillOpp, _oppText.Text);
+        ToolTip.SetTip(_pillOpp, opp.MyTurn == null ? _oppText.Text : L.F("vs {0}", who) + " · " + turn);
+        ToolTip.SetTip(_oppChip, _oppText.Text);
 
         (string dot, string bg) = opp.MyTurn switch
         {

@@ -109,6 +109,7 @@ public sealed class Anims
             _tweens.RemoveAt(i--);
             count--;
             t.Done?.Invoke();
+            if (count > _tweens.Count) count = _tweens.Count; // a callback may have cleared or finished the rest
         }
         return _tweens.Count > 0;
     }
@@ -116,10 +117,10 @@ public sealed class Anims
     /// <summary>Ends every tween now: each gets its final frame and its callback (for leaving a game mid-animation).</summary>
     public void Finish()
     {
-        while (_tweens.Count > 0)
+        var pending = _tweens.ToArray(); // a callback that adds a tween leaves it for the next update, rather than looping here
+        _tweens.Clear();
+        foreach (var t in pending)
         {
-            var t = _tweens[0];
-            _tweens.RemoveAt(0);
             if (t.Finished) continue;
             t.Finished = true;
             t.Apply(t.Curve(1));

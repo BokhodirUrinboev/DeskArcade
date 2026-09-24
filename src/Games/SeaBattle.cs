@@ -68,15 +68,16 @@ public sealed class SeaFleet
 
     public static SeaFleet? Decode(string text)
     {
-        try
+        var ships = new List<int[]>();
+        foreach (string part in text.Split(';'))
         {
-            var ships = text.Split(';').Select(s => s.Split(',').Select(int.Parse).ToArray()).ToList();
-            return ships.All(s => s.All(c => c is >= 0 and < N * N)) ? new SeaFleet(ships) : null;
+            var cells = part.Split(',');
+            var ship = new int[cells.Length];
+            for (int i = 0; i < cells.Length; i++)
+                if (!int.TryParse(cells[i], out ship[i]) || ship[i] is < 0 or >= N * N) return null; // never throw on the peer's text
+            ships.Add(ship);
         }
-        catch (FormatException)
-        {
-            return null;
-        }
+        return new SeaFleet(ships);
     }
 }
 

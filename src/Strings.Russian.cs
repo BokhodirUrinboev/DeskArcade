@@ -342,7 +342,7 @@ public static partial class Strings
         ["{0} is thinking…"] = "{0} думает…",
         ["DOUBLE JUMP!"] = "ДВЕ ЗА ХОД!",
         ["TRIPLE JUMP!"] = "ТРИ ЗА ХОД!",
-        ["vs {0}"] = "против {0}",
+        ["vs {0}"] = "соперник: {0}",
         ["click the board for a rematch"] = "нажмите на доску, чтобы сыграть ещё",
         ["Play over LAN"] = "Игра по сети",
         ["Host a game"] = "Создать игру",
@@ -934,13 +934,15 @@ public static partial class Strings
         ["Your turn"] = "Ваш ход",
         ["CPU · {0}"] = "Компьютер · {0}",
         ["Menu"] = "Меню",
-        ["Hide overlay"] = "Скрыть оверлей",
+        ["{0} shows the overlay again"] = "{0} снова покажет игру",
+        ["or run: deskarcade --signal show"] = "или выполните: deskarcade --signal show",
+        ["Hide overlay"] = "Скрыть игру",
         ["Drag to move"] = "Перетащите, чтобы переместить",
         ["Race the computer in solo rounds"] = "Гонка с компьютером в одиночных раундах",
         ["CPU ({0}): {1}"] = "Компьютер ({0}): {1}",
         ["CPU ({0}) is heading for {1}"] = "Компьютер ({0}) идёт к {1}",
         ["Race the computer: start a round and it plays one too"] = "Гонка с компьютером: начните раунд, и он сыграет свой",
-        ["the CPU goes easier: {0}"] = "компьютер становится слабее: {0}",
+        ["the CPU goes easier: {0}"] = "компьютер играет легче: {0}",
         ["Pacesetter"] = "Задающий темп",
         ["Beat the computer in 10 races"] = "Обыграйте компьютер в 10 гонках",
 
@@ -974,7 +976,7 @@ public static partial class Strings
         ["Off to get a treat"] = "Бежит за лакомством",
         ["Owl"] = "Сова",
         ["Parrot"] = "Попугай",
-        ["Playdate"] = "Свидание",
+        ["Playdate"] = "Встреча питомцев",
         ["Puffing smoke"] = "Пускает дым",
         ["Safe in its shell"] = "Спрятался в панцирь",
         ["Stuffing its cheeks"] = "Набивает щёки",
@@ -1002,7 +1004,7 @@ public static partial class Strings
 
 
         // ---- 1.8.0: races, part 2 (Clay Shooting, Plinko, Slingshot, Darts)
-        ["Click the sheet again to give up the leg"] = "Нажмите на табло ещё раз, чтобы сдать лег",
+        ["Click the sheet again to give up the leg"] = "Нажмите на лист счёта ещё раз, чтобы сдать лег",
         ["LEG GIVEN UP"] = "ЛЕГ СДАН",
 
 

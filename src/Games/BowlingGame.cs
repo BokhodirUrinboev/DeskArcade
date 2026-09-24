@@ -118,6 +118,7 @@ public sealed class BowlingGame : MiniGame
     public override bool SupportsLan => true;
     public override (int Score, bool Active)? Race => (_score.Total, _active);
     public override int RaceBaseline => FairRound;
+    public override int RaceMax => 300;
     public override int RaceBest => (int)Host.Stats.Get("bowling.best");
     public override double RaceSeconds => TypicalRoundSeconds;
 

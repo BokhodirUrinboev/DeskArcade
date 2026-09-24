@@ -82,6 +82,8 @@ public sealed class OverlayWindow : Window, IGameHost
     public IReadOnlyList<MiniGame> Games => _games;
     public MiniGame? Current { get; private set; }
     public bool OverlayVisible => IsVisible;
+    /// <summary>A --demo run: the games play themselves, and nothing they do should move the player's saved levels.</summary>
+    public bool Demo => _demo;
     public UpdateInfo? AvailableUpdate => _update;
 
     public bool AutostartEnabled
@@ -653,6 +655,24 @@ public sealed class OverlayWindow : Window, IGameHost
     }
 
     public void ToggleOverlay() => SetOverlayVisible(!IsVisible);
+
+    /// <summary>
+    /// Hide from the ☰ menu. Without a tray the only ways back are the shortcut, "deskarcade --signal show" and the next
+    /// start, so the notice says so and stays on screen for a moment before the overlay goes.
+    /// </summary>
+    public void HideFromMenu()
+    {
+        bool tray;
+        try { tray = _platform.HasTray; }
+        catch { tray = true; }
+        if (tray)
+        {
+            SetOverlayVisible(false);
+            return;
+        }
+        Notice(L.F("{0} shows the overlay again", Shortcuts.Label(HotkeyAction.ToggleOverlay)), L.T("or run: deskarcade --signal show"), Color.FromRgb(170, 180, 195));
+        DispatcherTimer.RunOnce(() => SetOverlayVisible(false), TimeSpan.FromSeconds(3));
+    }
 
     public void SetOverlayVisible(bool visible)
     {

@@ -317,7 +317,7 @@ public sealed class DurakView
     }
 
     /// <summary>Whether this player has something to do right now.</summary>
-    public bool MyTurn => !Over && Seat < Out.Length && !Out[Seat] && (TurnSeat() == Seat || Awaits(Seat));
+    public bool MyTurn => !Over && Seat >= 0 && Seat < Out.Length && !Out[Seat] && (TurnSeat() == Seat || Awaits(Seat));
 }
 
 /// <summary>
@@ -424,7 +424,7 @@ public sealed class DurakGame : MiniGame, IRoomGame
         L.F("Wins {0}", Host.Stats.Get("durak.wins")));
 
     /// <summary>The scoreboard's chip: the computer, or in a room whoever the bout waits on (the next player when it waits on me).</summary>
-    public override Opponent? Opponent => _view is { } v && _mode != Mode.Idle
+    public override Opponent? Opponent => _view is { } v && _mode != Mode.Idle && !(_mode == Mode.Guest && _room.State == RoomState.Lost)
         ? CardTable.Chip(v.Names, _mode == Mode.Solo, v.TurnSeat(), CardTable.NextSeat(v.Seat, v.Players, 1, v.Out), v.Over ? null : v.MyTurn)
         : null;
 
@@ -712,6 +712,7 @@ public sealed class DurakGame : MiniGame, IRoomGame
             if (!msg.Body.StartsWith("ds|", StringComparison.Ordinal)) continue;
             try { latest = JsonSerializer.Deserialize<DurakView>(msg.Body[3..]); }
             catch (JsonException) { }
+            if (latest != null && (latest.Seat < 0 || latest.Players < 2 || latest.Seat >= latest.Players)) latest = null; // a view that cannot be ours
         }
         // UDP can deliver out of order: only ever move forward
         if (latest != null && (_view == null || (latest.Game, latest.Version, latest.Ack).CompareTo((_view.Game, _view.Version, _view.Ack)) > 0))

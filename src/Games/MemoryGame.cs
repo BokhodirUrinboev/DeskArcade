@@ -136,6 +136,7 @@ public sealed class MemoryGame : MiniGame
     public override (int Score, bool Active)? Race => (_rules.Moves, _racing);
     public override bool RaceLowerIsBetter => true;
     public override int RaceBaseline => 22;
+    public override int RaceMin => MemoryRules.DefaultPairs;
     public override int RaceBest => (int)Host.Stats.Get("memory.best");
     public override double RaceSeconds => 75;
 

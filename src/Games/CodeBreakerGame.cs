@@ -124,6 +124,7 @@ public sealed class CodeBreakerGame : MiniGame
     public override (int Score, bool Active)? Race => (RaceScoreFor(Guess, _rules.Lost), _racing);
     public override bool RaceLowerIsBetter => true;
     public override int RaceBaseline => 5;
+    public override int RaceMin => 1;
     public override int RaceBest => (int)Host.Stats.Get("codebreaker.best");
     public override double RaceSeconds => 60;
 

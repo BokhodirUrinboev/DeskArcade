@@ -81,6 +81,12 @@ public abstract class MiniGame
     /// <summary>About how long a round lasts, in seconds; the computer rival paces its scoring over this time.</summary>
     public virtual double RaceSeconds => 60;
 
+    /// <summary>The lowest score a round can end with (fewer-is-better games): the computer never aims below it.</summary>
+    public virtual int RaceMin => 0;
+
+    /// <summary>The highest score a round can end with (52 cards home, a 300 game): the computer never aims above it.</summary>
+    public virtual int RaceMax => int.MaxValue;
+
     /// <summary>
     /// True when the game has a computer opponent whose strength can be set (tray → CPU difficulty): board games with
     /// levels, and every race game, where the computer rival plays at that level.

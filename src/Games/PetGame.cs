@@ -374,7 +374,8 @@ public sealed class PetGame : MiniGame
         if (f.Length != 7 || f[0] != "pt" || Array.IndexOf(Kinds, f[1]) < 0) return false;
         if (!double.TryParse(f[2], NumberStyles.Float, CultureInfo.InvariantCulture, out double x) ||
             !double.TryParse(f[3], NumberStyles.Float, CultureInfo.InvariantCulture, out double y) ||
-            x is < 0 or > 1 || y is < 0 or > 1 || !int.TryParse(f[4], out int face) || !Enum.TryParse<Mode>(f[5], true, out var mode))
+            !double.IsFinite(x) || !double.IsFinite(y) || x is < 0 or > 1 || y is < 0 or > 1 ||
+            !int.TryParse(f[4], out int face) || !Enum.TryParse<Mode>(f[5], true, out var mode))
             return false;
         string act = f[6];
         if (act.Length > 16) return false;
@@ -472,7 +473,7 @@ public sealed class PetGame : MiniGame
     bool Awake => _mode != Mode.Sleep;
 
     public override HudInfo Hud => new(_pets.ToString(), StateLine(),
-        L.F("Fetches {0} · Treats {1} · Pets {2}", Host.Stats.Get("pet.fetches"), Host.Stats.Get("pet.treats"), Host.Stats.Get("pet.pets")));
+        L.F("Pets {0}", Host.Stats.Get("pet.pets"))); // the pill shows the last number, and the board has no room for three
 
     string StateLine()
     {
@@ -1246,8 +1247,13 @@ public sealed class PetGame : MiniGame
         ClearGoal();
         switch (g)
         {
-            case "ball" or "return":
+            case "ball":
                 EndFetch();
+                Speak(Say.Upset, 0.35);
+                break;
+            case "return": // could not get it back to you: put the ball down here rather than keep it in its mouth for good
+                if (_ballHeld) ReleaseBall(default);
+                else EndFetch();
                 Speak(Say.Upset, 0.35);
                 break;
             case "treat": _treatWanted = false; break;
@@ -2018,6 +2024,7 @@ public sealed class PetGame : MiniGame
         if (_watchBall && _ball.State != ThingState.Air) _watchBall = false; // stopped some other way than landing
 
         bool acting = StepAct(dt);
+        TidyFly();
         if (_mode == Mode.Sit && !_pressed && !acting)
         {
             if (_watchBall && _ball.State == ThingState.Air) FaceBall();
@@ -2036,6 +2043,12 @@ public sealed class PetGame : MiniGame
         // sitting and sleeping are still: no frames needed until the behaviour timer or the user wakes us
         return _pressed || _ballHeld || (_mode is Mode.Walk or Mode.Air or Mode.Carried) || _happyT > 0 || _squashT > 0 || hearts || acting
             || things || bubble || visit || tweens || _goal.Length > 0 || _fetch.Length > 0 || _flyShown || Host.Lan.Connected;
+    }
+
+    /// <summary>A fly only hovers while the frog is after it; an act cut short by a click must not leave it buzzing for ever.</summary>
+    void TidyFly()
+    {
+        if (_flyShown && _act is not ("fly" or "tongue")) _fly.IsVisible = _flyShown = false;
     }
 
     /// <summary>Ride along with the window underneath, or fall when it moved away, closed or got covered.</summary>
@@ -2351,6 +2364,7 @@ public sealed class PetGame : MiniGame
     void HideVisitor()
     {
         _visitSeen = VisitFade;
+        _visitPos = default; // the next visitor starts afresh rather than gliding in from where the last one stood
         if (_visitArt != null) _visitArt.Root.IsVisible = false;
         _visitLabel.IsVisible = false;
         _metThisVisit = false;

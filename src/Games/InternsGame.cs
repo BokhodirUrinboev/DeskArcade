@@ -116,6 +116,7 @@ public sealed class InternsGame : MiniGame
     public override bool SupportsLan => true;
     public override (int Score, bool Active)? Race => (_world?.Saved ?? 0, _racing);
     public override int RaceBaseline => _world?.Needed ?? 8;
+    public override int RaceMax => _world?.Total ?? int.MaxValue;
     public override int RaceBest => RivalReference(Host.Stats.Get("interns.bestsaved"), _world?.Total ?? 24);
     public override double RaceSeconds => RoundSeconds(_world?.Total ?? 10);
 

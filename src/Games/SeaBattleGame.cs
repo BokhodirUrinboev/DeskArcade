@@ -469,10 +469,9 @@ public sealed class SeaBattleGame : MiniGame
                     }
                     if (_answers.TryGetValue(seq, out var answer)) Host.Lan.Send(answer);
                     break;
-                case "rs" when f.Length == 6 && int.TryParse(f[2], out int seq) && seq == _shotSeq && int.TryParse(f[3], out int sq) && sq == _pendingSq:
-                    var kind = (ShotKind)"mhsw".IndexOf(f[4][0]);
-                    var ship = f[5].Length == 0 ? Array.Empty<int>() : f[5].Split(',').Select(int.Parse).ToArray();
-                    ResolveMyShot(sq, new ShotResult(kind, ship));
+                case "rs" when f.Length == 6 && int.TryParse(f[2], out int seq) && seq == _shotSeq && int.TryParse(f[3], out int sq) && sq == _pendingSq
+                               && f[4].Length == 1 && "mhsw".IndexOf(f[4][0]) is >= 0 and var kindIndex && TryParseSquares(f[5], out var ship):
+                    ResolveMyShot(sq, new ShotResult((ShotKind)kindIndex, ship)); // anything malformed is dropped: the shot is re-sent anyway
                     break;
                 case "fl" when f.Length == 3 && _phase == Phase.Over && _enemyFleet == null:
                     _enemyFleet = SeaFleet.Decode(f[2]);
@@ -488,6 +487,19 @@ public sealed class SeaBattleGame : MiniGame
     }
 
     void SendReady() => Host.Lan.Send($"rd|{_gameNo}");
+
+    /// <summary>"3,4,5" to squares on the board; false for anything that is not a list of squares (the peer's text is untrusted).</summary>
+    static bool TryParseSquares(string text, out int[] squares)
+    {
+        squares = Array.Empty<int>();
+        if (text.Length == 0) return true;
+        var parts = text.Split(',');
+        var result = new int[parts.Length];
+        for (int i = 0; i < parts.Length; i++)
+            if (!int.TryParse(parts[i], out result[i]) || result[i] is < 0 or >= N * N) return false;
+        squares = result;
+        return true;
+    }
 
     void SendShot() => Host.Lan.Send($"sh|{_gameNo}|{_shotSeq}|{_pendingSq}");
 
