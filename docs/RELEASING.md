@@ -65,6 +65,16 @@ to a pull request cancels that PR's older run.
 All three Windows installers share one AppId, so any of them upgrades any other in place. The Flatpak
 and the winget manifests are not release artifacts; they are built or submitted by hand (below).
 
+**In-app updates depend on these names.** The game picks its download by name (`UpdateChecker.AssetName`):
+the Windows setups, `deskarcade_X.Y.Z_amd64.deb` / `_arm64.deb` for a `.deb` install and
+`DeskArcade-X.Y.Z-x86_64.AppImage` / `-aarch64.AppImage` for an AppImage, and checks the file against
+the SHA-256 digest GitHub records for the asset. Rename an asset and the updater falls back to the
+release page; upload one by hand without a digest and it still installs, but tells the player the file
+was not verified. `tests/DeskArcade.Tests/LinuxUpdateTests.cs` checks the names against `release.yml`.
+On Linux the `.deb` goes in through `pkexec` (PolicyKit's password prompt) and the AppImage replaces its
+own file; the package's `prerm` closes the running game, so a wrapper shell started by the game does the
+relaunch. Flatpak copies are told to use `flatpak update`.
+
 ## Identifiers that must never change
 
 Upgrades find the previous version through these. Changing one makes the new version install side by

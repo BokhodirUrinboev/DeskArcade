@@ -1023,6 +1023,24 @@ public static partial class Strings
 
 
         // ---- 1.8.0: Linux updates
+        ["Update {0}%"] = "Обновление {0}%",
+        ["then PolicyKit asks for your password to install it"] = "затем PolicyKit спросит ваш пароль для установки",
+        ["This release has no checksum"] = "У этого выпуска нет контрольной суммы",
+        ["installing the download unverified"] = "загруженный файл устанавливается без проверки",
+        ["a Flatpak updates with flatpak update · opening the release page"] = "Flatpak обновляется командой flatpak update · открываю страницу выпуска",
+        ["The update did not install · press Enter to close this window"] = "Обновление не установилось · нажмите Enter, чтобы закрыть это окно",
+        ["Update {0} downloaded"] = "Обновление {0} скачано",
+        ["no pkexec or terminal to install it · it is in {0}"] = "нет pkexec и терминала для установки · файл лежит в {0}",
+        ["Finishing the update in a terminal"] = "Завершаем обновление в терминале",
+        ["enter your password there · the game restarts when it is done"] = "введите там пароль · игра перезапустится, когда всё будет готово",
+        ["if it did not install, it is in {0}"] = "если оно не установилось, файл лежит в {0}",
+        ["Installed {0} · restarting"] = "Установлено {0} · перезапуск",
+        ["the new version starts in a moment"] = "новая версия запустится через мгновение",
+        ["saved in {0} · double-click the .deb to install it"] = "сохранено в {0} · дважды щёлкните .deb, чтобы установить",
+        ["Update failed · exit code {0}"] = "Обновление не удалось · код выхода {0}",
+        ["couldn't replace the running file · the new one is {0}"] = "не удалось заменить работающий файл · новый: {0}",
+        ["Installed {0}"] = "Установлено {0}",
+        ["start Desk Arcade again to play it"] = "запустите Desk Arcade снова, чтобы играть",
 
 
         // ---- 1.8.0: themes
