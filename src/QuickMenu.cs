@@ -9,7 +9,7 @@ namespace DeskArcade;
 /// <summary>
 /// The ☰ menu on the scoreboard: the essentials of the tray menu, for desktops without a tray (GNOME without the
 /// AppIndicator extension, a bare window manager) and for anyone who would rather not leave the overlay. Built fresh
-/// each time it opens, so it always shows the current game, pet and level.
+/// each time it opens, so it always shows the current game, pet, level and theme.
 /// </summary>
 public static class QuickMenu
 {
@@ -43,6 +43,20 @@ public static class QuickMenu
         }
         cpu.Items.Add(Check(L.T("Race the computer in solo rounds"), w.Settings.CpuRival, () => w.SetCpuRival(!w.Settings.CpuRival)));
         yield return cpu;
+
+        var themes = Sub(L.T("Theme"));
+        foreach (var (id, name) in Themes.Choices)
+        {
+            string t = id;
+            themes.Items.Add(Radio(L.T(name), w.Settings.Theme == t, () => w.SetTheme(t)));
+        }
+        themes.Items.Add(new Separator());
+        themes.Items.Add(Check(L.T("Theme decorations"), Themes.DecorEnabled, () =>
+        {
+            Themes.DecorEnabled = !Themes.DecorEnabled;
+            w.Wake();
+        }));
+        yield return themes;
 
         var lan = Sub(L.T("Play over LAN"));
         lan.Items.Add(new MenuItem { Header = w.LanStatus, IsEnabled = false });

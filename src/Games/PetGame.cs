@@ -101,6 +101,8 @@ public sealed class PetGame : MiniGame
         public ScaleTransform? Cheeks, Throat, Tongue, WingSpread;
         public RotateTransform? WingFlap, WingFlapL;
         public Control? TongueEl, Wings;
+        /// <summary>The theme's accessory, when it has one: a hat gives way to the nightcap, shades come off for sleep.</summary>
+        public Control? Hat, Shades;
     }
 
     sealed class Heart
@@ -443,6 +445,13 @@ public sealed class PetGame : MiniGame
         if (voices.Length == 0 || Now - _lastVoice < 0.3) return; // one thing at a time
         _lastVoice = Now;
         PlayThrottled(voices[Rng.Next(voices.Length)], volume, pitch * (0.94 + Rng.NextDouble() * 0.12));
+    }
+
+    /// <summary>A new theme may bring an accessory (a scarf, a pumpkin hat, a flower, sunglasses): redraw the pet, and the visitor when it next shows.</summary>
+    public override void ThemeChanged()
+    {
+        Rebuild();
+        _visitKind = "";
     }
 
     /// <summary>Redraws the pet after the kind changes in the tray.</summary>
@@ -2811,6 +2820,8 @@ public sealed class PetGame : MiniGame
         art.Zz.IsVisible = asleep;
         art.Shadow.IsVisible = grounded;
         art.Nightcap.IsVisible = nightcap;
+        if (art.Hat != null) art.Hat.IsVisible = !nightcap;
+        if (art.Shades != null) art.Shades.IsVisible = !sleeping;
         if (sleeping || happy) return;
 
         var d = pointer - (center + new Vec2(face * 2.5, -3 + p.Bob));
@@ -3218,6 +3229,7 @@ public sealed class PetGame : MiniGame
         cap.Children.Add(Art.PathOf("M-10,-13 L12,-13", null, Brushes.White, 3.5));
         cap.Children.Add(Art.Circle(3, -31, 3, Brushes.White, capInk, 0.8));
         head.Children.Add(cap);
+        var (hat, glasses) = Accessory(Themes.Current.Id, head, eyeBox, body, capY);
 
         var paw = duck || penguin || parrot || owl ? orange : Art.Brush(kind switch
         {
@@ -3243,7 +3255,68 @@ public sealed class PetGame : MiniGame
             PupilL = pupilL, PupilR = pupilR, FootA = footA, FootB = footB, Tail = tailTurn,
             EyesOpen = eyes, EyesSleep = eyesSleep, EyesHappy = eyesHappy, Shadow = shadow, Zz = zz, Nightcap = cap,
             Cheeks = cheeks, Throat = throat, Tongue = tongue, TongueEl = tongueEl, Wings = wings, WingSpread = wingSpread, WingFlap = wingFlap, WingFlapL = wingFlapL,
+            Hat = hat, Shades = glasses,
         };
+    }
+
+    /// <summary>
+    /// What the pet wears for the theme: a scarf in Winter (round the neck, on the body), a pumpkin hat in Halloween
+    /// and a flower behind the ear in Spring (on the head, where the nightcap goes), sunglasses in Ocean (over the
+    /// eyes, so they scale with them). Returns the hat and the shades so the pose can hide them.
+    /// </summary>
+    static (Control? Hat, Control? Shades) Accessory(string theme, Canvas head, Canvas eyeBox, Canvas body, double capY)
+    {
+        switch (theme)
+        {
+            case "winter":
+            {
+                var scarf = new Canvas();
+                var wool = Art.Brush("#DC283C");
+                scarf.Children.Add(Art.PathOf("M-11,9 L-15,20 L-8,19 L-6,10 Z", wool, Art.Brush("#8E1A28"), 1)); // the loose end
+                scarf.Children.Add(Art.PathOf("M-14,3 C-6,8 11,8 19,3 L19,8 C11,13 -6,13 -14,8 Z", wool, Art.Brush("#8E1A28"), 1));
+                scarf.Children.Add(Art.PathOf("M-13,5.5 C-6,10 11,10 18,5.5 M-14,17 L-9,16", null, Brushes.White, 1.4));
+                body.Children.Add(scarf);
+                return (null, null);
+            }
+            case "halloween":
+            {
+                var hat = new Canvas { RenderTransform = new TranslateTransform(0, capY) };
+                var rind = Art.Brush("#3F1E08");
+                hat.Children.Add(Art.At(new Ellipse { Width = 20, Height = 13, Fill = Art.Brush("#FF8C1E"), Stroke = rind, StrokeThickness = 1 }, -7.5, -24));
+                hat.Children.Add(Art.PathOf("M-1,-24 C-4,-20 -4,-15 -1,-11 M6,-24 C9,-20 9,-15 6,-11", null, Art.Brush(120, 120, 60, 10), 1));
+                hat.Children.Add(Art.PathOf("M1,-24 L2,-28 L4.5,-27.5 L4,-24 Z", Art.Brush("#4E8A2E"), rind, 0.8)); // the stem
+                hat.Children.Add(Art.PathOf("M-2,-19 L0,-16 L-4,-16 Z M5,-19 L7,-16 L3,-16 Z M-2,-14 L0,-12.5 L2.5,-14 L5,-12.5 L7,-14", Art.Brush("#2B1100"), Art.Brush("#2B1100"), 0.8));
+                head.Children.Add(hat);
+                return (hat, null);
+            }
+            case "spring":
+            {
+                var flower = new Canvas { RenderTransform = new TranslateTransform(0, capY) };
+                flower.Children.Add(Art.PathOf("M12,-11 L14,-4", null, Art.Brush("#4E8A2E"), 1.4)); // the stem, tucked behind the ear
+                for (int i = 0; i < 5; i++)
+                {
+                    var (px, py) = Art.Polar(3.6, -90 + 72 * i);
+                    flower.Children.Add(Art.At(new Ellipse { Width = 5, Height = 5, Fill = Art.Brush("#FFB7D5"), Stroke = Art.Brush("#E27AA6"), StrokeThickness = 0.6 }, 12 + px - 2.5, -14 + py - 2.5));
+                }
+                flower.Children.Add(Art.Circle(12, -14, 2.2, Art.Brush("#FFD23F"), Art.Brush("#B7791F"), 0.6));
+                head.Children.Add(flower);
+                return (flower, null);
+            }
+            case "ocean":
+            {
+                var shades = new Canvas();
+                var lens = Art.Brush(232, 24, 26, 34);
+                var rim = Art.Brush("#0B2A4A");
+                shades.Children.Add(Art.At(new Rectangle { Width = 10.5, Height = 8, RadiusX = 3, RadiusY = 3, Fill = lens, Stroke = rim, StrokeThickness = 1 }, -9.3, -7.4));
+                shades.Children.Add(Art.At(new Rectangle { Width = 10.5, Height = 8, RadiusX = 3, RadiusY = 3, Fill = lens, Stroke = rim, StrokeThickness = 1 }, 3.8, -7.4));
+                shades.Children.Add(Art.PathOf("M1.2,-4.5 L3.8,-4.5 M-9.3,-4 L-13,-6.5 M14.3,-4 L18,-6.5", null, rim, 1.2)); // bridge and arms
+                shades.Children.Add(Art.PathOf("M-7.5,-5.8 L-5,-5.8 M5.6,-5.8 L8.1,-5.8", null, Art.Brush(140, 255, 255, 255), 1)); // a glint
+                eyeBox.Children.Add(shades);
+                return (null, shades);
+            }
+            default:
+                return (null, null);
+        }
     }
 
     /// <summary>The treat jar, origin at the bottom center: glass, a wooden lid and a few treats inside.</summary>

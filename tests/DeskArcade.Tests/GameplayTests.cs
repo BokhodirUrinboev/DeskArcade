@@ -259,10 +259,10 @@ public class ThemeTests
     [Fact]
     public void SeasonalFollowsTheCalendarAndUnknownIdsFallBackToClassic()
     {
-        Assert.Equal(Themes.Halloween, Themes.Resolve("seasonal", new DateTime(2026, 10, 20)));
+        Assert.Equal(Themes.Halloween, Themes.Resolve("seasonal", new DateTime(2026, 10, 27)));
         Assert.Equal(Themes.Winter, Themes.Resolve("seasonal", new DateTime(2026, 12, 24)));
         Assert.Equal(Themes.Winter, Themes.Resolve("seasonal", new DateTime(2027, 1, 5)));
-        Assert.Equal(Themes.Classic, Themes.Resolve("seasonal", new DateTime(2026, 6, 1)));
+        Assert.Equal(Themes.Ocean, Themes.Resolve("seasonal", new DateTime(2026, 6, 1)));
         Assert.Equal(Themes.Neon, Themes.Resolve("neon", DateTime.Today));
         Assert.Equal(Themes.Classic, Themes.Resolve("no-such-theme", DateTime.Today));
         Assert.Equal(Themes.All.Count + 1, Themes.Choices.Count());

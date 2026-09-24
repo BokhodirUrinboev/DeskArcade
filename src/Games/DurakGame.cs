@@ -872,15 +872,16 @@ public sealed class DurakGame : MiniGame, IRoomGame
         _clickables.Clear();
         var a = _table;
 
+        var cloth = Themes.Current.Felt ?? Felt;
         var felt = new Border
         {
             Width = a.Width, Height = a.Height, CornerRadius = new CornerRadius(22), Opacity = 0.93,
             Background = new LinearGradientBrush
             {
                 StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative), EndPoint = new RelativePoint(0, 1, RelativeUnit.Relative),
-                GradientStops = { new GradientStop(Art.Blend(Felt, Colors.White, 0.08), 0), new GradientStop(Felt, 1) },
+                GradientStops = { new GradientStop(Art.Blend(cloth, Colors.White, 0.08), 0), new GradientStop(cloth, 1) },
             },
-            BorderBrush = Art.Brush("#0D3D27"), BorderThickness = new Thickness(3), IsHitTestVisible = false,
+            BorderBrush = Art.Brush(Art.Blend(cloth, Colors.Black, 0.45)), BorderThickness = new Thickness(3), IsHitTestVisible = false,
         };
         _canvas.Children.Add(Art.At(felt, a.Left, a.Top));
 
@@ -1211,17 +1212,38 @@ public sealed class DurakGame : MiniGame, IRoomGame
         };
     }
 
-    public static Border CardBack(double w, double h) => new()
+    /// <summary>A card back in the theme's colour (the classic blue when the theme has none); tagged so <see cref="PaintBack"/> can find it again.</summary>
+    public static Border CardBack(double w, double h)
     {
-        Width = w, Height = h, CornerRadius = new CornerRadius(6), BorderBrush = Brushes.White, BorderThickness = new Thickness(2),
-        IsHitTestVisible = false,
-        Background = new LinearGradientBrush
+        var back = new Border
+        {
+            Width = w, Height = h, CornerRadius = new CornerRadius(6), BorderBrush = Brushes.White, BorderThickness = new Thickness(2),
+            IsHitTestVisible = false, Tag = BackTag,
+            BoxShadow = new BoxShadows(new BoxShadow { OffsetX = 1, OffsetY = 2, Blur = 4, Color = Color.FromArgb(80, 0, 0, 0) }),
+        };
+        PaintBack(back);
+        return back;
+    }
+
+    public const string BackTag = "card-back";
+
+    /// <summary>Recolours a back from <see cref="CardBack"/> for the current theme.</summary>
+    public static void PaintBack(Border back)
+    {
+        var c = Themes.Current.CardBack ?? Color.FromRgb(40, 70, 160);
+        back.Background = new LinearGradientBrush
         {
             StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative), EndPoint = new RelativePoint(1, 1, RelativeUnit.Relative),
-            GradientStops = { new GradientStop(Color.FromRgb(40, 70, 160), 0), new GradientStop(Color.FromRgb(20, 36, 96), 1) },
-        },
-        BoxShadow = new BoxShadows(new BoxShadow { OffsetX = 1, OffsetY = 2, Blur = 4, Color = Color.FromArgb(80, 0, 0, 0) }),
-    };
+            GradientStops = { new GradientStop(c, 0), new GradientStop(Art.Blend(c, Colors.Black, 0.45), 1) },
+        };
+    }
+
+    public override void ThemeChanged()
+    {
+        foreach (var card in _cards.Shown)
+            if (card.Visual is Border { Tag: BackTag } back) PaintBack(back);
+        _drawnSize = default; // the felt is drawn afresh at the next layout
+    }
 
     // ------------------------------------------------------------------ demo
 

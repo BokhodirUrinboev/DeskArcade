@@ -171,12 +171,13 @@ public abstract class BoardGame : MiniGame
     // everything that moves with the board lives in _board, in board coordinates (0,0 = the top-left corner of the squares)
     readonly Canvas _board = new() { IsHitTestVisible = false };
     readonly Canvas _squares = new(), _deco = new(), _marks = new(), _glow = new(), _pieces = new();
-    readonly Border _frame = new() { CornerRadius = new CornerRadius(6), Background = Art.Brush(230, 60, 40, 28) };
+    readonly Border _frame = new() { CornerRadius = new CornerRadius(6) };
     readonly Rectangle _dim = new() { Fill = Art.Brush(Colors.Black), Opacity = 0, RadiusX = 6, RadiusY = 6 };
     readonly Rectangle _shake = new() { Fill = Art.Brush(90, 255, 255, 255), IsVisible = false };
     readonly Rectangle[] _cells;
     readonly DragHandle _handle;
     readonly Anims _motion = new(); // pieces on the move; finished (snapped into place) whenever the board is drawn afresh
+    readonly Color _light, _dark;
 
     IBoardRules _game;
     Vec2 _origin;
@@ -194,12 +195,15 @@ public abstract class BoardGame : MiniGame
     protected BoardGame(IGameHost host, Color light, Color dark) : base(host)
     {
         _game = NewRules();
+        _light = light;
+        _dark = dark;
         _cells = new Rectangle[Cols * Rows];
         for (int i = 0; i < _cells.Length; i++)
         {
-            _cells[i] = new Rectangle { Fill = Art.Brush((i / Cols + i % Cols) % 2 == 1 ? dark : light) };
+            _cells[i] = new Rectangle();
             _squares.Children.Add(_cells[i]);
         }
+        PaintBoard();
         foreach (var layer in new Control[] { _frame, _squares, _deco, _marks, _glow, _pieces, _shake, _dim })
         {
             layer.IsHitTestVisible = false;
@@ -325,6 +329,23 @@ public abstract class BoardGame : MiniGame
     public override void PointerCancel() => _handle.Cancel();
 
     public override void PositionsReset() => _placed = false;
+
+    public override void ThemeChanged() => PaintBoard();
+
+    /// <summary>
+    /// The squares and the frame: the theme's board colours when it has them and the game has a two-tone board
+    /// (chess, checkers); a one-colour board (tic-tac-toe's paper, Connect Four's frame) always keeps its own.
+    /// </summary>
+    void PaintBoard()
+    {
+        var t = Themes.Current;
+        bool themed = _light != _dark && t.BoardLight is { } && t.BoardDark is { };
+        Color light = themed ? t.BoardLight!.Value : _light, dark = themed ? t.BoardDark!.Value : _dark;
+        for (int i = 0; i < _cells.Length; i++)
+            _cells[i].Fill = Art.Brush((i / Cols + i % Cols) % 2 == 1 ? dark : light);
+        var frame = themed && t.BoardFrame is { } f ? Color.FromArgb(230, f.R, f.G, f.B) : Color.FromArgb(230, 60, 40, 28);
+        _frame.Background = Art.Brush(frame);
+    }
 
     void NewGame()
     {
@@ -853,9 +874,10 @@ public abstract class BoardGame : MiniGame
         _fade?.Cancel();
         _pulse = _fade = null;
         _marks.Children.Clear();
+        var gold = Themes.Current.Gold;
         if (_lastPath is { Length: > 0 } last)
             foreach (int sq in new[] { last[0], last[^1] }.Distinct())
-                _marks.Children.Add(Box(sq, Art.Brush(70, 255, 209, 102), null));
+                _marks.Children.Add(Box(sq, Art.Brush(Color.FromArgb(70, gold.R, gold.G, gold.B)), null));
         if (_game.Alert >= 0)
         {
             var box = Box(_game.Alert, Art.Brush(110, 255, 60, 60), null);
@@ -867,17 +889,17 @@ public abstract class BoardGame : MiniGame
             var moves = _game.LegalMoves();
             if (_selected >= 0)
             {
-                _marks.Children.Add(Box(_selected, null, Art.Brush(Gold)));
-                foreach (int sq in _via) _marks.Children.Add(Box(sq, null, Art.Brush(Gold)));
+                _marks.Children.Add(Box(_selected, null, Art.Brush(gold)));
+                foreach (int sq in _via) _marks.Children.Add(Box(sq, null, Art.Brush(gold)));
                 var dots = new List<Control>();
                 foreach (var m in Routes(moves).Where(m => m.Length > _via.Count + 1))
                 {
                     var c = Local(m[^1]);
-                    dots.Add(Art.Circle(c.X, c.Y, Cell * 0.16, Art.Brush(200, 255, 209, 102)));
+                    dots.Add(Art.Circle(c.X, c.Y, Cell * 0.16, Art.Brush(Color.FromArgb(200, gold.R, gold.G, gold.B))));
                     if (m.Length > _via.Count + 2) // a route with more landings: mark the next one too
                     {
                         var n = Local(m[_via.Count + 1]);
-                        dots.Add(Art.Circle(n.X, n.Y, Cell * 0.1, null, Art.Brush(200, 255, 209, 102), 2));
+                        dots.Add(Art.Circle(n.X, n.Y, Cell * 0.1, null, Art.Brush(Color.FromArgb(200, gold.R, gold.G, gold.B)), 2));
                     }
                 }
                 foreach (var dot in dots)
@@ -892,7 +914,7 @@ public abstract class BoardGame : MiniGame
             }
             else
                 foreach (int from in moves.Where(m => m.Length > 1).Select(m => m[0]).Distinct())
-                    _marks.Children.Add(Box(from, null, Art.Brush(120, 255, 209, 102)));
+                    _marks.Children.Add(Box(from, null, Art.Brush(Color.FromArgb(120, gold.R, gold.G, gold.B))));
         }
         Lift(_selected >= 0 ? _at[_selected] : null);
     }

@@ -23,6 +23,7 @@ public sealed class DragHandle
     Rect _rect;
     Vec2 _offset;
     double _width;
+    string _painted = "";
 
     public DragHandle(IGameHost host, string id, string title)
     {
@@ -30,16 +31,25 @@ public sealed class DragHandle
         _id = id;
         _label = new TextBlock
         {
-            FontFamily = Fx.Font, FontSize = 11, FontWeight = FontWeight.Bold, Foreground = Art.Brush("#D5DBE5"),
-            VerticalAlignment = VerticalAlignment.Center,
+            FontFamily = Fx.Font, FontSize = 11, FontWeight = FontWeight.Bold, VerticalAlignment = VerticalAlignment.Center,
         };
         _grip = new Border
         {
-            Height = Height, CornerRadius = new CornerRadius(8), Background = Art.Brush(205, 18, 20, 28),
-            BorderBrush = Art.Brush(60, 255, 255, 255), BorderThickness = new Thickness(1), Padding = new Thickness(9, 0, 10, 1),
+            Height = Height, CornerRadius = new CornerRadius(8), BorderThickness = new Thickness(1), Padding = new Thickness(9, 0, 10, 1),
             Child = _label, IsHitTestVisible = false, IsVisible = false, Cursor = new Cursor(StandardCursorType.SizeAll),
         };
+        Paint();
         Retitle(title);
+    }
+
+    /// <summary>The grip in the theme's colours: its ink for the bar, the accent for the rim. Called again when the theme changes.</summary>
+    void Paint()
+    {
+        var t = Themes.Current;
+        _painted = t.Id;
+        _grip.Background = Art.Brush(Color.FromArgb(205, t.Ink.R, t.Ink.G, t.Ink.B));
+        _grip.BorderBrush = Art.Brush(Color.FromArgb(110, t.Accent.R, t.Accent.G, t.Accent.B));
+        _label.Foreground = Art.Brush(Art.Blend(t.HudFront, t.HudBack, 0.15));
     }
 
     /// <summary>The grip, to add to the game's layer above the board.</summary>
@@ -61,6 +71,7 @@ public sealed class DragHandle
     /// <summary>Puts the grip along the top edge of <paramref name="panel"/>: just above it, or inside its top-left corner when there is no room above.</summary>
     public void Show(Rect panel)
     {
+        if (_painted != Themes.Current.Id) Paint(); // every game lays out again after a theme change
         if (_width <= 0)
         {
             _grip.Measure(Size.Infinity);

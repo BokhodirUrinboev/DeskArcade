@@ -1044,6 +1044,28 @@ public static partial class Strings
 
 
         // ---- 1.8.0: themes
+        ["Ocean"] = "Океан",
+        ["Forest"] = "Лес",
+        ["Sunset"] = "Закат",
+        ["Candy"] = "Конфеты",
+        ["Mono"] = "Моно",
+        ["Spring"] = "Весна",
+        ["Autumn"] = "Осень",
+        ["Midnight"] = "Полночь",
+        ["Theme decorations"] = "Украшения темы",
+        ["the desk as you know it"] = "стол, каким вы его знаете",
+        ["lights on, volume up"] = "включаем свет, прибавляем звук",
+        ["insert coin"] = "опустите монету",
+        ["boo"] = "бу-у",
+        ["mind the snow"] = "осторожно, снег",
+        ["deep breath"] = "глубокий вдох",
+        ["quiet under the trees"] = "тишина под деревьями",
+        ["golden hour"] = "золотой час",
+        ["sweet"] = "сладко",
+        ["just the game"] = "только игра",
+        ["fresh start"] = "новое начало",
+        ["crunchy leaves"] = "хрустящие листья",
+        ["lights out"] = "гасим свет",
 
 
     };

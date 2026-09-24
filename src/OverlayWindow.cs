@@ -28,6 +28,7 @@ public sealed class OverlayWindow : Window, IGameHost
     readonly string? _startGame;
     readonly Canvas _root = new() { Background = Brushes.Transparent };
     readonly Canvas _gameLayer = new();
+    readonly DecorLayer _decor = new();
     readonly Canvas _hudLayer = new();
     readonly List<MiniGame> _games = new();
     readonly List<HitShape> _hitShapes = new();
@@ -123,6 +124,7 @@ public sealed class OverlayWindow : Window, IGameHost
 
         _root.Children.Add(_gameLayer);
         _root.Children.Add(Fx.Layer);
+        _root.Children.Add(_decor.Layer);
         _root.Children.Add(_hudLayer);
         Content = _root;
 
@@ -147,6 +149,7 @@ public sealed class OverlayWindow : Window, IGameHost
         Fx.ReducedMotion = Settings.ReducedMotion;
         Engine.Art.ColorBlind = Settings.ColorBlind;
         Themes.Apply(Settings.Theme, DateTime.Today);
+        OnThemeChanged(); // the pieces built before the games (the race label, the decor) take the theme too
         _board = new OfficeBoard(() => _boardEntry);
         _boardTimer.Tick += (_, _) => RefreshBoardEntry();
 
@@ -535,6 +538,7 @@ public sealed class OverlayWindow : Window, IGameHost
         }
         busy |= Fx.Update(dt);
         busy |= _hud.Update(dt);
+        busy |= _decor.Update(dt, busy, Themes.Current, Arena, Platforms.Items); // only rides along with other motion
         PushHitShapes();
 
         if (busy) _idle = 0;
@@ -1312,10 +1316,26 @@ public sealed class OverlayWindow : Window, IGameHost
         SaveSettings();
         if (Themes.Apply(id, DateTime.Today)) OnThemeChanged();
         _tray?.Refresh();
+        if (!IsVisible) return;
+        // the theme's name and mood, with a burst of its confetti, so the pick reads at once
+        var t = Themes.Current;
+        var at = new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.3);
+        Fx.Popup(at, L.T(t.Name), t.Gold, 40, 2.4, L.T(t.Mood));
+        Fx.Burst(at, t.Confetti, 48, 540, 650, 7, 1.1);
+        Sound.Play("best", 0.5, 1.15);
+        Wake();
     }
 
+    /// <summary>
+    /// <see cref="Themes.Current"/> changed: every game redraws its themed pieces, the current one lays out again,
+    /// and the shared chrome (the scoreboard, the race label, the decor) follows. Also run once from the constructor.
+    /// </summary>
     void OnThemeChanged()
     {
+        var t = Themes.Current;
+        _raceLabel.Background = Engine.Art.Brush(Color.FromArgb(200, t.Ink.R, t.Ink.G, t.Ink.B));
+        _raceLabel.Foreground = Engine.Art.Brush(t.HudFront);
+        _hud?.ThemeChanged();
         foreach (var game in _games) game.ThemeChanged();
         Current?.Layout();
         Wake();
