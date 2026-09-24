@@ -14,7 +14,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 |---|---|---|
 | 1.7.1 | 2026-09-22 | Eight new games; Durak with a co-worker joins one room |
 | 1.7.2 | 2026-09-24 | `--while`, Solitaire, Last Card, Interns, Blockfall; Pinball and Paper Toss races |
-| 1.8.0 | 2026-09-24 | Somebody to play against in every game, twelve pets, animation, the Ubuntu overlay, the ☰ menu |
+| 1.8.0 | 2026-09-24 | Somebody to play against in every game, twelve pets, animation, thirteen themes, the Ubuntu overlay and updates, the ☰ menu |
 | 1.9.0 | late October | Package managers, a feel pass by hand, Flathub |
 | 2.0.0 | mid December | Signed Windows builds, a real Mac, a winter event |
 
@@ -106,6 +106,17 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
   on the window nearest the cursor, and **pet visits over the LAN** (the co-worker's pet walks your desktop as a
   ghost and the two say hello). Three new achievements. *Verified: unit tests for the tables and the visit
   messages; demo runs as six kinds and a loopback visit with `pet.visits` counted.*
+- [x] **Thirteen themes that dress everything**: the scoreboard, grips, boards, felts and card backs, pieces, popup gold
+  and the pet's accessories follow the theme; Ocean, Forest, Sunset, Candy, Mono, Spring, Autumn and Midnight join the
+  five, Seasonal walks the calendar month by month, and most themes drift light decorations (snow that settles on
+  window tops, leaves, petals, bubbles, fireflies, stars, embers, confetti) only while a game is already moving, so an
+  idle overlay still costs nothing. *Verified: unit tests for every palette's contrast, the calendar for every day of
+  2026 and the decor model staying in its box and going quiet; screenshots under Xvfb of three themes; 0 % idle CPU.*
+- [x] **Updates install themselves on Linux**: a `.deb` through PolicyKit's password prompt (apt, with dpkg as the
+  fallback, and a terminal running sudo where there is no pkexec), an AppImage replaced in place, the game closed and
+  started again by a wrapper that outlives it; progress on the scoreboard; the file's SHA-256 checked against GitHub's
+  digest. *Verified: 65 unit tests that run the generated shell for real with fake pkexec, apt-get, dpkg and sudo. Not
+  yet run on a real Ubuntu install (see below).*
 - [x] **The overlay on a real Ubuntu desktop**: EWMH states (above, sticky, skip taskbar and pager, all workspaces)
   set as properties and sent as client messages on every show, keyboard focus handed straight back if a window
   manager gives it to us, a session-bus check for the tray with a one-time notice pointing at the ☰ menu when stock
@@ -161,7 +172,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 |---|---|
 | Durak and Last Card rooms across real PCs, played by people | Two to four PCs on one network |
 | How the pet voices sound (twelve of them now); fetch, treats and visits on screen | Speakers and a look on screen |
-| The 1.8.0 overlay hints on real GNOME, KDE and XFCE sessions; the tray notice on stock GNOME | An Ubuntu desktop |
+| The 1.8.0 overlay hints on real GNOME, KDE and XFCE sessions; the tray notice on stock GNOME; an in-app `.deb` and AppImage update end to end | An Ubuntu desktop with the 1.8.0 package installed |
 | The computer rival's pacing and levels with a real mouse; the grips and animations at full frame rate | Someone playing |
 | How the eight new games, Solitaire, Last Card and Interns feel with a real mouse (none of the last three was played by hand) | Someone playing them |
 | macOS: click-through, window list, hotkeys, sound | A Mac |
