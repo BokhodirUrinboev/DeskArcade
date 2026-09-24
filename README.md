@@ -42,6 +42,12 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 - **Play while it builds.** `arcade dotnet test` (or `deskarcade --while make`) runs your command as usual
   and shows it on the scoreboard, then chimes when it passes or fails.
 - **Idle means idle.** When nothing is moving, rendering stops and CPU use drops to almost zero.
+- **Somebody to play against, in every game.** Board games have four CPU levels. Round-based games race a
+  computer rival that plays a round alongside yours at the level you pick, marking its scoring on the desktop,
+  and the same rounds race a co-worker over the LAN. The scoreboard shows who you are up against, the CPU's
+  level and whose turn it is.
+- **Boards move.** Chess, checkers, the card tables and the other boards have a grip above them: drag it (or
+  right-drag the board) to put the game where you want it, and it stays there.
 - **34 games, 85 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
 - **Play with the person at the next desk** over the local network: Air Hockey (best of 3), Pong,
   H-O-R-S-E, Mini Golf and Archery duels, board games, Sea Battle and score races. You see what the other
@@ -124,8 +130,21 @@ once whether to allow Desk Arcade on private networks; say yes on both PCs.
 
 ## Scoreboard, stats and achievements
 
-The scoreboard is a small pill showing the game icon, score and best. **Click it** to open the full
-board with a tab for every game; it shrinks back shortly after the mouse leaves. Drag it anywhere.
+The scoreboard is a small pill showing the game icon, score and best, then who you are playing: **CPU ·
+Hard**, **vs Alice**, or **Your turn** / **Alice's turn** in a game with turns (the dot breathes while you wait
+for the other side). The score pops when it changes. **Click it** to open the full board with a tab for every
+game; it shrinks back shortly after the mouse leaves. Drag it anywhere.
+
+The **☰** at the end of the pill (and of the tabs) opens a menu with the essentials of the tray menu: game,
+pet, CPU difficulty, play over LAN, stats, shortcuts, reset positions, hide, exit. It is the way in on desktops
+without a tray (GNOME without the AppIndicator extension, a bare window manager), and it never leaves the overlay.
+
+**Race the computer:** in round-based games (Bubble Pop, Whack-a-Bug, Tower Stack and the others that race
+over the LAN) a computer rival plays a round alongside yours when nobody is on the LAN. Its live score sits
+under the scoreboard, red rings show where it scores, and when your round ends the higher score wins (the
+lower one in games where fewer is better, like Darts). It plays at the game's CPU level (**tray → CPU
+difficulty**, or the ☰ menu); two wins in a row move it up a level, two losses move it down. Switch it off
+with **Race the computer in solo rounds** in the same menu.
 
 **Daily challenge:** one task a day, the same for everyone ("Make 15 baskets in Hoops"), shown in the tray
 with your progress; click it to jump to the game. Finish it on consecutive days to build a streak.
@@ -148,6 +167,8 @@ broadcasts your user name and today's scores on UDP port 47821 every 20 seconds,
 | **Ctrl+Alt+B** | Bring the ball, bow, paddle or pet to the cursor (a penalty stroke in Mini Golf) |
 | Click the scoreboard | Open the game tabs |
 | Drag the scoreboard | Move it |
+| ☰ on the scoreboard | The quick menu: game, pet, CPU difficulty, LAN, stats, hide, exit |
+| Drag the grip above a board or table (or right-drag the board) | Move it; the place is remembered (**tray → Reset positions** forgets it) |
 | Tray icon, left-click | Show or hide |
 | Tray icon menu | Game, pet, CPU difficulty, theme, break reminder, office leaderboard, volume, language, Claude Code options, updates, stats, monitor, reset, exit |
 
