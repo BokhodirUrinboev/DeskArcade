@@ -1018,5 +1018,13 @@ public static partial class Strings
         ["grab your paddle for a rematch"] = "возьмите ракетку для реванша",
 
 
+
+
+        // ---- 1.8.0: Linux updates
+
+
+        // ---- 1.8.0: themes
+
+
     };
 }

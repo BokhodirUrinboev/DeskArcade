@@ -57,6 +57,9 @@ public static class QuickMenu
         yield return Item(L.T("Stats & achievements…"), w.OpenStats);
         yield return Item(L.T("Shortcuts…"), w.OpenShortcuts);
         yield return Item(L.T("Reset positions"), w.ResetPositions);
+        if (w.AvailableUpdate is { } update)
+            yield return Item(UpdateChecker.CanInstall ? L.F("Install version {0}", update.Version.ToString(3)) : L.F("Download version {0}…", update.Version.ToString(3)), w.InstallUpdate);
+        else yield return Item(L.T("Check for updates"), () => w.CheckForUpdates(manual: true));
         yield return new Separator();
         yield return Item(L.T("Hide overlay"), () => w.SetOverlayVisible(false));
         yield return Item(L.T("Exit"), w.Quit);
