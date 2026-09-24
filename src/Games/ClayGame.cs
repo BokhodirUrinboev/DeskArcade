@@ -13,7 +13,7 @@ namespace DeskArcade.Games;
 /// <summary>
 /// Clay Shooting: click the trap machine for a round of 15 pulls. Clays arc across the closed box of the
 /// screen, bouncing off its edges, and shatter when they reach the floor or a window top. Click them
-/// first; one shot that breaks two is a double.
+/// first; one shot that breaks two is a double. A round races the computer, or a co-worker over the LAN.
 /// </summary>
 public sealed class ClayGame : MiniGame
 {
@@ -21,8 +21,8 @@ public sealed class ClayGame : MiniGame
     const double Step = 1.0 / 240, Gravity = 900, AirDrag = 0.05, WallBounce = 0.7;
     const double PullEvery = 1.4, FirstPull = 0.8, FastScale = 1.25, DoubleChance = 0.4, GoldenChance = 0.1;
     const double TrapHalfW = 42, TrapH = 70, MouthX = 48, MouthY = 59, LabelW = 150;
-    const double ArmTime = 0.35, ArmRest = -12, ArmSwing = -78;
-    const int Pulls = 15, DoubleFrom = 6, FastFrom = 11, GoldPoints = 5, DoubleBonus = 5, MaxShards = 90;
+    const double ArmTime = 0.35, ArmRest = -12, ArmSwing = -78, RecoilTime = 0.5, RecoilPush = 8, RecoilTilt = 7;
+    const int Pulls = 15, DoubleFrom = 6, FastFrom = 11, GoldPoints = 5, DoubleBonus = 5, MaxShards = 90, FairRound = 18;
 
     static readonly Color Gold = Color.FromRgb(255, 209, 102);
     static readonly Color[] ClayChips =
@@ -69,11 +69,12 @@ public sealed class ClayGame : MiniGame
     readonly Border _label;
     readonly Canvas _clayLayer = new() { IsHitTestVisible = false };
     readonly Canvas _shardLayer = new() { IsHitTestVisible = false };
+    readonly Sprite _flash = MakeFlash();
     readonly List<Clay> _clays = new();
     readonly List<Shard> _shards = new();
     readonly Dictionary<string, double> _lastSound = new();
 
-    double _trapX = double.NaN, _time, _acc, _launchIn = -1, _endIn = -1, _armT, _demoWait;
+    double _trapX = double.NaN, _time, _acc, _launchIn = -1, _endIn = -1, _armT, _recoil, _demoWait;
     int _face = 1, _pull, _hits, _thrown, _score;
     long _bestBefore;
     bool _roundActive, _played;
@@ -91,10 +92,23 @@ public sealed class ClayGame : MiniGame
         Layer.Children.Add(_label);
         Layer.Children.Add(_clayLayer);
         Layer.Children.Add(_shardLayer);
+        Layer.Children.Add(_flash);
     }
 
     public override string Id => "clay";
     public override string Title => "Clay Shooting";
+
+    // A round of 15 pulls is the race: the computer or the co-worker shoots a round of their own alongside.
+    public override bool SupportsLan => true;
+    public override (int Score, bool Active)? Race => (_score, _roundActive);
+    public override int RaceBaseline => FairRound;
+    public override int RaceBest => (int)Host.Stats.Get("clay.best");
+    public override double RaceSeconds => FirstPull + (Pulls - 1) * PullEvery + 4; // the last clays are still in the air
+
+    public override void StartRace()
+    {
+        if (!_roundActive) StartRound();
+    }
 
     public override Sprite CreateIcon()
     {
@@ -135,6 +149,9 @@ public sealed class ClayGame : MiniGame
         _acc = 0;
         foreach (var s in _shards) _shardLayer.Children.Remove(s.El);
         _shards.Clear();
+        Anims.Clear();
+        _recoil = 0;
+        _flash.IsVisible = false;
     }
 
     void PlaceTrap(double x)
@@ -162,6 +179,7 @@ public sealed class ClayGame : MiniGame
     void StartRound()
     {
         _roundActive = true;
+        Host.RoundStarted();
         _score = _hits = _thrown = _pull = 0;
         _launchIn = FirstPull;
         _endIn = -1;
@@ -197,6 +215,7 @@ public sealed class ClayGame : MiniGame
         if (fromTrap)
         {
             _armT = ArmTime;
+            Anims.Add(RecoilTime, k => _recoil = ClayMaths.Recoil(k), Ease.Linear); // the machine kicks back and settles
             Host.Sound.Play("twang", 0.45, 1.3);
         }
         Host.Sound.Play("whoosh", 0.35 * k, 1.1);
@@ -285,6 +304,7 @@ public sealed class ClayGame : MiniGame
         _played = true;
         _launchIn = -1;
         Host.Stats.Max("clay.best", _score);
+        Host.RoundEnded(_score);
         bool best = _score > _bestBefore;
         var a = Host.Arena;
         var at = new Vec2(a.Center.X, a.Top + a.Height * 0.3);
@@ -345,6 +365,7 @@ public sealed class ClayGame : MiniGame
             sum += c.Pos;
             _hits++;
             Host.Stats.Add("clay.hits");
+            Host.ShareAction(c.Pos, pts);
             Host.Fx.Popup(c.Pos - new Vec2(0, 34), L.F("+{0}", pts), c.Golden ? Gold : Colors.White, c.Golden ? 30 : 24, 0.9,
                 rising ? L.T("still rising") : null);
             Host.Fx.Burst(c.Pos, c.Golden ? GoldChips : ClayChips, 6, 240, 700, 4, 0.4);
@@ -356,7 +377,10 @@ public sealed class ClayGame : MiniGame
         {
             gained += DoubleBonus;
             Host.Stats.Add("clay.doubles");
-            Host.Fx.Popup(sum / hit.Count - new Vec2(0, 84), L.T("DOUBLE!"), Gold, 36, 1.4, L.F("+{0} bonus", DoubleBonus));
+            var mid = sum / hit.Count;
+            Host.ShareAction(mid, DoubleBonus);
+            Flash(mid);
+            Host.Fx.Popup(mid - new Vec2(0, 84), L.T("DOUBLE!"), Gold, 36, 1.4, L.F("+{0} bonus", DoubleBonus));
             Host.Sound.Play("score", 0.7);
         }
         _score += gained;
@@ -416,6 +440,7 @@ public sealed class ClayGame : MiniGame
             _armT = Math.Max(0, _armT - dt);
             busy = true;
         }
+        busy |= Anims.Update(dt);
         busy |= UpdateShards(dt);
         DrawTrap();
         return busy;
@@ -466,8 +491,23 @@ public sealed class ClayGame : MiniGame
         PlayThrottled("thunk", 0.2, 1.7);
     }
 
+    /// <summary>A white flash with a gold rim where one shot took two clays.</summary>
+    void Flash(Vec2 at)
+    {
+        _flash.Set(at);
+        _flash.Scale = 0.3;
+        _flash.Opacity = 1;
+        _flash.IsVisible = true;
+        Anims.Add(0.45, k =>
+        {
+            _flash.Scale = 0.3 + 1.3 * k;
+            _flash.Opacity = 1 - k;
+        }, Ease.OutCubic, () => _flash.IsVisible = false);
+    }
+
     void SpawnShards(Vec2 at, Vec2 carry, bool golden)
     {
+        if (Fx.ReducedMotion) return; // like the particle bursts: no debris flying about
         var brushes = golden ? GoldChipBrushes : ClayChipBrushes;
         int count = golden ? 12 : 9;
         for (int i = 0; i < count && _shards.Count < MaxShards; i++)
@@ -504,23 +544,11 @@ public sealed class ClayGame : MiniGame
                 _shards.RemoveAt(i);
                 continue;
             }
-            s.Vel.Y += 1300 * dt;
-            s.Pos += s.Vel * dt;
-            // shards stay in the box too, and settle on the floor
-            if (s.Pos.X < a.Left) { s.Pos.X = a.Left; s.Vel.X = Math.Abs(s.Vel.X) * 0.5; }
-            else if (s.Pos.X > a.Right) { s.Pos.X = a.Right; s.Vel.X = -Math.Abs(s.Vel.X) * 0.5; }
-            if (s.Pos.Y < a.Top) { s.Pos.Y = a.Top; s.Vel.Y = Math.Abs(s.Vel.Y) * 0.5; }
-            if (s.Pos.Y > a.Bottom - 2)
-            {
-                s.Pos.Y = a.Bottom - 2;
-                s.Vel = new Vec2(s.Vel.X * 0.6, -Math.Abs(s.Vel.Y) * 0.25);
-                s.Spin *= 0.5;
-            }
+            ClayMaths.StepShard(ref s.Pos, ref s.Vel, ref s.Spin, dt, a.Left, a.Top, a.Right, a.Bottom);
             s.Rot.Angle += s.Spin * dt;
             s.Tr.X = s.Pos.X;
             s.Tr.Y = s.Pos.Y;
-            double k = s.Age / s.Life;
-            s.El.Opacity = k < 0.5 ? 1 : 1 - (k - 0.5) / 0.5;
+            s.El.Opacity = ClayMaths.ShardOpacity(s.Age / s.Life);
         }
         return _shards.Count > 0;
     }
@@ -531,7 +559,8 @@ public sealed class ClayGame : MiniGame
     {
         if (double.IsNaN(_trapX)) return;
         var a = Host.Arena;
-        _trap.Set(new Vec2(_trapX, a.Bottom));
+        // the recoil pushes the machine away from its mouth and tips it back (the tilt is mirrored with the sprite)
+        _trap.Set(new Vec2(_trapX - _face * RecoilPush * _recoil, a.Bottom), -RecoilTilt * _recoil);
         _trap.FlipX = _face;
 
         double k = 1 - _armT / ArmTime;
@@ -623,6 +652,18 @@ public sealed class ClayGame : MiniGame
         return s;
     }
 
+    static Sprite MakeFlash()
+    {
+        var s = new Sprite { IsHitTestVisible = false, IsVisible = false };
+        var glow = new RadialGradientBrush();
+        glow.GradientStops.Add(new GradientStop(Color.FromArgb(230, 255, 255, 255), 0));
+        glow.GradientStops.Add(new GradientStop(Color.FromArgb(120, 255, 236, 170), 0.45));
+        glow.GradientStops.Add(new GradientStop(Color.FromArgb(0, 255, 209, 102), 1));
+        s.Children.Add(Art.Circle(0, 0, 70, glow));
+        s.Children.Add(Art.Circle(0, 0, 44, null, Art.Brush(Gold), 3));
+        return s;
+    }
+
     static LinearGradientBrush Vertical(Color top, Color bottom)
     {
         var brush = new LinearGradientBrush
@@ -682,4 +723,42 @@ public sealed class ClayGame : MiniGame
         target ??= ready.FirstOrDefault(c => c.Vel.Y > 0 && c.Pos.Y > Host.Arena.Bottom - 160);
         if (target != null) Shoot(target.Pos + new Vec2((Rng.NextDouble() - 0.5) * 10, (Rng.NextDouble() - 0.5) * 10));
     }
+}
+
+/// <summary>The bits of Clay Shooting's motion that are plain arithmetic, so they can be tested.</summary>
+public static class ClayMaths
+{
+    const double ShardGravity = 1300, FloorLift = 2;
+
+    /// <summary>
+    /// The trap machine's kick after a throw, for progress <paramref name="k"/> (0 → 1): a quick shove that peaks at 1
+    /// a third of the way through and settles back to 0.
+    /// </summary>
+    public static double Recoil(double k)
+    {
+        k = Math.Clamp(k, 0, 1);
+        return 6.75 * k * (1 - k) * (1 - k);
+    }
+
+    /// <summary>
+    /// Moves a shard for <paramref name="dt"/> seconds: it falls, keeps to the box (the walls and top send it back at
+    /// half speed) and comes to rest on the floor, where it bounces once or twice and its spin dies down.
+    /// </summary>
+    public static void StepShard(ref Vec2 pos, ref Vec2 vel, ref double spin, double dt, double left, double top, double right, double bottom)
+    {
+        vel.Y += ShardGravity * dt;
+        pos += vel * dt;
+        if (pos.X < left) { pos.X = left; vel.X = Math.Abs(vel.X) * 0.5; }
+        else if (pos.X > right) { pos.X = right; vel.X = -Math.Abs(vel.X) * 0.5; }
+        if (pos.Y < top) { pos.Y = top; vel.Y = Math.Abs(vel.Y) * 0.5; }
+        if (pos.Y > bottom - FloorLift)
+        {
+            pos.Y = bottom - FloorLift;
+            vel = new Vec2(vel.X * 0.6, -Math.Abs(vel.Y) * 0.25);
+            spin *= 0.5;
+        }
+    }
+
+    /// <summary>A shard is solid for the first half of its life and fades over the second.</summary>
+    public static double ShardOpacity(double k) => k < 0.5 ? 1 : Math.Max(0, 1 - (k - 0.5) / 0.5);
 }

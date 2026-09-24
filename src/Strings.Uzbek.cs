@@ -961,6 +961,8 @@ public static partial class Strings
 
 
         // ---- 1.8.0: races, part 2 (Clay Shooting, Plinko, Slingshot, Darts)
+        ["Click the sheet again to give up the leg"] = "Legdan voz kechish uchun jadvalni yana bir bor bosing",
+        ["LEG GIVEN UP"] = "LEGDAN VOZ KECHILDI",
 
 
         // ---- 1.8.0: races, part 3 (Pool, Memory, Code Breaker, Solitaire, Interns)

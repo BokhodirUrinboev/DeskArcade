@@ -12,7 +12,8 @@ namespace DeskArcade.Games;
 /// <summary>
 /// Plinko: click the strip on top of the peg board to drop a disc and watch it bounce down into a scoring
 /// slot. Ten discs per round; the gold slot in the middle is the jackpot. The board is its own closed box,
-/// stands on the floor and moves by right-dragging its header.
+/// stands on the floor and moves by its grip (or by right-dragging its header). A round races the computer,
+/// or a co-worker over the LAN.
 /// </summary>
 public sealed class PlinkoGame : MiniGame
 {
@@ -22,7 +23,8 @@ public sealed class PlinkoGame : MiniGame
     const double DiscR = 11, PegR = 4, PegTop = 92, RowGap = 34, SlotTop = 446, FloorY = 522, DividerHalf = 1.5;
     const double Gravity = 1300, MaxSpeed = 950, PegBounce = 0.5, WallBounce = 0.5, DiscBounce = 0.5, FloorBounce = 0.3;
     const double Step = 1.0 / 240, FadeTime = 0.6, RoundEndDelay = 0.7, SettleTime = 0.45;
-    const int Slots = 9, PegRows = 10, DiscsPerRound = 10, MaxFalling = 3, JackpotSlot = 4;
+    const double JackpotW = SlotW - DividerHalf * 2, ShimmerW = JackpotW * 0.7;
+    const int Slots = 9, PegRows = 10, DiscsPerRound = 10, MaxFalling = 3, JackpotSlot = 4, FairRound = 800;
 
     static readonly int[] Values = { 10, 25, 50, 100, 250, 100, 50, 25, 10 };
     static readonly Color Gold = Color.FromRgb(255, 209, 102);
@@ -36,7 +38,7 @@ public sealed class PlinkoGame : MiniGame
     {
         public required Ellipse Glow;
         public Vec2 Pos;
-        public double Flash;
+        public Anims.Tween? Lit;
     }
 
     sealed class Disc
@@ -44,7 +46,7 @@ public sealed class PlinkoGame : MiniGame
         public required Sprite Sprite;
         public Vec2 Pos, Vel;
         public int Slot = -1; // set once the disc is below the divider tops and can't change slot any more
-        public double Age, Still, LandedT, Fade;
+        public double Age, Still, LandedT, Fade, Bounce;
         public bool Landed, Settled;
     }
 
@@ -65,24 +67,35 @@ public sealed class PlinkoGame : MiniGame
     };
     readonly Sprite _preview = MakeDisc(Colors.White);
     readonly Rectangle[] _slotBacks = new Rectangle[Slots];
-    readonly double[] _slotFlash = new double[Slots];
+    readonly ScaleTransform[] _slotPulse = new ScaleTransform[Slots];
+    readonly TranslateTransform _shimmerShift = new(-ShimmerW, 0);
+    readonly Rectangle _shimmer = new()
+    {
+        Width = ShimmerW, Height = FloorY - SlotTop, Opacity = 0, IsHitTestVisible = false,
+        Fill = Horizontal(Color.FromArgb(0, 255, 255, 255), Color.FromArgb(150, 255, 250, 225), Color.FromArgb(0, 255, 255, 255)),
+    };
     readonly List<Peg> _pegs = new();
-    readonly List<Peg> _litPegs = new();
     readonly List<Disc> _discs = new();
     readonly Dictionary<string, double> _lastSound = new();
+    readonly DragHandle _handle;
 
-    Vec2 _origin, _moveOffset;
+    Vec2 _origin;
     double _scale = 1, _fitScale = -1, _time, _acc, _roundEndIn = -1;
     int _score, _jackpots, _discsLeft = DiscsPerRound, _colorIndex, _demoWait;
     long _bestAtStart;
-    bool _placed, _moving, _onFloor, _roundOver;
+    bool _placed, _onFloor, _roundOver, _roundStarted;
+    Anims.Tween? _shimmerSweep;
 
     public PlinkoGame(IGameHost host) : base(host)
     {
         _board.RenderTransformOrigin = RelativePoint.TopLeft;
         _board.RenderTransform = new TransformGroup { Children = { _boardScale, _boardShift } };
+        _shimmer.RenderTransformOrigin = RelativePoint.TopLeft;
+        _shimmer.RenderTransform = _shimmerShift;
         BuildBoard();
         Layer.Children.Add(_board);
+        _handle = new DragHandle(host, Id, Title);
+        Layer.Children.Add(_handle.Visual);
 
         // The overlay only wakes its frame loop for clicks; hovering the strip has to wake it to move the preview disc.
         _header.PointerEntered += (_, _) => Host.Wake();
@@ -94,6 +107,19 @@ public sealed class PlinkoGame : MiniGame
 
     public override string Id => "plinko";
     public override string Title => "Plinko";
+
+    // A round of ten discs is the race; the computer or the co-worker drops a round of their own alongside.
+    public override bool SupportsLan => true;
+    public override (int Score, bool Active)? Race => (_score, _roundStarted && !_roundOver);
+    public override int RaceBaseline => FairRound;
+    public override int RaceBest => (int)Host.Stats.Get("plinko.best");
+    public override double RaceSeconds => 32;
+
+    public override void StartRace()
+    {
+        if (_roundOver) NewRound();
+        BeginRound();
+    }
 
     public override Sprite CreateIcon()
     {
@@ -115,6 +141,8 @@ public sealed class PlinkoGame : MiniGame
     int FallingCount => _discs.Count(d => !d.Landed);
     bool CanDrop => _roundOver || (_discsLeft > 0 && FallingCount < MaxFalling);
     Rect StripRect => new(_origin.X, _origin.Y, BoardW * _scale, HeaderH * _scale);
+    Rect BoardRect => new(_origin.X, _origin.Y, BoardW * _scale, BoardH * _scale);
+    Size BoardSize => new(BoardW * _scale, BoardH * _scale);
     Vec2 ToScreen(Vec2 local) => _origin + local * _scale;
     Vec2 ToLocal(Vec2 screen) => (screen - _origin) / _scale;
 
@@ -133,10 +161,11 @@ public sealed class PlinkoGame : MiniGame
         {
             _placed = true;
             _fitScale = _scale = fit;
-            if (Host.Settings.PlinkoX is double px && Host.Settings.PlinkoY is double py)
+            // the grip's saved place, or where the board stood before it had a grip (the old PlinkoX/Y settings)
+            if (PlinkoPlacement.Restore(_handle.Saved(), Host.Settings.PlinkoX, Host.Settings.PlinkoY, a.Left, a.Top) is Vec2 saved)
             {
-                _origin = ClampOrigin(new Vec2(a.Left + px, a.Top + py));
-                _onFloor = a.Bottom - (_origin.Y + BoardH * _scale) < 28;
+                _origin = ClampOrigin(saved);
+                _onFloor = PlinkoPlacement.StandsOnFloor(_origin.Y + BoardH * _scale, a.Bottom);
             }
             else
             {
@@ -157,9 +186,13 @@ public sealed class PlinkoGame : MiniGame
 
     public override void Deactivate()
     {
-        _moving = false;
+        _handle.Cancel();
         _preview.IsVisible = false;
     }
+
+    public override void PointerCancel() => _handle.Cancel();
+
+    public override void PositionsReset() => _placed = false;
 
     double FitScale()
     {
@@ -199,16 +232,26 @@ public sealed class PlinkoGame : MiniGame
     {
         _score = _jackpots = 0;
         _discsLeft = DiscsPerRound;
-        _roundOver = false;
+        _roundOver = _roundStarted = false;
         _roundEndIn = -1;
         _bestAtStart = Host.Stats.Get("plinko.best");
         UpdateLabel();
         Host.HudChanged();
     }
 
+    /// <summary>The round is under way from the first disc (or from the rival's start, in a race).</summary>
+    void BeginRound()
+    {
+        if (_roundStarted) return;
+        _roundStarted = true;
+        Host.RoundStarted();
+        Host.HudChanged();
+    }
+
     void EndRound()
     {
         _roundOver = true;
+        Host.RoundEnded(_score);
         bool best = _score > _bestAtStart;
         var at = ToScreen(new Vec2(BoardW / 2, BoardH * 0.3));
         Host.Fx.Popup(at, best ? L.T("NEW BEST!") : L.T("ROUND OVER"), best ? Gold : Colors.White, 36, 2.2,
@@ -230,6 +273,7 @@ public sealed class PlinkoGame : MiniGame
     bool Drop(double localX)
     {
         if (_discsLeft <= 0 || FallingCount >= MaxFalling) return false;
+        BeginRound();
         var d = new Disc
         {
             Sprite = MakeDisc(DiscColors[_colorIndex++ % DiscColors.Length]),
@@ -252,13 +296,16 @@ public sealed class PlinkoGame : MiniGame
         int slot = d.Slot, value = Values[slot];
         _score += value;
         Host.Stats.Max("plinko.best", _score);
-        _slotFlash[slot] = 1;
+        PulseSlot(slot);
+        Anims.Add(0.35, k => d.Bounce = 0.3 * (1 - k), Ease.OutBack); // the disc thuds in: a pop that dips under and settles
         var at = ToScreen(new Vec2(XL + (slot + 0.5) * SlotW, SlotTop - 16));
+        Host.ShareAction(at, value);
         PlayThrottled("thunk", 0.45, 1.25);
         if (slot == JackpotSlot)
         {
             _jackpots++;
             Host.Stats.Add("plinko.jackpots");
+            Shimmer(0.5, 1);
             Host.Fx.Popup(at, $"+{value}", Gold, 34, 1.4, L.T("JACKPOT!"));
             Host.Fx.Burst(at, Confetti, 40, 480, 700, 7, 1.1);
             Host.Sound.Play("best", 0.8);
@@ -273,19 +320,22 @@ public sealed class PlinkoGame : MiniGame
 
     // ------------------------------------------------------------------ input
 
-    public override void CollectHitShapes(List<HitShape> into) => into.Add(HitShape.Box(StripRect));
+    public override void CollectHitShapes(List<HitShape> into)
+    {
+        into.Add(HitShape.Box(StripRect));
+        into.Add(_handle.Hit);
+    }
 
     public override bool PointerDown(Vec2 p, bool right)
     {
-        if (!StripRect.Contains(p.ToPoint())) return false;
-        if (right)
+        bool onStrip = StripRect.Contains(p.ToPoint());
+        if (_handle.Contains(p) || (right && onStrip))
         {
-            _moving = true;
-            _moveOffset = _origin - p;
+            _handle.Begin(p, _origin, anywhere: true); // the grip, or a right-drag on the header
             _preview.IsVisible = false;
             return true;
         }
-        if (_roundEndIn >= 0) return false;
+        if (!onStrip || _roundEndIn >= 0) return false;
         if (_roundOver) NewRound();
         Drop(ToLocal(p).X);
         return false;
@@ -293,30 +343,22 @@ public sealed class PlinkoGame : MiniGame
 
     public override void PointerUp(Vec2 p)
     {
-        if (!_moving) return;
-        _moving = false;
+        if (!_handle.Dragging) return;
         var a = Host.Arena;
-        _origin = ClampOrigin(p + _moveOffset);
-        _onFloor = a.Bottom - (_origin.Y + BoardH * _scale) < 28; // let go close to the floor: stand on it
+        _origin = _handle.Move(p, BoardSize);
+        _onFloor = PlinkoPlacement.StandsOnFloor(_origin.Y + BoardH * _scale, a.Bottom); // let go close to the floor: stand on it
         if (_onFloor) _origin.Y = a.Bottom - BoardH * _scale;
         PlaceBoard();
-        SavePosition();
+        _handle.End(_origin);
     }
 
     public override void Summon(Vec2 p)
     {
-        if (_moving) return;
+        if (_handle.Dragging) return;
         _origin = ClampOrigin(p - new Vec2(BoardW * _scale / 2, HeaderH * _scale / 2));
         _onFloor = Host.Arena.Bottom - (_origin.Y + BoardH * _scale) < 1;
         PlaceBoard();
-        SavePosition();
-    }
-
-    void SavePosition()
-    {
-        Host.Settings.PlinkoX = _origin.X - Host.Arena.Left;
-        Host.Settings.PlinkoY = _origin.Y - Host.Arena.Top;
-        Host.SaveSettings();
+        _handle.Save(_origin);
     }
 
     // ------------------------------------------------------------------ simulation
@@ -324,11 +366,11 @@ public sealed class PlinkoGame : MiniGame
     public override bool Update(double dt)
     {
         _time += dt;
-        bool busy = _moving;
+        bool busy = _handle.Dragging;
 
-        if (_moving)
+        if (_handle.Dragging)
         {
-            _origin = ClampOrigin(Host.Pointer + _moveOffset);
+            _origin = _handle.Move(Host.Pointer, BoardSize);
             PlaceBoard();
         }
 
@@ -364,10 +406,16 @@ public sealed class PlinkoGame : MiniGame
                 d.Sprite.Opacity = 1 - k;
                 d.Sprite.Scale = 1 - 0.3 * k;
             }
+            else if (d.Landed)
+            {
+                d.Sprite.Scale = 1 + d.Bounce;
+            }
             d.Sprite.Set(d.Pos);
         }
 
-        busy |= UpdateFlashes(dt);
+        // the jackpot slot catches the light now and then while discs are on their way down
+        if (_shimmerSweep == null && FallingCount > 0 && !Fx.ReducedMotion) Shimmer(1.1, 0.55, 0.5);
+        busy |= Anims.Update(dt);
 
         if (!_roundOver && _roundEndIn < 0 && _discsLeft == 0 && FallingCount == 0) _roundEndIn = RoundEndDelay;
         if (_roundEndIn >= 0)
@@ -411,8 +459,7 @@ public sealed class PlinkoGame : MiniGame
             if (Math.Abs(peg.Pos.Y - d.Pos.Y) >= DiscR + PegR) continue;
             double hit = Bounce(d, peg.Pos, PegR, PegBounce, true);
             if (hit <= 0) continue;
-            if (peg.Flash <= 0) _litPegs.Add(peg);
-            peg.Flash = 1;
+            Light(peg);
             if (hit > 60) PlayThrottled("rim", Math.Min(0.22, hit / 2600), 2.3 + Rng.NextDouble() * 0.5);
         }
 
@@ -554,24 +601,34 @@ public sealed class PlinkoGame : MiniGame
         b.Vel += n * j;
     }
 
-    bool UpdateFlashes(double dt)
+    // ------------------------------------------------------------------ animation
+
+    /// <summary>A peg lights up as the disc clips it and fades over a third of a second.</summary>
+    void Light(Peg peg)
     {
-        for (int i = _litPegs.Count - 1; i >= 0; i--)
+        peg.Lit?.Cancel();
+        peg.Glow.Opacity = 1;
+        peg.Lit = Anims.Add(0.3, k => peg.Glow.Opacity = 1 - k, Ease.OutQuad, () => peg.Lit = null);
+    }
+
+    /// <summary>The slot a disc landed in brightens and swells up from its floor, then settles.</summary>
+    void PulseSlot(int slot)
+    {
+        double rest = SlotBaseOpacity(slot);
+        Anims.Add(0.5, k =>
         {
-            var peg = _litPegs[i];
-            peg.Flash = Math.Max(0, peg.Flash - dt * 3.5);
-            peg.Glow.Opacity = peg.Flash;
-            if (peg.Flash <= 0) _litPegs.RemoveAt(i);
-        }
-        bool any = _litPegs.Count > 0;
-        for (int k = 0; k < Slots; k++)
-        {
-            if (_slotFlash[k] <= 0) continue;
-            _slotFlash[k] = Math.Max(0, _slotFlash[k] - dt * 2);
-            _slotBacks[k].Opacity = SlotBaseOpacity(k) + 0.45 * _slotFlash[k];
-            any = true;
-        }
-        return any;
+            _slotBacks[slot].Opacity = rest + 0.45 * (1 - k);
+            _slotPulse[slot].ScaleY = 1 + 0.14 * Ease.Pulse(k);
+        }, Ease.Linear);
+    }
+
+    /// <summary>A band of light sweeps across the jackpot slot: softly while discs fall, brightly when one lands there.</summary>
+    void Shimmer(double seconds, double strength, double delay = 0)
+    {
+        _shimmerSweep?.Cancel();
+        _shimmer.Opacity = strength;
+        _shimmerSweep = Anims.Add(seconds, k => _shimmerShift.X = -ShimmerW + (JackpotW + ShimmerW) * k, Ease.InOutQuad,
+            () => _shimmerSweep = null, delay);
     }
 
     // ------------------------------------------------------------------ visuals
@@ -581,11 +638,12 @@ public sealed class PlinkoGame : MiniGame
         if (_boardScale.ScaleX != _scale) _boardScale.ScaleX = _boardScale.ScaleY = _scale;
         _boardShift.X = _origin.X;
         _boardShift.Y = _origin.Y;
+        _handle.Show(BoardRect);
     }
 
     void UpdatePreview()
     {
-        bool show = !_moving && _roundEndIn < 0 && StripRect.Contains(Host.Pointer.ToPoint());
+        bool show = !_handle.Dragging && _roundEndIn < 0 && StripRect.Contains(Host.Pointer.ToPoint());
         if (show)
         {
             _preview.Set(new Vec2(Clamp(ToLocal(Host.Pointer).X, XL + DiscR, XR - DiscR), DropY));
@@ -608,11 +666,17 @@ public sealed class PlinkoGame : MiniGame
         for (int k = 0; k < Slots; k++)
         {
             var color = SlotColor(k);
+            _slotPulse[k] = new ScaleTransform();
             _slotBacks[k] = Art.At(new Rectangle
             {
                 Width = SlotW - DividerHalf * 2, Height = FloorY - SlotTop, Fill = Art.Brush(color), Opacity = SlotBaseOpacity(k), IsHitTestVisible = false,
+                RenderTransformOrigin = new RelativePoint(0.5, 1, RelativeUnit.Relative), RenderTransform = _slotPulse[k],
             }, XL + k * SlotW + DividerHalf, SlotTop);
             c.Add(_slotBacks[k]);
+            if (k != JackpotSlot) continue;
+            var window = new Canvas { Width = JackpotW, Height = FloorY - SlotTop, ClipToBounds = true, IsHitTestVisible = false };
+            window.Children.Add(_shimmer);
+            c.Add(Art.At(window, XL + k * SlotW + DividerHalf, SlotTop));
             c.Add(Art.At(new TextBlock
             {
                 Text = Values[k].ToString(), Width = SlotW, TextAlignment = TextAlignment.Center, FontFamily = Fx.Font,
@@ -701,6 +765,19 @@ public sealed class PlinkoGame : MiniGame
         return brush;
     }
 
+    static LinearGradientBrush Horizontal(Color left, Color middle, Color right)
+    {
+        var brush = new LinearGradientBrush
+        {
+            StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+            EndPoint = new RelativePoint(1, 0, RelativeUnit.Relative),
+        };
+        brush.GradientStops.Add(new GradientStop(left, 0));
+        brush.GradientStops.Add(new GradientStop(middle, 0.5));
+        brush.GradientStops.Add(new GradientStop(right, 1));
+        return brush;
+    }
+
     static Sprite MakeDisc(Color color)
     {
         var s = new Sprite { IsHitTestVisible = false };
@@ -716,7 +793,7 @@ public sealed class PlinkoGame : MiniGame
 
     public override void DemoTick()
     {
-        if (_moving || _roundEndIn >= 0) return;
+        if (_handle.Dragging || _roundEndIn >= 0) return;
         if (_roundOver)
         {
             if (--_demoWait <= 0) NewRound(); // let the round-end popup show first
@@ -724,4 +801,25 @@ public sealed class PlinkoGame : MiniGame
         }
         if (FallingCount < 2 && Rng.NextDouble() < 0.5) Drop(XL + DiscR + Rng.NextDouble() * (XR - XL - DiscR * 2));
     }
+}
+
+/// <summary>Where the Plinko board stands, worked out without any UI so it can be tested.</summary>
+public static class PlinkoPlacement
+{
+    /// <summary>Let go this close above the floor (in DIPs), the board is stood on it.</summary>
+    public const double FloorSnap = 28;
+
+    /// <summary>
+    /// The board's saved origin: the grip's place when there is one, otherwise where the board stood before it had a grip
+    /// (the PlinkoX/PlinkoY settings, kept relative to the arena's top-left), or null when it was never moved.
+    /// </summary>
+    public static Vec2? Restore(Vec2? gripSaved, double? legacyX, double? legacyY, double arenaLeft, double arenaTop)
+    {
+        if (gripSaved is Vec2 saved) return saved;
+        if (legacyX is double x && legacyY is double y) return new Vec2(arenaLeft + x, arenaTop + y);
+        return null;
+    }
+
+    /// <summary>True when a board whose bottom edge is at <paramref name="bottom"/> should stand on the floor at <paramref name="floor"/>.</summary>
+    public static bool StandsOnFloor(double bottom, double floor) => floor - bottom < FloorSnap;
 }
