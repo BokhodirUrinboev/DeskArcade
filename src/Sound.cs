@@ -39,8 +39,12 @@ public sealed partial class Sound : IDisposable
         _thread.Start();
     }
 
+    /// <summary>A sound was asked for while sound is on (the clip's name and volume), so the pet can react to the games' sounds.</summary>
+    public event Action<string, double>? Played;
+
     public void Play(string name, double vol = 1, double pitch = 1)
     {
+        if (Enabled) Played?.Invoke(name, vol);
         if (!Enabled || !_running || !_clips.TryGetValue(name, out var clip)) return;
         lock (_lock)
         {

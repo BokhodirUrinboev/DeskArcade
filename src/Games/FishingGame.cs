@@ -15,7 +15,7 @@ namespace DeskArcade.Games;
 /// hook it (too soon spooks it, too late and it steals the bait). Then hold to reel and let go before the
 /// tension bar hits red, or the line snaps. Two-minute rounds, started by the first cast (see FishFight.cs).
 /// </summary>
-public sealed class FishingGame : MiniGame
+public sealed class FishingGame : MiniGame, IPetPlayground
 {
     /// <summary>A round is two minutes.</summary>
     public const double RoundSeconds = 120;
@@ -346,6 +346,7 @@ public sealed class FishingGame : MiniGame
         _roundLeft = RoundSeconds;
         _score = _caught = 0;
         _shownSecond = -1;
+        _petStole = false;
         Host.Sound.Play("fire", 0.5);
         Host.HudChanged();
     }
@@ -1203,5 +1204,45 @@ public sealed class FishingGame : MiniGame
                 _reeling = _fight!.Tension < PulseAt; // pulse: reel until the bar turns yellow
                 break;
         }
+    }
+
+    // ------------------------------------------------------------------ the pet keeping you company
+
+    /// <summary>The pet already ran off with a fish this round: one is enough.</summary>
+    bool _petStole;
+
+    /// <summary>The pet sits on the pier, beside the rod.</summary>
+    public PetFloor PetFloor => new(Host.Arena.Left + 32, _pierEnd - 22, _deckY);
+
+    /// <summary>
+    /// The float while a fish is being tempted or fought (to watch), and the fish on its way up out of the water, loose for
+    /// the taking once it nears the rod tip: not the golden trout, and only once a round.
+    /// </summary>
+    public PetToy PetToy
+    {
+        get
+        {
+            if (_state == State.Landing && _suitor is { } f)
+            {
+                var hang = _tip + new Vec2(0, 10 + f.Len * 0.5);
+                bool loose = _active && !_petStole && !f.Species.Golden && _landT >= 0.3 && _landT < LandTime + LandHold - 0.05;
+                return new PetToy(PetToyKind.Fish, hang, default, f.Len * 0.3, loose);
+            }
+            return _state is State.Waiting or State.Fighting ? new PetToy(PetToyKind.Fish, _bob) : new PetToy(PetToyKind.None);
+        }
+    }
+
+    /// <summary>The pet snatched the fish off the line: it runs off with it, and the catch still counts.</summary>
+    public bool PetTouched(PetTouch touch, Vec2 v)
+    {
+        if (touch != PetTouch.Steal || _state != State.Landing || _suitor is not { } f || !_active || _petStole || f.Species.Golden) return false;
+        _petStole = true;
+        RemoveFish(f);
+        _suitor = null;
+        _state = State.Ready;
+        AddFish(new Vec2(_waterR - 30, _surface + 20 + Rng.NextDouble() * Math.Max(1, _depth - 36))); // a new fish swims in, as after any catch
+        Host.Fx.Popup(_tip - new Vec2(0, 40), L.T("Fish thief!"), Gold, 26, 1.8, L.T("your pet ran off with it · it still counts"));
+        Host.Wake();
+        return true;
     }
 }

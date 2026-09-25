@@ -228,6 +228,7 @@ public sealed partial class HoopsGame : MiniGame
         _ball.Place(_ball.Pos, v);
         _ball.Spin = -v.X * 0.25;
         _releasePos = _ball.Pos;
+        _petThrows++;
         _throwLive = v.Length > 150;
         if (_throwLive) HorseReleased(_releasePos);
         _scored = false;

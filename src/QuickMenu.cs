@@ -24,6 +24,8 @@ public static class QuickMenu
         yield return games;
 
         var pets = Sub(L.T("Pet"));
+        pets.Items.Add(Check(L.T("Pet keeps me company in games"), w.Settings.PetCompany, () => w.SetPetCompany(!w.Settings.PetCompany)));
+        pets.Items.Add(new Separator());
         foreach (var (kind, name) in Tray.PetChoices())
         {
             string k = kind;
