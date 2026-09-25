@@ -127,6 +127,10 @@ public static class Achievements
         new("sheep-100", "sheep", "Good dog", "Pen 100 sheep", "sheep.penned", 100),
         new("sheep-round5", "sheep", "Top dog", "Clear round 5 of Sheep Herding", "sheep.round", 5),
         new("sheep-spare", "sheep", "Come by!", "Pen the whole flock with 30 seconds to spare", "sheep.spare", 30),
+
+        new("cannons-hard", "cannons", "Castle breaker", "Beat the computer at Hard or Expert in Cannon Castles", "cannons.hardwins", 1),
+        new("cannons-flawless", "cannons", "Untouchable", "Win Cannon Castles without losing a single block", "cannons.flawless", 1),
+        new("cannons-duel", "cannons", "Siege of the next desk", "Win a Cannon Castles duel over the LAN", "cannons.duelwins", 1),
         new("codebreaker-win", "codebreaker", "Code cracked", "Break a code", "codebreaker.wins", 1),
         new("codebreaker-fast", "codebreaker", "Mind reader", "Break a code in 4 guesses or fewer", "codebreaker.fast", 1),
         new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),
