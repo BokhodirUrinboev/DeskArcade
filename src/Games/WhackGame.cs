@@ -13,7 +13,7 @@ namespace DeskArcade.Games;
 /// Whack-a-Bug: bugs peek over the tops of your windows, up from the taskbar and in from the sides of the
 /// screen for a moment. Whack them before they duck back; quick hits build a combo. Ladybugs are features.
 /// </summary>
-public sealed class WhackGame : MiniGame
+public sealed class WhackGame : MiniGame, IPetPlayground
 {
     /// <summary>A round is 30 seconds.</summary>
     public const double RoundSeconds = 30;
@@ -765,4 +765,31 @@ public sealed class WhackGame : MiniGame
         var targets = _bugs.Where(b => b.Kind != Kind.Ladybug && Whackable(b) && OutFrac(b) > 0.9).ToList();
         if (targets.Count > 0) Whack(targets[Rng.Next(targets.Count)]);
     }
+
+    // ------------------------------------------------------------------ the pet keeping you company
+
+    readonly List<Vec2> _petBugs = new();
+
+    public PetFloor PetFloor
+    {
+        get
+        {
+            var a = Host.Arena;
+            return new PetFloor(a.Left + 26, a.Right - 26, a.Bottom);
+        }
+    }
+
+    /// <summary>The bugs peeking out (the sleeper too), for the pet to hide from; it never touches them.</summary>
+    public PetToy PetToy
+    {
+        get
+        {
+            _petBugs.Clear();
+            foreach (var b in _bugs)
+                if (b.WhackT < 0 && !b.Leaving && OutFrac(b) >= 0.3) _petBugs.Add(HitCenter(b));
+            return _petBugs.Count == 0 ? new(PetToyKind.None) : new(PetToyKind.Bugs, _petBugs[0], Bugs: _petBugs);
+        }
+    }
+
+    public bool PetTouched(PetTouch touch, Vec2 v) => false;
 }

@@ -1043,6 +1043,12 @@ public static partial class Strings
         ["the ☰ button on the scoreboard has the menu"] = "menyu hisob taxtasidagi ☰ tugmasida",
 
 
+        // ---- pets in the games
+        ["Pet keeps me company in games"] = "Uy hayvoni o'yinlarda hamroh bo'ladi",
+        ["Fish thief!"] = "Baliq o'g'risi!",
+        ["your pet ran off with it · it still counts"] = "uy hayvoningiz uni olib qochdi · ov baribir hisoblanadi",
+
+
         // ---- 1.8.0: pets
         ["After the ball!"] = "To'p ketidan!",
         ["Begging for a treat · click the jar"] = "Shirinlik so'rayapti · idishni bosing",

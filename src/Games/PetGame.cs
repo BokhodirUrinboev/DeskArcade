@@ -26,7 +26,7 @@ namespace DeskArcade.Games;
 /// pet visits as a faded ghost, and the two greet when they meet. A thought bubble shows what is on its mind.
 /// There is no score to chase, so it is built to sit perfectly still (zero CPU) most of the time.
 /// </summary>
-public sealed class PetGame : MiniGame
+public sealed partial class PetGame : MiniGame
 {
     const double Step = 1.0 / 240, Gravity = 1800, HalfW = 22, Height = 46, CenterLift = 20;
     const double HitR = 27, DragStart = 6, CarryCount = 30, DangleY = 18, MaxThrow = 2600;

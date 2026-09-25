@@ -65,6 +65,7 @@ public sealed class OverlayWindow : Window, IGameHost
     bool _checkingUpdates;
     double _lastAchievementAt = -10;
     int _achievementRow;
+    PetGame.Companion? _petPal; // the pet keeping the player company in the other games
 
     public Settings Settings { get; } = Settings.Load();
     public Stats Stats { get; } = Stats.Load();
@@ -227,6 +228,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new PinballGame(this));
         _games.Add(new MarbleGame(this));
         _games.Add(new PetGame(this));
+        StartPetCompany();
 
         _hud = new Hud(_games);
         _hud.GameClicked += SwitchGame;
@@ -541,6 +543,7 @@ public sealed class OverlayWindow : Window, IGameHost
                 CountTowardBreak(now, dt);
             }
             busy |= playing;
+            if (_petPal != null) busy |= _petPal.Update(dt, playing);
         }
         busy |= Fx.Update(dt);
         busy |= _hud.Update(dt);
@@ -626,6 +629,7 @@ public sealed class OverlayWindow : Window, IGameHost
         Current = next;
         _gameLayer.Children.Add(next.Layer);
         next.Activate();
+        _petPal?.GameChanged(next);
         IntroAnimation(next);
 
         Settings.Game = next.Id;
@@ -1067,9 +1071,34 @@ public sealed class OverlayWindow : Window, IGameHost
         Settings.PetKind = kind;
         SaveSettings();
         foreach (var pet in _games.OfType<PetGame>()) pet.Rebuild();
+        _petPal?.Rebuild();
         _hud.SetGame(Current!.Id, Current.Title); // the scoreboard icon too
         SwitchGame("pet");
         _tray?.Refresh();
+    }
+
+    // ------------------------------------------------------------------ the pet keeping you company in the games
+
+    /// <summary>Builds the companion pet (drawn over the games, under the popups) and lets it hear the games' sounds.</summary>
+    void StartPetCompany()
+    {
+        _petPal = PetGame.CreateCompanion(this);
+        _root.Children.Insert(_root.Children.IndexOf(_gameLayer) + 1, _petPal.Layer);
+        Sound.Played += (clip, volume) =>
+        {
+            if (Dispatcher.UIThread.CheckAccess()) _petPal?.Heard(clip, volume);
+            else Dispatcher.UIThread.Post(() => _petPal?.Heard(clip, volume));
+        };
+    }
+
+    /// <summary>Tray or ☰ → Pet → Pet keeps me company in games.</summary>
+    public void SetPetCompany(bool on)
+    {
+        Settings.PetCompany = on;
+        SaveSettings();
+        _petPal?.GameChanged(Current);
+        _tray?.Refresh();
+        Wake();
     }
 
     /// <summary>Saves and registers new shortcuts; returns a line for the Shortcuts window to show.</summary>
@@ -1358,6 +1387,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _raceLabel.Foreground = Engine.Art.Brush(t.HudFront);
         _hud?.ThemeChanged();
         foreach (var game in _games) game.ThemeChanged();
+        _petPal?.Rebuild(); // a theme may bring the pet an accessory
         Current?.Layout();
         Wake();
     }

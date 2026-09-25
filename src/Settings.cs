@@ -62,6 +62,8 @@ public sealed class Settings
     public bool CpuRival { get; set; } = true;
     /// <summary>Snow, leaves, petals and the like drifting over the desktop while a game moves (tray → Theme → Theme decorations).</summary>
     public bool ThemeDecor { get; set; } = true;
+    /// <summary>The pet sits with you in the other games and joins in (tray → Pet → Pet keeps me company in games); off by default.</summary>
+    public bool PetCompany { get; set; }
     /// <summary>Remind the player to take a break after this many minutes of play; 0 turns it off.</summary>
     public int BreakMinutes { get; set; }
     /// <summary>When Claude finishes while you were playing, say "back to work" instead of "your turn".</summary>

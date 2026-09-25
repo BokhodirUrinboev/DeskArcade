@@ -1043,6 +1043,12 @@ public static partial class Strings
         ["the ☰ button on the scoreboard has the menu"] = "меню находится под кнопкой ☰ на табло",
 
 
+        // ---- pets in the games
+        ["Pet keeps me company in games"] = "Питомец составляет компанию в играх",
+        ["Fish thief!"] = "Рыбный воришка!",
+        ["your pet ran off with it · it still counts"] = "питомец утащил её · улов всё равно засчитан",
+
+
         // ---- 1.8.0: pets
         ["After the ball!"] = "За мячом!",
         ["Begging for a treat · click the jar"] = "Просит лакомство · нажмите на банку",

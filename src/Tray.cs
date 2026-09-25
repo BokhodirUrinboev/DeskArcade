@@ -43,6 +43,8 @@ public sealed class Tray : IDisposable
         }
         menu.Add(new NativeMenuItem(L.T("Game")) { Menu = games });
         var pets = new NativeMenu();
+        pets.Add(Check(L.T("Pet keeps me company in games"), () => _w.SetPetCompany(!_w.Settings.PetCompany), () => _w.Settings.PetCompany));
+        pets.Add(new NativeMenuItemSeparator());
         foreach (var (kind, name) in PetChoices())
             pets.Add(Radio(name, () => _w.SetPet(kind), () => _w.Settings.PetKind == kind));
         menu.Add(new NativeMenuItem(L.T("Pet")) { Menu = pets });
