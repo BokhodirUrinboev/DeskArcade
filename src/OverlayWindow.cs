@@ -221,6 +221,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new InternsGame(this));
         _games.Add(new BlockfallGame(this));
         _games.Add(new PinballGame(this));
+        _games.Add(new MarbleGame(this));
         _games.Add(new PetGame(this));
 
         _hud = new Hud(_games);
@@ -597,6 +598,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "lastcard" => L.T("match the colour or the number — say “last card” when you're down to one"),
         "solitaire" => L.T("click the stock to turn a card — click or drag cards onto the piles"),
         "pinball" => L.T("click the ball to serve — press by a flipper to flip it, right-click flips both"),
+        "marble" => L.T("drag ramps and bumpers out of the tray, then click the funnel — land the marble in the cup"),
         _ => "",
     };
 
