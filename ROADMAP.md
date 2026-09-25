@@ -5,7 +5,7 @@ in the git history). The next three months are about **getting Desk Arcade in fr
 managers, Flathub, a real Mac test, and the visibility SignPath asked for before it signs Windows builds.
 Eight new games came early and shipped in 1.7.1, four more with `--while` and the first LAN races in 1.7.2, and
 1.8.0 turned every game into a two-player game: a computer rival or a co-worker in each of them, twelve pets,
-animation everywhere, and an overlay that behaves on a real Ubuntu desktop. 1.8.1 added five games from the ideas list.
+animation everywhere, and an overlay that behaves on a real Ubuntu desktop. 1.8.1 added five games from the ideas list, and 1.8.2 gave the pets their turn.
 
 Each item says how it will be verified. "Demo" means copies on one PC (`--profile`) playing by themselves
 (`--demo`).
@@ -16,7 +16,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 | 1.7.2 | 2026-09-24 | `--while`, Solitaire, Last Card, Interns, Blockfall; Pinball and Paper Toss races |
 | 1.8.0 | 2026-09-24 | Somebody to play against in every game, twelve pets, animation, thirteen themes, the Ubuntu overlay and updates, the ☰ menu |
 | 1.8.1 | 2026-09-25 | Five new games: Marble Run, Sheep Herding, Cannon Castles, Reversi, Gomoku |
-| 1.8.2 | late September | Pets join the games, pet mail over the LAN, pets grow up and nap on a favourite window, pet volume |
+| 1.8.2 | 2026-09-25 | Pets join the games, pet mail over the LAN, pets grow up and nap on a favourite window, pet volume |
 | 1.9.0 | late October | Package managers, a feel pass by hand, Flathub |
 | 2.0.0 | mid December | Signed Windows builds, a real Mac, a winter event |
 
@@ -142,7 +142,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
   (`ReversiTests`, `GomokuTests`). Not played by hand or across two PCs yet.*
 - [ ] The Russian and Uzbek text for the five games, read by native speakers.
 
-## 1.8.2: the pets' turn
+## 1.8.2: the pets' turn (shipped 2026-09-25)
 
 - [x] **The pet joins the games** (tray → Pet → "Pet keeps me company in games", off by default): it bats a loose
   Hoops ball back, runs under the Pong ball, hides from Whack-a-Bug bugs and may steal a fish in Fishing (the points
