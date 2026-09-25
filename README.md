@@ -5,7 +5,7 @@ deploy or Claude Code is working, and still see everything underneath.
 
 **Platforms:** Windows 10/11 (x64, ARM64) · Ubuntu 22.04/24.04 (amd64, arm64) · other Linux via AppImage
 or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE) &nbsp;·&nbsp;
-**Version:** 1.8.0
+**Version:** 1.8.1
 
 ---
 
