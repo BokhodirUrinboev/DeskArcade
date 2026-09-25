@@ -43,7 +43,7 @@ the csproj. It builds and uploads every package as workflow artifacts but publis
 
 **CI** (`ci.yml`) runs on pull requests, pushes to `main` and on demand. It builds for Windows x64 and
 macOS arm64, builds, packages and install-checks the amd64 `.deb` on Ubuntu, and lints the workflows
-with actionlint (including shellcheck on `run:` scripts). The Ubuntu job also runs the unit tests, and the
+with actionlint (including shellcheck on `run:` scripts). The Windows and Ubuntu jobs also run the unit tests, and the
 **smoke** job starts the published app on `windows-11-arm`, `ubuntu-24.04-arm` (under Xvfb) and
 `macos-14` runners, opens the stats window and quits it through `--signal` (`tests/smoke.sh`). A new push
 to a pull request cancels that PR's older run.
