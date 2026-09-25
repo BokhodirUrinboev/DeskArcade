@@ -116,6 +116,10 @@ public static class Achievements
         new("blockfall-four", "blockfall", "Four at once", "Clear four lines with one piece", "blockfall.fours", 1),
         new("blockfall-lines", "blockfall", "Line manager", "Clear 200 lines", "blockfall.lines", 200),
         new("blockfall-10k", "blockfall", "Stacked", "Score 10,000 points in one game", "blockfall.best", 10000),
+
+        new("sheep-100", "sheep", "Good dog", "Pen 100 sheep", "sheep.penned", 100),
+        new("sheep-round5", "sheep", "Top dog", "Clear round 5 of Sheep Herding", "sheep.round", 5),
+        new("sheep-spare", "sheep", "Come by!", "Pen the whole flock with 30 seconds to spare", "sheep.spare", 30),
         new("codebreaker-win", "codebreaker", "Code cracked", "Break a code", "codebreaker.wins", 1),
         new("codebreaker-fast", "codebreaker", "Mind reader", "Break a code in 4 guesses or fewer", "codebreaker.fast", 1),
         new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),
