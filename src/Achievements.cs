@@ -61,6 +61,8 @@ public static class Achievements
         new("pet-visit", "pet", "Playdate", "Meet a co-worker's pet over the LAN", "pet.visits", 1),
         new("pet-grown", "pet", "All grown up", "Raise a pet until it is grown up", "pet.stage", 1),
         new("pet-wise", "pet", "Old and wise", "Raise a pet until it is old and wise", "pet.stage", 2),
+        new("pet-post", "pet", "Pet post", "Send 10 gifts to a co-worker's pet", "pet.giftssent", 10),
+        new("pet-parcel", "pet", "Special delivery", "Open a parcel from a co-worker", "pet.parcels", 1),
 
         new("tower-15", "tower", "Skyscraper", "Build a tower 15 blocks high", "tower.height", 15),
         new("tower-perfect", "tower", "Perfectionist", "Make 10 perfect drops", "tower.perfect", 10),

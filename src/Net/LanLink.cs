@@ -69,6 +69,8 @@ public sealed class LanLink : IDisposable
     /// fractions of the peer's arena) and how many points it scored (0 for a miss, negative for a penalty).
     /// </summary>
     public event Action<double, double, int>? ActionReceived;
+    /// <summary>Raised when a pet-mail message ("pm|…", see <see cref="PetMail"/>) arrives; it bypasses the game inbox, so mail reaches the pet whatever game is on.</summary>
+    public event Action<string>? MailReceived;
 
     /// <summary>Counts connections, so games can tell a new session from the one they already set up.</summary>
     public int Session { get; private set; }
@@ -318,6 +320,11 @@ public sealed class LanLink : IDisposable
                 double.TryParse(f[1], NumberStyles.Float, CultureInfo.InvariantCulture, out double y) && int.TryParse(f[2], out int pts) &&
                 x is >= 0 and <= 1 && y is >= 0 and <= 1)
                 ActionReceived?.Invoke(x, y, pts);
+            return;
+        }
+        if (kind == PetMail.Tag)
+        {
+            MailReceived?.Invoke(msg);
             return;
         }
         if (kind == "em")

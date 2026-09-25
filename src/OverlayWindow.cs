@@ -72,6 +72,8 @@ public sealed class OverlayWindow : Window, IGameHost
     public Fx Fx { get; } = new();
     public Platforms Platforms { get; } = new();
     public LanLink Lan { get; } = new();
+    /// <summary>Gifts for a co-worker's pet, and parcels for ours.</summary>
+    public PetMailer PetMail { get; private set; } = null!;
     OfficeBoard _board = null!;
     BoardEntry _boardEntry = new(OfficeBoard.InstanceId, "", "", new Dictionary<string, long>());
     readonly DispatcherTimer _boardTimer = new() { Interval = TimeSpan.FromSeconds(5) };
@@ -263,6 +265,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _hudLayer.Children.Add(_hud);
         _hudLayer.Children.Add(_raceLabel);
         _race = new RaceMode(this);
+        PetMail = new PetMailer(this);
 
         PlaceWindow();
         UpdateArena();
@@ -798,7 +801,7 @@ public sealed class OverlayWindow : Window, IGameHost
         catch { /* clipboard busy */ }
     }
 
-    void Notice(string title, string sub, Color color)
+    internal void Notice(string title, string sub, Color color)
     {
         if (!IsVisible) return;
         // popups drift upward, so start well clear of the scoreboard (or above it when it sits low)
