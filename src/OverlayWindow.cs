@@ -203,6 +203,8 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new ChessGame(this));
         _games.Add(new ConnectFourGame(this));
         _games.Add(new TicTacToeGame(this));
+        _games.Add(new ReversiGame(this));
+        _games.Add(new GomokuGame(this));
         _games.Add(new SeaBattleGame(this));
         var durak = new DurakGame(this);
         durak.SetupRequested += () => RoomWindow.ShowFor(this, durak);
@@ -220,7 +222,10 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(lastCard);
         _games.Add(new InternsGame(this));
         _games.Add(new BlockfallGame(this));
+        _games.Add(new SheepGame(this));
+        _games.Add(new CannonGame(this));
         _games.Add(new PinballGame(this));
+        _games.Add(new MarbleGame(this));
         _games.Add(new PetGame(this));
 
         _hud = new Hud(_games);
@@ -577,6 +582,8 @@ public sealed class OverlayWindow : Window, IGameHost
         "chess" => L.T("click a piece, then the square it should move to"),
         "connect4" => L.T("click a column to drop a disc — four in a row wins"),
         "tictactoe" => L.T("click a square — three in a row wins"),
+        "reversi" => L.T("click a dotted square — outflank discs to flip them, most discs wins"),
+        "gomoku" => L.T("click an intersection — five or more in a row wins (freestyle)"),
         "seabattle" => L.T("click the enemy grid to start, then fire — a hit shoots again"),
         "durak" => L.T("play the computer, or set up a room for up to four co-workers"),
         "clay" => L.T("click the trap machine, then shoot the clays at the top of their arc"),
@@ -593,10 +600,13 @@ public sealed class OverlayWindow : Window, IGameHost
         "memory" => L.T("flip two cards at a time — find all the pairs"),
         "codebreaker" => L.T("pick a colour, fill the row and click Check — a black pin is the right colour in the right place"),
         "blockfall" => L.T("point over the well to steer — click turns, hold drops faster, right-click drops"),
+        "sheep" => L.T("move the cursor to herd the flock into the pen — click to bark"),
+        "cannons" => L.T("drag back from your cannon and let go — mind the wind and knock down their flag"),
         "interns" => L.T("pick a tool, then click an intern — get enough of them to the exit"),
         "lastcard" => L.T("match the colour or the number — say “last card” when you're down to one"),
         "solitaire" => L.T("click the stock to turn a card — click or drag cards onto the piles"),
         "pinball" => L.T("click the ball to serve — press by a flipper to flip it, right-click flips both"),
+        "marble" => L.T("drag ramps and bumpers out of the tray, then click the funnel — land the marble in the cup"),
         _ => "",
     };
 

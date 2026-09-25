@@ -15,6 +15,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 | 1.7.1 | 2026-09-22 | Eight new games; Durak with a co-worker joins one room |
 | 1.7.2 | 2026-09-24 | `--while`, Solitaire, Last Card, Interns, Blockfall; Pinball and Paper Toss races |
 | 1.8.0 | 2026-09-24 | Somebody to play against in every game, twelve pets, animation, thirteen themes, the Ubuntu overlay and updates, the ☰ menu |
+| 1.8.1 | late September | Five new games: Marble Run, Sheep Herding, Cannon Castles, Reversi, Gomoku |
 | 1.9.0 | late October | Package managers, a feel pass by hand, Flathub |
 | 2.0.0 | mid December | Signed Windows builds, a real Mac, a winter event |
 
@@ -124,6 +125,22 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
   dependencies. *Verified: the hints read back from the live X window under Xvfb; unit tests for the message
   bodies and the packaging files. Not yet run on a real GNOME session (see below).*
 
+## 1.8.1: five new games from the ideas list
+
+- [x] **Marble Run** (`marble`): place up to three ramps and bumpers, then drop a marble down the window tops into
+  a cup on the taskbar; fewer pieces score more; five courses a round, raced by score. *Verified: unit tests for
+  rolling, edges, pieces, the cup and scoring (`MarbleTests`). Not played by hand yet.*
+- [x] **Sheep Herding** (`sheep`): the cursor is the sheepdog; the flock flees it, hops off and onto window tops,
+  and is driven into a pen on the taskbar before the clock runs out; click to bark. *Verified: unit tests for
+  fleeing, flocking, the pen and the clock (`SheepTests`). Not played by hand yet.*
+- [x] **Cannon Castles** (`cannons`): castles on two window tops, drag back to aim, wind between them; four CPU
+  levels and a LAN duel. *Verified: unit tests for the ballistics, the blocks, the CPU's aim and the duel
+  messages (`CannonTests`). Not played by hand or across two PCs yet.*
+- [x] **Reversi** (`reversi`) and **Gomoku** (`gomoku`) on the board-game table: flip animations, four CPU levels
+  and LAN turns. *Verified: unit tests for the rules, each CPU level against the one below, and think time
+  (`ReversiTests`, `GomokuTests`). Not played by hand or across two PCs yet.*
+- [ ] The Russian and Uzbek text for the five games, read by native speakers.
+
 ## 1.9.0: package managers and a feel pass (October)
 
 - [ ] **A feel pass by hand** on the 1.8.0 work, on Windows and Ubuntu: the computer rival's pacing and levels in each
@@ -191,19 +208,14 @@ and using the windows and taskbar as the playing field. LAN notes say how each c
 | **Asteroids** | Rocks drift and bounce around the closed box; steer a ship with the mouse and click to fire | Co-op: two ships, one field |
 | **Window Jenga** | A tower of blocks stands on a window top; pull one block out with a drag and set it on top; the tower leans with every window move | Turns, ghost hands |
 | **Paper Planes** | Fold (click) and throw a paper plane from the corner; it glides through gaps between windows to a landing strip on the taskbar; thermals rise off warm (busy) windows | Distance race |
-| **Marble Run** | Drop a marble at the top; it rolls down the window tops like ramps; place a few bumpers and flippers to steer it to a cup | Race: same run, first to the cup |
 | **Kite** | Fly a kite from the taskbar on a string held by the cursor; the wind gusts with the desk fan; catch the clouds and dodge the windows | Two kites, tangle to cut the other's string |
-| **Sheep Herding** | Sheep wander along the window tops; the cursor is the dog; drive the flock into a pen on the taskbar before the timer runs out | Co-op: two dogs |
 | **Ping-Pong Cups** | Beer-pong with water cups on a window top; flick the ball from the bottom edge; the cups go down one by one | Turns, ghost balls |
-| **Cannon Castles** | Two castles on two windows; take turns setting an angle and power to lob cannonballs across the desk; wind between the windows | Turns, the classic |
 | **Rope Bridge** | Interns need a bridge between two windows; drag planks into place before they walk off the edge | Co-op |
 | **Snakes on Windows** | A snake crawls along the edges of windows; steer it with the cursor to apples; do not cross your own tail | Two snakes, one desktop |
 | **Bingo of Work** | A card of everyday desk events ("a build passes", "Claude needs you", "10 minutes without a click"); the overlay ticks them off; first line wins | Office board |
-| **Reversi / Othello** | The last of the classic boards; flips animate | Turns, like chess |
 | **Backgammon** | Dice and checkers; doubling cube optional | Turns |
 | **Dominoes** | Tiles laid along the taskbar in a line that bends up the window edges | Rooms for 2–4 |
 | **Sudoku / Minesweeper** | Puzzle pads for the quiet minutes; a mouse-only number pad | Daily challenge race: same puzzle, first to finish |
-| **Gomoku** | Five in a row on a 15×15 board; the CPU levels from BoardGame carry over | Turns |
 | **Mancala** | Seeds in pits along the taskbar; a calm sowing game | Turns |
 | **Battleship Salvo** | Sea Battle with three shots a turn, bigger fleets, a fog of war that lifts | Rooms for 3 |
 

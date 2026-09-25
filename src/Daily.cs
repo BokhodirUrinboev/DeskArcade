@@ -31,6 +31,7 @@ public sealed class Daily
         new("hoops", "hoops.swishes", 5, "Swish {0} shots in Hoops"),
         new("checkers", "checkers.captures", 8, "Capture {0} pieces in Checkers"),
         new("chess", "chess.captures", 6, "Capture {0} pieces in Chess"),
+        new("reversi", "reversi.flips", 40, "Flip {0} discs in Reversi"),
         new("seabattle", "seabattle.sunk", 5, "Sink {0} ships in Sea Battle"),
         new("darts", "darts.trebles", 6, "Hit {0} trebles in Darts"),
         new("toss", "toss.baskets", 10, "Toss {0} paper balls into the bin"),
@@ -43,7 +44,10 @@ public sealed class Daily
         new("lastcard", "lastcard.played", 25, "Play {0} cards in Last Card"),
         new("interns", "interns.saved", 15, "Get {0} interns to the exit"),
         new("blockfall", "blockfall.lines", 20, "Clear {0} lines in Blockfall"),
+        new("sheep", "sheep.penned", 12, "Pen {0} sheep in Sheep Herding"),
+        new("cannons", "cannons.blocks", 20, "Knock down {0} castle blocks in Cannon Castles"),
         new("pinball", "pinball.bumpers", 60, "Hit {0} bumpers in Pinball"),
+        new("marble", "marble.cups", 5, "Land {0} marbles in the cup in Marble Run"),
     };
 
     readonly Settings _settings;
