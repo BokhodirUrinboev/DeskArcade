@@ -19,8 +19,9 @@ public enum ClaudeStatus { Unknown, Working, Done, Attention }
 public enum TaskStatus { None, Running, Passed, Failed }
 
 /// <summary>
-/// Scoreboard. A compact pill (game icon, score, best) until you click it; then the full board with
-/// game tabs, which shrinks back shortly after the mouse leaves. Drag either form to move it.
+/// Scoreboard. A compact pill (game icon, score, best, who you're playing and whose turn it is, a ☰ menu) until you
+/// click it; then the full board with game tabs, which shrinks back shortly after the mouse leaves. Drag either form
+/// to move it.
 /// </summary>
 public sealed class Hud : Border
 {
@@ -31,11 +32,14 @@ public sealed class Hud : Border
     readonly Dictionary<string, Border> _tabs = new();
 
     // full board
-    readonly Grid _board = new() { RowDefinitions = new RowDefinitions("Auto,Auto,Auto,Auto,Auto") };
+    readonly Grid _board = new() { RowDefinitions = new RowDefinitions("Auto,Auto,Auto,Auto,Auto,Auto") };
     readonly TextBlock _score = Text(30, FontWeight.Black, "#FFFFFF");
     readonly TextBlock _title = Text(11, FontWeight.Bold, "#9AA4B2");
     readonly TextBlock _best = Text(12, FontWeight.SemiBold, "#FFD166");
     readonly TextBlock _line = Text(12, FontWeight.Normal, "#C9D1DC");
+    readonly Border _oppChip;
+    readonly Ellipse _oppDot = new() { Width = 8, Height = 8 };
+    readonly TextBlock _oppText = Text(11, FontWeight.SemiBold, "#FFFFFF");
     readonly Border _chip;
     readonly Ellipse _chipDot = new() { Width = 8, Height = 8 };
     readonly TextBlock _chipText = Text(11, FontWeight.SemiBold, "#FFFFFF");
@@ -48,8 +52,15 @@ public sealed class Hud : Border
     readonly Canvas _pillIcon = new() { Width = 24, Height = 24, IsHitTestVisible = false };
     readonly TextBlock _pillScore = Text(18, FontWeight.Black, "#FFFFFF");
     readonly TextBlock _pillBest = Text(11, FontWeight.SemiBold, "#FFD166");
+    readonly Border _pillOpp;
+    readonly Ellipse _pillOppDot = new() { Width = 7, Height = 7 };
+    readonly TextBlock _pillOppText = Text(11, FontWeight.SemiBold, "#FFFFFF");
     readonly Ellipse _pillDot = new() { Width = 8, Height = 8, IsVisible = false };
     readonly Ellipse _pillTaskDot = new() { Width = 8, Height = 8, IsVisible = false };
+    readonly TextBlock _menuButton = Text(15, FontWeight.Bold, "#C9D1DC");
+    readonly TextBlock _menuTabText = Text(15, FontWeight.Bold, "#C9D1DC");
+    readonly ScaleTransform _scoreScale = new(), _oppScale = new();
+    readonly Anims _anims = new();
 
     readonly TranslateTransform _pos = new();
     readonly DispatcherTimer _collapseTimer = new() { Interval = TimeSpan.FromMilliseconds(650) };
@@ -64,19 +75,26 @@ public sealed class Hud : Border
     DateTime? _taskSince;
     TimeSpan? _taskTook;
     int _taskCode, _taskFlashes;
-    bool _expanded, _pressed, _dragging;
+    bool _expanded, _pressed, _dragging, _menuOpen, _shownOnce;
     Vec2 _pressAt, _dragOffset;
+    Opponent? _opponent;
+    string _lastScore = "", _currentId = "";
 
     public event Action<string>? GameClicked;
-    /// <summary>A press started on the scoreboard (the overlay must keep taking the mouse until it ends).</summary>
+    /// <summary>A press started on the scoreboard, or its menu opened (the overlay must keep taking the mouse until it ends).</summary>
     public event Action? InteractionStarted;
+    /// <summary>The scoreboard's menu closed: the overlay can go back to its usual hit shapes.</summary>
+    public event Action? InteractionEnded;
+    /// <summary>A scoreboard animation started: the overlay should run frames until <see cref="Update"/> says it is over.</summary>
+    public event Action? Animating;
     /// <summary>The scoreboard was dragged to a new place.</summary>
     public event Action? Moved;
 
+    /// <summary>Builds the ☰ menu's items each time it opens.</summary>
+    public Func<IEnumerable<Control>>? MenuItems { get; set; }
+
     public Hud(IEnumerable<MiniGame> games)
     {
-        Background = Art.Brush(240, 18, 20, 28);
-        BorderBrush = Art.Brush(70, 255, 255, 255);
         BorderThickness = new Thickness(1);
         HorizontalAlignment = HorizontalAlignment.Left;
         VerticalAlignment = VerticalAlignment.Top;
@@ -84,7 +102,7 @@ public sealed class Hud : Border
         RenderTransform = _pos;
         Opacity = IdleOpacity;
 
-        // --- full board: tabs / score + title + best / context line / claude chip
+        // --- full board: tabs / score + title + best / context line / opponent chip / claude chip / task chip
         var tabs = new WrapPanel { Orientation = Orientation.Horizontal };
         foreach (var game in games)
         {
@@ -104,12 +122,29 @@ public sealed class Hud : Border
             _tabs[id] = tab;
             tabs.Children.Add(tab);
         }
+        _menuTabText.HorizontalAlignment = HorizontalAlignment.Center;
+        _menuTabText.VerticalAlignment = VerticalAlignment.Center;
+        _menuTabText.IsHitTestVisible = false;
+        var menuTab = new Border
+        {
+            Width = 34, Height = 28, CornerRadius = new CornerRadius(8), Margin = new Thickness(0, 0, 4, 4),
+            Background = Brushes.Transparent, Cursor = new Cursor(StandardCursorType.Hand), Child = _menuTabText,
+        };
+        ToolTip.SetTip(menuTab, L.T("Menu"));
+        menuTab.PointerPressed += (_, e) =>
+        {
+            e.Handled = true;
+            OpenMenu();
+        };
+        tabs.Children.Add(menuTab);
         _board.Children.Add(tabs);
 
         var mid = new DockPanel { Margin = new Thickness(2, 0, 0, 0) };
-        var right = new StackPanel { VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Right };
+        var right = new StackPanel { VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Right, MaxWidth = ExpandedWidth - 120 };
         _title.HorizontalAlignment = HorizontalAlignment.Right;
+        _title.TextTrimming = TextTrimming.CharacterEllipsis;
         _best.HorizontalAlignment = HorizontalAlignment.Right;
+        _best.TextTrimming = TextTrimming.CharacterEllipsis; // long lines ("Best 17 darts · …") must not squeeze the score out
         right.Children.Add(_title);
         right.Children.Add(_best);
         DockPanel.SetDock(right, Dock.Right);
@@ -123,54 +158,72 @@ public sealed class Hud : Border
         Grid.SetRow(_line, 2);
         _board.Children.Add(_line);
 
-        var chipRow = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
-        _chipDot.Margin = new Thickness(0, 0, 5, 0);
-        _chipDot.VerticalAlignment = VerticalAlignment.Center;
-        chipRow.Children.Add(_chipDot);
-        chipRow.Children.Add(_chipText);
-        _chip = new Border
-        {
-            CornerRadius = new CornerRadius(9), Padding = new Thickness(7, 2, 8, 3), Margin = new Thickness(0, 6, 0, 0),
-            HorizontalAlignment = HorizontalAlignment.Left, Child = chipRow, IsVisible = false,
-        };
-        Grid.SetRow(_chip, 3);
+        _oppText.TextTrimming = TextTrimming.CharacterEllipsis;
+        _oppText.MaxWidth = ExpandedWidth - 60;
+        _oppChip = Chip(_oppDot, _oppText);
+        Grid.SetRow(_oppChip, 3);
+        _board.Children.Add(_oppChip);
+
+        _chip = Chip(_chipDot, _chipText);
+        Grid.SetRow(_chip, 4);
         _board.Children.Add(_chip);
 
-        _taskDot.Margin = new Thickness(0, 0, 5, 0);
-        _taskDot.VerticalAlignment = VerticalAlignment.Center;
         _taskText.TextTrimming = TextTrimming.CharacterEllipsis;
-        _taskChip = new Border
-        {
-            CornerRadius = new CornerRadius(9), Padding = new Thickness(7, 2, 8, 3), Margin = new Thickness(0, 6, 0, 0),
-            HorizontalAlignment = HorizontalAlignment.Left, IsVisible = false,
-            Child = new StackPanel { Orientation = Orientation.Horizontal, Children = { _taskDot, _taskText } },
-        };
-        Grid.SetRow(_taskChip, 4);
+        _taskChip = Chip(_taskDot, _taskText);
+        Grid.SetRow(_taskChip, 5);
         _board.Children.Add(_taskChip);
         _board.Transitions = new Transitions
         {
             new DoubleTransition { Property = OpacityProperty, Duration = TimeSpan.FromMilliseconds(140) },
         };
 
-        // --- compact pill: icon, score, best, claude dot
+        // --- compact pill: icon, score, best, opponent / turn, claude dot, task dot, menu
         _pillIcon.VerticalAlignment = VerticalAlignment.Center;
         _pillScore.Margin = new Thickness(6, 0, 0, 1);
         _pillScore.VerticalAlignment = VerticalAlignment.Center;
+        _pillScore.RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative);
+        _pillScore.RenderTransform = _scoreScale;
         _pillBest.Margin = new Thickness(10, 1, 0, 0);
         _pillBest.VerticalAlignment = VerticalAlignment.Center;
+        _pillOppDot.Margin = new Thickness(0, 0, 4, 0);
+        _pillOppDot.VerticalAlignment = VerticalAlignment.Center;
+        _pillOpp = new Border
+        {
+            CornerRadius = new CornerRadius(8), Padding = new Thickness(6, 1, 7, 2), Margin = new Thickness(9, 0, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center, IsVisible = false, // hit-testable, so its tooltip can show the whole line
+            RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative), RenderTransform = _oppScale,
+            Child = new StackPanel { Orientation = Orientation.Horizontal, Children = { _pillOppDot, _pillOppText } },
+        };
         _pillDot.Margin = new Thickness(10, 0, 0, 0);
         _pillDot.VerticalAlignment = VerticalAlignment.Center;
+        _pillTaskDot.Margin = new Thickness(6, 0, 0, 0);
+        _pillTaskDot.VerticalAlignment = VerticalAlignment.Center;
+        _menuButton.Text = "☰";
+        _menuTabText.Text = "☰";
+        _menuButton.Margin = new Thickness(9, 0, 0, 1);
+        _menuButton.Padding = new Thickness(2, 0);
+        _menuButton.VerticalAlignment = VerticalAlignment.Center;
+        _menuButton.Background = Brushes.Transparent; // takes the press itself, so it opens the menu instead of the board
+        _menuButton.Cursor = new Cursor(StandardCursorType.Hand);
+        ToolTip.SetTip(_menuButton, L.T("Menu"));
+        _menuButton.PointerPressed += (_, e) =>
+        {
+            if (!e.GetCurrentPoint(this).Properties.IsLeftButtonPressed) return;
+            e.Handled = true;
+            OpenMenu();
+        };
         _pill.Children.Add(_pillIcon);
         _pill.Children.Add(_pillScore);
         _pill.Children.Add(_pillBest);
+        _pill.Children.Add(_pillOpp);
         _pill.Children.Add(_pillDot);
-        _pillTaskDot.Margin = new Thickness(6, 0, 0, 0);
-        _pillTaskDot.VerticalAlignment = VerticalAlignment.Center;
         _pill.Children.Add(_pillTaskDot);
+        _pill.Children.Add(_menuButton);
 
         Child = new Panel { Children = { _pill, _board } };
         ApplyState();
         SetClaude(ClaudeStatus.Unknown);
+        ThemeChanged();
 
         _collapseTimer.Tick += (_, _) =>
         {
@@ -187,6 +240,18 @@ public sealed class Hud : Border
         PointerMoved += OnMove;
         PointerReleased += OnUp;
         PointerCaptureLost += (_, _) => EndPress();
+    }
+
+    static Border Chip(Ellipse dot, TextBlock text)
+    {
+        dot.Margin = new Thickness(0, 0, 5, 0);
+        dot.VerticalAlignment = VerticalAlignment.Center;
+        return new Border
+        {
+            CornerRadius = new CornerRadius(9), Padding = new Thickness(7, 2, 8, 3), Margin = new Thickness(0, 6, 0, 0),
+            HorizontalAlignment = HorizontalAlignment.Left, IsVisible = false,
+            Child = new StackPanel { Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center, Children = { dot, text } },
+        };
     }
 
     public Vec2 Position
@@ -206,8 +271,11 @@ public sealed class Hud : Border
 
     public bool IsExpanded => _expanded;
 
-    /// <summary>True while a press or drag on the scoreboard is in progress.</summary>
-    public bool IsInteracting => _pressed;
+    /// <summary>True while a press or drag on the scoreboard is in progress, or its menu is open (the overlay then takes the whole mouse).</summary>
+    public bool IsInteracting => _pressed || _menuOpen;
+
+    /// <summary>True only while a press or drag is in progress: an open menu needs the mouse, not frames.</summary>
+    public bool IsPressed => _pressed;
 
     public ClaudeStatus Status => _status;
 
@@ -217,11 +285,12 @@ public sealed class Hud : Border
 
     public void SetGame(string id, string title)
     {
-        foreach (var (key, tab) in _tabs)
-            tab.Background = key == id ? Art.Brush(70, 255, 255, 255) : Brushes.Transparent;
+        _currentId = id;
+        MarkTab();
         _title.Text = L.T(title).ToUpperInvariant();
         foreach (var (key, tab) in _tabs) ToolTip.SetTip(tab, L.T(_games[key].Title));
         UpdateClaudeText();
+        _shownOnce = false; // a new game's first score is not a change worth a bump
 
         _pillIcon.Children.Clear();
         if (_games.TryGetValue(id, out var game))
@@ -232,8 +301,12 @@ public sealed class Hud : Border
         }
     }
 
-    public void Show(HudInfo info)
+    /// <param name="opponent">Who the player is up against and whose turn it is; null in a solo game.</param>
+    public void Show(HudInfo info, Opponent? opponent = null)
     {
+        bool scored = _shownOnce && info.Score != _lastScore;
+        _shownOnce = true;
+        _lastScore = info.Score;
         _score.Text = info.Score;
         _pillScore.Text = info.Score;
         _line.Text = info.Line;
@@ -248,7 +321,94 @@ public sealed class Hud : Border
             break;
         }
         _pillBest.Text = "★ " + shown;
+        ToolTip.SetTip(_best, info.Best);
+        ToolTip.SetTip(_line, info.Line);
+        ToolTip.SetTip(_pillBest, info.Best);
+        if (scored) Bump(_scoreScale, 0.3);
+        SetOpponent(opponent);
     }
+
+    /// <summary>The chip after the score: "CPU · Hard", "vs Alice", or whose turn it is when the game has turns.</summary>
+    void SetOpponent(Opponent? opp)
+    {
+        if (opp == _opponent) return; // records compare by value: nothing to rebuild
+        bool myTurnNow = opp?.MyTurn == true && (_opponent?.MyTurn != true || _opponent.Name != opp.Name);
+        _opponent = opp;
+        _oppChip.IsVisible = _pillOpp.IsVisible = opp != null;
+        if (opp == null) return;
+
+        string name = opp.IsCpu ? L.T("CPU") : Short(opp.Name, 12);
+        string level = opp.IsCpu && opp.Level > 0 ? L.T(MiniGame.LevelNames[opp.Level - 1]) : "";
+        string who = level.Length > 0 ? L.F("CPU · {0}", level) : name;
+        string turn = opp.MyTurn switch { true => L.T("Your turn"), false => L.F("{0}'s turn", name), _ => "" };
+        // the board line names the other side once: "vs CPU · Hard · Your turn", "CPU's turn · Hard", "vs Alice"
+        _oppText.Text = opp.MyTurn switch
+        {
+            true => L.F("vs {0}", who) + " · " + turn,
+            false => level.Length > 0 ? turn + " · " + level : turn,
+            _ => L.F("vs {0}", who),
+        };
+        _pillOppText.Text = turn.Length > 0 ? turn : who;
+        ToolTip.SetTip(_pillOpp, opp.MyTurn == null ? _oppText.Text : L.F("vs {0}", who) + " · " + turn);
+        ToolTip.SetTip(_oppChip, _oppText.Text);
+
+        // turns keep their traffic-light colours; a rival without turns takes the theme's accent (the CPU) or rival colour
+        var theme = Themes.Current;
+        (Color dot, Color bg) = opp.MyTurn switch
+        {
+            true => (Color.Parse("#3DDC84"), Color.Parse("#113A24")),
+            false => (Color.Parse("#FFB020"), Color.Parse("#3A2E12")),
+            _ => opp.IsCpu ? (theme.Accent, Art.Blend(theme.Accent, theme.HudBack, 0.72)) : (theme.Rival, Art.Blend(theme.Rival, theme.HudBack, 0.72)),
+        };
+        var fill = Art.Brush(Art.Safe(dot));
+        _oppDot.Fill = _pillOppDot.Fill = fill;
+        _oppChip.Background = _pillOpp.Background = Art.Brush(bg);
+        _oppDot.Opacity = _pillOppDot.Opacity = 1;
+        if (myTurnNow) Bump(_oppScale, 0.25);
+    }
+
+    static string Short(string s, int max) => s.Length <= max ? s : s[..(max - 1)] + "…";
+
+    /// <summary>The current game's tab lit in the theme's accent.</summary>
+    void MarkTab()
+    {
+        var accent = Themes.Current.Accent;
+        foreach (var (key, tab) in _tabs)
+            tab.Background = key == _currentId ? Art.Brush(Color.FromArgb(95, accent.R, accent.G, accent.B)) : Brushes.Transparent;
+    }
+
+    /// <summary>
+    /// Dresses the scoreboard in <see cref="Themes.Current"/>: its background and text, the accent border and tab,
+    /// the gold of the best score and the rival chip. Everything else about it stays as it is.
+    /// </summary>
+    public void ThemeChanged()
+    {
+        var t = Themes.Current;
+        Background = Art.Brush(Color.FromArgb(240, t.HudBack.R, t.HudBack.G, t.HudBack.B));
+        BorderBrush = Art.Brush(Color.FromArgb(120, t.Accent.R, t.Accent.G, t.Accent.B));
+        var front = Art.Brush(t.HudFront);
+        var soft = Art.Brush(Art.Blend(t.HudFront, t.HudBack, 0.2));
+        var dim = Art.Brush(Art.Blend(t.HudFront, t.HudBack, 0.42));
+        var gold = Art.Brush(t.Gold);
+        _score.Foreground = _pillScore.Foreground = front;
+        _best.Foreground = _pillBest.Foreground = gold;
+        _line.Foreground = soft;
+        _title.Foreground = dim;
+        _menuButton.Foreground = _menuTabText.Foreground = soft;
+        MarkTab();
+        SetOpponent(_opponent);
+    }
+
+    /// <summary>A quick pop of the score or the turn chip: a bit bigger, then back, in a third of a second.</summary>
+    void Bump(ScaleTransform scale, double amount)
+    {
+        if (Fx.ReducedMotion) return;
+        _anims.Add(0.36, k => scale.ScaleX = scale.ScaleY = 1 + amount * (1 - k), Ease.OutCubic, () => scale.ScaleX = scale.ScaleY = 1);
+        Animating?.Invoke();
+    }
+
+    /// <summary>Advances the scoreboard's own animations; true while one runs.</summary>
+    public bool Update(double dt) => _anims.Update(dt);
 
     /// <param name="since">When Claude started working (shows a running timer).</param>
     /// <param name="waited">How long the finished task took (shown on "done").</param>
@@ -365,6 +525,33 @@ public sealed class Hud : Border
         {
             _taskDot.Opacity = _taskChip.Opacity = _pillTaskDot.Opacity = 1;
         }
+
+        // waiting on the other side: the turn dot breathes
+        _oppDot.Opacity = _pillOppDot.Opacity = _opponent?.MyTurn == false && !_blinkOn && !Fx.ReducedMotion ? 0.3 : 1;
+    }
+
+    // ------------------------------------------------------------------ menu
+
+    /// <summary>Opens the ☰ menu under the scoreboard (also reachable from the tray, where there is one).</summary>
+    public void OpenMenu()
+    {
+        if (_menuOpen || MenuItems == null) return;
+        var flyout = new MenuFlyout { Placement = PlacementMode.Bottom };
+        foreach (var item in MenuItems()) flyout.Items.Add(item);
+        flyout.Opened += (_, _) =>
+        {
+            _menuOpen = true;
+            _collapseTimer.Stop();
+            Opacity = 1;
+            InteractionStarted?.Invoke();
+        };
+        flyout.Closed += (_, _) =>
+        {
+            _menuOpen = false;
+            InteractionEnded?.Invoke();
+            if (!IsPointerOver) PointerLeft();
+        };
+        flyout.ShowAt(this);
     }
 
     // ------------------------------------------------------------------ expand / collapse
@@ -381,7 +568,7 @@ public sealed class Hud : Border
 
     public void Collapse()
     {
-        if (!_expanded || _pressed) return;
+        if (!_expanded || _pressed || _menuOpen) return;
         _expanded = false;
         ApplyState();
     }
@@ -389,7 +576,7 @@ public sealed class Hud : Border
     /// <summary>The mouse is no longer over the scoreboard: shrink it back after a short delay.</summary>
     public void PointerLeft()
     {
-        if (_pressed) return;
+        if (_pressed || _menuOpen) return;
         Opacity = IdleOpacity;
         if (_expanded && !_collapseTimer.IsEnabled) _collapseTimer.Start();
     }
@@ -400,7 +587,7 @@ public sealed class Hud : Border
         _pill.IsVisible = !_expanded;
         Width = _expanded ? ExpandedWidth : double.NaN;
         CornerRadius = new CornerRadius(_expanded ? 14 : 16);
-        Padding = _expanded ? new Thickness(10, 8, 12, 9) : new Thickness(6, 4, 12, 4);
+        Padding = _expanded ? new Thickness(10, 8, 12, 9) : new Thickness(6, 4, 10, 4);
         Cursor = new Cursor(_expanded ? StandardCursorType.SizeAll : StandardCursorType.Hand);
     }
 

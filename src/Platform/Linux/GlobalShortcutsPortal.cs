@@ -58,7 +58,7 @@ public sealed class GlobalShortcutsPortal : IDisposable
     {
         try
         {
-            string? address = _address ?? SessionBusAddress();
+            string? address = _address ?? SessionBus.Address();
             if (address == null) return await FailAsync().ConfigureAwait(false);
             var connection = new Connection(address);
             lock (_gate)
@@ -217,15 +217,6 @@ public sealed class GlobalShortcutsPortal : IDisposable
     /// <summary>A request or session token: an object path element, unique enough for one connection.</summary>
     static string NewToken() => "deskarcade" + Random.Shared.Next().ToString("x8");
 
-    static string? SessionBusAddress()
-    {
-        if (Address.Session is { Length: > 0 } address) return address;
-        string? runtimeDir = Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR");
-        if (runtimeDir is not { Length: > 0 }) return null;
-        string socket = Path.Combine(runtimeDir, "bus");
-        return File.Exists(socket) ? "unix:path=" + socket : null;
-    }
-
     async Task<bool> FailAsync()
     {
         await ShutdownAsync().ConfigureAwait(false);
@@ -264,4 +255,58 @@ public sealed class GlobalShortcutsPortal : IDisposable
     }
 
     public void Dispose() => ShutdownAsync().Wait();
+}
+
+/// <summary>The session bus without a portal: where it is, and whether a well-known name is currently owned.</summary>
+internal static class SessionBus
+{
+    const string BusService = "org.freedesktop.DBus";
+    const string BusPath = "/org/freedesktop/DBus";
+
+    /// <summary>The session bus address, or null when the session has none.</summary>
+    public static string? Address()
+    {
+        if (Tmds.DBus.Protocol.Address.Session is { Length: > 0 } address) return address; // qualified: Address() above shadows the type
+        string? runtimeDir = Environment.GetEnvironmentVariable("XDG_RUNTIME_DIR");
+        if (runtimeDir is not { Length: > 0 }) return null;
+        string socket = Path.Combine(runtimeDir, "bus");
+        return File.Exists(socket) ? "unix:path=" + socket : null;
+    }
+
+    /// <summary>
+    /// Asks the bus driver whether <paramref name="name"/> has an owner. Null when there is no session bus or the
+    /// bus did not answer within <paramref name="timeout"/>; throws only on a broken connection. Inside a Flatpak the
+    /// proxy answers for names the manifest may talk to, so no extra permission is needed for a --talk-name.
+    /// </summary>
+    public static async Task<bool?> NameHasOwnerAsync(string name, TimeSpan timeout)
+    {
+        string? address = Address();
+        if (address == null) return null;
+        using var connection = new Connection(address);
+        Task<bool> query = QueryAsync(connection, name);
+        if (await Task.WhenAny(query, Task.Delay(timeout)).ConfigureAwait(false) != query)
+        {
+            _ = query.ContinueWith(static t => _ = t.Exception, TaskContinuationOptions.OnlyOnFaulted); // disposing the connection fails it
+            return null;
+        }
+        return await query.ConfigureAwait(false);
+    }
+
+    static async Task<bool> QueryAsync(Connection connection, string name)
+    {
+        await connection.ConnectAsync().ConfigureAwait(false);
+        var writer = connection.GetMessageWriter();
+        MessageBuffer call;
+        try
+        {
+            writer.WriteMethodCallHeader(BusService, BusPath, BusService, "NameHasOwner", "s");
+            writer.WriteString(name);
+            call = writer.CreateMessage();
+        }
+        finally
+        {
+            writer.Dispose();
+        }
+        return await connection.CallMethodAsync(call, static (message, _) => message.GetBodyReader().ReadBool()).ConfigureAwait(false);
+    }
 }

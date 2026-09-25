@@ -28,6 +28,7 @@ public sealed class OverlayWindow : Window, IGameHost
     readonly string? _startGame;
     readonly Canvas _root = new() { Background = Brushes.Transparent };
     readonly Canvas _gameLayer = new();
+    readonly DecorLayer _decor = new();
     readonly Canvas _hudLayer = new();
     readonly List<MiniGame> _games = new();
     readonly List<HitShape> _hitShapes = new();
@@ -82,6 +83,8 @@ public sealed class OverlayWindow : Window, IGameHost
     public IReadOnlyList<MiniGame> Games => _games;
     public MiniGame? Current { get; private set; }
     public bool OverlayVisible => IsVisible;
+    /// <summary>A --demo run: the games play themselves, and nothing they do should move the player's saved levels.</summary>
+    public bool Demo => _demo;
     public UpdateInfo? AvailableUpdate => _update;
 
     public bool AutostartEnabled
@@ -121,6 +124,7 @@ public sealed class OverlayWindow : Window, IGameHost
 
         _root.Children.Add(_gameLayer);
         _root.Children.Add(Fx.Layer);
+        _root.Children.Add(_decor.Layer);
         _root.Children.Add(_hudLayer);
         Content = _root;
 
@@ -144,7 +148,9 @@ public sealed class OverlayWindow : Window, IGameHost
         Platforms.Enabled = Settings.Platforms;
         Fx.ReducedMotion = Settings.ReducedMotion;
         Engine.Art.ColorBlind = Settings.ColorBlind;
+        Themes.DecorEnabled = Settings.ThemeDecor;
         Themes.Apply(Settings.Theme, DateTime.Today);
+        OnThemeChanged(); // the pieces built before the games (the race label, the decor) take the theme too
         _board = new OfficeBoard(() => _boardEntry);
         _boardTimer.Tick += (_, _) => RefreshBoardEntry();
 
@@ -231,6 +237,13 @@ public sealed class OverlayWindow : Window, IGameHost
             SaveSettings();
             PushHitShapes();
         };
+        _hud.MenuItems = () => QuickMenu.Build(this);
+        _hud.InteractionEnded += () =>
+        {
+            PushHitShapes();
+            Wake();
+        };
+        _hud.Animating += Wake;
         _hud.SizeChanged += (_, e) =>
         {
             // expand toward the middle of the screen, so a board near the right edge stays on screen
@@ -282,6 +295,13 @@ public sealed class OverlayWindow : Window, IGameHost
                 Wake();
             }, TimeSpan.FromSeconds(2.2));
         }
+
+        if (OperatingSystem.IsLinux())
+            DispatcherTimer.RunOnce(() =>
+            {
+                if (!_platform.HasTray)
+                    Notice(L.T("No tray icon on this desktop"), L.T("the ☰ button on the scoreboard has the menu"), Color.FromRgb(255, 209, 102));
+            }, TimeSpan.FromSeconds(8));
 
         if (_demo)
         {
@@ -504,7 +524,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _lastTick = now;
 
         UpdatePointer();
-        bool busy = _captured || HudBusy;
+        bool busy = _captured || _hud.IsPressed; // an open menu takes the mouse but needs no frames
         if (Current != null && !_paused)
         {
             bool playing = Current.Update(dt) || _captured;
@@ -518,6 +538,8 @@ public sealed class OverlayWindow : Window, IGameHost
             busy |= playing;
         }
         busy |= Fx.Update(dt);
+        busy |= _hud.Update(dt);
+        busy |= _decor.Update(dt, busy, Themes.Current, Arena, Platforms.Items); // only rides along with other motion
         PushHitShapes();
 
         if (busy) _idle = 0;
@@ -531,8 +553,11 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public void HudChanged()
     {
-        if (Current != null) _hud.Show(Current.Hud);
+        if (Current != null) _hud.Show(Current.Hud, Current.Opponent ?? _race.Opponent);
     }
+
+    /// <summary>Seconds since the overlay started, for pacing things that live outside the games.</summary>
+    public double Clock => _clock.Elapsed.TotalSeconds;
 
     public void SaveSettings() => Settings.Save();
 
@@ -591,6 +616,7 @@ public sealed class OverlayWindow : Window, IGameHost
         Current = next;
         _gameLayer.Children.Add(next.Layer);
         next.Activate();
+        IntroAnimation(next);
 
         Settings.Game = next.Id;
         SaveSettings();
@@ -606,6 +632,26 @@ public sealed class OverlayWindow : Window, IGameHost
         Wake();
     }
 
+    /// <summary>The new game rises into place with a short fade, so a switch reads as a change rather than a jump.</summary>
+    void IntroAnimation(MiniGame game)
+    {
+        if (!IsVisible) return;
+        var layer = game.Layer;
+        var shift = new TranslateTransform();
+        layer.RenderTransformOrigin = RelativePoint.TopLeft;
+        layer.RenderTransform = shift;
+        layer.Opacity = 0.05;
+        Fx.Anims.Add(0.34, k =>
+        {
+            layer.Opacity = 0.05 + 0.95 * k;
+            shift.Y = 16 * (1 - k);
+        }, Ease.OutCubic, () =>
+        {
+            layer.Opacity = 1;
+            if (layer.RenderTransform == shift) layer.RenderTransform = null;
+        });
+    }
+
     public void NextGame()
     {
         if (!IsVisible) SetOverlayVisible(true);
@@ -614,6 +660,24 @@ public sealed class OverlayWindow : Window, IGameHost
     }
 
     public void ToggleOverlay() => SetOverlayVisible(!IsVisible);
+
+    /// <summary>
+    /// Hide from the ☰ menu. Without a tray the only ways back are the shortcut, "deskarcade --signal show" and the next
+    /// start, so the notice says so and stays on screen for a moment before the overlay goes.
+    /// </summary>
+    public void HideFromMenu()
+    {
+        bool tray;
+        try { tray = _platform.HasTray; }
+        catch { tray = true; }
+        if (tray)
+        {
+            SetOverlayVisible(false);
+            return;
+        }
+        Notice(L.F("{0} shows the overlay again", Shortcuts.Label(HotkeyAction.ToggleOverlay)), L.T("or run: deskarcade --signal show"), Color.FromRgb(170, 180, 195));
+        DispatcherTimer.RunOnce(() => SetOverlayVisible(false), TimeSpan.FromSeconds(3));
+    }
 
     public void SetOverlayVisible(bool visible)
     {
@@ -656,9 +720,20 @@ public sealed class OverlayWindow : Window, IGameHost
             if (_hud.Task != TaskStatus.None) _hud.SetTask(_hud.Task, _taskLabel, _taskSince);
         }
         RefreshPlatforms();
+        _race.Refresh();
         SaveSettings();
         _tray?.Refresh();
         Wake();
+    }
+
+    /// <summary>Race the computer in solo rounds, or play them alone.</summary>
+    public void SetCpuRival(bool on)
+    {
+        Settings.CpuRival = on;
+        SaveSettings();
+        _race.Refresh();
+        HudChanged();
+        _tray?.Refresh();
     }
 
     public void MoveToNextMonitor()
@@ -678,6 +753,7 @@ public sealed class OverlayWindow : Window, IGameHost
         Settings.ResetPositions();
         SaveSettings();
         PlaceHud();
+        foreach (var game in _games) game.PositionsReset();
         Current?.Layout();
         PushHitShapes();
         Wake();
@@ -825,27 +901,147 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public void PlayDaily() => SwitchGame(Daily.For(Daily.Today).GameId);
 
+    bool _installingUpdate;
+
     /// <summary>
-    /// Windows installs: downloads the new installer and runs it silently. The installer asks this copy to
-    /// quit and starts the new version afterwards. Elsewhere, or if anything fails, opens the release page.
+    /// Installs the update this copy can install. A Windows setup is downloaded and run silently; it asks this copy to
+    /// quit and starts the new version afterwards. A Linux .deb goes through PolicyKit and an AppImage replaces its own
+    /// file (<see cref="Platform.Linux.LinuxUpdate"/>); both come back as the same profile. A Flatpak is told to use
+    /// flatpak, and a manual copy, or anything that fails, gets the release page.
     /// </summary>
     public async void InstallUpdate()
     {
-        if (_update is not UpdateInfo u) return;
+        if (_update is not UpdateInfo u || _installingUpdate) return;
+        if (UpdateChecker.InstallKind == InstallKind.Flatpak)
+        {
+            Notice(L.F("Desk Arcade {0} is available", u.Version.ToString(3)), L.T("a Flatpak updates with flatpak update · opening the release page"), Color.FromRgb(255, 209, 102));
+            UpdateChecker.OpenInBrowser(u.Url);
+            return;
+        }
         if (!UpdateChecker.CanInstall)
         {
             UpdateChecker.OpenInBrowser(u.Url);
             return;
         }
-        SetOverlayVisible(true);
-        Notice(L.F("Downloading version {0}…", u.Version.ToString(3)), L.T("the game restarts when it is done"), Color.FromRgb(77, 163, 255));
-        string? installer = await UpdateChecker.DownloadInstallerAsync(u);
-        if (installer == null)
+        _installingUpdate = true;
+        try
+        {
+            SetOverlayVisible(true);
+            var file = await DownloadUpdateAsync(u);
+            if (file == null) return;
+            switch (UpdateChecker.InstallKind)
+            {
+                case InstallKind.Deb: await InstallDebAsync(u, file); break;
+                case InstallKind.AppImage: await InstallAppImageAsync(u, file); break;
+                default: RunWindowsSetup(u, file.Path); break;
+            }
+        }
+        finally
+        {
+            _installingUpdate = false;
+        }
+    }
+
+    /// <summary>Downloads the asset for this copy, with the percentage on the scoreboard's task chip when it is free, else in a notice every 25%.</summary>
+    async System.Threading.Tasks.Task<DownloadedUpdate?> DownloadUpdateAsync(UpdateInfo u)
+    {
+        string version = u.Version.ToString(3);
+        var blue = Color.FromRgb(77, 163, 255);
+        Notice(L.F("Downloading version {0}…", version),
+            UpdateChecker.InstallKind == InstallKind.Deb ? L.T("then PolicyKit asks for your password to install it") : L.T("the game restarts when it is done"), blue);
+        bool chip = _hud.Task == TaskStatus.None && _taskSince == null, done = false;
+        int shown = 0;
+        var progress = new Progress<int>(percent =>
+        {
+            if (done) return; // a late report must not bring the chip back
+            if (chip && _taskSince == null) _hud.SetTask(TaskStatus.Running, L.F("Update {0}%", percent));
+            else if (UpdateChecker.CrossedProgressStep(shown, percent)) Notice(L.F("Downloading version {0}…", version), L.F("{0}%", percent), blue);
+            shown = percent;
+        });
+        var file = await UpdateChecker.DownloadInstallerAsync(u, progress);
+        done = true;
+        if (chip && _taskSince == null) _hud.SetTask(TaskStatus.None);
+        if (file == null)
         {
             Notice(L.T("Couldn't download the update"), L.T("opening the download page instead"), Color.FromRgb(255, 107, 107));
             UpdateChecker.OpenInBrowser(u.Url);
+        }
+        else if (!file.Verified)
+        {
+            Notice(L.T("This release has no checksum"), L.T("installing the download unverified"), Color.FromRgb(255, 209, 102));
+        }
+        return file;
+    }
+
+    /// <summary>
+    /// The PolicyKit (or terminal and sudo) install of a downloaded .deb. The package closes this copy while it runs, so the
+    /// wrapper shell is what starts the new version; this copy only reports what it still sees.
+    /// </summary>
+    async System.Threading.Tasks.Task InstallDebAsync(UpdateInfo u, DownloadedUpdate file)
+    {
+        string version = u.Version.ToString(3), dir = Path.GetDirectoryName(file.Path) ?? ".", folder = Platform.Linux.LinuxUpdate.Tidy(dir);
+        var gold = Color.FromRgb(255, 209, 102);
+        SaveSettings();
+        Stats.Save(); // nothing stays only in memory when the package's prerm closes the game
+        var install = Platform.Linux.LinuxUpdate.StartDebInstall(file.Path, Program.Profile, L.T("The update did not install · press Enter to close this window"));
+        if (install == null)
+        {
+            Notice(L.F("Update {0} downloaded", version), L.F("no pkexec or terminal to install it · it is in {0}", folder), gold);
+            if (!UpdateChecker.OpenFolder(dir)) UpdateChecker.OpenInBrowser(u.Url);
             return;
         }
+        if (install.ViaTerminal)
+            Notice(L.T("Finishing the update in a terminal"), L.T("enter your password there · the game restarts when it is done"), Color.FromRgb(77, 163, 255));
+        int? code = await install.ExitCode;
+        if (code == null)
+        {
+            Notice(L.F("Update {0} downloaded", version), L.F("if it did not install, it is in {0}", folder), gold);
+            return;
+        }
+        switch (Platform.Linux.LinuxUpdate.Classify(code.Value))
+        {
+            case Platform.Linux.LinuxUpdate.Outcome.Installed:
+                Notice(L.F("Installed {0} · restarting", version), L.T("the new version starts in a moment"), Color.FromRgb(61, 220, 132));
+                await System.Threading.Tasks.Task.Delay(1500);
+                Quit();
+                break;
+            case Platform.Linux.LinuxUpdate.Outcome.Dismissed:
+                Notice(L.F("Update {0} downloaded", version), L.F("saved in {0} · double-click the .deb to install it", folder), gold);
+                if (!UpdateChecker.OpenFolder(dir)) UpdateChecker.OpenInBrowser(u.Url);
+                break;
+            default:
+                Notice(L.F("Update failed · exit code {0}", code.Value), L.T("opening the download page instead"), Color.FromRgb(255, 107, 107));
+                UpdateChecker.OpenInBrowser(u.Url);
+                break;
+        }
+    }
+
+    /// <summary>Replaces the running AppImage with the download and starts the new file; when that is not possible the download is kept and the player told where.</summary>
+    async System.Threading.Tasks.Task InstallAppImageAsync(UpdateInfo u, DownloadedUpdate file)
+    {
+        string version = u.Version.ToString(3);
+        string running = Environment.GetEnvironmentVariable("APPIMAGE") ?? Program.LaunchPath;
+        var result = await System.Threading.Tasks.Task.Run(() => Platform.Linux.LinuxUpdate.InstallAppImage(file.Path, running));
+        if (!result.Replaced)
+        {
+            Notice(L.F("Update {0} downloaded", version), L.F("couldn't replace the running file · the new one is {0}", Platform.Linux.LinuxUpdate.Tidy(result.Path)), Color.FromRgb(255, 209, 102));
+            if (!UpdateChecker.OpenFolder(Path.GetDirectoryName(result.Path) ?? ".")) UpdateChecker.OpenInBrowser(u.Url);
+            return;
+        }
+        SaveSettings();
+        if (!Platform.Linux.LinuxUpdate.Relaunch(result.Path, Program.Profile))
+        {
+            Notice(L.F("Installed {0}", version), L.T("start Desk Arcade again to play it"), Color.FromRgb(61, 220, 132));
+            return;
+        }
+        Notice(L.F("Installed {0} · restarting", version), L.T("the new version starts in a moment"), Color.FromRgb(61, 220, 132));
+        await System.Threading.Tasks.Task.Delay(1500);
+        Quit();
+    }
+
+    /// <summary>Runs the downloaded Windows installer silently; it closes this copy and starts the new version.</summary>
+    void RunWindowsSetup(UpdateInfo u, string installer)
+    {
         try
         {
             Process.Start(new ProcessStartInfo(installer, "/SILENT /SUPPRESSMSGBOXES /NORESTART") { UseShellExecute = true });
@@ -902,7 +1098,8 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public void RoundEnded(int score) => _race.LocalEnd(score);
 
-    static readonly Color RivalColor = Color.FromRgb(255, 92, 108);
+    /// <summary>The other side's colour: a co-worker's ghost markers, and the computer rival's.</summary>
+    public static readonly Color RivalColor = Color.FromRgb(255, 92, 108);
 
     public void ShareAction(Vec2 at, int points)
     {
@@ -926,13 +1123,16 @@ public sealed class OverlayWindow : Window, IGameHost
         if (text == null) return;
         _raceLabel.Text = text;
         var b = _hud.Area;
-        Canvas.SetLeft(_raceLabel, b.Left);
+        _raceLabel.Measure(Size.Infinity); // keep the whole line on screen when the scoreboard sits near the right edge
+        double width = _raceLabel.DesiredSize.Width;
+        Canvas.SetLeft(_raceLabel, Math.Max(Arena.Left + 4, Math.Min(b.Left, Arena.Right - width - 4)));
         Canvas.SetTop(_raceLabel, b.Bottom + 6 < Arena.Bottom - 30 ? b.Bottom + 6 : b.Top - 30);
     }
 
-    public void RaceResult(string title, string sub, Color color, bool won)
+    /// <param name="down">How far below the usual spot to show it, when another popup is due there at the same time.</param>
+    public void RaceResult(string title, string sub, Color color, bool won, double down = 0)
     {
-        var at = new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.3);
+        var at = new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.3 + down);
         Fx.Popup(at, title, color, 40, 2.6, sub);
         if (won) Fx.Burst(at, new[] { color, Colors.White }, 40, 520, 650, 7, 1.0);
         Sound.Play(won ? "best" : "buzzer", won ? 0.8 : 0.4);
@@ -1111,16 +1311,42 @@ public sealed class OverlayWindow : Window, IGameHost
             Color.FromRgb(120, 200, 255));
     }
 
+    /// <summary>Snow, leaves and the other theme decorations on or off.</summary>
+    public void SetThemeDecor(bool on)
+    {
+        Settings.ThemeDecor = on;
+        Themes.DecorEnabled = on;
+        SaveSettings();
+        _tray?.Refresh();
+        Wake();
+    }
+
     public void SetTheme(string id)
     {
         Settings.Theme = id;
         SaveSettings();
         if (Themes.Apply(id, DateTime.Today)) OnThemeChanged();
         _tray?.Refresh();
+        if (!IsVisible) return;
+        // the theme's name and mood, with a burst of its confetti, so the pick reads at once
+        var t = Themes.Current;
+        var at = new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.3);
+        Fx.Popup(at, L.T(t.Name), t.Gold, 40, 2.4, L.T(t.Mood));
+        Fx.Burst(at, t.Confetti, 48, 540, 650, 7, 1.1);
+        Sound.Play("best", 0.5, 1.15);
+        Wake();
     }
 
+    /// <summary>
+    /// <see cref="Themes.Current"/> changed: every game redraws its themed pieces, the current one lays out again,
+    /// and the shared chrome (the scoreboard, the race label, the decor) follows. Also run once from the constructor.
+    /// </summary>
     void OnThemeChanged()
     {
+        var t = Themes.Current;
+        _raceLabel.Background = Engine.Art.Brush(Color.FromArgb(200, t.Ink.R, t.Ink.G, t.Ink.B));
+        _raceLabel.Foreground = Engine.Art.Brush(t.HudFront);
+        _hud?.ThemeChanged();
         foreach (var game in _games) game.ThemeChanged();
         Current?.Layout();
         Wake();

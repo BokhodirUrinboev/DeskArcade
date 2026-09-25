@@ -930,5 +930,143 @@ public static partial class Strings
         ["Bumper cars"] = "Bamper poygasi",
         ["Hit 500 bumpers"] = "Bamperlarga 500 marta tegizing",
         ["Hit {0} bumpers in Pinball"] = "Pinbolda bamperlarga {0} marta tegizing",
+        // ---- 1.8.0: scoreboard, races against the computer, movable boards
+        ["Your turn"] = "Sizning yurishingiz",
+        ["CPU · {0}"] = "Kompyuter ({0})",
+        ["Menu"] = "Menyu",
+        ["{0} shows the overlay again"] = "{0} o'yinni yana ko'rsatadi",
+        ["or run: deskarcade --signal show"] = "yoki ishga tushiring: deskarcade --signal show",
+        ["Hide overlay"] = "O'yinni yashirish",
+        ["Drag to move"] = "Ko'chirish uchun torting",
+        ["Race the computer in solo rounds"] = "Yakka raundlarda kompyuter bilan poyga",
+        ["CPU ({0}): {1}"] = "Kompyuter ({0}): {1}",
+        ["CPU ({0}) is heading for {1}"] = "Kompyuter ({0}) {1} ga intilmoqda",
+        ["Race the computer: start a round and it plays one too"] = "Kompyuter bilan poyga: raund boshlang, u ham o'ynaydi",
+        ["the CPU goes easier: {0}"] = "kompyuter osonlashdi: {0}",
+        ["Pacesetter"] = "Sur'at beruvchi",
+        ["Beat the computer in 10 races"] = "Kompyuterni 10 poygada yutib chiqing",
+
+
+        // ---- 1.8.0: Linux overlay
+        ["No tray icon on this desktop"] = "Bu ish stolida trey belgisi yo'q",
+        ["the ☰ button on the scoreboard has the menu"] = "menyu hisob taxtasidagi ☰ tugmasida",
+
+
+        // ---- 1.8.0: pets
+        ["After the ball!"] = "To'p ketidan!",
+        ["Begging for a treat · click the jar"] = "Shirinlik so'rayapti · idishni bosing",
+        ["Bringing the ball back"] = "To'pni olib kelyapti",
+        ["Catching flies"] = "Pashsha tutyapti",
+        ["Click to pet · right-click for a trick · throw the ball · click the jar for a treat"] = "Silash uchun bosing · nayrang uchun o'ng tugma · to'pni uloqtiring · shirinlik uchun idishni bosing",
+        ["Coming over to sit with you"] = "Yoningizga o'tirgani kelyapti",
+        ["Curled up"] = "G'ujanak bo'lib yotibdi",
+        ["Dragon"] = "Ajdar",
+        ["Feed your pet 30 treats"] = "Uy hayvoningizga 30 ta shirinlik bering",
+        ["Fetch!"] = "Olib kel!",
+        ["Fetches {0} · Treats {1} · Pets {2}"] = "Olib kelish {0} · Shirinlik {1} · Silash {2}",
+        ["Flying"] = "Uchyapti",
+        ["Frog"] = "Qurbaqa",
+        ["Good morning!"] = "Xayrli tong!",
+        ["Hamster"] = "Xomyak",
+        ["Have your pet bring the ball back 20 times"] = "Uy hayvoningiz to'pni 20 marta olib kelsin",
+        ["Having a look around"] = "Atrofga qarayapti",
+        ["Keeping you company"] = "Sizga hamroh bo'lyapti",
+        ["Meet a co-worker's pet over the LAN"] = "Hamkasbingizning uy hayvoni bilan tarmoq orqali uchrashing",
+        ["Nom nom nom"] = "Nam-nam-nam",
+        ["Off to get a treat"] = "Shirinlik olgani ketdi",
+        ["Owl"] = "Boyqush",
+        ["Parrot"] = "To'tiqush",
+        ["Playdate"] = "Uchrashuv",
+        ["Puffing smoke"] = "Tutun chiqaryapti",
+        ["Safe in its shell"] = "Qobig'ida bekinib olgan",
+        ["Stuffing its cheeks"] = "Lunjini to'ldiryapti",
+        ["Treat time"] = "Shirinlik vaqti",
+        ["Turtle"] = "Toshbaqa",
+        ["Visiting {0}'s {1}"] = "{0}ning uy hayvoni ({1}) bilan uchrashyapti",
+        ["Wants to play · throw the ball"] = "O'ynagisi kelyapti · to'pni uloqtiring",
+        ["Watching the ball"] = "To'pni kuzatyapti",
+        ["Watching you"] = "Sizni kuzatyapti",
+        ["Hello!"] = "Salom!",
+        ["Pretty bird!"] = "Chiroyli qush!",
+        ["Cracker?"] = "Pechenye?",
+
+
+        // ---- 1.8.0: board and turn games
+        ["the CPU goes easier: {0} · click a grid for a rematch"] = "kompyuter osonlashdi: {0} · qayta o'ynash uchun maydonni bosing",
+
+
+        // ---- 1.8.0: duels and card tables (Durak, Last Card, Golf, Archery, Hoops)
+
+
+        // ---- 1.8.0: races, part 1 (Keepy-Uppy, Bug Squash, Can Knockdown, Brick Breaker)
+        ["GO!"] = "BOSHLANDI!",
+        ["{0} seconds · spare the ladybugs"] = "{0} soniya · xonqizlarga tegmang",
+
+
+        // ---- 1.8.0: races, part 2 (Clay Shooting, Plinko, Slingshot, Darts)
+        ["Click the sheet again to give up the leg"] = "Legdan voz kechish uchun jadvalni yana bir bor bosing",
+        ["LEG GIVEN UP"] = "LEGDAN VOZ KECHILDI",
+
+
+        // ---- 1.8.0: races, part 3 (Pool, Memory, Code Breaker, Solitaire, Interns)
+        ["Click a card to flip it · find all the pairs · right-drag moves the cards"] = "Kartani ochish uchun ustiga bosing · barcha juftlarni toping · kartalarni o'ng tugma bilan suring",
+        ["Click the stock to turn a card · click or drag cards to move them · right-drag moves the felt"] = "Kartani ochish uchun to'plamni bosing · kartalarni bosing yoki suring · stolni o'ng tugma bilan suring",
+
+
+        // ---- 1.8.0: animation pass (Bubbles, Whack, Tower, Bowling, Fishing, Pinball, Paper Toss, Blockfall, Hockey, Pong)
+        ["First to {0} · CPU {1} · drag your blue mallet"] = "{0} golgacha · kompyuter: {1} · ko'k tayoqchani suring",
+        ["First to {0} · CPU {1} · drag your paddle"] = "{0} ochkogacha · kompyuter: {1} · raketkangizni suring",
+        ["grab your mallet for a rematch"] = "qayta o'ynash uchun tayoqchani oling",
+        ["grab your paddle for a rematch"] = "revansh uchun raketkani ushlang",
+
+
+
+
+        // ---- 1.8.0: Linux updates
+        ["Update {0}%"] = "Yangilanish {0}%",
+        ["then PolicyKit asks for your password to install it"] = "keyin PolicyKit o'rnatish uchun parolingizni so'raydi",
+        ["This release has no checksum"] = "Bu relizda nazorat yig'indisi yo'q",
+        ["installing the download unverified"] = "yuklab olingan fayl tekshiruvsiz o'rnatilmoqda",
+        ["a Flatpak updates with flatpak update · opening the release page"] = "Flatpak flatpak update bilan yangilanadi · reliz sahifasi ochilmoqda",
+        ["The update did not install · press Enter to close this window"] = "Yangilanish o'rnatilmadi · bu oynani yopish uchun Enter bosing",
+        ["Update {0} downloaded"] = "{0} yangilanishi yuklab olindi",
+        ["no pkexec or terminal to install it · it is in {0}"] = "o'rnatish uchun pkexec ham, terminal ham yo'q · fayl {0} ichida",
+        ["Finishing the update in a terminal"] = "Yangilanish terminalda yakunlanmoqda",
+        ["enter your password there · the game restarts when it is done"] = "parolingizni o'sha yerda kiriting · tugagach o'yin qayta ishga tushadi",
+        ["if it did not install, it is in {0}"] = "agar o'rnatilmagan bo'lsa, fayl {0} ichida",
+        ["Installed {0} · restarting"] = "{0} o'rnatildi · qayta ishga tushmoqda",
+        ["the new version starts in a moment"] = "yangi versiya birozdan keyin ishga tushadi",
+        ["saved in {0} · double-click the .deb to install it"] = "{0} ichida saqlandi · o'rnatish uchun .deb faylini ikki marta bosing",
+        ["Update failed · exit code {0}"] = "Yangilanish muvaffaqiyatsiz · chiqish kodi {0}",
+        ["couldn't replace the running file · the new one is {0}"] = "ishlayotgan faylni almashtirib bo'lmadi · yangisi: {0}",
+        ["Installed {0}"] = "{0} o'rnatildi",
+        ["start Desk Arcade again to play it"] = "o'ynash uchun Desk Arcade'ni qayta ishga tushiring",
+
+
+        // ---- 1.8.0: themes
+        ["Ocean"] = "Okean",
+        ["Forest"] = "O'rmon",
+        ["Sunset"] = "Shom",
+        ["Candy"] = "Shirinlik",
+        ["Mono"] = "Mono",
+        ["Spring"] = "Bahor",
+        ["Autumn"] = "Kuz",
+        ["Midnight"] = "Yarim tun",
+        ["Theme decorations"] = "Mavzu bezaklari",
+        ["the desk as you know it"] = "o'zingiz bilgan stol",
+        ["lights on, volume up"] = "chiroqlar yoqilgan, ovoz balandroq",
+        ["insert coin"] = "tanga tashlang",
+        ["boo"] = "buu",
+        ["mind the snow"] = "qorga ehtiyot bo'ling",
+        ["deep breath"] = "chuqur nafas oling",
+        ["quiet under the trees"] = "daraxtlar ostida sokinlik",
+        ["golden hour"] = "oltin soat",
+        ["sweet"] = "shirin",
+        ["just the game"] = "faqat o'yin",
+        ["fresh start"] = "yangi boshlanish",
+        ["crunchy leaves"] = "shitirlagan barglar",
+        ["lights out"] = "chiroqlar o'chdi",
+
+
     };
 }

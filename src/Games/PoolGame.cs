@@ -13,12 +13,15 @@ namespace DeskArcade.Games;
 /// Pool, clear-the-table style: a see-through pool table over the desktop with fifteen numbered balls in
 /// a rack. Press on the cue ball, drag back and let go; the further the drag, the harder the shot. The aim
 /// line shows the first ball the cue ball would meet and where that ball would go. Pot all fifteen in as
-/// few shots as possible; potting the cue ball (a scratch) costs a shot. Only the cue ball takes the mouse.
+/// few shots as possible; potting the cue ball (a scratch) costs a shot. The grip above the table (or a
+/// right-drag) moves it. A rack is a round: over the LAN, or against the computer, the fewer shots to clear
+/// the table win. Only the cue ball and the grip take the mouse.
 /// </summary>
 public sealed class PoolGame : MiniGame
 {
-    const double MaxWidth = 1100, WidthShare = 0.72, CushionW = 10, RailW = 28, Reach = 30;
+    const double MaxWidth = 1100, WidthShare = 0.72, CushionW = 10, RailW = 28, Reach = 30, Frame = RailW + CushionW;
     const double MaxPull = 180, MinPull = 8, MaxShot = 2600, SinkTime = 0.25, StickLen = 380;
+    const double DrawBackTime = 0.16, StrikeTime = 0.07, RackInTime = 0.28, FlashTime = 0.45;
     const int Balls = 15;
 
     static readonly Color Gold = Color.FromRgb(255, 209, 102);
@@ -36,12 +39,12 @@ public sealed class PoolGame : MiniGame
         public required Disc Body;
         public Sprite Sprite = new();
         public int Number;
-        public double SinkT = -1;
-        public Vec2 SinkFrom, SinkTo;
     }
 
     readonly DiscTable _table = new() { Restitution = 0.95, CushionRestitution = 0.75, Friction = 110, Damping = 0.3 };
-    readonly Canvas _tableLayer = new() { IsHitTestVisible = false };
+    readonly Canvas _tableLayer = new() { IsHitTestVisible = false }; // the art, drawn around a felt at the origin
+    readonly TranslateTransform _tableTr = new();                     // and carried to where the felt is
+    readonly Canvas _fxLayer = new() { IsHitTestVisible = false };
     readonly Canvas _ballLayer = new() { IsHitTestVisible = false };
     readonly Canvas _aimLayer = new() { IsHitTestVisible = false };
     readonly Line _aimLine = Dashed(170);
@@ -51,11 +54,13 @@ public sealed class PoolGame : MiniGame
     readonly Ball[] _balls = new Ball[Balls + 1]; // [0] is the cue ball
     readonly List<Ball> _sinking = new();
     readonly Dictionary<string, double> _lastSound = new();
+    readonly DragHandle _handle;
 
     Rect _felt;
-    double _r, _time;
-    int _shots, _pottedThisShot;
-    bool _placed, _aiming, _inShot, _scratch, _cleared;
+    Vec2 _origin;
+    double _r, _time, _shrink = 1;
+    int _shots, _pottedThisShot, _rackNo;
+    bool _placed, _racked, _aiming, _inShot, _striking, _scratch, _cleared, _racing, _breakPending;
     Vec2 _pull;
 
     Ball Cue => _balls[0];
@@ -67,6 +72,7 @@ public sealed class PoolGame : MiniGame
         _table.Collided += (a, b, speed) =>
         {
             if (speed > 30) PlayThrottled("click", Math.Min(0.9, 0.08 + speed / 1600), 0.9 + Rng.NextDouble() * 0.2);
+            if (_breakPending && speed > 150) BreakFlash((a.Pos + b.Pos) * 0.5);
         };
         _table.Cushion += (d, speed) =>
         {
@@ -79,11 +85,16 @@ public sealed class PoolGame : MiniGame
         _aimLayer.Children.Add(_ghost);
         _aimLayer.IsVisible = false;
         _stick.IsVisible = false;
+        _handle = new DragHandle(host, Id, Title);
+        _tableLayer.RenderTransformOrigin = RelativePoint.TopLeft;
+        _tableLayer.RenderTransform = _tableTr;
 
         Layer.Children.Add(_tableLayer);
+        Layer.Children.Add(_fxLayer);
         Layer.Children.Add(_aimLayer);
         Layer.Children.Add(_ballLayer);
         Layer.Children.Add(_stick);
+        Layer.Children.Add(_handle.Visual);
     }
 
     public override string Id => "pool";
@@ -124,26 +135,91 @@ public sealed class PoolGame : MiniGame
         }
     }
 
+    // ------------------------------------------------------------------ races
+
+    public override bool SupportsLan => true;
+    public override (int Score, bool Active)? Race => (_shots, _racing);
+    public override bool RaceLowerIsBetter => true;
+    public override int RaceBaseline => 30;
+    public override int RaceMin => 10;
+    public override int RaceBest => (int)Host.Stats.Get("pool.best");
+    public override double RaceSeconds => 150;
+
+    /// <summary>The rival's round began: a fresh rack, unless this one is still unbroken, and the round is on.</summary>
+    public override void StartRace()
+    {
+        if (_racing) return;
+        if (_shots > 0 || _cleared) Rack();
+        BeginRound();
+    }
+
+    void BeginRound()
+    {
+        _racing = true;
+        Host.RoundStarted();
+        Host.HudChanged();
+    }
+
+    void EndRound()
+    {
+        if (!_racing) return;
+        _racing = false;
+        Host.RoundEnded(_shots);
+    }
+
     // ------------------------------------------------------------------ table
 
     public override void Layout()
     {
-        var old = _felt;
-        double oldR = _r;
-        _felt = PlaceTable();
-        _r = Math.Clamp(_felt.Width / 92, 8, 12);
-        _table.Bounds = _felt;
-        _table.Pockets.Clear();
-        double r = _r, f = _felt.X, t = _felt.Y, w = _felt.Width, h = _felt.Height;
-        foreach (var (x, y) in new[] { (f - r * 0.5, t - r * 0.5), (f + w + r * 0.5, t - r * 0.5), (f - r * 0.5, t + h + r * 0.5), (f + w + r * 0.5, t + h + r * 0.5) })
-            _table.Pockets.Add(new DiscTable.Pocket(new Vec2(x, y), r * 2));
-        _table.Pockets.Add(new DiscTable.Pocket(new Vec2(f + w / 2, t - r * 0.9), r * 1.75));
-        _table.Pockets.Add(new DiscTable.Pocket(new Vec2(f + w / 2, t + h + r * 0.9), r * 1.75));
-
-        foreach (var b in _balls) b.Body.R = r;
+        var a = Host.Arena;
         if (!_placed)
         {
             _placed = true;
+            var felt = PlaceTable();
+            _shrink = felt.Width / Math.Max(1, BaseWidth());
+            _origin = _handle.Saved() ?? new Vec2(felt.X - Frame, felt.Y - Frame);
+        }
+        double w = BaseWidth() * _shrink, h = w / 2;
+        double ow = w + Frame * 2, oh = h + Frame * 2;
+        _origin = new Vec2(
+            Clamp(_origin.X, a.Left + 4, Math.Max(a.Left + 4, a.Right - ow - 4)),
+            Clamp(_origin.Y, a.Top + 4, Math.Max(a.Top + 4, a.Bottom - oh - 4)));
+        MoveTable(new Rect(_origin.X + Frame, _origin.Y + Frame, w, h));
+        Host.HudChanged();
+    }
+
+    public override void PositionsReset() => _placed = false;
+
+    /// <summary>The felt's width when nothing is in the way: a share of the screen, capped, and never taller than it can be.</summary>
+    double BaseWidth()
+    {
+        var a = Host.Arena;
+        return Math.Max(120, Math.Min(Math.Min(a.Width * WidthShare, MaxWidth), (a.Height - Frame * 2 - 30) * 2));
+    }
+
+    /// <summary>The rails, cushions and pockets around the felt: the panel the grip moves.</summary>
+    Rect Outer => _felt.Inflate(Frame);
+
+    /// <summary>
+    /// Sets the felt (moved or resized): the physics, the pockets and every ball's place on it. The table art is drawn
+    /// once around a felt at the origin and a transform carries it to the felt, so a drag only moves that transform,
+    /// the pockets and the balls; the art (and the ball sprites) are rebuilt only when the felt or the balls change size.
+    /// </summary>
+    void MoveTable(Rect felt)
+    {
+        var old = _felt;
+        double oldR = _r;
+        _felt = felt;
+        _r = Math.Clamp(_felt.Width / 92, 8, 12);
+        _table.Bounds = _felt;
+        _table.Pockets.Clear();
+        _table.Pockets.AddRange(PocketsOf(_felt, _r));
+        bool resized = old.Size != _felt.Size;
+
+        foreach (var b in _balls) b.Body.R = _r;
+        if (!_racked)
+        {
+            _racked = true;
             Rack();
         }
         else if (old != _felt)
@@ -156,18 +232,37 @@ public sealed class PoolGame : MiniGame
                 b.Body.Pos = new Vec2(_felt.X + (b.Body.Pos.X - old.X) * k, _felt.Y + (b.Body.Pos.Y - old.Y) * k);
                 b.Body.Vel *= k;
             }
-            _table.Separate(); // the radius shrinks less than the table, so pull apart any that now overlap
+            if (resized) _table.Separate(); // the radius shrinks less than the table, so pull apart any that now overlap
         }
         if (oldR != _r) RebuildBalls();
-        DrawTable();
+        if (resized) DrawTable();
+        _tableTr.X = _felt.X;
+        _tableTr.Y = _felt.Y;
         Draw();
-        Host.HudChanged();
+        _handle.Show(Outer);
+    }
+
+    /// <summary>The six pockets of a felt: one in each corner, one in the middle of each long rail (in that order).</summary>
+    public static DiscTable.Pocket[] PocketsOf(Rect felt, double r)
+    {
+        double f = felt.X, t = felt.Y, w = felt.Width, h = felt.Height;
+        return new[]
+        {
+            new DiscTable.Pocket(new Vec2(f - r * 0.5, t - r * 0.5), r * 2),
+            new DiscTable.Pocket(new Vec2(f + w + r * 0.5, t - r * 0.5), r * 2),
+            new DiscTable.Pocket(new Vec2(f - r * 0.5, t + h + r * 0.5), r * 2),
+            new DiscTable.Pocket(new Vec2(f + w + r * 0.5, t + h + r * 0.5), r * 2),
+            new DiscTable.Pocket(new Vec2(f + w / 2, t - r * 0.9), r * 1.75),
+            new DiscTable.Pocket(new Vec2(f + w / 2, t + h + r * 0.9), r * 1.75),
+        };
     }
 
     public override void Deactivate()
     {
+        _handle.Cancel();
         _aiming = false;
         HideAim();
+        Anims.Finish();
     }
 
     /// <summary>Centred on the screen and clear of the HUD, shrinking if it has to.</summary>
@@ -175,14 +270,12 @@ public sealed class PoolGame : MiniGame
     {
         var a = Host.Arena;
         var hud = Host.HudBounds.Inflate(10);
-        double border = RailW + CushionW;
-        double w = Math.Min(a.Width * WidthShare, MaxWidth);
-        w = Math.Min(w, (a.Height - border * 2 - 30) * 2);
+        double w = BaseWidth();
         for (int attempt = 0; attempt < 10; attempt++, w *= 0.92)
         {
             double h = w / 2;
             var felt = new Rect(a.Center.X - w / 2, a.Center.Y - h / 2, w, h);
-            var outer = felt.Inflate(border);
+            var outer = felt.Inflate(Frame);
             if (hud.Width <= 0 || !outer.Intersects(hud)) return felt;
             // slide it away from the HUD: below, to the left, above or to the right, whichever fits
             foreach (var shift in new[]
@@ -204,9 +297,13 @@ public sealed class PoolGame : MiniGame
 
     void Rack()
     {
+        _rackNo++;
+        Anims.Clear(); // whatever the last rack was still doing (a strike, a sink, a flash) is over
+        _fxLayer.Children.Clear();
+        _striking = false;
+        _stick.IsVisible = false;
         _shots = 0;
-        _cleared = false;
-        _inShot = false;
+        _cleared = _inShot = _racing = false;
         foreach (var b in _sinking) b.Sprite.IsVisible = false;
         _sinking.Clear();
 
@@ -241,14 +338,21 @@ public sealed class PoolGame : MiniGame
                 b.Body.Pos = foot + new Vec2(row * gap * 0.866, (i - row / 2.0) * gap);
                 b.Body.Vel = default;
                 b.Body.Sunk = false;
-                b.SinkT = -1;
                 b.Sprite.IsVisible = true;
-                b.Sprite.Scale = 1;
                 b.Sprite.Opacity = 1;
+                PopIn(b, 0.02 * slot);
             }
         }
         PlaceCue();
         Host.HudChanged();
+        Host.Wake();
+    }
+
+    /// <summary>A ball settles onto the felt: it grows into place with a little overshoot.</summary>
+    void PopIn(Ball b, double delay = 0)
+    {
+        b.Sprite.Scale = 0.01;
+        Anims.Add(RackInTime, k => b.Sprite.Scale = Math.Max(0.01, k), Ease.OutBack, null, delay);
     }
 
     void PlaceCue()
@@ -257,10 +361,11 @@ public sealed class PoolGame : MiniGame
         cue.Body.Sunk = false;
         cue.Body.Vel = default;
         cue.Body.Pos = FreeSpot(HeadSpot);
-        cue.SinkT = -1;
         cue.Sprite.IsVisible = true;
-        cue.Sprite.Scale = 1;
         cue.Sprite.Opacity = 1;
+        cue.Sprite.Set(cue.Body.Pos);
+        PopIn(cue);
+        Host.Wake();
     }
 
     /// <summary>The spot itself, or the nearest free place along the head string if a ball is sitting on it.</summary>
@@ -283,10 +388,16 @@ public sealed class PoolGame : MiniGame
     public override void CollectHitShapes(List<HitShape> into)
     {
         if (Ready) into.Add(HitShape.Circle(Cue.Body.Pos, Reach));
+        into.Add(_handle.Hit);
     }
 
     public override bool PointerDown(Vec2 p, bool right)
     {
+        if (right || _handle.Contains(p))
+        {
+            _handle.Begin(p, _origin, anywhere: true); // the grip, or a right-drag on the cue ball
+            return true;
+        }
         if (!Ready || (p - Cue.Body.Pos).Length > Reach) return false;
         if (_cleared)
         {
@@ -300,6 +411,7 @@ public sealed class PoolGame : MiniGame
 
     public override void PointerUp(Vec2 p)
     {
+        _handle.End(_origin);
         if (!_aiming) return;
         _aiming = false;
         HideAim();
@@ -309,6 +421,7 @@ public sealed class PoolGame : MiniGame
 
     public override void PointerCancel()
     {
+        _handle.Cancel();
         if (!_aiming) return;
         _aiming = false; // cut off mid-aim: no shot
         HideAim();
@@ -316,16 +429,54 @@ public sealed class PoolGame : MiniGame
 
     static double SpeedFor(double pull) => MaxShot * Math.Pow(Math.Min(pull, MaxPull) / MaxPull, 1.3);
 
+    /// <summary>The pull that would give this speed: how far the cue stands back before a shot the demo plays.</summary>
+    static double PullFor(double speed) => MaxPull * Math.Pow(Math.Clamp(speed / MaxShot, 0, 1), 1 / 1.3);
+
     void Shoot(Vec2 dir, double speed)
     {
-        if (!Ready) return;
-        Cue.Body.Vel = dir * Math.Min(speed, MaxShot);
+        if (!Ready || _striking) return;
+        speed = Math.Min(speed, MaxShot);
+        if (!_racing && _shots == 0 && !_cleared) BeginRound(); // the break starts a round
         _shots++;
-        _inShot = true;
+        _inShot = _striking = true;
         _pottedThisShot = 0;
         _scratch = false;
-        Host.Sound.Play("click", 0.3 + 0.5 * speed / MaxShot, 0.7);
+        _breakPending = BallsLeft == Balls;
+        Strike(dir, speed);
         Host.HudChanged();
+    }
+
+    /// <summary>The cue draws back, then strikes: the cue ball sets off on the hit.</summary>
+    void Strike(Vec2 dir, double speed)
+    {
+        int rack = _rackNo;
+        var from = Cue.Body.Pos;
+        double angle = Math.Atan2(-dir.Y, -dir.X) * 180 / Math.PI;
+        double rest = _r + 4 + PullFor(speed) * 0.45, back = rest + 16 + 40 * speed / MaxShot;
+        _stick.Set(from - dir * rest, angle);
+        _stick.IsVisible = true;
+        Anims.Add(DrawBackTime, k => _stick.Set(from - dir * (rest + (back - rest) * k), angle), Ease.OutQuad, () =>
+            Anims.Add(StrikeTime, k => _stick.Set(from - dir * (back - (back - _r - 1) * k), angle), Ease.InQuad, () =>
+            {
+                _striking = false;
+                _stick.IsVisible = false;
+                if (rack != _rackNo || Cue.Body.Sunk) return;
+                Cue.Body.Vel = dir * speed;
+                Host.Sound.Play("click", 0.3 + 0.5 * speed / MaxShot, 0.7);
+            }));
+        Host.Wake();
+    }
+
+    /// <summary>The break: a white flash over the felt and a burst where the cue ball met the rack.</summary>
+    void BreakFlash(Vec2 at)
+    {
+        _breakPending = false;
+        var flash = Art.At(new Rectangle { Width = _felt.Width, Height = _felt.Height, Fill = Brushes.White, Opacity = 0, IsHitTestVisible = false }, _felt.X, _felt.Y);
+        _fxLayer.Children.Add(flash);
+        Anims.Add(FlashTime, k => flash.Opacity = 0.32 * (1 - k), Ease.OutQuad, () => _fxLayer.Children.Remove(flash));
+        Host.Fx.Marker(at, Colors.White, 10, 150, 0.5);
+        Host.Fx.Burst(at, new[] { Colors.White, Gold }, 18, 320, 500, 4, 0.5);
+        Host.Sound.Play("fire", 0.35, 1.2);
     }
 
     public override void Summon(Vec2 p)
@@ -342,6 +493,11 @@ public sealed class PoolGame : MiniGame
     public override bool Update(double dt)
     {
         _time += dt;
+        if (_handle.Dragging)
+        {
+            _origin = _handle.Move(Host.Pointer, Outer.Size);
+            MoveTable(new Rect(_origin.X + Frame, _origin.Y + Frame, _felt.Width, _felt.Height));
+        }
         if (_aiming)
         {
             var pull = Host.Pointer - Cue.Body.Pos;
@@ -350,32 +506,33 @@ public sealed class PoolGame : MiniGame
             UpdateAim();
         }
 
-        if (_inShot) _table.Advance(dt);
-        for (int i = _sinking.Count - 1; i >= 0; i--)
+        bool anim = Anims.Update(dt);
+        if (_inShot && !_striking)
         {
-            var b = _sinking[i];
-            b.SinkT += dt;
-            double k = Math.Min(1, b.SinkT / SinkTime);
-            b.Sprite.Set(b.SinkFrom + (b.SinkTo - b.SinkFrom) * k);
-            b.Sprite.Scale = 1 - 0.6 * k;
-            b.Sprite.Opacity = 1 - k;
-            if (k < 1) continue;
-            b.Sprite.IsVisible = false;
-            _sinking.RemoveAt(i);
+            _table.Advance(dt);
+            if (_table.AllStill && _sinking.Count == 0) ResolveShot();
         }
-        if (_inShot && _table.AllStill && _sinking.Count == 0) ResolveShot();
 
         Draw();
-        return _aiming || _inShot || _sinking.Count > 0;
+        return _aiming || _inShot || _sinking.Count > 0 || anim || _handle.Dragging;
     }
 
     void OnSunk(Disc d, int pocket)
     {
         var b = _balls[d.Tag];
-        b.SinkT = 0;
-        b.SinkFrom = d.Pos;
-        b.SinkTo = _table.Pockets[pocket].Pos;
+        var from = d.Pos;
+        var to = _table.Pockets[pocket].Pos;
         _sinking.Add(b);
+        Anims.Add(SinkTime, k =>
+        {
+            b.Sprite.Set(from + (to - from) * k); // it slides into the pocket, shrinking and fading
+            b.Sprite.Scale = 1 - 0.6 * k;
+            b.Sprite.Opacity = 1 - k;
+        }, Ease.InQuad, () =>
+        {
+            b.Sprite.IsVisible = false;
+            _sinking.Remove(b);
+        });
         PlayThrottled("thunk", 0.6, 0.7);
         if (b.Number == 0)
         {
@@ -384,6 +541,7 @@ public sealed class PoolGame : MiniGame
         }
         _pottedThisShot++;
         Host.Stats.Add("pool.potted");
+        Host.ShareAction(from, 1);
         Host.HudChanged();
     }
 
@@ -414,6 +572,7 @@ public sealed class PoolGame : MiniGame
         long before = Host.Stats.Get("pool.best");
         Host.Stats.Add("pool.cleared");
         Host.Stats.Min("pool.best", _shots);
+        EndRound();
         bool best = before == 0 || _shots < before;
         var a = Host.Arena;
         var at = new Vec2(_felt.Center.X, Math.Max(a.Top + 60, _felt.Center.Y - 40));
@@ -493,15 +652,18 @@ public sealed class PoolGame : MiniGame
         {
             var s = MakeBall(b.Number, _r);
             s.IsVisible = !b.Body.Sunk;
+            s.Scale = b.Sprite.Scale; // a ball still popping in or sinking carries on from where it was
+            s.Opacity = b.Sprite.Opacity;
             b.Sprite = s;
             _ballLayer.Children.Add(s);
         }
     }
 
+    /// <summary>Draws the rails, cushions, felt, spots, diamonds and pockets around a felt at the origin; <see cref="_tableTr"/> places them.</summary>
     void DrawTable()
     {
         _tableLayer.Children.Clear();
-        var felt = _felt;
+        var felt = new Rect(0, 0, _felt.Width, _felt.Height);
         var cushion = felt.Inflate(CushionW);
         var outer = cushion.Inflate(RailW);
 
@@ -545,7 +707,7 @@ public sealed class PoolGame : MiniGame
         }
 
         // pockets over the rails
-        foreach (var p in _table.Pockets)
+        foreach (var p in PocketsOf(felt, _r))
         {
             _tableLayer.Children.Add(Art.Circle(p.Pos.X, p.Pos.Y, p.R + 3, Art.Brush("#2B2B2B")));
             _tableLayer.Children.Add(Art.Circle(p.Pos.X, p.Pos.Y, p.R, Art.Brush("#050506")));

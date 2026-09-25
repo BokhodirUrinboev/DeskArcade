@@ -23,6 +23,10 @@ finish-args:
   - --socket=pulseaudio
   # Tray icon: Avalonia registers a StatusNotifierItem named org.kde.StatusNotifierItem-<pid>-<n>
   # with the watcher. <n> starts at 0 and deskarcade.sh execs the game, so it runs as pid 2.
+  # The same talk permission lets the game ask the bus driver whether a watcher exists at all
+  # (X11Platform.HasTray): the D-Bus proxy answers NameHasOwner for names the app may talk to,
+  # so no --talk-name=org.freedesktop.DBus is needed. Without a watcher (stock GNOME) the game
+  # points at the scoreboard's menu instead.
   - --talk-name=org.kde.StatusNotifierWatcher
   - --own-name=org.kde.StatusNotifierItem-2-0
   # Settings, high scores and crash.log in ~/.config/DeskArcade (src/Settings.cs), shared with the

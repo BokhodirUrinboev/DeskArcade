@@ -8,7 +8,10 @@ using Avalonia.Media;
 
 namespace DeskArcade.Engine;
 
-/// <summary>Floating score text and simple particles, drawn above the games.</summary>
+/// <summary>
+/// Floating score text and simple particles, drawn above the games. The classic gold the games write their popups
+/// and bursts in becomes the current theme's gold on the way through (<see cref="Themes.Themed"/>).
+/// </summary>
 public sealed class Fx
 {
     sealed class Pop
@@ -50,6 +53,9 @@ public sealed class Fx
 
     public Canvas Layer { get; } = new() { IsHitTestVisible = false };
 
+    /// <summary>Tweens that belong to the overlay rather than to one game (a game's entrance, the scoreboard).</summary>
+    public Anims Anims { get; } = new();
+
     /// <summary>Reduced motion: no particle bursts or trails, and popups appear in place without bouncing or drifting.</summary>
     public static bool ReducedMotion { get; set; }
 
@@ -59,7 +65,7 @@ public sealed class Fx
     public void Popup(Vec2 p, string text, Color color, double size = 30, double life = 1.2, string? sub = null)
     {
         var panel = new StackPanel { IsHitTestVisible = false };
-        color = Art.Safe(color);
+        color = Art.Safe(Themes.Themed(color));
         panel.Children.Add(Outlined(text, color, size));
         if (sub != null) panel.Children.Add(Outlined(sub, Colors.White, size * 0.45));
 
@@ -139,7 +145,7 @@ public sealed class Fx
     public void Spawn(Vec2 p, Vec2 v, Color c, double size, double life, double gravity)
     {
         if (ReducedMotion) return;
-        c = Art.Safe(c);
+        c = Art.Safe(Themes.Themed(c));
         if (_parts.Count >= MaxParticles) return;
         Particle part;
         if (_pool.Count > 0)
@@ -171,6 +177,7 @@ public sealed class Fx
 
     public bool Update(double dt)
     {
+        bool animating = Anims.Update(dt);
         for (int i = _pops.Count - 1; i >= 0; i--)
         {
             var pop = _pops[i];
@@ -220,7 +227,7 @@ public sealed class Fx
             Place(ring, ring.Age / ring.Life);
         }
 
-        return _pops.Count > 0 || _parts.Count > 0 || _rings.Count > 0;
+        return _pops.Count > 0 || _parts.Count > 0 || _rings.Count > 0 || animating;
     }
 
     public void Clear()

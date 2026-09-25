@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace DeskArcade;
 
@@ -31,6 +33,8 @@ public sealed class Settings
     public double? PlinkoY { get; set; }
     public double? HudX { get; set; }
     public double? HudY { get; set; }
+    /// <summary>Where movable boards, tables and wells were dragged to, per game id: x and y from the arena's top-left corner.</summary>
+    public Dictionary<string, double[]> Positions { get; set; } = new();
 
     public int BestHoopsStreak { get; set; }
     public int BestHoopsScore { get; set; }
@@ -48,15 +52,23 @@ public sealed class Settings
     public bool ColorBlind { get; set; }
     /// <summary>Colours for mallets, paddles and balls: a theme id from <see cref="Engine.Themes"/>, or "seasonal".</summary>
     public string Theme { get; set; } = "classic";
-    /// <summary>CPU level per board game id (1 Easy … 4 Expert); a game not listed starts at Easy.</summary>
-    public System.Collections.Generic.Dictionary<string, int> BoardLevels { get; set; } = new();
+    /// <summary>
+    /// CPU level per game id (1 Easy … 4 Expert); a game not listed starts at its own default (Easy for board games,
+    /// Medium elsewhere). Stored under the name it had when only board games had levels, so older files still load.
+    /// </summary>
+    [JsonPropertyName("BoardLevels")]
+    public Dictionary<string, int> Levels { get; set; } = new();
+    /// <summary>Race the computer in round-based games when nobody is on the LAN: a computer rival plays a round alongside.</summary>
+    public bool CpuRival { get; set; } = true;
+    /// <summary>Snow, leaves, petals and the like drifting over the desktop while a game moves (tray → Theme → Theme decorations).</summary>
+    public bool ThemeDecor { get; set; } = true;
     /// <summary>Remind the player to take a break after this many minutes of play; 0 turns it off.</summary>
     public int BreakMinutes { get; set; }
     /// <summary>When Claude finishes while you were playing, say "back to work" instead of "your turn".</summary>
     public bool BackToWork { get; set; }
     /// <summary>Post today's scores to the office leaderboard on the local network (opt-in: it sends the user name).</summary>
     public bool ShareLeaderboard { get; set; }
-    /// <summary>The desktop pet: "cat", "dog", "duck", "bunny" or "penguin".</summary>
+    /// <summary>The desktop pet: one of <see cref="Games.PetGame.Kinds"/> ("cat" by default).</summary>
     public string PetKind { get; set; } = "cat";
     /// <summary>A <see cref="DeskArcade.ShortcutModifiers"/> name and three letters, for show/hide, next game and bring to cursor.</summary>
     public string ShortcutModifiers { get; set; } = "CtrlAlt";
@@ -108,6 +120,7 @@ public sealed class Settings
     public void ResetPositions()
     {
         HoopX = HoopY = BowX = BowY = HudX = HudY = PlinkoX = PlinkoY = null;
+        Positions.Clear();
     }
 
     public void ResetScores()

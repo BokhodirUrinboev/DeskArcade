@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Shapes;
 using Avalonia.Media;
 using DeskArcade.Engine;
 
@@ -12,12 +13,15 @@ namespace DeskArcade.Games;
 /// <summary>
 /// Darts: a dartboard hangs on the screen. Press on it and hold to aim: the reticle settles, then starts to
 /// wobble the longer you hold, so let go in the sweet spot. Play 501, three darts a turn, and finish on a double
-/// (or the bull) in as few darts as you can; going below zero, down to 1 or out on a single is a bust.
+/// (or the bull) in as few darts as you can; going below zero, down to 1 or out on a single is a bust. A leg is a
+/// race against the computer, or a co-worker over the LAN, and the fewer darts win; the score sheet under the board
+/// keeps the count, and clicking it twice gives a hopeless leg up. The grip (or a right-drag) moves the board.
 /// </summary>
 public sealed class DartsGame : MiniGame
 {
-    const double SurroundK = 1.24, HitMargin = 14, FlightTime = 0.18, PullDelay = 0.9, PullTime = 0.22;
-    const double SettleTime = 1.2, LandSigma = 0.012, DemoSigma = 0.05, MaxLand = 1.2;
+    const double SurroundK = 1.24, HitMargin = 14, FlightTime = 0.26, PullDelay = 0.9, PullTime = 0.22, ThudTime = 0.45;
+    const double SettleTime = 1.2, LandSigma = 0.012, DemoSigma = 0.05, MaxLand = 1.2, SheetW = 112, ConcedeWindow = 2.5;
+    const int FairLeg = 27;
 
     static readonly Color Gold = Color.FromRgb(255, 209, 102);
     static readonly Color Black = Color.FromRgb(27, 27, 27), Cream = Color.FromRgb(241, 227, 192);
@@ -35,23 +39,84 @@ public sealed class DartsGame : MiniGame
     readonly Sprite _reticle;
     readonly Control _reticleWarn;
     readonly Dart[] _darts = new Dart[X01.DartsPerTurn];
+    readonly Path _segFlash = new() { Fill = Art.Brush(235, 255, 255, 255), Opacity = 0, IsHitTestVisible = false };
+    readonly Border _sheet;
+    readonly TextBlock _sheetScore, _sheetSub;
+    readonly ScaleTransform _sheetPulse = new();
+    readonly DragHandle _handle;
 
-    Vec2 _centre, _summonAt, _aim, _phase1, _phase2, _demoPoint;
-    double _r, _builtR = -1, _time, _holdT, _flyT, _pullIn = -1, _pullT = -1, _lastThud = -1, _demoHold;
-    bool _builtColorBlind, _summoned, _aiming, _flying, _demoAim;
-    int _thrown, _demoWait;
+    Vec2 _centre, _aim, _phase1, _phase2, _demoPoint;
+    Vec2? _saved; // the board box's top-left, once it has been moved
+    Rect _sheetRect;
+    double _r, _builtR = -1, _time, _holdT, _lastThud = -1, _demoHold, _concedeArmed = double.NegativeInfinity;
+    bool _builtColorBlind, _placed, _aiming, _demoAim, _legOn;
+    int _thrown, _demoWait, _sheetShown = -1;
+    Anims.Tween? _flight, _pull;
 
     public DartsGame(IGameHost host) : base(host)
     {
         _reticle = MakeReticle(out _reticleWarn);
+        _sheetScore = new TextBlock
+        {
+            FontFamily = Fx.Font, FontSize = 30, FontWeight = FontWeight.Black, Foreground = Art.Brush("#F4F1EA"),
+            TextAlignment = TextAlignment.Center, Width = SheetW - 16,
+        };
+        _sheetSub = new TextBlock
+        {
+            FontFamily = Fx.Font, FontSize = 11, FontWeight = FontWeight.SemiBold, Foreground = Art.Brush("#B8C0CA"),
+            TextAlignment = TextAlignment.Center, Width = SheetW - 16,
+        };
+        _sheet = new Border
+        {
+            Width = SheetW, CornerRadius = new CornerRadius(8), Background = Art.Brush(225, 18, 20, 28),
+            BorderBrush = Art.Brush(60, 255, 255, 255), BorderThickness = new Thickness(1), Padding = new Thickness(8, 3, 8, 6),
+            Child = new StackPanel { Children = { _sheetScore, _sheetSub } }, IsHitTestVisible = false,
+            RenderTransformOrigin = new RelativePoint(0.5, 0.5, RelativeUnit.Relative), RenderTransform = _sheetPulse,
+        };
         Layer.Children.Add(_board);
         Layer.Children.Add(_dartLayer);
+        Layer.Children.Add(_sheet);
         Layer.Children.Add(_reticle);
         _reticle.IsVisible = false;
+        _handle = new DragHandle(host, Id, Title);
+        Layer.Children.Add(_handle.Visual);
+        ShowSheet(_leg.Remaining);
+        L.Changed += () => ShowSheet(_leg.Remaining);
     }
 
     public override string Id => "darts";
     public override string Title => "Darts";
+
+    // A leg of 501 is the race and the fewer darts win: the computer or the co-worker throws a leg of their own alongside.
+    public override bool SupportsLan => true;
+    public override (int Score, bool Active)? Race => (_leg.DartsUsed, _legOn);
+    public override bool RaceLowerIsBetter => true;
+    public override int RaceBaseline => FairLeg;
+    public override int RaceMin => 9;
+    public override int RaceBest => (int)Host.Stats.Get("darts.best");
+    public override double RaceSeconds => 80;
+
+    public override void StartRace()
+    {
+        if (_leg.Finished) NewLeg();
+        BeginLeg();
+    }
+
+    /// <summary>The leg counts from its first dart (or from the rival's start, in a race).</summary>
+    void BeginLeg()
+    {
+        if (_legOn) return;
+        _legOn = true;
+        Host.RoundStarted();
+    }
+
+    /// <summary>Game shot, or the leg given up: <paramref name="raceDarts"/> is what the leg counts as in a race.</summary>
+    void EndLeg(int raceDarts)
+    {
+        if (!_legOn) return;
+        _legOn = false;
+        Host.RoundEnded(raceDarts);
+    }
 
     public override Sprite CreateIcon()
     {
@@ -91,15 +156,27 @@ public sealed class DartsGame : MiniGame
 
     public override void Layout()
     {
+        Place();
+        Host.HudChanged();
+    }
+
+    /// <summary>Sizes and positions the board, the darts in it, the sheet and the grip.</summary>
+    void Place()
+    {
         var a = Host.Arena;
         double r = Clamp(Math.Min(a.Width, a.Height) * 0.2, 140, 200);
         r = Math.Max(30, Math.Min(r, (Math.Min(a.Width, a.Height) - 20) / (2 * SurroundK))); // tiny arenas still fit
         double outer = r * SurroundK;
 
-        Vec2 c;
-        if (_summoned)
+        if (!_placed)
         {
-            c = _summonAt;
+            _placed = true;
+            _saved = _handle.Saved();
+        }
+        Vec2 c;
+        if (_saved is Vec2 saved)
+        {
+            c = saved + new Vec2(outer, outer);
         }
         else
         {
@@ -124,47 +201,125 @@ public sealed class DartsGame : MiniGame
         }
         _board.Set(_centre);
         PlaceDarts();
-        Host.HudChanged();
+        PlaceSheet();
+        _handle.Show(BoxOf(_centre, outer));
     }
 
     static Rect BoxOf(Vec2 c, double r) => new(c.X - r, c.Y - r, r * 2, r * 2);
 
+    /// <summary>The board box's top-left: what the grip drags.</summary>
+    Vec2 Origin => _centre - new Vec2(_r * SurroundK, _r * SurroundK);
+    Size BoxSize => new(_r * SurroundK * 2, _r * SurroundK * 2);
+
+    /// <summary>The score sheet sits under the board, or beside it when the board stands on the floor.</summary>
+    void PlaceSheet()
+    {
+        var a = Host.Arena;
+        double outer = _r * SurroundK;
+        _sheet.Measure(Size.Infinity);
+        double h = Math.Max(40, _sheet.DesiredSize.Height);
+        double x = _centre.X - SheetW / 2, y = _centre.Y + outer + 8;
+        if (y + h > a.Bottom - 4)
+        {
+            y = _centre.Y - h / 2;
+            x = _centre.X - outer - SheetW - 8;
+            if (x < a.Left + 4) x = _centre.X + outer + 8;
+        }
+        x = Clamp(x, a.Left + 4, Math.Max(a.Left + 4, a.Right - SheetW - 4));
+        _sheetRect = new Rect(x, y, SheetW, h);
+        Canvas.SetLeft(_sheet, x);
+        Canvas.SetTop(_sheet, y);
+    }
+
     public override void ThemeChanged() => BuildDarts();
+
+    public override void PositionsReset() => _placed = false;
 
     public override void Deactivate()
     {
+        _handle.Cancel();
         // an unfinished throw is called off; the leg itself carries on next time
-        if (_flying) _darts[--_thrown].Sprite.IsVisible = false; // not scored yet: it lands only in Land()
-        _aiming = _flying = _demoAim = false;
+        if (_flight != null)
+        {
+            _flight.Cancel();
+            _flight = null;
+            _darts[--_thrown].Sprite.IsVisible = false; // not scored yet: it lands only in Land()
+        }
+        _aiming = _demoAim = false;
         _reticle.IsVisible = false;
-        if (_pullIn > 0 || _pullT >= 0) ClearDarts();
+        Anims.Finish(); // a pull under way clears the darts, a flash or a ticking sheet ends where it was going
     }
 
     // ------------------------------------------------------------------ input
 
-    public override void CollectHitShapes(List<HitShape> into) => into.Add(HitShape.Circle(_centre, _r * SurroundK + HitMargin));
+    public override void CollectHitShapes(List<HitShape> into)
+    {
+        into.Add(HitShape.Circle(_centre, _r * SurroundK + HitMargin));
+        into.Add(HitShape.Box(_sheetRect.Inflate(4)));
+        into.Add(_handle.Hit);
+    }
 
     public override bool PointerDown(Vec2 p, bool right)
     {
-        if (right || (p - _centre).Length > _r * SurroundK + HitMargin) return false;
-        if (_demoAim || _flying) return false;
+        if (right || _handle.Contains(p))
+        {
+            _handle.Begin(p, Origin, anywhere: true); // the grip, or a right-drag on the board
+            return true;
+        }
+        if (_sheetRect.Inflate(4).Contains(p.ToPoint()))
+        {
+            SheetClicked();
+            return false;
+        }
+        if ((p - _centre).Length > _r * SurroundK + HitMargin) return false;
+        if (_demoAim || _flight != null) return false;
         if (_leg.Finished)
         {
             NewLeg();
             return false;
         }
-        if (_pullIn > 0 || _pullT >= 0 || _thrown >= X01.DartsPerTurn) ClearDarts(); // no need to wait for the pull
+        if (_pull != null || _thrown >= X01.DartsPerTurn) ClearDarts(); // no need to wait for the pull
         StartAim();
         return true;
     }
 
+    /// <summary>Two clicks on the sheet within a couple of seconds give the leg up: it counts as a long one in a race.</summary>
+    void SheetClicked()
+    {
+        if (_leg.Finished || _leg.DartsUsed == 0 || _aiming || _flight != null) return;
+        var at = new Vec2(_sheetRect.Center.X, _sheetRect.Top - 24);
+        double now = Environment.TickCount64 / 1000.0; // the wall clock: the game's own time stands still while it is idle
+        if (now - _concedeArmed > ConcedeWindow)
+        {
+            _concedeArmed = now;
+            Host.Fx.Popup(at, L.T("Click the sheet again to give up the leg"), Colors.White, 16, 1.8);
+            Host.Sound.Play("click", 0.4);
+            return;
+        }
+        _concedeArmed = double.NegativeInfinity;
+        int darts = _leg.DartsUsed;
+        Host.Fx.Popup(at, L.T("LEG GIVEN UP"), Color.FromRgb(255, 100, 100), 30, 1.8, L.F("{0} darts", darts));
+        Host.Sound.Play("buzzer", 0.45);
+        EndLeg(DartsRace.Score(darts, gaveUp: true));
+        ClearDarts();
+        _leg.NewLeg();
+        TickSheet();
+        Host.HudChanged();
+    }
+
     public override void PointerUp(Vec2 p)
     {
+        if (_handle.Dragging)
+        {
+            _handle.End(Origin);
+            return;
+        }
         if (_aiming && !_demoAim) Release();
     }
 
     public override void PointerCancel()
     {
+        _handle.Cancel();
         if (!_aiming || _demoAim) return;
         _aiming = false; // cut off mid-aim: no dart thrown
         _reticle.IsVisible = false;
@@ -199,33 +354,38 @@ public sealed class DartsGame : MiniGame
     {
         _aiming = _demoAim = false;
         _reticle.IsVisible = false;
+        BeginLeg();
         var off = (_aim - _centre) / _r + DartsRules.Scatter(Rng, LandSigma);
         if (off.Length > MaxLand) off *= MaxLand / off.Length; // it sticks in the surround at worst
         var dart = _darts[_thrown++];
         dart.Offset = off;
-        dart.Sprite.Opacity = 0.6;
-        dart.Sprite.Scale = 2.4;
         dart.Sprite.IsVisible = true;
-        _flying = true;
-        _flyT = 0;
+        _flight = Anims.Add(FlightTime, k => DrawFlight(dart, k), Ease.Linear, () =>
+        {
+            _flight = null;
+            Land();
+        });
+        DrawFlight(dart, 0);
         Host.Sound.Play("whoosh", 0.25, 1.6);
-        DrawFlight(0);
     }
 
     void Land()
     {
-        _flying = false;
         var dart = _darts[_thrown - 1];
         dart.Sprite.Scale = 1;
         dart.Sprite.Opacity = 1;
         var at = _centre + dart.Offset * _r;
-        dart.Sprite.Set(at);
+        dart.Sprite.Set(at, 0);
+        Anims.Add(ThudTime, k => dart.Sprite.Set(_centre + dart.Offset * _r, DartsRace.Thud(k)), Ease.Linear); // it quivers as it sticks
 
         var res = _leg.Throw(DartsRules.Score(dart.Offset, 1));
         var seg = res.Segment;
         Host.Stats.Add("darts.darts");
         if (seg.Multiplier == 3) Host.Stats.Add("darts.trebles");
         if (seg.IsBull) Host.Stats.Add("darts.bulls");
+        Host.ShareAction(at, seg.Points);
+        FlashSegment(seg, dart.Offset.Length);
+        TickSheet();
 
         if (_time - _lastThud > 0.06)
         {
@@ -251,9 +411,11 @@ public sealed class DartsGame : MiniGame
             Host.Stats.Add("darts.180s");
             Host.Fx.Popup(top, "180!", Gold, 46, 2.0);
             Host.Fx.Burst(top, Themes.Current.Confetti, 36, 480, 700, 6, 1.0);
+            Host.Fx.Burst(_centre, new[] { Gold, Colors.White }, 24, 620, 500, 5, 0.9);
+            Host.Fx.Marker(_centre, Gold, 30, _r * 2.8, 0.9);
             Host.Sound.Play("star", 0.8);
         }
-        if (res.TurnOver) _pullIn = res.Checkout ? PullDelay * 2 : PullDelay;
+        if (res.TurnOver) SchedulePull(res.Checkout ? PullDelay * 2 : PullDelay);
         Host.HudChanged();
     }
 
@@ -267,15 +429,35 @@ public sealed class DartsGame : MiniGame
         Host.Fx.Popup(at, L.T("GAME SHOT!"), Gold, 42, 2.6, best ? L.F("{0} darts · new best!", darts) : L.F("{0} darts", darts));
         Host.Fx.Burst(at, Themes.Current.Confetti, 44, 540, 700, 7, 1.1);
         Host.Sound.Play("best", 0.8);
+        EndLeg(DartsRace.Score(darts, gaveUp: false));
     }
 
     void NewLeg()
     {
         ClearDarts();
         _leg.NewLeg();
+        TickSheet();
         Host.Fx.Popup(_centre - new Vec2(0, _r * 0.55), "501", Colors.White, 34, 1.2, L.T("game on!"));
         Host.Sound.Play("attention", 0.4);
         Host.HudChanged();
+    }
+
+    /// <summary>After a turn the darts are pulled out of the board: they fade and grow toward the player.</summary>
+    void SchedulePull(double delay)
+    {
+        _pull?.Cancel();
+        _pull = Anims.Add(PullTime, k =>
+        {
+            for (int i = 0; i < _thrown; i++)
+            {
+                _darts[i].Sprite.Opacity = 1 - k;
+                _darts[i].Sprite.Scale = 1 + 0.4 * k;
+            }
+        }, Ease.Linear, () =>
+        {
+            ClearDarts();
+            Host.HudChanged();
+        }, delay);
     }
 
     void ClearDarts()
@@ -287,14 +469,15 @@ public sealed class DartsGame : MiniGame
             d.Sprite.Scale = 1;
         }
         _thrown = 0;
-        _pullIn = _pullT = -1;
+        _pull?.Cancel();
+        _pull = null;
     }
 
     public override void Summon(Vec2 p)
     {
-        _summoned = true;
-        _summonAt = p;
+        _saved = p - new Vec2(_r * SurroundK, _r * SurroundK);
         Layout();
+        _handle.Save(Origin);
     }
 
     // ------------------------------------------------------------------ animation
@@ -302,6 +485,11 @@ public sealed class DartsGame : MiniGame
     public override bool Update(double dt)
     {
         _time += dt;
+        if (_handle.Dragging)
+        {
+            _saved = _handle.Move(Host.Pointer, BoxSize);
+            Place();
+        }
         if (_aiming)
         {
             _holdT += dt;
@@ -310,50 +498,71 @@ public sealed class DartsGame : MiniGame
             _reticleWarn.Opacity = Math.Clamp((_holdT - SettleTime) / 0.8, 0, 1); // the ring turns orange past the sweet spot
             if (_demoAim && _holdT >= _demoHold) Release();
         }
-
-        if (_flying)
-        {
-            _flyT += dt;
-            double k = Math.Min(1, _flyT / FlightTime);
-            if (k >= 1) Land();
-            else DrawFlight(k);
-        }
-
-        if (_pullIn > 0 && (_pullIn -= dt) <= 0)
-        {
-            _pullIn = -1;
-            _pullT = 0;
-        }
-        if (_pullT >= 0)
-        {
-            _pullT += dt;
-            double k = _pullT / PullTime;
-            if (k >= 1)
-            {
-                ClearDarts();
-                Host.HudChanged();
-            }
-            else
-            {
-                for (int i = 0; i < _thrown; i++)
-                {
-                    _darts[i].Sprite.Opacity = 1 - k;
-                    _darts[i].Sprite.Scale = 1 + 0.4 * k; // pulled back out toward the player
-                }
-            }
-        }
-        return _aiming || _flying || _pullIn > 0 || _pullT >= 0;
+        bool busy = Anims.Update(dt);
+        return _handle.Dragging || _aiming || busy;
     }
 
-    void DrawFlight(double k)
+    /// <summary>
+    /// The dart on its way: from the thrower's hand, below and a little to the right of where it will land, up over a
+    /// small arc and into the board. It looks big in the hand, small in the air and settles to its size as it sticks.
+    /// </summary>
+    void DrawFlight(Dart dart, double k)
     {
-        var dart = _darts[_thrown - 1];
-        double e = k * k;
         var land = _centre + dart.Offset * _r;
-        // it comes from the thrower's hand, a little below and to the right, and shrinks into the board
-        dart.Sprite.Set(land + new Vec2(_r * 0.12, _r * 0.35) * (1 - e));
-        dart.Sprite.Scale = 2.4 - 1.4 * e;
+        var hand = land + new Vec2(_r * 0.14, _r * 0.5);
+        var p = hand + (land - hand) * Ease.OutQuad(k);
+        p.Y -= DartsRace.Lift(k) * _r * 0.22;
+        dart.Sprite.Set(p, DartsRace.Pitch(k));
+        dart.Sprite.Scale = DartsRace.Scale(k);
         dart.Sprite.Opacity = 0.6 + 0.4 * k;
+    }
+
+    /// <summary>The segment the dart landed in lights up and fades.</summary>
+    void FlashSegment(Segment seg, double radius)
+    {
+        if (seg.Multiplier == 0) return;
+        double r = _r;
+        var sb = new StringBuilder();
+        if (seg.IsBull)
+        {
+            double rr = r * (seg.Points == 50 ? DartsRules.BullR : DartsRules.OuterBullR);
+            sb.Append($"M{Art.F(-rr)},0 A{Art.F(rr)},{Art.F(rr)} 0 1 0 {Art.F(rr)},0 A{Art.F(rr)},{Art.F(rr)} 0 1 0 {Art.F(-rr)},0 Z");
+        }
+        else
+        {
+            var (r0, r1) = seg.Multiplier == 3 ? (DartsRules.TrebleIn, DartsRules.TrebleOut)
+                : seg.Multiplier == 2 ? (DartsRules.DoubleIn, DartsRules.DoubleOut)
+                : radius < DartsRules.TrebleIn ? (DartsRules.OuterBullR, DartsRules.TrebleIn)
+                : (DartsRules.TrebleOut, DartsRules.DoubleIn);
+            double a = DartsRules.AngleOf(seg.Number);
+            Sector(sb, r * r0, r * r1, a - 9, a + 9);
+        }
+        _segFlash.Data = Geometry.Parse(sb.ToString());
+        _segFlash.Opacity = 0.85;
+        Anims.Add(0.4, k => _segFlash.Opacity = 0.85 * (1 - k), Ease.OutQuad);
+    }
+
+    /// <summary>The sheet counts down (or back up after a bust) to the leg's remaining score, and bumps as it lands.</summary>
+    void TickSheet()
+    {
+        int from = _sheetShown < 0 ? _leg.Remaining : _sheetShown, to = _leg.Remaining;
+        if (from == to)
+        {
+            ShowSheet(to);
+            return;
+        }
+        Anims.Add(0.55, k =>
+        {
+            ShowSheet((int)Math.Round(from + (to - from) * k));
+            _sheetPulse.ScaleX = _sheetPulse.ScaleY = 1 + 0.08 * Ease.Pulse(k);
+        }, Ease.OutCubic);
+    }
+
+    void ShowSheet(int remaining)
+    {
+        _sheetShown = remaining;
+        _sheetScore.Text = remaining.ToString();
+        _sheetSub.Text = L.F("{0} darts", _leg.DartsUsed);
     }
 
     void PlaceDarts()
@@ -410,6 +619,7 @@ public sealed class DartsGame : MiniGame
         foreach (double k in new[] { DartsRules.BullR, DartsRules.OuterBullR, DartsRules.TrebleIn, DartsRules.TrebleOut, DartsRules.DoubleIn, DartsRules.DoubleOut })
             parts.Add(Art.Circle(0, 0, r * k, null, wire, thick));
         parts.Add(Art.Circle(0, 0, r * 1.205, null, wire, thick * 1.6)); // the number ring
+        parts.Add(_segFlash);
 
         var ink = Art.Brush("#F4F1EA");
         for (int i = 0; i < 20; i++)
@@ -509,7 +719,7 @@ public sealed class DartsGame : MiniGame
 
     public override void DemoTick()
     {
-        if (_aiming || _flying) return;
+        if (_aiming || _flight != null || _handle.Dragging) return;
         if (_leg.Finished)
         {
             if (++_demoWait > 25)
@@ -519,7 +729,7 @@ public sealed class DartsGame : MiniGame
             }
             return;
         }
-        if (_pullIn > 0 || _pullT >= 0) return;
+        if (_pull != null) return;
         if (_thrown >= X01.DartsPerTurn) ClearDarts();
         if (++_demoWait < 4) return;
         _demoWait = 0;
@@ -529,5 +739,40 @@ public sealed class DartsGame : MiniGame
         _demoHold = 0.5 + Rng.NextDouble() * 0.6; // inside the sweet spot, like someone who knows the game
         _demoAim = true;
         StartAim();
+    }
+}
+
+/// <summary>How a leg of darts counts in a race, and the plain arithmetic of a dart's flight, kept apart so they can be tested.</summary>
+public static class DartsRace
+{
+    /// <summary>What a leg that was given up counts as: worse than any leg that was finished.</summary>
+    public const int GivenUp = 99;
+
+    /// <summary>The race score of a leg: the darts it took, or at least <see cref="GivenUp"/> when the player gave it up.</summary>
+    public static int Score(int dartsUsed, bool gaveUp) => gaveUp ? Math.Max(GivenUp, dartsUsed) : Math.Max(0, dartsUsed);
+
+    /// <summary>The dart's size along its flight (<paramref name="k"/> 0 → 1): big in the hand, smallest in the air, its own size as it sticks.</summary>
+    public static double Scale(double k)
+    {
+        k = Math.Clamp(k, 0, 1);
+        const double far = 0.7;
+        return k < far ? 2.2 - 1.4 * Ease.OutQuad(k / far) : 0.8 + 0.2 * Ease.InQuad((k - far) / (1 - far));
+    }
+
+    /// <summary>How high above the straight line the dart is, 0 → 1 → 0 over the flight.</summary>
+    public static double Lift(double k)
+    {
+        k = Math.Clamp(k, 0, 1);
+        return 4 * k * (1 - k);
+    }
+
+    /// <summary>The dart's tilt in degrees on its way: nose up as it leaves the hand, level as it lands.</summary>
+    public static double Pitch(double k) => -14 * (1 - Math.Clamp(k, 0, 1));
+
+    /// <summary>The quiver of a dart that has just stuck, in degrees around its tip, dying down over the thud.</summary>
+    public static double Thud(double k)
+    {
+        if (k <= 0 || k >= 1) return 0;
+        return Math.Sin(k * 5 * Math.PI) * 9 * (1 - k) * (1 - k);
     }
 }

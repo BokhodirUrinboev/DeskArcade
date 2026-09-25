@@ -390,6 +390,7 @@ public sealed partial class ArcheryGame : MiniGame
 
         UpdateBowVisual();
         DuelUpdate(dt);
+        busy |= Anims.Update(dt);
         return busy || DuelOn;
     }
 

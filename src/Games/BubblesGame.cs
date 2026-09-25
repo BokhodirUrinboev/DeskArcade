@@ -13,7 +13,10 @@ namespace DeskArcade.Games;
 /// </summary>
 public sealed class BubblesGame : MiniGame
 {
-    const double Gravity = 900, Step = 1.0 / 240, HSpeed = 150, HitPad = 8, ComboWindow = 0.9;
+    const double Gravity = 900, Step = 1.0 / 240, HSpeed = 150, HitPad = 8, ComboWindow = 0.9, WaveBreak = 1.4;
+
+    /// <summary>A fair round for a decent player: waves 1 and 2 cleared with a few combos and some time bonus, and part of wave 3.</summary>
+    public const int FairRound = 260;
 
     static readonly double[] Radius = { 15, 25, 38, 54 };
     static readonly double[] BounceHeight = { 170, 270, 390, 520 };
@@ -27,9 +30,11 @@ public sealed class BubblesGame : MiniGame
     sealed class Bubble
     {
         public required Sprite Sprite;
+        public required ScaleTransform Wobble;
+        public Anims.Tween? Tween;
         public Vec2 Pos, Vel;
         public int Size;
-        public double Age, Bump;
+        public double Age;
         public bool Starter;
     }
 
@@ -47,7 +52,7 @@ public sealed class BubblesGame : MiniGame
 
     public override string Id => "bubbles";
     public override string Title => "Bubble Pop";
-    public override Sprite CreateIcon() => MakeBubble(9, Tints[3]);
+    public override Sprite CreateIcon() => MakeBubble(9, Tints[3], out _);
 
     int SecondsLeft => (int)Math.Ceiling(Math.Max(0, _timeLeft));
 
@@ -92,15 +97,22 @@ public sealed class BubblesGame : MiniGame
             Text = L.T("pop me"), Width = Radius[3] * 2, TextAlignment = TextAlignment.Center,
             FontFamily = Fx.Font, FontSize = 13, FontWeight = FontWeight.Bold, Foreground = Brushes.White,
         }, -Radius[3], -9));
+        Breathe(b);
     }
 
     public override bool SupportsLan => true;
     public override (int Score, bool Active)? Race => (_score, _active);
+    public override int RaceBaseline => FairRound;
+    public override int RaceBest => Host.Settings.BestBubbles;
+    public override double RaceSeconds => TypicalRoundSeconds;
+
+    /// <summary>About how long a round lasts: waves 1 and 2 cleared with time to spare, wave 3 played out to the clock.</summary>
+    public static double TypicalRoundSeconds => Math.Round(0.6 * WaveSeconds(1) + 0.7 * WaveSeconds(2) + WaveSeconds(3) + 2 * WaveBreak);
 
     public override void StartRace()
     {
         if (_active) return;
-        _bubbles.Clear();
+        foreach (var b in _bubbles.ToArray()) Pop(b, false); // the starter goes, sprite and all
         StartGame();
     }
 
@@ -117,7 +129,8 @@ public sealed class BubblesGame : MiniGame
         Host.Sound.Play("fire", 0.6);
     }
 
-    static double WaveSeconds(int wave) => Math.Min(60, 16 + 8 * wave);
+    /// <summary>The clock for a wave: 24 s for the first, 8 s more for each after it, up to a minute.</summary>
+    public static double WaveSeconds(int wave) => Math.Min(60, 16 + 8 * wave);
 
     void SpawnWave(int wave)
     {
@@ -140,7 +153,8 @@ public sealed class BubblesGame : MiniGame
 
     Bubble SpawnBubble(int size, Vec2 pos, Vec2 vel)
     {
-        var b = new Bubble { Sprite = MakeBubble(Radius[size], Tints[size]), Pos = pos, Vel = vel, Size = size };
+        var sprite = MakeBubble(Radius[size], Tints[size], out var wobble);
+        var b = new Bubble { Sprite = sprite, Wobble = wobble, Pos = pos, Vel = vel, Size = size };
         b.Sprite.Scale = 0.01;
         b.Sprite.Set(pos);
         _bubbleLayer.Children.Add(b.Sprite);
@@ -159,10 +173,9 @@ public sealed class BubblesGame : MiniGame
 
     void Pop(Bubble b, bool scored)
     {
-        _bubbleLayer.Children.Remove(b.Sprite);
         _bubbles.Remove(b);
+        Burst(b);
         var tint = Tints[b.Size];
-        Host.Fx.Burst(b.Pos, new[] { tint, Colors.White }, 8 + b.Size * 4, 200 + b.Size * 60, 300, 5, 0.5);
         Host.Sound.Play("pop", 0.7, 1.5 - b.Size * 0.2);
         if (!scored) return;
         Host.Stats.Add("bubbles.popped");
@@ -192,10 +205,11 @@ public sealed class BubblesGame : MiniGame
         AddScore(bonus);
         var a = Host.Arena;
         var at = new Vec2(a.Center.X, a.Top + a.Height * 0.3);
+        Host.ShareAction(at, bonus);
         Host.Fx.Popup(at, L.T("WAVE CLEAR!"), Gold, 40, 1.6, L.F("+{0} time bonus", bonus));
         Host.Fx.Burst(at, Tints, 36, 500, 700, 7, 1.0);
         Host.Sound.Play("fire", 0.8);
-        _waveIn = 1.4;
+        _waveIn = WaveBreak;
         Host.HudChanged();
     }
 
@@ -305,13 +319,12 @@ public sealed class BubblesGame : MiniGame
         foreach (var b in _bubbles)
         {
             b.Age += dt;
-            b.Bump = Math.Max(0, b.Bump - dt * 5);
-            double appear = Math.Min(1, b.Age / 0.2);
-            b.Sprite.Scale = Math.Max(0.01, appear * (1 + 0.07 * b.Bump));
+            double appear = Fx.ReducedMotion ? 1 : Math.Min(1, b.Age / 0.2);
+            b.Sprite.Scale = Math.Max(0.01, appear);
             b.Sprite.Set(b.Pos);
-            busy |= appear < 1 || b.Bump > 0;
+            busy |= appear < 1;
         }
-        return busy;
+        return Anims.Update(dt) || busy;
     }
 
     void StepBubble(Bubble b, double h)
@@ -335,24 +348,91 @@ public sealed class BubblesGame : MiniGame
 
         b.Pos.Y = ground - r;
         b.Vel.Y = -Math.Sqrt(2 * Gravity * BounceHeight[b.Size]); // every bounce reaches the same height
-        b.Bump = 1;
+        Wobble(b);
+    }
+
+    // ------------------------------------------------------------------ animation
+
+    /// <summary>A bounce sets the bubble wobbling: it squashes wide, then tall, and settles.</summary>
+    void Wobble(Bubble b)
+    {
+        b.Tween?.Cancel();
+        b.Tween = Anims.Add(0.5, k =>
+        {
+            double w = 0.16 * Math.Sin(k * Math.PI * 3) * (1 - k);
+            b.Wobble.ScaleX = 1 + w;
+            b.Wobble.ScaleY = 1 - w;
+        }, Ease.Linear, () => Settle(b));
+    }
+
+    /// <summary>The starter bubble breathes for a few seconds after it appears, then rests (so the screen can go idle).</summary>
+    void Breathe(Bubble b)
+    {
+        b.Tween?.Cancel();
+        b.Tween = Anims.Add(4.2, k => b.Wobble.ScaleX = b.Wobble.ScaleY = 1 + 0.045 * Math.Sin(k * Math.PI * 6), Ease.Linear, () => Settle(b), 0.3);
+    }
+
+    static void Settle(Bubble b)
+    {
+        b.Wobble.ScaleX = b.Wobble.ScaleY = 1;
+        b.Tween = null;
+    }
+
+    /// <summary>The bubble swells and vanishes, and a ring of droplets flies out and falls.</summary>
+    void Burst(Bubble b)
+    {
+        b.Tween?.Cancel();
+        var sprite = b.Sprite;
+        Anims.Add(0.16, k =>
+        {
+            sprite.Scale = 1 + 0.45 * k;
+            sprite.Opacity = 1 - k;
+        }, Ease.OutQuad, () => _bubbleLayer.Children.Remove(sprite));
+
+        var tint = Tints[b.Size];
+        double r = Radius[b.Size];
+        int count = 5 + b.Size * 2;
+        for (int i = 0; i < count; i++)
+        {
+            double ang = Math.PI * 2 * (i + Rng.NextDouble() * 0.6) / count;
+            var dir = new Vec2(Math.Cos(ang), Math.Sin(ang));
+            double reach = r * (1.6 + Rng.NextDouble() * 1.2);
+            var tr = new TranslateTransform();
+            var drop = Art.Circle(0, 0, 2 + b.Size * 0.8 + Rng.NextDouble() * 1.5, Art.Brush(i % 3 == 0 ? Colors.White : tint));
+            drop.RenderTransformOrigin = RelativePoint.TopLeft;
+            drop.RenderTransform = tr;
+            drop.IsHitTestVisible = false;
+            _bubbleLayer.Children.Add(drop);
+            var from = b.Pos;
+            Anims.Add(0.45 + Rng.NextDouble() * 0.2, k =>
+            {
+                var p = from + dir * (reach * Ease.OutQuad(k)) + new Vec2(0, 160 * k * k); // out, then down
+                tr.X = p.X;
+                tr.Y = p.Y;
+                drop.Opacity = 1 - k * k;
+            }, Ease.Linear, () => _bubbleLayer.Children.Remove(drop));
+        }
     }
 
     // ------------------------------------------------------------------ visuals
 
-    static Sprite MakeBubble(double r, Color tint)
+    /// <summary>A bubble centred on the origin; <paramref name="wobble"/> squashes its skin about its centre.</summary>
+    static Sprite MakeBubble(double r, Color tint, out ScaleTransform wobble)
     {
         var s = new Sprite { IsHitTestVisible = false };
+        wobble = new ScaleTransform();
+        var skin = new Canvas { RenderTransformOrigin = RelativePoint.TopLeft, RenderTransform = wobble };
         var fill = new RadialGradientBrush { GradientOrigin = new RelativePoint(0.35, 0.3, RelativeUnit.Relative) };
         fill.GradientStops.Add(new GradientStop(Color.FromArgb(40, 255, 255, 255), 0));
         fill.GradientStops.Add(new GradientStop(Color.FromArgb(80, tint.R, tint.G, tint.B), 0.65));
         fill.GradientStops.Add(new GradientStop(Color.FromArgb(200, tint.R, tint.G, tint.B), 1));
-        s.Rotor.Children.Add(Art.Circle(0, 0, r, fill, Art.Brush(Color.FromArgb(230, tint.R, tint.G, tint.B)), Math.Max(1.2, r * 0.05)));
-        s.Rotor.Children.Add(Art.At(new Avalonia.Controls.Shapes.Ellipse
+        skin.Children.Add(Art.Circle(0, 0, r, fill, Art.Brush(Color.FromArgb(230, tint.R, tint.G, tint.B)), Math.Max(1.2, r * 0.05)));
+        skin.Children.Add(Art.At(new Avalonia.Controls.Shapes.Ellipse
         {
             Width = r * 0.55, Height = r * 0.3, Fill = Art.Brush(190, 255, 255, 255), RenderTransform = new RotateTransform(-35),
         }, -r * 0.62, -r * 0.6));
-        s.Rotor.Children.Add(Art.Circle(r * 0.42, r * 0.4, r * 0.09, Art.Brush(150, 255, 255, 255)));
+        skin.Children.Add(Art.Circle(r * 0.42, r * 0.4, r * 0.09, Art.Brush(150, 255, 255, 255)));
+        s.Rotor.Children.Add(skin);
         return s;
     }
 

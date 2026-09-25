@@ -19,7 +19,13 @@ public sealed class TowerGame : MiniGame
     const double Step = 1.0 / 240, Gravity = 2400, StartW = 170, BlockH = 26, PlinthW = 196, PlinthH = 16;
     const double HitPad = 24, HoverGap = 70, SlideSpan = 210, BaseSpeed = 230, SpeedPerBlock = 11, MaxSpeed = 640;
     const double PerfectPx = 5, WidenPx = 10, SinkMargin = 220, SinkSeconds = 0.35, MinBaseW = 260, FadeIn = 0.15;
+    const double SwayMax = 8, SwayPerBlock = 0.22, SwayRate = 1.7;
     const int PerfectsToWiden = 3;
+
+    /// <summary>A fair round for a decent player: a tower fifteen blocks high.</summary>
+    public const int FairRound = 15;
+    /// <summary>About how long such a tower takes to stack, in seconds.</summary>
+    public const double TypicalRoundSeconds = 40;
 
     static readonly Color Gold = Color.FromRgb(255, 209, 102);
     static readonly Color[] Confetti = { Gold, Color.FromRgb(239, 71, 111), Color.FromRgb(6, 214, 160), Colors.White };
@@ -28,7 +34,7 @@ public sealed class TowerGame : MiniGame
 
     sealed class Block
     {
-        public required Control El;
+        public required Canvas El;
         public double X1, X2; // relative to the base centre
         public int Level;     // 0 rests on the plinth
     }
@@ -80,6 +86,9 @@ public sealed class TowerGame : MiniGame
     // LAN race: both players stack at once; the round's score is the height
     public override bool SupportsLan => true;
     public override (int Score, bool Active)? Race => (_height, _roundOn);
+    public override int RaceBaseline => FairRound;
+    public override int RaceBest => (int)Host.Stats.Get("tower.best");
+    public override double RaceSeconds => TypicalRoundSeconds;
 
     public override void StartRace()
     {
@@ -131,6 +140,7 @@ public sealed class TowerGame : MiniGame
 
     public override void Deactivate()
     {
+        Anims.Finish(); // blocks settle, flashes go
         foreach (var piece in _pieces) _pieceLayer.Children.Remove(piece.Sprite);
         _pieces.Clear();
         if (_sinkT >= 0) FinishSink();
@@ -157,7 +167,7 @@ public sealed class TowerGame : MiniGame
         ChooseBase();
         _standing = true;
         _plinth.IsVisible = true;
-        AddBlock(-StartW / 2, StartW / 2, 0, BlockColor(0));
+        AddBlock(-StartW / 2, StartW / 2, 0, BlockColor(0), settle: false);
         SpawnMover(StartW, true);
         Draw();
         Host.HudChanged();
@@ -259,11 +269,12 @@ public sealed class TowerGame : MiniGame
         GameOver();
     }
 
-    void AddBlock(double x1, double x2, int level, Color color)
+    void AddBlock(double x1, double x2, int level, Color color, bool settle = true)
     {
         var el = MakeBlock(x2 - x1, color);
         _blockLayer.Children.Add(el);
         _blocks.Add(new Block { El = el, X1 = x1, X2 = x2, Level = level });
+        if (settle) Squash(el);
     }
 
     void SpawnMover(double w, bool parked)
@@ -351,6 +362,7 @@ public sealed class TowerGame : MiniGame
 
         _height++;
         AddBlock(x1, x2, top.Level + 1, _moveColor);
+        if (perfect) Flash(_blocks[^1].El, grown: false);
         Host.ShareAction(new Vec2(_baseX + (x1 + x2) / 2, y), 1);
         Host.Stats.Max("tower.height", _height);
         Host.Stats.Max("tower.best", _height);
@@ -368,7 +380,11 @@ public sealed class TowerGame : MiniGame
                 _streak = 0;
                 grown = nextW < StartW;
                 nextW = Math.Min(StartW, nextW + WidenPx);
-                if (grown) Host.Sound.Play("score", 0.5);
+                if (grown)
+                {
+                    Host.Sound.Play("score", 0.5);
+                    Flash(_blocks[^1].El, grown: true);
+                }
             }
             var at = new Vec2(_baseX + topCenter, y);
             Host.Fx.Popup(at - new Vec2(0, 30), L.T("PERFECT!"), Gold, 26, 0.9, grown ? L.T("wider block") : null);
@@ -512,8 +528,9 @@ public sealed class TowerGame : MiniGame
             _acc = 0;
         }
 
+        bool anim = Anims.Update(dt);
         Draw();
-        return _phase == Phase.Playing || _falling || _sinkT >= 0 || _pieces.Count > 0 || (_hasMover && _moverAge < FadeIn);
+        return anim || _phase == Phase.Playing || _falling || _sinkT >= 0 || _pieces.Count > 0 || (_hasMover && _moverAge < FadeIn);
     }
 
     void SimStep(double h)
@@ -631,19 +648,25 @@ public sealed class TowerGame : MiniGame
 
     // ------------------------------------------------------------------ visuals
 
+    /// <summary>How far the top of the tower leans right now: it sways more the taller it gets, only while a game is on.</summary>
+    double Sway => Fx.ReducedMotion || _phase != Phase.Playing || !_standing ? 0 : Math.Sin(_time * SwayRate) * Math.Min(SwayMax, SwayPerBlock * _height);
+
     void Draw()
     {
-        double plinthTop = PlinthTop;
+        double plinthTop = PlinthTop, sway = Sway;
+        int top = _blocks.Count > 0 ? _blocks[^1].Level + 1 : 1;
         Canvas.SetLeft(_plinth, _baseX - PlinthW / 2);
         Canvas.SetTop(_plinth, plinthTop);
         foreach (var b in _blocks)
         {
-            Canvas.SetLeft(b.El, _baseX + b.X1);
+            double lean = (double)(b.Level + 1) / top; // the base stays put, the top leans the most
+            Canvas.SetLeft(b.El, _baseX + b.X1 + sway * lean * lean);
             Canvas.SetTop(b.El, plinthTop + TopRelOf(b));
         }
         if (_hasMover)
         {
-            _mover.Set(new Vec2(_baseX + _moveX, plinthTop + MoverTopRel + BlockH / 2));
+            // the sliding block leans with the top of the tower, so what lines up on screen lines up when it lands
+            _mover.Set(new Vec2(_baseX + _moveX + sway, plinthTop + MoverTopRel + BlockH / 2));
             _mover.Opacity = Math.Min(1, _moverAge / FadeIn);
         }
         foreach (var p in _pieces)
@@ -659,6 +682,33 @@ public sealed class TowerGame : MiniGame
         if (_lastSound.TryGetValue(name, out double t) && _time - t < 0.05) return;
         _lastSound[name] = _time;
         Host.Sound.Play(name, vol, pitch);
+    }
+
+    // ------------------------------------------------------------------ animation
+
+    /// <summary>A landed block squashes wide and low on impact and springs back up.</summary>
+    void Squash(Canvas block)
+    {
+        var sc = new ScaleTransform(1.15, 0.7);
+        block.RenderTransformOrigin = new RelativePoint(0.5, 1, RelativeUnit.Relative);
+        block.RenderTransform = sc;
+        Anims.Add(0.28, k =>
+        {
+            sc.ScaleX = 1.15 - 0.15 * k;
+            sc.ScaleY = 0.7 + 0.3 * k;
+        }, Ease.OutBack, () => block.RenderTransform = null);
+    }
+
+    /// <summary>A perfect drop lights the block up for a moment (gold when it earned a wider block).</summary>
+    void Flash(Canvas block, bool grown)
+    {
+        var flash = new Rectangle
+        {
+            Width = block.Width, Height = BlockH, RadiusX = 3, RadiusY = 3, IsHitTestVisible = false,
+            Fill = grown ? Art.Brush(Gold) : Brushes.White, Opacity = 0.95,
+        };
+        block.Children.Add(flash);
+        Anims.Add(grown ? 0.6 : 0.4, k => flash.Opacity = 0.95 * (1 - k), Ease.OutQuad, () => block.Children.Remove(flash));
     }
 
     /// <summary>Block colours step through a hue gradient as the tower grows.</summary>

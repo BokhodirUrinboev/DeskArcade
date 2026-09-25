@@ -342,7 +342,7 @@ public static partial class Strings
         ["{0} is thinking…"] = "{0} думает…",
         ["DOUBLE JUMP!"] = "ДВЕ ЗА ХОД!",
         ["TRIPLE JUMP!"] = "ТРИ ЗА ХОД!",
-        ["vs {0}"] = "против {0}",
+        ["vs {0}"] = "соперник: {0}",
         ["click the board for a rematch"] = "нажмите на доску, чтобы сыграть ещё",
         ["Play over LAN"] = "Игра по сети",
         ["Host a game"] = "Создать игру",
@@ -930,5 +930,143 @@ public static partial class Strings
         ["Bumper cars"] = "Автодром",
         ["Hit 500 bumpers"] = "Попадите в бамперы 500 раз",
         ["Hit {0} bumpers in Pinball"] = "Попадите в бамперы {0} раз в пинболе",
+        // ---- 1.8.0: scoreboard, races against the computer, movable boards
+        ["Your turn"] = "Ваш ход",
+        ["CPU · {0}"] = "Компьютер · {0}",
+        ["Menu"] = "Меню",
+        ["{0} shows the overlay again"] = "{0} снова покажет игру",
+        ["or run: deskarcade --signal show"] = "или выполните: deskarcade --signal show",
+        ["Hide overlay"] = "Скрыть игру",
+        ["Drag to move"] = "Перетащите, чтобы переместить",
+        ["Race the computer in solo rounds"] = "Гонка с компьютером в одиночных раундах",
+        ["CPU ({0}): {1}"] = "Компьютер ({0}): {1}",
+        ["CPU ({0}) is heading for {1}"] = "Компьютер ({0}) идёт к {1}",
+        ["Race the computer: start a round and it plays one too"] = "Гонка с компьютером: начните раунд, и он сыграет свой",
+        ["the CPU goes easier: {0}"] = "компьютер играет легче: {0}",
+        ["Pacesetter"] = "Задающий темп",
+        ["Beat the computer in 10 races"] = "Обыграйте компьютер в 10 гонках",
+
+
+        // ---- 1.8.0: Linux overlay
+        ["No tray icon on this desktop"] = "На этом рабочем столе нет значка в трее",
+        ["the ☰ button on the scoreboard has the menu"] = "меню находится под кнопкой ☰ на табло",
+
+
+        // ---- 1.8.0: pets
+        ["After the ball!"] = "За мячом!",
+        ["Begging for a treat · click the jar"] = "Просит лакомство · нажмите на банку",
+        ["Bringing the ball back"] = "Несёт мяч обратно",
+        ["Catching flies"] = "Ловит мух",
+        ["Click to pet · right-click for a trick · throw the ball · click the jar for a treat"] = "Клик — погладить · правая кнопка — трюк · бросьте мяч · нажмите на банку — лакомство",
+        ["Coming over to sit with you"] = "Идёт посидеть рядом с вами",
+        ["Curled up"] = "Свернулся клубком",
+        ["Dragon"] = "Дракон",
+        ["Feed your pet 30 treats"] = "Дайте питомцу 30 лакомств",
+        ["Fetch!"] = "Апорт!",
+        ["Fetches {0} · Treats {1} · Pets {2}"] = "Апорт {0} · Лакомства {1} · Поглаживания {2}",
+        ["Flying"] = "Летит",
+        ["Frog"] = "Лягушка",
+        ["Good morning!"] = "Доброе утро!",
+        ["Hamster"] = "Хомяк",
+        ["Have your pet bring the ball back 20 times"] = "Пусть питомец принесёт мяч 20 раз",
+        ["Having a look around"] = "Осматривается",
+        ["Keeping you company"] = "Составляет вам компанию",
+        ["Meet a co-worker's pet over the LAN"] = "Встретьте питомца коллеги по локальной сети",
+        ["Nom nom nom"] = "Ням-ням-ням",
+        ["Off to get a treat"] = "Бежит за лакомством",
+        ["Owl"] = "Сова",
+        ["Parrot"] = "Попугай",
+        ["Playdate"] = "Встреча питомцев",
+        ["Puffing smoke"] = "Пускает дым",
+        ["Safe in its shell"] = "Спрятался в панцирь",
+        ["Stuffing its cheeks"] = "Набивает щёки",
+        ["Treat time"] = "Время лакомства",
+        ["Turtle"] = "Черепаха",
+        ["Visiting {0}'s {1}"] = "В гостях у питомца {0} ({1})",
+        ["Wants to play · throw the ball"] = "Хочет играть · бросьте мяч",
+        ["Watching the ball"] = "Следит за мячом",
+        ["Watching you"] = "Наблюдает за вами",
+        ["Hello!"] = "Привет!",
+        ["Pretty bird!"] = "Красивая птичка!",
+        ["Cracker?"] = "Печенье?",
+
+
+        // ---- 1.8.0: board and turn games
+        ["the CPU goes easier: {0} · click a grid for a rematch"] = "компьютер играет легче: {0} · нажмите на поле, чтобы сыграть ещё",
+
+
+        // ---- 1.8.0: duels and card tables (Durak, Last Card, Golf, Archery, Hoops)
+
+
+        // ---- 1.8.0: races, part 1 (Keepy-Uppy, Bug Squash, Can Knockdown, Brick Breaker)
+        ["GO!"] = "ПОЕХАЛИ!",
+        ["{0} seconds · spare the ladybugs"] = "{0} секунд · божьих коровок не трогайте",
+
+
+        // ---- 1.8.0: races, part 2 (Clay Shooting, Plinko, Slingshot, Darts)
+        ["Click the sheet again to give up the leg"] = "Нажмите на лист счёта ещё раз, чтобы сдать лег",
+        ["LEG GIVEN UP"] = "ЛЕГ СДАН",
+
+
+        // ---- 1.8.0: races, part 3 (Pool, Memory, Code Breaker, Solitaire, Interns)
+        ["Click a card to flip it · find all the pairs · right-drag moves the cards"] = "Нажмите на карту, чтобы открыть её · найдите все пары · правой кнопкой можно сдвинуть карты",
+        ["Click the stock to turn a card · click or drag cards to move them · right-drag moves the felt"] = "Нажмите на колоду, чтобы открыть карту · нажимайте на карты или перетаскивайте их · правой кнопкой можно сдвинуть стол",
+
+
+        // ---- 1.8.0: animation pass (Bubbles, Whack, Tower, Bowling, Fishing, Pinball, Paper Toss, Blockfall, Hockey, Pong)
+        ["First to {0} · CPU {1} · drag your blue mallet"] = "До {0} голов · компьютер: {1} · двигайте синюю биту",
+        ["First to {0} · CPU {1} · drag your paddle"] = "До {0} · компьютер: {1} · двигайте ракетку",
+        ["grab your mallet for a rematch"] = "возьмите биту для реванша",
+        ["grab your paddle for a rematch"] = "возьмите ракетку для реванша",
+
+
+
+
+        // ---- 1.8.0: Linux updates
+        ["Update {0}%"] = "Обновление {0}%",
+        ["then PolicyKit asks for your password to install it"] = "затем PolicyKit спросит ваш пароль для установки",
+        ["This release has no checksum"] = "У этого выпуска нет контрольной суммы",
+        ["installing the download unverified"] = "загруженный файл устанавливается без проверки",
+        ["a Flatpak updates with flatpak update · opening the release page"] = "Flatpak обновляется командой flatpak update · открываю страницу выпуска",
+        ["The update did not install · press Enter to close this window"] = "Обновление не установилось · нажмите Enter, чтобы закрыть это окно",
+        ["Update {0} downloaded"] = "Обновление {0} скачано",
+        ["no pkexec or terminal to install it · it is in {0}"] = "нет pkexec и терминала для установки · файл лежит в {0}",
+        ["Finishing the update in a terminal"] = "Завершаем обновление в терминале",
+        ["enter your password there · the game restarts when it is done"] = "введите там пароль · игра перезапустится, когда всё будет готово",
+        ["if it did not install, it is in {0}"] = "если оно не установилось, файл лежит в {0}",
+        ["Installed {0} · restarting"] = "Установлено {0} · перезапуск",
+        ["the new version starts in a moment"] = "новая версия запустится через мгновение",
+        ["saved in {0} · double-click the .deb to install it"] = "сохранено в {0} · дважды щёлкните .deb, чтобы установить",
+        ["Update failed · exit code {0}"] = "Обновление не удалось · код выхода {0}",
+        ["couldn't replace the running file · the new one is {0}"] = "не удалось заменить работающий файл · новый: {0}",
+        ["Installed {0}"] = "Установлено {0}",
+        ["start Desk Arcade again to play it"] = "запустите Desk Arcade снова, чтобы играть",
+
+
+        // ---- 1.8.0: themes
+        ["Ocean"] = "Океан",
+        ["Forest"] = "Лес",
+        ["Sunset"] = "Закат",
+        ["Candy"] = "Конфеты",
+        ["Mono"] = "Моно",
+        ["Spring"] = "Весна",
+        ["Autumn"] = "Осень",
+        ["Midnight"] = "Полночь",
+        ["Theme decorations"] = "Украшения темы",
+        ["the desk as you know it"] = "стол, каким вы его знаете",
+        ["lights on, volume up"] = "включаем свет, прибавляем звук",
+        ["insert coin"] = "опустите монету",
+        ["boo"] = "бу-у",
+        ["mind the snow"] = "осторожно, снег",
+        ["deep breath"] = "глубокий вдох",
+        ["quiet under the trees"] = "тишина под деревьями",
+        ["golden hour"] = "золотой час",
+        ["sweet"] = "сладко",
+        ["just the game"] = "только игра",
+        ["fresh start"] = "новое начало",
+        ["crunchy leaves"] = "хрустящие листья",
+        ["lights out"] = "гасим свет",
+
+
     };
 }

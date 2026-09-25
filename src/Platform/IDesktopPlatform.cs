@@ -57,6 +57,13 @@ public interface IDesktopPlatform : IDisposable
     /// <summary>Whether a second <see cref="RegisterHotkeys"/> call takes effect straight away.</summary>
     bool HotkeysApplyLive => false;
 
+    /// <summary>
+    /// Whether this desktop can show our tray icon. Linux asks the session bus (the tray is a StatusNotifierItem,
+    /// which needs a watcher that stock GNOME lacks); everywhere else the tray is a given. While false, the
+    /// scoreboard's ☰ menu is the only menu.
+    /// </summary>
+    bool HasTray => true;
+
     IAudioOutput? OpenAudio(int sampleRate);
 
     bool AutostartEnabled { get; set; }

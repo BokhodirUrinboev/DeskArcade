@@ -13,6 +13,7 @@ public static class Achievements
         new("explorer", "general", "Explorer", "Play 6 different games", "play.games", 6),
         new("pair-programmer", "general", "Pair programmer", "Be playing when Claude finishes 10 times", "claude.done", 10),
         new("its-compiling", "general", "It's compiling", "Be playing when a --while command finishes 10 times", "task.done", 10),
+        new("race-cpu", "general", "Pacesetter", "Beat the computer in 10 races", "race.cpuwins", 10),
 
         new("hoops-100", "hoops", "Hundred baskets", "Score 100 baskets", "hoops.baskets", 100),
         new("hoops-swish", "hoops", "Nothing but net", "Score 25 swishes", "hoops.swishes", 25),
@@ -55,6 +56,9 @@ public static class Achievements
         new("pet-friend", "pet", "Best friends", "Pet your desktop pet 50 times", "pet.pets", 50),
         new("pet-taxi", "pet", "Taxi", "Carry your pet 10 times", "pet.carries", 10),
         new("pet-tricks", "pet", "Show-off", "Watch your pet do 25 tricks", "pet.tricks", 25),
+        new("pet-fetch", "pet", "Fetch!", "Have your pet bring the ball back 20 times", "pet.fetches", 20),
+        new("pet-treats", "pet", "Treat time", "Feed your pet 30 treats", "pet.treats", 30),
+        new("pet-visit", "pet", "Playdate", "Meet a co-worker's pet over the LAN", "pet.visits", 1),
 
         new("tower-15", "tower", "Skyscraper", "Build a tower 15 blocks high", "tower.height", 15),
         new("tower-perfect", "tower", "Perfectionist", "Make 10 perfect drops", "tower.perfect", 10),

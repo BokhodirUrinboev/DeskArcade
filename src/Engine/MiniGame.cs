@@ -40,8 +40,17 @@ public interface IGameHost
 
 public sealed record HudInfo(string Score, string Line, string Best);
 
+/// <summary>
+/// The other side of a two-player game, for the scoreboard's chip: who it is, whether it is the computer (and at which
+/// level, 1–4, or 0 when the game has no levels) and whose turn it is (null when the game has no turns).
+/// </summary>
+public sealed record Opponent(string Name, bool IsCpu, int Level, bool? MyTurn);
+
 public abstract class MiniGame
 {
+    /// <summary>The computer opponent's levels, 1 to 4.</summary>
+    public static readonly string[] LevelNames = { "Easy", "Medium", "Hard", "Expert" };
+
     protected MiniGame(IGameHost host) => Host = host;
 
     protected IGameHost Host { get; }
@@ -60,6 +69,51 @@ public abstract class MiniGame
     /// <summary>Race mode: start a round now, because the other player just started theirs.</summary>
     public virtual void StartRace() { }
 
+    /// <summary>Race games where fewer is better (darts thrown, moves made): the lower final score wins.</summary>
+    public virtual bool RaceLowerIsBetter => false;
+
+    /// <summary>A fair score for one round by a decent player, so the computer rival has something to aim at.</summary>
+    public virtual int RaceBaseline => 20;
+
+    /// <summary>The player's best round score, or 0 when there is none yet; the computer rival measures itself against it.</summary>
+    public virtual int RaceBest => 0;
+
+    /// <summary>About how long a round lasts, in seconds; the computer rival paces its scoring over this time.</summary>
+    public virtual double RaceSeconds => 60;
+
+    /// <summary>The lowest score a round can end with (fewer-is-better games): the computer never aims below it.</summary>
+    public virtual int RaceMin => 0;
+
+    /// <summary>The highest score a round can end with (52 cards home, a 300 game): the computer never aims above it.</summary>
+    public virtual int RaceMax => int.MaxValue;
+
+    /// <summary>
+    /// True when the game has a computer opponent whose strength can be set (tray → CPU difficulty): board games with
+    /// levels, and every race game, where the computer rival plays at that level.
+    /// </summary>
+    public virtual bool HasCpuLevels => Race != null;
+
+    /// <summary>The level a new player starts at: Medium for most games (board games start gently).</summary>
+    protected virtual int DefaultCpuLevel => 2;
+
+    /// <summary>The computer opponent's level, 1 (Easy) to 4 (Expert), kept per game in the settings.</summary>
+    public int CpuLevel
+    {
+        get => Math.Clamp(Host.Settings.Levels.TryGetValue(Id, out int l) ? l : DefaultCpuLevel, 1, LevelNames.Length);
+        set
+        {
+            Host.Settings.Levels[Id] = Math.Clamp(value, 1, LevelNames.Length);
+            Host.SaveSettings();
+            Host.HudChanged();
+        }
+    }
+
+    /// <summary>Who this player is up against right now, for the scoreboard; null in a solo game (races supply their own).</summary>
+    public virtual Opponent? Opponent => null;
+
+    /// <summary>Tweens for the game's own animations: advance them from <see cref="Update"/> and stay busy while <see cref="Engine.Anims.Busy"/>.</summary>
+    protected Anims Anims { get; } = new();
+
     /// <summary>A small (about 20 px) icon for the scoreboard, drawn around its origin. Called once per use.</summary>
     public abstract Sprite CreateIcon();
 
@@ -68,6 +122,9 @@ public abstract class MiniGame
 
     public virtual void Activate() => Layout();
     public virtual void Deactivate() { }
+
+    /// <summary>Tray → Reset positions: forget where the board or table was dragged to (the next <see cref="Layout"/> re-centres it).</summary>
+    public virtual void PositionsReset() { }
 
     /// <summary>Advance the simulation. Return true while anything is still moving.</summary>
     public abstract bool Update(double dt);

@@ -44,6 +44,24 @@ public sealed partial class HoopsGame
     bool HorseOn => Host.Lan.Connected;
     bool Matching => _horse.Now == HorseMatch.Phase.Match;
     bool MyShot => _horse.MyShot;
+    bool Waiting => HorseOn && _horse.Now != HorseMatch.Phase.Over && !MyShot;
+
+    /// <summary>The scoreboard's chip in H-O-R-S-E: the other player, and whose shot it is.</summary>
+    public override Opponent? Opponent => HorseOn ? new(Host.Lan.PeerName, false, 0, _horse.Now == HorseMatch.Phase.Over ? null : MyShot) : null;
+
+    /// <summary>The shot has come round to this player: the hoop swells once, with a soft sound.</summary>
+    void TurnCue()
+    {
+        Host.Sound.Play("pop", 0.4, 1.4);
+        Anims.Add(0.5, k => SetHoopPulse(1 + 0.12 * k), Ease.Pulse, () => SetHoopPulse(1));
+    }
+
+    /// <summary>While the other player shoots, our ball sits dimmed a little, so it is clear whose go it is.</summary>
+    void WaitingLook()
+    {
+        double opacity = Waiting ? 0.7 : 1;
+        if (_ballSprite.Opacity != opacity) _ballSprite.Opacity = opacity;
+    }
 
     void HorseLayer()
     {
@@ -148,6 +166,7 @@ public sealed partial class HoopsGame
 
     void HorseUpdate(double dt)
     {
+        WaitingLook();
         if (!HorseOn)
         {
             _rivalBall.IsVisible = _rivalLabel.IsVisible = false;
@@ -251,8 +270,9 @@ public sealed partial class HoopsGame
     /// <summary>Advances the match the same way on both screens and shows what happened.</summary>
     void Apply(bool byMe, bool made, Vec2 spot)
     {
-        bool setting = _horse.Now == HorseMatch.Phase.Set;
+        bool setting = _horse.Now == HorseMatch.Phase.Set, wasMyShot = MyShot;
         int letter = _horse.Apply(byMe, made);
+        if (!byMe && !wasMyShot && MyShot && _horse.Now != HorseMatch.Phase.Over) TurnCue();
         if (setting && made)
         {
             _spotN = spot;

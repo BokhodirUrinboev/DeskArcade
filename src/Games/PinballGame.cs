@@ -17,7 +17,12 @@ public sealed class PinballGame : MiniGame
 {
     const int Balls = 3;
     const double ServeReach = 28, BoxMaxW = 300, BoxAbove = 150, BoxBelow = 70, FlashTime = 0.18, BallArtR = 12.5;
-    const double MinWindowWidth = 140, DemoHold = 0.2;
+    const double MinWindowWidth = 140, DemoHold = 0.2, PlungerH = 34, OvershootDeg = 7;
+
+    /// <summary>A fair three-ball game for a decent player: a good few bumper hits and a lane bonus or two.</summary>
+    public const int FairRound = 2500;
+    /// <summary>About how long three balls last, in seconds.</summary>
+    public const double TypicalRoundSeconds = 90;
 
     static readonly Color Gold = Color.FromRgb(255, 209, 102);
     static readonly Color[] BumperColors = { Color.FromRgb(239, 71, 111), Color.FromRgb(77, 163, 255), Color.FromRgb(255, 166, 43) };
@@ -29,7 +34,7 @@ public sealed class PinballGame : MiniGame
     {
         public required Sprite Sprite;
         public required Control Flash;
-        public double FlashT;
+        public Anims.Tween? Pulse;
     }
 
     readonly PinballTable _table;
@@ -49,13 +54,18 @@ public sealed class PinballGame : MiniGame
     readonly IntPtr[] _windowHwnds = new IntPtr[2];
     readonly Ellipse[] _laneLights = new Ellipse[3];
     readonly Path?[] _slingFlash = new Path?[2];
-    readonly double[] _slingT = new double[2];
+    readonly Anims.Tween?[] _slingTween = new Anims.Tween?[2], _overshoot = new Anims.Tween?[2];
+    readonly double[] _flipOver = new double[2];
+    readonly bool[] _flipWasMoving = new bool[2];
     readonly double[] _demoFlipAt = { -1, -1 }, _demoReleaseAt = { -1, -1 };
     readonly Dictionary<string, double> _lastSound = new();
+    readonly Sprite _plunger = new() { IsHitTestVisible = false };
+    readonly ScaleTransform _plungerScale = new();
+    Anims.Tween? _chase, _plungerTween;
 
     Rect _builtFor;
     double _time;
-    int _ballNo = 1, _held, _seenGen = -1, _demoServeTicks = -1;
+    int _ballNo = 1, _held, _seenGen = -1, _demoServeTicks = -1, _chaseStep = -1;
     bool _gameOver;
 
     public PinballGame(IGameHost host) : base(host)
@@ -68,10 +78,12 @@ public sealed class PinballGame : MiniGame
             _flippers[i] = MakeFlipper(out _flipperBodies[i]);
             if (i == 1) _flippers[i].FlipX = -1; // the right flipper is the left one mirrored
         }
+        BuildPlunger();
         Layer.Children.Add(_tableArt);
         Layer.Children.Add(_bumperLayer);
         Layer.Children.Add(_flippers[0]);
         Layer.Children.Add(_flippers[1]);
+        Layer.Children.Add(_plunger);
         Layer.Children.Add(_serveRing);
         Layer.Children.Add(_ball);
     }
@@ -100,6 +112,9 @@ public sealed class PinballGame : MiniGame
     /// <summary>A LAN race is one three-ball game: it starts with the first serve and ends at game over.</summary>
     public override bool SupportsLan => true;
     public override (int Score, bool Active)? Race => (_table.Score, _inGame);
+    public override int RaceBaseline => FairRound;
+    public override int RaceBest => (int)Host.Stats.Get("pinball.best");
+    public override double RaceSeconds => TypicalRoundSeconds;
 
     public override void StartRace()
     {
@@ -128,6 +143,7 @@ public sealed class PinballGame : MiniGame
             _table.Ball = _table.ServeSpot;
             _table.BallVel = default;
             DrawTable();
+            _plunger.Set(_table.ServeSpot + new Vec2(0, _table.BallR + 4));
         }
         SyncWindows(force: true);
         Draw();
@@ -139,6 +155,7 @@ public sealed class PinballGame : MiniGame
         SetFlippers(3, false, quiet: true);
         _held = 0;
         for (int i = 0; i < 2; i++) _demoFlipAt[i] = _demoReleaseAt[i] = -1;
+        Anims.Finish();
     }
 
     void NewGame()
@@ -154,6 +171,7 @@ public sealed class PinballGame : MiniGame
         if (_gameOver) NewGame();
         if (!_inGame) BeginGame();
         _table.Serve();
+        ShakePlunger();
         Host.Sound.Play("whoosh", 0.5, 1.2);
         Host.HudChanged();
     }
@@ -204,22 +222,27 @@ public sealed class PinballGame : MiniGame
             case PinballTable.Hit.Bumper:
                 Host.Stats.Add("pinball.bumpers");
                 var art = ArtFor(_table.Bumpers[index]);
-                if (art != null) art.FlashT = FlashTime;
+                if (art != null) Pulse(art);
+                Host.ShareAction(at, PinballTable.BumperPoints * _table.Multiplier);
                 PlaySound("pin-bumper", 0.7, 0.9 + Rng.NextDouble() * 0.2);
                 Host.Fx.Popup(at - new Vec2(0, 24), $"+{PinballTable.BumperPoints * _table.Multiplier}", Gold, 18, 0.5);
                 Host.Fx.Burst(at, Sparks, 6, 260, 300, 4, 0.35);
                 Host.HudChanged();
                 break;
             case PinballTable.Hit.Sling:
-                _slingT[index] = FlashTime;
+                FlashSling(index);
+                Host.ShareAction(at, PinballTable.SlingPoints * _table.Multiplier);
                 PlaySound("kick", 0.6, 1.4);
                 Host.HudChanged();
                 break;
             case PinballTable.Hit.Rollover:
+                Host.ShareAction(at, PinballTable.LanePoints * _table.Multiplier);
                 PlaySound("pin-ding", speed > 0 ? 0.6 : 0.25, 1);
                 Host.HudChanged();
                 break;
             case PinballTable.Hit.LanesDone:
+                Chase();
+                Host.ShareAction(at, PinballTable.LanesBonus * Math.Max(1, index - 1)); // scored at the multiplier before this one
                 Host.Fx.Popup(at + new Vec2(0, 50), L.F("×{0} multiplier", index), Gold, 30, 1.4, L.F("+{0} bonus", PinballTable.LanesBonus));
                 Host.Sound.Play("score", 0.6);
                 Host.HudChanged();
@@ -231,6 +254,7 @@ public sealed class PinballGame : MiniGame
                 PlaySound("board", Math.Min(0.5, speed / 5000), 1.6);
                 break;
             case PinballTable.Hit.Drain:
+                Host.ShareAction(at, 0);
                 Drained();
                 break;
         }
@@ -408,26 +432,16 @@ public sealed class PinballGame : MiniGame
             _table.Advance(dt);
             busy = true;
         }
-
-        foreach (var art in _mainArt) busy |= Fade(art, dt);
-        foreach (var art in _windowArt)
-            if (art != null) busy |= Fade(art, dt);
         for (int i = 0; i < 2; i++)
         {
-            if (_slingT[i] <= 0) continue;
-            _slingT[i] = Math.Max(0, _slingT[i] - dt);
-            busy = true;
+            var f = i == 0 ? _table.Left : _table.Right;
+            if (_flipWasMoving[i] && !f.Moving) Overshoot(i, f.Raised ? -1 : 1); // it just arrived: swing a touch past and back
+            _flipWasMoving[i] = f.Moving;
         }
+        busy |= Anims.Update(dt);
 
         Draw();
         return busy || _table.InPlay || _table.FlippersMoving;
-    }
-
-    static bool Fade(BumperArt art, double dt)
-    {
-        if (art.FlashT <= 0) return false;
-        art.FlashT = Math.Max(0, art.FlashT - dt);
-        return true;
     }
 
     void PlaySound(string name, double vol, double pitch)
@@ -447,31 +461,95 @@ public sealed class PinballGame : MiniGame
         Canvas.SetLeft(_serveRing, _table.ServeSpot.X - ServeReach);
         Canvas.SetTop(_serveRing, _table.ServeSpot.Y - ServeReach);
 
-        _flippers[0].Set(_table.Left.Pivot, _table.Left.Angle * 180 / Math.PI);
-        _flippers[1].Set(_table.Right.Pivot, _table.Right.Angle * 180 / Math.PI);
+        _flippers[0].Set(_table.Left.Pivot, _table.Left.Angle * 180 / Math.PI + _flipOver[0]);
+        _flippers[1].Set(_table.Right.Pivot, _table.Right.Angle * 180 / Math.PI + _flipOver[1]);
 
-        foreach (var art in _mainArt) DrawFlash(art);
         DrawWindowBumpers();
-        for (int i = 0; i < 3; i++) _laneLights[i].Fill = _table.LaneLit[i] ? LaneOn : LaneOff;
-        for (int i = 0; i < 2; i++)
-            if (_slingFlash[i] is { } flash) flash.Opacity = _slingT[i] / FlashTime;
+        for (int i = 0; i < 3; i++)
+        {
+            bool lit = _chaseStep >= 0 ? _chaseStep % 3 == i : _table.LaneLit[i];
+            _laneLights[i].Fill = lit ? LaneOn : LaneOff;
+        }
     }
 
     void DrawWindowBumpers()
     {
         for (int j = 0; j < 2; j++)
-        {
-            if (_windowArt[j] is not { } art || _windowBumpers[j] is not { } b) continue;
-            art.Sprite.Set(b.Center);
-            DrawFlash(art);
-        }
+            if (_windowArt[j] is { } art && _windowBumpers[j] is { } b) art.Sprite.Set(b.Center);
     }
 
-    static void DrawFlash(BumperArt art)
+    // ------------------------------------------------------------------ animation
+
+    /// <summary>A pop bumper swells and lights up when the ball hits it.</summary>
+    void Pulse(BumperArt art)
     {
-        double k = art.FlashT / FlashTime;
-        art.Flash.Opacity = k;
-        art.Sprite.Scale = Fx.ReducedMotion ? 1 : 1 + 0.1 * k;
+        art.Pulse?.Cancel();
+        art.Pulse = Anims.Add(0.26, k =>
+        {
+            art.Sprite.Scale = 1 + 0.22 * k;
+            art.Flash.Opacity = k;
+        }, Ease.Pulse, () =>
+        {
+            art.Sprite.Scale = 1;
+            art.Flash.Opacity = 0;
+            art.Pulse = null;
+        });
+    }
+
+    void FlashSling(int side)
+    {
+        if (_slingFlash[side] is not { } flash) return;
+        _slingTween[side]?.Cancel();
+        _slingTween[side] = Anims.Add(FlashTime, k => flash.Opacity = 1 - k, Ease.OutQuad, () => flash.Opacity = 0);
+    }
+
+    /// <summary>A flipper that has just swung up (or dropped) goes a few degrees past its stop and springs back.</summary>
+    void Overshoot(int side, double dir)
+    {
+        _overshoot[side]?.Cancel();
+        _overshoot[side] = Anims.Add(0.18, k => _flipOver[side] = dir * OvershootDeg * Math.Sin(k * Math.PI) * (1 - k), Ease.Linear, () => _flipOver[side] = 0);
+    }
+
+    /// <summary>All three lanes lit: the lights chase round three times before the lanes go dark for the next multiplier.</summary>
+    void Chase()
+    {
+        _chase?.Cancel();
+        _chase = Anims.Add(0.9, k => _chaseStep = Math.Min(8, (int)(k * 9)), Ease.Linear, () =>
+        {
+            _chaseStep = -1;
+            _chase = null;
+        });
+    }
+
+    /// <summary>A little plunger under the serve spot: a spring on a knob, drawn from its top.</summary>
+    void BuildPlunger()
+    {
+        var steel = Art.Brush("#C9D1DC");
+        var shade = Art.Brush(150, 20, 22, 28);
+        var body = new Canvas { RenderTransformOrigin = RelativePoint.TopLeft, RenderTransform = _plungerScale };
+        body.Children.Add(Art.At(new Rectangle { Width = 5, Height = PlungerH - 8, Fill = steel, Stroke = shade, StrokeThickness = 1 }, -2.5, 0));
+        var coils = new System.Text.StringBuilder();
+        for (double y = 4; y < PlungerH - 10; y += 4) coils.Append($"M-7,{Art.F(y)} L7,{Art.F(y + 2)} ");
+        body.Children.Add(Art.PathOf(coils.ToString(), null, Art.Brush(200, 201, 209, 220), 1.2));
+        body.Children.Add(Art.Circle(0, PlungerH - 6, 6.5, Art.Brush(Themes.Current.Mine), shade, 1.2));
+        _plunger.Children.Add(body);
+    }
+
+    /// <summary>The launch: the plunger is rammed home, then rattles as its spring settles.</summary>
+    void ShakePlunger()
+    {
+        _plungerTween?.Cancel();
+        var at = _table.ServeSpot + new Vec2(0, _table.BallR + 4);
+        _plungerTween = Anims.Add(0.5, k =>
+        {
+            _plungerScale.ScaleY = 1 - 0.45 * Math.Max(0, 1 - k * 3) + 0.1 * Math.Sin(k * Math.PI * 6) * (1 - k);
+            _plunger.Set(at + new Vec2(3 * Math.Sin(k * Math.PI * 10) * (1 - k), 0));
+        }, Ease.Linear, () =>
+        {
+            _plungerScale.ScaleY = 1;
+            _plunger.Set(at);
+            _plungerTween = null;
+        });
     }
 
     /// <summary>The fixed parts (rails, slingshots, lanes, the table's own bumpers), redrawn when the arena changes.</summary>
@@ -536,6 +614,8 @@ public sealed class PinballGame : MiniGame
     public override void ThemeChanged()
     {
         foreach (var body in _flipperBodies) body.Fill = Art.Brush(Themes.Current.Mine);
+        _plunger.Children.Clear();
+        BuildPlunger();
     }
 
     static string FlipperPath(double len, double baseR, double tipR)

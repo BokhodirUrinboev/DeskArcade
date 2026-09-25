@@ -13,11 +13,18 @@ namespace DeskArcade.Games;
 /// <summary>
 /// Can Knockdown: throw the ball from behind the foul line and knock the pyramid off its shelf.
 /// Clear a stack to get a bigger one; run out of balls with cans still standing and the game is over.
+/// A game, from the first throw to that game over, is one race round against the computer or a co-worker.
 /// </summary>
 public sealed class CansGame : MiniGame
 {
     const double BallR = 17, CanR = 17, CanW = 30, CanH = 40, CanSpacing = 35, Step = 1.0 / 240, Gravity = 1900;
     const double ShelfThick = 10, FoulGap = 380, BallMass = 2.2, CanMass = 1, Reach = BallR + 16;
+
+    /// <summary>What a decent game scores: two stacks cleared with a spare ball each, and a dent in the third.</summary>
+    public const int Baseline = 30;
+
+    /// <summary>About how long such a game takes, in seconds.</summary>
+    public const double GameSeconds = 45;
 
     static readonly Color Gold = Color.FromRgb(255, 209, 102);
     static readonly Color[] Labels =
@@ -30,9 +37,12 @@ public sealed class CansGame : MiniGame
     {
         public required Sprite Sprite;
         public Vec2 Pos, Vel, Home;
-        public double Angle, Spin, StillT, FadeT;
-        public bool Dynamic, Resting, Down, Golden;
+        public double Angle, Spin, StillT, FadeT, Wobble;
+        public bool Dynamic, Resting, Down, Golden, Landing;
         public Can? SupportA, SupportB;
+        public Anims.Tween? WobbleTween;
+        public TranslateTransform? Sheen; // the golden can's glint, sweeping across it
+        public ScaleTransform? StarScale;
     }
 
     readonly BallBody _ball = new(BallR) { Gravity = Gravity, Restitution = 0.45, RollFriction = 1.8 };
@@ -55,8 +65,8 @@ public sealed class CansGame : MiniGame
 
     double _shelfX1, _shelfX2, _shelfY, _spotX, _foulX;
     double _time, _acc, _sinceThrow, _clearIn = -1, _judgeIn = -1;
-    int _stack, _ballsLeft, _score;
-    bool _placed, _holding, _inFlight, _gameOver, _shelfOnRight, _beatBest;
+    int _stack, _ballsLeft, _score, _build;
+    bool _placed, _holding, _inFlight, _gameOver, _shelfOnRight, _beatBest, _roundActive;
     Vec2 _grabOffset;
 
     public CansGame(IGameHost host) : base(host)
@@ -73,7 +83,7 @@ public sealed class CansGame : MiniGame
 
     public override Sprite CreateIcon()
     {
-        var icon = MakeCan(Labels[0], false);
+        var icon = MakeCan(Labels[0], false, out _, out _);
         icon.Scale = 0.5;
         return icon;
     }
@@ -110,6 +120,27 @@ public sealed class CansGame : MiniGame
         _foul.IsVisible = false;
     }
 
+    public override bool SupportsLan => true;
+    public override (int Score, bool Active)? Race => (_score, _roundActive);
+    public override int RaceBaseline => Baseline;
+    public override int RaceBest => Host.Settings.BestCans;
+    public override double RaceSeconds => GameSeconds;
+
+    /// <summary>The rival started a game: a fresh stack if the last game is over, and this game counts from now.</summary>
+    public override void StartRace()
+    {
+        if (_roundActive) return;
+        if (_gameOver) NewGame();
+        BeginRound();
+        Host.Wake();
+    }
+
+    void BeginRound()
+    {
+        _roundActive = true;
+        Host.RoundStarted();
+    }
+
     void NewGame()
     {
         _score = 0;
@@ -119,14 +150,21 @@ public sealed class CansGame : MiniGame
         NextStack();
     }
 
+    /// <summary>The shape of the n-th stack: rows of cans (3, then 4 from the third stack, 5 from the fifth) and balls to throw at it.</summary>
+    public static (int Rows, int Balls) StackShape(int stack)
+    {
+        int rows = 3 + Math.Min(2, Math.Max(0, stack - 1) / 2);
+        return (rows, rows >= 5 ? 4 : 3);
+    }
+
     void NextStack()
     {
         _stack++;
         Host.Stats.Max("cans.stack", _stack);
         foreach (var c in _cans) _canLayer.Children.Remove(c.Sprite);
         _cans.Clear();
-        int rows = 3 + Math.Min(2, (_stack - 1) / 2);
-        _ballsLeft = rows >= 5 ? 4 : 3;
+        var (rows, balls) = StackShape(_stack);
+        _ballsLeft = balls;
         PlaceShelf(rows);
         BuildPyramid(rows);
         ReturnBall();
@@ -167,29 +205,93 @@ public sealed class CansGame : MiniGame
         _foul.EndPoint = new Point(_foulX, a.Bottom);
     }
 
+    /// <summary>
+    /// Where the cans of a pyramid of <paramref name="rows"/> rows stand, bottom row first and left to right, centered
+    /// on <paramref name="cx"/> with the bottom row on a shelf at <paramref name="shelfY"/>.
+    /// </summary>
+    public static List<Vec2> PyramidHomes(int rows, double cx, double shelfY)
+    {
+        var homes = new List<Vec2>();
+        for (int k = 0; k < rows; k++)
+        {
+            int n = rows - k;
+            for (int i = 0; i < n; i++) homes.Add(new Vec2(cx + (i - (n - 1) / 2.0) * CanSpacing, shelfY - CanH / 2 - k * CanH));
+        }
+        return homes;
+    }
+
+    /// <summary>When the n-th can of a new stack starts its drop: one after another, bottom row first.</summary>
+    public static double DropDelay(int index) => 0.07 * index;
+
+    /// <summary>A stack is built by dropping its cans onto the shelf one by one, each bouncing to a stop.</summary>
     void BuildPyramid(int rows)
     {
+        int build = ++_build;
         double cx = (_shelfX1 + _shelfX2) / 2;
+        var homes = PyramidHomes(rows, cx, _shelfY);
         var below = new List<Can>();
+        int index = 0, last = homes.Count - 1;
         for (int k = 0; k < rows; k++)
         {
             int n = rows - k;
             var row = new List<Can>(n);
             for (int i = 0; i < n; i++)
             {
-                var home = new Vec2(cx + (i - (n - 1) / 2.0) * CanSpacing, _shelfY - CanH / 2 - k * CanH);
+                var home = homes[index];
                 bool golden = k == rows - 1;
                 var can = new Can
                 {
-                    Sprite = MakeCan(Labels[(k + i) % Labels.Length], golden), Pos = home, Home = home, Golden = golden,
-                    SupportA = k > 0 ? below[i] : null, SupportB = k > 0 ? below[i + 1] : null,
+                    Sprite = MakeCan(Labels[(k + i) % Labels.Length], golden, out var sheen, out var starScale), Pos = home, Home = home, Golden = golden,
+                    SupportA = k > 0 ? below[i] : null, SupportB = k > 0 ? below[i + 1] : null, Landing = true, Sheen = sheen, StarScale = starScale,
                 };
-                can.Sprite.Set(home, 0);
                 _canLayer.Children.Add(can.Sprite);
                 _cans.Add(can);
                 row.Add(can);
+                DropIn(can, index, index == last ? build : 0);
+                index++;
             }
             below = row;
+        }
+        Draw();
+    }
+
+    /// <param name="lastOf">The build this can completes (its stack is then ready), or 0 for the others.</param>
+    void DropIn(Can can, int index, int lastOf)
+    {
+        var a = Host.Arena;
+        var home = can.Home;
+        double start = Math.Max(a.Top + CanH, home.Y - 260);
+        can.Pos = new Vec2(home.X, start);
+        can.Sprite.Opacity = 0;
+        Anims.Add(0.5, k =>
+        {
+            can.Sprite.Opacity = 1;
+            can.Pos = new Vec2(home.X, start + (home.Y - start) * k);
+        }, Ease.OutBounce, () =>
+        {
+            can.Pos = home;
+            can.Landing = false;
+            PlayThrottled("thump", 0.18, 1.3 + Rng.NextDouble() * 0.2);
+            if (lastOf != 0 && lastOf == _build) StackReady();
+        }, DropDelay(index));
+    }
+
+    /// <summary>The whole stack stands: the golden can catches the light a few times.</summary>
+    void StackReady()
+    {
+        for (int i = 0; i < 3; i++) Anims.After(0.2 + i * 1.1, Glint);
+    }
+
+    void Glint()
+    {
+        foreach (var c in _cans)
+        {
+            if (!c.Golden || c.Down || c.Sheen is not { } sheen || c.StarScale is not { } star) continue;
+            Anims.Add(0.7, k =>
+            {
+                sheen.X = -CanW + CanW * 2 * k;
+                star.ScaleX = star.ScaleY = 1 + 0.7 * Ease.Pulse(k);
+            }, Ease.InOutQuad);
         }
     }
 
@@ -216,6 +318,7 @@ public sealed class CansGame : MiniGame
         int bonus = _ballsLeft * 5;
         AddScore(bonus);
         var at = new Vec2((_shelfX1 + _shelfX2) / 2, _shelfY - 140);
+        if (bonus > 0) Host.ShareAction(at, bonus);
         Host.Fx.Popup(at, L.T("CLEAR!"), Gold, 40, 1.8, bonus > 0 ? L.F("+{0} for spare balls", bonus) : L.T("next stack"));
         Host.Fx.Burst(at, Confetti, 36, 500, 700, 7, 1.0);
         Host.Sound.Play("fire", 0.8);
@@ -225,6 +328,8 @@ public sealed class CansGame : MiniGame
     void GameOver()
     {
         _gameOver = true;
+        _roundActive = false;
+        Host.RoundEnded(_score);
         var a = Host.Arena;
         var at = new Vec2(a.Center.X, a.Top + a.Height * 0.3);
         Host.Fx.Popup(at, _beatBest ? L.T("NEW BEST!") : L.T("GAME OVER"), _beatBest ? Gold : Colors.White, 38, 2.4, L.F("{0} points · reached stack {1}", _score, _stack));
@@ -263,12 +368,28 @@ public sealed class CansGame : MiniGame
             _ball.Place(_ball.Pos, v); // just dropped it: no ball used
             return;
         }
-        _ball.Place(_ball.Pos, v);
         _ball.Spin = -v.X * 0.3;
+        Throw(v);
+        Host.Sound.Play("whoosh", Math.Min(1, v.Length / 3000) * 0.5);
+    }
+
+    public override void PointerCancel()
+    {
+        if (!_holding) return;
+        _holding = false;
+        _foul.IsVisible = false;
+        _ball.Place(_ball.Pos);
+    }
+
+    /// <summary>A ball leaves the hand: the first throw of a game starts its race round.</summary>
+    void Throw(Vec2 v)
+    {
+        _ball.Place(_ball.Pos, v);
         _inFlight = true;
         _sinceThrow = 0;
         _ballsLeft--;
-        Host.Sound.Play("whoosh", Math.Min(1, v.Length / 3000) * 0.5);
+        if (!_roundActive) BeginRound();
+        Glint();
         Host.HudChanged();
     }
 
@@ -310,7 +431,7 @@ public sealed class CansGame : MiniGame
     public override bool Update(double dt)
     {
         _time += dt;
-        bool busy = _holding;
+        bool busy = _holding | Anims.Update(dt);
 
         if (_holding)
         {
@@ -396,7 +517,7 @@ public sealed class CansGame : MiniGame
         foreach (var c in _cans)
         {
             // lose support when a can underneath has been knocked out of place
-            if (!c.Dynamic && (Displaced(c.SupportA) || Displaced(c.SupportB)))
+            if (!c.Dynamic && !c.Landing && (Displaced(c.SupportA) || Displaced(c.SupportB)))
             {
                 Wake(c);
                 c.Vel = new Vec2((Rng.NextDouble() - 0.5) * 80, 0);
@@ -407,7 +528,7 @@ public sealed class CansGame : MiniGame
 
         if (!_holding)
             foreach (var c in _cans)
-                if (c.FadeT == 0) ResolveBallCan(c);
+                if (c.FadeT == 0 && !c.Landing) ResolveBallCan(c);
         for (int i = 0; i < _cans.Count; i++)
             for (int j = i + 1; j < _cans.Count; j++)
                 ResolveCans(_cans[i], _cans[j]);
@@ -420,6 +541,7 @@ public sealed class CansGame : MiniGame
             int pts = c.Golden ? 3 : 1;
             AddScore(pts);
             Host.Stats.Add("cans.knocked");
+            Host.ShareAction(c.Pos, pts);
             Host.Fx.Popup(c.Pos - new Vec2(0, 30), $"+{pts}", c.Golden ? Gold : Colors.White, c.Golden ? 28 : 22, 0.8);
             Host.HudChanged();
             if (_clearIn < 0 && CansLeft == 0) _clearIn = 0.7;
@@ -433,6 +555,15 @@ public sealed class CansGame : MiniGame
         c.Dynamic = true;
         c.Resting = false;
         c.StillT = 0;
+    }
+
+    /// <summary>A can that was brushed rather than knocked rocks on its base: the tilt at a point of the wobble, in degrees.</summary>
+    public static double WobbleAngle(double k) => 9 * Math.Sin(k * Math.PI * 4) * (1 - k);
+
+    void Wobble(Can c)
+    {
+        if (c.WobbleTween is { Finished: false }) return;
+        c.WobbleTween = Anims.Add(0.6, k => c.Wobble = WobbleAngle(k), Ease.Linear, () => c.Wobble = 0);
     }
 
     static double HalfHeight(Can c)
@@ -507,7 +638,11 @@ public sealed class CansGame : MiniGame
             if (rel < 50)
             {
                 _ball.Pos -= n * overlap; // a gentle touch just rests against the can
-                if (rel > 0) _ball.Vel -= n * (rel * 1.3);
+                if (rel > 0)
+                {
+                    _ball.Vel -= n * (rel * 1.3);
+                    if (rel > 8) Wobble(c);
+                }
                 return;
             }
             Wake(c);
@@ -525,9 +660,9 @@ public sealed class CansGame : MiniGame
         PlayThrottled("rim", Math.Min(0.8, rel / 1400), 1.2 + Rng.NextDouble() * 0.3);
     }
 
-    static void ResolveCans(Can a, Can b)
+    void ResolveCans(Can a, Can b)
     {
-        if (a.FadeT > 0 || b.FadeT > 0) return;
+        if (a.FadeT > 0 || b.FadeT > 0 || a.Landing || b.Landing) return;
         bool aMoving = a.Dynamic && !a.Resting, bMoving = b.Dynamic && !b.Resting;
         if (!aMoving && !bMoving) return;
         Vec2 d = b.Pos - a.Pos;
@@ -554,11 +689,13 @@ public sealed class CansGame : MiniGame
         {
             a.Pos -= n * overlap;
             if (rel > 0) a.Vel -= n * (rel * 1.3);
+            if (rel > 8) Wobble(b); // brushed, not knocked
         }
         else
         {
             b.Pos += n * overlap;
             if (rel > 0) b.Vel += n * (rel * 1.3);
+            if (rel > 8) Wobble(a);
         }
     }
 
@@ -567,7 +704,7 @@ public sealed class CansGame : MiniGame
     void Draw()
     {
         _ballSprite.Set(_ball.Pos, _ball.Angle);
-        foreach (var c in _cans) c.Sprite.Set(c.Pos, c.Angle);
+        foreach (var c in _cans) c.Sprite.Set(c.Pos, c.Angle + c.Wobble);
     }
 
     void PlayThrottled(string name, double vol, double pitch = 1)
@@ -588,7 +725,8 @@ public sealed class CansGame : MiniGame
         return brush;
     }
 
-    static Sprite MakeCan(Color label, bool golden)
+    /// <summary>A can, standing on the origin's level, with (for the golden one) the sheen and star its glint moves.</summary>
+    static Sprite MakeCan(Color label, bool golden, out TranslateTransform? sheen, out ScaleTransform? starScale)
     {
         var s = new Sprite { IsHitTestVisible = false };
         s.Rotor.Children.Add(Art.At(new Rectangle
@@ -607,7 +745,23 @@ public sealed class CansGame : MiniGame
         {
             Width = CanW - 2, Height = 5, Fill = Art.Brush("#D5D9DE"), Stroke = Art.Brush("#5C626B"), StrokeThickness = 0.8,
         }, -CanW / 2 + 1, -CanH / 2 - 1));
-        if (golden) s.Rotor.Children.Add(Art.PathOf(Art.StarPath(0, 1, 6, 2.6), Brushes.White));
+        sheen = null;
+        starScale = null;
+        if (!golden) return s;
+
+        // a slanted streak of light that the glint sweeps across the can, clipped to it
+        sheen = new TranslateTransform(-CanW, 0);
+        var streak = new Canvas { Clip = new RectangleGeometry(new Rect(-CanW / 2, -CanH / 2, CanW, CanH)) };
+        streak.Children.Add(Art.At(new Rectangle
+        {
+            Width = 9, Height = CanH + 16, Fill = Art.Brush(140, 255, 255, 255), RenderTransformOrigin = RelativePoint.TopLeft,
+            RenderTransform = new TransformGroup { Children = { new RotateTransform(18), sheen } },
+        }, -4.5, -CanH / 2 - 8));
+        s.Rotor.Children.Add(streak);
+        starScale = new ScaleTransform(1, 1);
+        var star = new Canvas { RenderTransformOrigin = RelativePoint.TopLeft, RenderTransform = starScale };
+        star.Children.Add(Art.PathOf(Art.StarPath(0, 0, 6, 2.6), Brushes.White));
+        s.Rotor.Children.Add(Art.At(star, 0, 1));
         return s;
     }
 
@@ -632,7 +786,7 @@ public sealed class CansGame : MiniGame
 
     public override void DemoTick()
     {
-        if (_holding || _inFlight || _clearIn >= 0 || _judgeIn >= 0) return;
+        if (_holding || _inFlight || _clearIn >= 0 || _judgeIn >= 0 || _cans.Any(c => c.Landing)) return;
         if (_gameOver) NewGame();
         if (_ballsLeft <= 0) return;
         var target = _cans.Where(c => !c.Down).OrderByDescending(c => c.Pos.Y).FirstOrDefault();
@@ -641,10 +795,6 @@ public sealed class CansGame : MiniGame
         double T = 0.75 + Rng.NextDouble() * 0.15;
         var aim = target.Pos + new Vec2(0, -6);
         var v = new Vec2((aim.X - from.X) / T, (aim.Y - from.Y - 0.5 * Gravity * T * T) / T) * 1.02;
-        _ball.Place(from, v);
-        _inFlight = true;
-        _sinceThrow = 0;
-        _ballsLeft--;
-        Host.HudChanged();
+        Throw(v);
     }
 }
