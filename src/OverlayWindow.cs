@@ -203,6 +203,8 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new ChessGame(this));
         _games.Add(new ConnectFourGame(this));
         _games.Add(new TicTacToeGame(this));
+        _games.Add(new ReversiGame(this));
+        _games.Add(new GomokuGame(this));
         _games.Add(new SeaBattleGame(this));
         var durak = new DurakGame(this);
         durak.SetupRequested += () => RoomWindow.ShowFor(this, durak);
@@ -577,6 +579,8 @@ public sealed class OverlayWindow : Window, IGameHost
         "chess" => L.T("click a piece, then the square it should move to"),
         "connect4" => L.T("click a column to drop a disc — four in a row wins"),
         "tictactoe" => L.T("click a square — three in a row wins"),
+        "reversi" => L.T("click a dotted square — outflank discs to flip them, most discs wins"),
+        "gomoku" => L.T("click an intersection — five or more in a row wins (freestyle)"),
         "seabattle" => L.T("click the enemy grid to start, then fire — a hit shoots again"),
         "durak" => L.T("play the computer, or set up a room for up to four co-workers"),
         "clay" => L.T("click the trap machine, then shoot the clays at the top of their arc"),

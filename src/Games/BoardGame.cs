@@ -42,8 +42,8 @@ public interface ILeveledRules
 
 /// <summary>
 /// What one move does to the pieces on screen, worked out from the board before and after it: which pieces slide
-/// along which path, which vanish (captured), which one appears (placed) and what the mover turns into where it
-/// lands (a promoted pawn, a crowned man).
+/// along which path, which vanish (captured), which one appears (placed), which turn over to the other side
+/// (Reversi) and what the mover turns into where it lands (a promoted pawn, a crowned man).
 /// </summary>
 public sealed class BoardMovePlan
 {
@@ -58,17 +58,21 @@ public sealed class BoardMovePlan
 
     /// <summary>What the mover has become where it landed, when it changed kind on the way.</summary>
     public (int Square, sbyte Piece)? Becomes { get; set; }
+
+    /// <summary>Pieces that changed side where they stand (Reversi), nearest the placed piece first, each with what it became.</summary>
+    public List<(int Square, sbyte Piece)> Flips { get; } = new();
 }
 
 /// <summary>Plans the animation of a move from the board before and after it. UI-free, so it can be tested.</summary>
 public static class BoardAnim
 {
     /// <summary>
-    /// The plan for <paramref name="move"/>, or null when the difference between the boards is not what that one
-    /// move explains (then the board is simply drawn afresh). A castling rook slides along with the king; anything
-    /// else that left the board was captured.
+    /// The plan for <paramref name="move"/> on a board <paramref name="cols"/> squares wide, or null when the
+    /// difference between the boards is not what that one move explains (then the board is simply drawn afresh). A
+    /// castling rook slides along with the king; anything else that left the board was captured. A placed piece may
+    /// turn others over to its side, and they flip in order, nearest first.
     /// </summary>
-    public static BoardMovePlan? Plan(sbyte[] before, sbyte[] after, int[] move)
+    public static BoardMovePlan? Plan(sbyte[] before, sbyte[] after, int[] move, int cols = 8)
     {
         if (before.Length != after.Length || move.Length == 0 || move.Any(sq => sq < 0 || sq >= before.Length)) return null;
         var gone = new List<int>();    // squares that emptied
@@ -87,8 +91,13 @@ public static class BoardAnim
         if (move.Length == 1)
         {
             int sq = move[0];
-            if (came.Count != 1 || came[0] != sq || gone.Count != 0 || swapped.Count != 0) return null;
+            if (came.Count != 1 || came[0] != sq || gone.Count != 0) return null;
+            // a placed piece may turn others over to its own side (Reversi), but nothing else
+            if (swapped.Any(s => after[s] != after[sq] || before[s] != -after[sq])) return null;
             plan.Appear = (sq, after[sq]);
+            int r = sq / cols, c = sq % cols;
+            foreach (int s in swapped.OrderBy(s => Math.Max(Math.Abs(s / cols - r), Math.Abs(s % cols - c))).ThenBy(s => s))
+                plan.Flips.Add((s, after[s]));
             return plan;
         }
 
@@ -120,10 +129,10 @@ public static class BoardAnim
     /// For a board that arrived over the network: the plan when it is exactly one legal move on from the board we
     /// show, otherwise null (several plies at once, a rematch, anything odd: draw it at once).
     /// </summary>
-    public static BoardMovePlan? Decide(sbyte[] before, sbyte[] after, int plyBefore, int plyAfter, int[]? path, List<int[]> legal)
+    public static BoardMovePlan? Decide(sbyte[] before, sbyte[] after, int plyBefore, int plyAfter, int[]? path, List<int[]> legal, int cols = 8)
     {
         if (plyAfter != plyBefore + 1 || path == null || !legal.Any(m => m.SequenceEqual(path))) return null;
-        return Plan(before, after, path);
+        return Plan(before, after, path, cols);
     }
 
     /// <summary>Which leg of <paramref name="path"/> (0-based) passes over or lands on <paramref name="sq"/>; the last leg when none does.</summary>
@@ -153,7 +162,7 @@ public static class BoardAnim
 /// </summary>
 public abstract class BoardGame : MiniGame
 {
-    const double CpuDelay = 0.6, SyncEvery = 0.4, LegSeconds = 0.22;
+    const double CpuDelay = 0.6, SyncEvery = 0.4, LegSeconds = 0.22, FlipSeconds = 0.24, FlipGap = 0.07;
     /// <summary>How often the CPU plays a random move instead of its best one, per level (Easy … Expert).</summary>
     static readonly double[] Blunders = { 0.45, 0.2, 0.05, 0 };
 
@@ -230,6 +239,14 @@ public abstract class BoardGame : MiniGame
     protected virtual (Vec2 From, double Seconds)? DropFrom(int sq) => null;
     /// <summary>The squares of the line that just won, in games that have one, so it can light up.</summary>
     protected virtual int[]? WinningLine => null;
+    /// <summary>Whether the squares a piece may be placed on get a dot on the player's turn (Reversi).</summary>
+    protected virtual bool DotPlacements => false;
+    /// <summary>Something to tell both players once the board has changed (a pass in Reversi), or null.</summary>
+    protected virtual string? Note => null;
+    /// <summary>How often the CPU plays a random move instead of its best one at <paramref name="level"/>; games whose levels already play loosely say 0.</summary>
+    protected virtual double Blunder(int level) => Blunders[level - 1];
+    /// <summary>The player has just won: <paramref name="cpuLevel"/> is the level beaten, 0 over the LAN. Not called in demo games.</summary>
+    protected virtual void Won(int cpuLevel) { }
 
     protected virtual int Cols => 8;
     protected virtual int Rows => 8;
@@ -265,7 +282,7 @@ public abstract class BoardGame : MiniGame
     {
         if (LevelDepths is not { } depths || _game is not ILeveledRules rules) return _game.BestMove(Rng);
         var moves = _game.LegalMoves();
-        if (Rng.NextDouble() < Blunders[Level - 1]) return moves[Rng.Next(moves.Count)];
+        if (Rng.NextDouble() < Blunder(Level)) return moves[Rng.Next(moves.Count)];
         return rules.BestMove(Rng, depths[Level - 1]);
     }
 
@@ -503,12 +520,13 @@ public abstract class BoardGame : MiniGame
         var captured = _game.Apply(move);
         Deselect();
         _lastPath = move;
-        Show(BoardAnim.Plan(before, _game.Board, move));
+        Show(BoardAnim.Plan(before, _game.Board, move, Cols));
         MoveFx(captured.Count, mine);
         AfterMove();
     }
 
-    void MoveFx(int captures, bool byMe)
+    /// <summary>The sound (and the stats) of a move that captured <paramref name="captures"/> pieces.</summary>
+    protected virtual void MoveFx(int captures, bool byMe)
     {
         if (captures > 0)
         {
@@ -525,6 +543,11 @@ public abstract class BoardGame : MiniGame
     {
         if (!_over && _game.Result != 0) GameOver(_game.Result);
         else if (!_over && _game.Alert >= 0) Host.Sound.Play("rim", 0.5, 0.8);
+        if (!_over && Note is { } note)
+        {
+            var b = BoardRect;
+            Host.Fx.Popup(new Vec2(b.Center.X, b.Top + b.Height * 0.3), note, Colors.White, 24, 1.8);
+        }
         if (!_over && !LanOn && _game.Turn != Me) _cpuIn = Math.Max(CpuDelay, _settle + 0.25);
         if (!IsGuest) SendState();
         DrawMarks();
@@ -554,6 +577,7 @@ public abstract class BoardGame : MiniGame
                 Host.Stats.Add("lan.wins");
             }
             string sub = L.F("vs {0}", Rival);
+            if (!_demo) Won(LanOn ? 0 : Level);
             if (HasLevels && !LanOn && !_demo) // demo games don't move the player's level
             {
                 _lossStreak = 0;
@@ -656,7 +680,7 @@ public abstract class BoardGame : MiniGame
         var path = ParsePath(f[2]);
         int before = _game.Count(Me);
         bool advanced = !newGame && d.Ply > _game.Ply;
-        var plan = newGame ? null : BoardAnim.Decide(_game.Board, d.Board, _game.Ply, d.Ply, path, _game.LegalMoves());
+        var plan = newGame ? null : BoardAnim.Decide(_game.Board, d.Board, _game.Ply, d.Ply, path, _game.LegalMoves(), Cols);
         if (newGame)
         {
             _gameNo = gameNo;
@@ -784,6 +808,29 @@ public abstract class BoardGame : MiniGame
                 end = Math.Max(end, 0.3);
             }
         }
+        double flipAt = plan.Appear != null ? 0.18 : 0;
+        foreach (var (sq, piece) in plan.Flips)
+        {
+            // a coin flip: the disc squashes to its edge, turns over and opens out again, one after another
+            if (_at[sq] is not { } pv || pv.Piece != -piece)
+            {
+                Rebuild();
+                return;
+            }
+            bool turned = false;
+            var s = pv.Sprite;
+            _motion.Add(FlipSeconds, k =>
+            {
+                if (k >= 0.5 && !turned)
+                {
+                    turned = true;
+                    Repaint(pv, piece);
+                }
+                s.FlipX = Math.Max(0.04, Math.Abs(1 - 2 * k));
+            }, Ease.Linear, delay: flipAt);
+            end = Math.Max(end, flipAt + FlipSeconds);
+            flipAt += FlipGap;
+        }
         if (plan.Becomes is { } becomes)
         {
             if (_at[becomes.Square] is not { } pv)
@@ -810,6 +857,8 @@ public abstract class BoardGame : MiniGame
         {
             sbyte shown = _at[sq]?.Piece ?? 0;
             if (plan.Becomes is { } b && b.Square == sq && _at[sq] != null) shown = b.Piece;
+            foreach (var f in plan.Flips)
+                if (f.Square == sq) shown = f.Piece;
             if (shown != _game.Board[sq])
             {
                 Rebuild();
@@ -913,8 +962,16 @@ public abstract class BoardGame : MiniGame
                 }, Ease.OutQuad);
             }
             else
+            {
                 foreach (int from in moves.Where(m => m.Length > 1).Select(m => m[0]).Distinct())
                     _marks.Children.Add(Box(from, null, Art.Brush(Color.FromArgb(120, gold.R, gold.G, gold.B))));
+                if (DotPlacements)
+                    foreach (var m in moves.Where(m => m.Length == 1))
+                    {
+                        var c = Local(m[0]);
+                        _marks.Children.Add(Art.Circle(c.X, c.Y, Cell * 0.1, Art.Brush(Color.FromArgb(150, gold.R, gold.G, gold.B)), Art.Brush(90, 0, 0, 0), 1));
+                    }
+            }
         }
         Lift(_selected >= 0 ? _at[_selected] : null);
     }

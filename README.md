@@ -48,7 +48,7 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
   level and whose turn it is.
 - **Boards move.** Chess, checkers, the card tables and the other boards have a grip above them: drag it (or
   right-drag the board) to put the game where you want it, and it stays there.
-- **34 games, 89 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
+- **36 games, 93 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
 - **Play with the person at the next desk** over the local network: Air Hockey (best of 3), Pong,
   H-O-R-S-E, Mini Golf and Archery duels, board games, Sea Battle and score races in twenty-one games. You see
   what the other player does: their ball, arrow or puck, and a marker wherever they pop, whack or stack.
@@ -81,6 +81,8 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 | ♞ **Chess** | Click a piece, then its square. Full rules: castling, en passant, check, mate, stalemate and the 50-move rule; pawns always promote to a queen. Play the CPU (Easy, Medium, Hard or Expert: it starts on Easy, moves up a level each time you win and back down if you lose twice running) or a co-worker over the LAN. Moves slide, captures fade, a promotion pops and a king in check pulses red. Drag the grip above the board or right-drag to move it; the scoreboard shows whose turn it is and the CPU level. |
 | 🔴 **Connect Four** | Click a column to drop a disc; four in a row (across, down or diagonal) wins. Discs fall and bounce into place, and the winning four lights up. Play the CPU or a co-worker. Drag the grip above the board or right-drag to move it; the turn shows on the scoreboard. |
 | ❌ **Tic-tac-toe** | Click a square; three in a row wins. The CPU is good but slips now and then. Marks pop in and the winning line lights up. Drag the grip above the board or right-drag to move it; the turn shows on the scoreboard. |
+| ⚫ **Reversi** | Othello rules on an 8×8 board. Click one of the dotted squares: your disc must outflank a line of the other colour, and every disc it outflanks turns over, one after another. No move? You pass (the board says so); when neither side can move, the most discs wins. Play the CPU (Easy plays loosely, Medium grabs corners and edges, Hard and Expert look ahead; it starts on Easy and moves up as you win; **tray → CPU difficulty** sets it) or a co-worker over the LAN. Drag the grip above the board or right-drag to move it; the scoreboard shows the discs each side has. |
+| ⚪ **Gomoku** | Five in a row on the 15×15 intersections, freestyle (six or more in a row wins too). Click an intersection to put a stone there; the winning line lights up. Play the CPU (Easy extends its own lines, Medium weighs every threat and block, Hard and Expert look a few moves ahead among the best points; **tray → CPU difficulty** sets it) or a co-worker over the LAN. Drag the grip above the board or right-drag to move it. |
 | 🚢 **Sea Battle** | Your fleet is on the left, the enemy's waters on the right. Click your grid to shuffle your ships, the enemy grid to start, then fire. A hit shoots again; sink all five ships to win. Shells arc to their square (a splash for a miss, a burst for a hit), a sunk ship darkens square by square and the enemy fleet surfaces when the game is over. The CPU has four levels (**tray → CPU difficulty**): Easy fires at random, Medium hunts and then works along a wounded ship, Hard hunts on a checkerboard, Expert hunts where the most ships could still lie; it moves up a level when you win and down after two losses. Or play a co-worker. Drag the grip above the grids or right-drag to move them; the scoreboard shows whose shot it is. |
 | 🃏 **Durak** | The Russian card game (podkidnoy), for 2–4 players: against 1–3 computer players, or co-workers in a room you create (see below). Click a card to attack, throw in or beat a card (click a table card first to pick which one); **Take** gives up the bout, **Done** ends your throwing in. The last player holding cards is the durak. The table has a grip above it (or right-drag it anywhere) and remembers where you put it. Cards are dealt off the deck one by one, fly to the table when played and go to whoever took them; the scoreboard chip says whose move the bout is waiting on (in a room, by name). |
 | 🗑️ **Paper Toss** | Grab the crumpled paper in the corner and flick it into the wastebasket on a window top or the far end of the taskbar. A desk fan blows a new wind every throw, stronger the longer your streak. A basket is 1 point, a swish 2, and the bin moves; one miss ends the run. |
@@ -115,7 +117,7 @@ joins straight into it and follows whenever the host switches.
 | Hoops | H-O-R-S-E: make a shot and the other player has to make it from the same spot, or take a letter. Each of you sees the other's ball fly as a faded ghost ball. In every duel the scoreboard chip names the other player and says whose shot it is; your ball, bow or hoop swells once with a soft sound when the turn comes round, and sits dimmed while they play |
 | Mini Golf | Match play over 9 holes, taking turns stroke by stroke on your own courses. Their ball shows up as a ghost around your cup; a hole goes to the better score against par |
 | Archery | Take turns, one arrow each, ten apiece, in the same wind. Their arrow flies from your bow as a ghost |
-| Checkers, Chess, Connect Four, Tic-tac-toe | Turns over the network; the guest sees the board from their side and the host's move slide in; the scoreboard chip says whose turn it is (both PCs need 1.8.0 or later) |
+| Checkers, Chess, Connect Four, Tic-tac-toe, Reversi, Gomoku | Turns over the network; the guest sees the board from their side and the host's move slide in; the scoreboard chip says whose turn it is (both PCs need 1.8.0 or later) |
 | Sea Battle | Each fleet stays on its own PC; only shots and hits cross the network |
 | Durak, Last Card | The host's table opens a room and your co-worker's copy joins it by itself; the host starts the game from the table, with or without computer players (the room also takes more co-workers, see below) |
 | Bubble Pop, Whack-a-Bug, Tower Stack, Bowling, Fishing, Pinball, Paper Toss, Blockfall, Keepy-Uppy, Bug Squash, Can Knockdown, Brick Breaker, Clay Shooting, Plinko, Slingshot, Darts, Pool, Memory, Code Breaker, Solitaire, Interns | Race: start a round and theirs starts too (in Pinball a three-ball game, in Paper Toss a run, in Blockfall a game, in Keepy-Uppy a run of kicks, in Can Knockdown and Brick Breaker a whole game, in Clay Shooting 15 pulls, in Plinko ten discs, in Slingshot one tower, in Darts a leg of 501, in Pool a rack, in Memory and Solitaire a deal, in Code Breaker a code, in Interns a level). You see their live score, a red ring wherever they pop, whack, kick, squash, knock, break, hit, stack, pot, pair, pin, send a card home or save an intern, and who won; in Darts, Pool, Memory and Code Breaker the fewer darts, shots, moves or guesses win |
@@ -153,7 +155,7 @@ with **Race the computer in solo rounds** in the same menu.
 with your progress; click it to jump to the game. Finish it on consecutive days to build a streak.
 
 **Stats & achievements** in the tray menu (or `DeskArcade --signal stats`) opens a window with time
-played and best score per game, and all 89 achievements with their progress. Stats live in
+played and best score per game, and all 93 achievements with their progress. Stats live in
 `stats.json` next to your settings and can be reset from the tray.
 
 **Office leaderboard:** **tray → Office leaderboard** shows today's best hoops streak, baskets, Air Hockey
@@ -391,7 +393,7 @@ Releases are built and published by GitHub Actions when a `vX.Y.Z` tag is pushed
 
 | Flag | Purpose |
 |---|---|
-| `--game <id>` | Start on a specific game: `hoops`, `archery`, `juggle`, `golf`, `bugs`, `cans`, `bricks`, `bubbles`, `hockey`, `pong`, `clay`, `whack`, `plinko`, `tower`, `slingshot`, `checkers`, `chess`, `connect4`, `tictactoe`, `seabattle`, `durak`, `darts`, `toss`, `fishing`, `bowling`, `pool`, `pinball`, `memory`, `codebreaker`, `solitaire`, `lastcard`, `interns`, `blockfall`, `pet` |
+| `--game <id>` | Start on a specific game: `hoops`, `archery`, `juggle`, `golf`, `bugs`, `cans`, `bricks`, `bubbles`, `hockey`, `pong`, `clay`, `whack`, `plinko`, `tower`, `slingshot`, `checkers`, `chess`, `connect4`, `tictactoe`, `reversi`, `gomoku`, `seabattle`, `durak`, `darts`, `toss`, `fishing`, `bowling`, `pool`, `pinball`, `memory`, `codebreaker`, `solitaire`, `lastcard`, `interns`, `blockfall`, `pet` |
 | `--demo` | The current game plays itself, for smoke tests without touching the mouse |
 | `--profile <name>` | Run an isolated copy with its own lock, signal channel and settings, alongside the installed game |
 
@@ -400,7 +402,7 @@ Releases are built and published by GitHub Actions when a `vX.Y.Z` tag is pushed
 | Path | Contents |
 |---|---|
 | `src/Engine` | Lightweight game engine: `Vec2`, ball physics, window-top platforms, sprites, effects, themes, the rival's ghost ball, `MiniGame` |
-| `src/Games` | One class per game; `BoardGame` is shared by the grid games. Rules and physics without UI (`Draughts`, `ChessRules`, `LineRules`, `SeaBattle`, `HockeyTable`, `PongTable`, `GolfMatch`, `ArcheryMatch`, `DurakRules`, `DartsRules`, `PaperFlight`, `DiscTable`, `BowlingScore`, `PinballTable`, `FishFight`, `MemoryRules`, `CodeBreakerRules`, `SolitaireRules`, `LastCardRules`, `InternsWorld`, `BlockfallRules`) are unit-tested |
+| `src/Games` | One class per game; `BoardGame` is shared by the grid games. Rules and physics without UI (`Draughts`, `ChessRules`, `LineRules`, `ReversiRules`, `GomokuRules`, `SeaBattle`, `HockeyTable`, `PongTable`, `GolfMatch`, `ArcheryMatch`, `DurakRules`, `DartsRules`, `PaperFlight`, `DiscTable`, `BowlingScore`, `PinballTable`, `FishFight`, `MemoryRules`, `CodeBreakerRules`, `SolitaireRules`, `LastCardRules`, `InternsWorld`, `BlockfallRules`) are unit-tested |
 | `src/Net` | `LanLink`: pairing and messages between two copies on the local network; `DuelChannel`: reliable, ordered events for turn-based duels; `OfficeBoard`: the opt-in leaderboard; `RoomLink`: rooms of up to four players by code, for Durak and Last Card |
 | `src/RaceMode.cs`, `src/Daily.cs` | Score races over the LAN; the daily challenge |
 | `src/Platform` | The OS layer behind `IDesktopPlatform`, with `Windows`, `Linux` and `Mac` implementations |
