@@ -97,7 +97,7 @@ public static class LinuxUpdate
     {
         foreach (string dir in (path ?? "").Split(':', StringSplitOptions.RemoveEmptyEntries))
         {
-            string candidate = Path.Combine(dir, name);
+            string candidate = dir.TrimEnd('/') + "/" + name; // Linux paths, whatever OS the tests run on
             if (exists(candidate)) return candidate;
         }
         return null;
