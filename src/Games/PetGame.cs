@@ -26,7 +26,7 @@ namespace DeskArcade.Games;
 /// pet visits as a faded ghost, and the two greet when they meet. A thought bubble shows what is on its mind.
 /// There is no score to chase, so it is built to sit perfectly still (zero CPU) most of the time.
 /// </summary>
-public sealed class PetGame : MiniGame
+public sealed partial class PetGame : MiniGame
 {
     const double Step = 1.0 / 240, Gravity = 1800, HalfW = 22, Height = 46, CenterLift = 20;
     const double HitR = 27, DragStart = 6, CarryCount = 30, DangleY = 18, MaxThrow = 2600;
@@ -224,6 +224,7 @@ public sealed class PetGame : MiniGame
         BuildBubble();
         _heartLayer.Children.Add(_bubbleBox);
         _brain.Tick += (_, _) => Think();
+        BuildMail();
     }
 
     public override string Id => "pet";
@@ -497,6 +498,7 @@ public sealed class PetGame : MiniGame
     {
         if (_mode == Mode.Sleep) return L.T("Sleeping · click to wake");
         if (_mode == Mode.Carried) return L.T("Wheee! · let go to throw");
+        if (MailLine() is { } mail) return mail;
         if (_visiting && Host.Lan.Connected) return L.F("Visiting {0}'s {1}", Host.Lan.PeerName, KindName(_visit.Kind));
         if (_act == "morning") return L.T("Good morning!");
         if (_act == "eat") return L.T("Nom nom nom");
@@ -587,6 +589,7 @@ public sealed class PetGame : MiniGame
             _morning = true; // a long stretch and a hello, once it is on its feet
         }
         _active = true;
+        MailLayout();
         RunBrain();
         Draw(0);
         _shownLine = StateLine();
@@ -669,6 +672,7 @@ public sealed class PetGame : MiniGame
         if (_mode != Mode.Sit || _pressed || _act.Length > 0 || _goal.Length > 0 || _fetch.Length > 0) return;
         TrackPointer();
         _night = IsNight(TimeOnly.FromDateTime(DateTime.Now));
+        if (MailDecide()) return;
         double idle = Now - _lastStir;
         double sleepAfter = _demo ? DemoSleepAfter : _night ? NightSleepAfter : SleepAfter;
         if (idle > sleepAfter || (Energy < 0.3 && idle > 15))
@@ -1301,6 +1305,7 @@ public sealed class PetGame : MiniGame
     {
         string g = _goal;
         ClearGoal();
+        if (MailArrive(g)) return;
         switch (g)
         {
             case "ball": GrabBall(); break;
@@ -1323,6 +1328,7 @@ public sealed class PetGame : MiniGame
         if (_ball.State is ThingState.Resting or ThingState.Air or ThingState.Held) into.Add(HitShape.Circle(_ball.P, BallHitR));
         into.Add(HitShape.Circle(Center - new Vec2(0, 3), HitR));
         into.Add(HitShape.Box(JarRect()));
+        MailHitShapes(into);
     }
 
     Rect JarRect() => new(_jarPos.X - JarW / 2 - 4, _jarPos.Y - JarH - 6, JarW + 8, JarH + 8);
@@ -1330,6 +1336,7 @@ public sealed class PetGame : MiniGame
     public override bool PointerDown(Vec2 p, bool right)
     {
         if (_pressed || _ballHeld) return false;
+        if (MailPointerDown(p, right)) return false;
         if (_ball.State is ThingState.Resting or ThingState.Air && (p - _ball.P).Length <= BallHitR)
         {
             if (right) return false;
@@ -2070,13 +2077,14 @@ public sealed class PetGame : MiniGame
         bool hearts = UpdateHearts(dt);
         bool bubble = UpdateBubble(dt);
         bool visit = UpdateVisit(dt);
+        bool mail = UpdateMail(dt);
         bool tweens = Anims.Update(dt);
         DrawThings();
         Draw(dt);
         UpdateHudIfChanged();
         // sitting and sleeping are still: no frames needed until the behaviour timer or the user wakes us
         return _pressed || _ballHeld || (_mode is Mode.Walk or Mode.Air or Mode.Carried) || _happyT > 0 || _squashT > 0 || hearts || acting
-            || things || bubble || visit || tweens || _goal.Length > 0 || _fetch.Length > 0 || _flyShown || Host.Lan.Connected;
+            || things || bubble || visit || tweens || _goal.Length > 0 || _fetch.Length > 0 || _flyShown || Host.Lan.Connected || mail;
     }
 
     /// <summary>A fly only hovers while the frog is after it; an act cut short by a click must not leave it buzzing for ever.</summary>

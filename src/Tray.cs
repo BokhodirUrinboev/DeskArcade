@@ -76,6 +76,19 @@ public sealed class Tray : IDisposable
         var send = new NativeMenuItem(L.T("Send")) { Menu = emotes };
         _refreshers.Add(() => send.IsEnabled = _w.Lan.Connected);
         lan.Add(send);
+        var gifts = new NativeMenu();
+        foreach (var gift in PetMailer.Gifts)
+        {
+            var g = gift;
+            gifts.Add(Item(PetMailer.GiftName(g), () => _w.PetMail.Send(g)));
+        }
+        var mail = new NativeMenuItem(_w.PetMail.MenuHeader) { Menu = gifts };
+        _refreshers.Add(() =>
+        {
+            mail.Header = _w.PetMail.MenuHeader;
+            mail.IsEnabled = _w.PetMail.CanSend;
+        });
+        lan.Add(mail);
         lan.Add(Item(L.T("Leave"), () => _w.LeaveLan()));
         menu.Add(new NativeMenuItem(L.T("Play over LAN")) { Menu = lan });
         menu.Add(new NativeMenuItemSeparator());

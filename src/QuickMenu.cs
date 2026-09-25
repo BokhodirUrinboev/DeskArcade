@@ -62,6 +62,16 @@ public static class QuickMenu
         lan.Items.Add(Item(L.T("Find games / join by address…"), w.OpenLobby));
         lan.Items.Add(Item(L.T("Durak with co-workers…"), w.OpenDurakRooms));
         lan.Items.Add(Item(L.T("Last Card with co-workers…"), w.OpenLastCardRooms));
+        if (w.PetMail.CanSend)
+        {
+            var mail = Sub(w.PetMail.MenuHeader);
+            foreach (var gift in PetMailer.Gifts)
+            {
+                var g = gift;
+                mail.Items.Add(Item(PetMailer.GiftName(g), () => w.PetMail.Send(g)));
+            }
+            lan.Items.Add(mail);
+        }
         lan.Items.Add(Item(L.T("Leave"), w.LeaveLan));
         yield return lan;
 
