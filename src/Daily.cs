@@ -43,6 +43,7 @@ public sealed class Daily
         new("lastcard", "lastcard.played", 25, "Play {0} cards in Last Card"),
         new("interns", "interns.saved", 15, "Get {0} interns to the exit"),
         new("blockfall", "blockfall.lines", 20, "Clear {0} lines in Blockfall"),
+        new("sheep", "sheep.penned", 12, "Pen {0} sheep in Sheep Herding"),
         new("pinball", "pinball.bumpers", 60, "Hit {0} bumpers in Pinball"),
         new("marble", "marble.cups", 5, "Land {0} marbles in the cup in Marble Run"),
     };

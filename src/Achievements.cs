@@ -119,6 +119,10 @@ public static class Achievements
         new("marble-cup", "marble", "In the cup", "Land a marble in the cup in Marble Run", "marble.cups", 1),
         new("marble-bare", "marble", "Look, no ramps", "Land a marble in the cup without placing a piece", "marble.bare", 1),
         new("marble-streak", "marble", "Marble master", "Land 5 marbles in a row at the first release", "marble.streak", 5),
+
+        new("sheep-100", "sheep", "Good dog", "Pen 100 sheep", "sheep.penned", 100),
+        new("sheep-round5", "sheep", "Top dog", "Clear round 5 of Sheep Herding", "sheep.round", 5),
+        new("sheep-spare", "sheep", "Come by!", "Pen the whole flock with 30 seconds to spare", "sheep.spare", 30),
         new("codebreaker-win", "codebreaker", "Code cracked", "Break a code", "codebreaker.wins", 1),
         new("codebreaker-fast", "codebreaker", "Mind reader", "Break a code in 4 guesses or fewer", "codebreaker.fast", 1),
         new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),

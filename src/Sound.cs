@@ -152,6 +152,7 @@ public sealed partial class Sound : IDisposable
         SynthesizeFishing();
         SynthesizePool();
         SynthesizePinball();
+        SynthesizeSheep();
     }
 
     float[] Render(double seconds, Func<double, double> fn)
