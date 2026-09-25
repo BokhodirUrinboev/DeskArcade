@@ -32,6 +32,9 @@ jobs:
           dotnet-version: '10.0.x'
       - name: Build
         run: dotnet build DeskArcade.csproj -c Release -r win-x64
+      # Also on Windows: path and line-ending assumptions in the tests only show up here
+      - name: Test
+        run: dotnet test tests/DeskArcade.Tests/DeskArcade.Tests.csproj -c Release
 
   ubuntu:
     name: Ubuntu build and .deb
