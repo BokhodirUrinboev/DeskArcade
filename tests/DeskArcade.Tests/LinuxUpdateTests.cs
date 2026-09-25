@@ -32,6 +32,30 @@ public class LinuxUpdateTests
         return path;
     }
 
+    /// <summary>
+    /// A PATH that starts with <paramref name="dir"/> and carries the system's programs without <paramref name="hidden"/>: the
+    /// system folders are mirrored by links into a folder of their own that leaves those names out, so a machine that has a
+    /// real pkexec (a CI runner) behaves like one that has none.
+    /// </summary>
+    static string PathWithout(string dir, params string[] hidden)
+    {
+        string mirror = Path.Combine(dir, "sysbin");
+        Directory.CreateDirectory(mirror);
+        foreach (string folder in (Environment.GetEnvironmentVariable("PATH") ?? "").Split(':', StringSplitOptions.RemoveEmptyEntries))
+        {
+            if (!Directory.Exists(folder)) continue;
+            foreach (string file in Directory.EnumerateFiles(folder))
+            {
+                string name = Path.GetFileName(file), link = Path.Combine(mirror, name);
+                if (Array.IndexOf(hidden, name) >= 0 || File.Exists(link) || Directory.Exists(link)) continue;
+                try { File.CreateSymbolicLink(link, file); }
+                catch (IOException) { }
+                catch (UnauthorizedAccessException) { }
+            }
+        }
+        return dir + ":" + mirror;
+    }
+
     /// <summary>Runs a script with /bin/sh, with <paramref name="pathDir"/> first on PATH, and returns its exit code.</summary>
     static int Run(string script, string? pathDir = null)
     {
@@ -292,7 +316,7 @@ public class LinuxUpdateTests
         // a terminal that just runs the program it is handed, and a sudo that refuses
         Fake(dir, "x-terminal-emulator", "[ \"$1\" = -e ] && shift; exec \"$@\"");
         Fake(dir, "sudo", "exit 1");
-        var install = LinuxUpdate.StartDebInstall(deb, "", null, path: dir + ":" + Environment.GetEnvironmentVariable("PATH"));
+        var install = LinuxUpdate.StartDebInstall(deb, "", null, path: PathWithout(dir, "pkexec"));
         Assert.NotNull(install);
         Assert.Equal("x-terminal-emulator", install.Runner);
         Assert.True(install.ViaTerminal);

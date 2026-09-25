@@ -127,7 +127,7 @@ public class SlingshotMathsTests
         Assert.Equal(0, SlingshotMaths.BandWobble(1), 6);
         var offsets = Samples.Select(SlingshotMaths.BandWobble).ToArray();
         Assert.True(offsets[0] > 0); // forward, along the shot
-        Assert.True(offsets.Any(o => o < -0.5)); // and back past the rest
+        Assert.Contains(offsets, o => o < -0.5); // and back past the rest
         Assert.True(offsets.All(o => Math.Abs(o) <= 9));
         Assert.True(offsets.Take(offsets.Length / 2).Max(Math.Abs) > offsets.Skip(offsets.Length / 2).Max(Math.Abs));
     }
