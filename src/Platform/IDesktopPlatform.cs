@@ -8,8 +8,11 @@ namespace DeskArcade.Platform;
 
 public enum HotkeyAction { ToggleOverlay, NextGame, Summon }
 
-/// <summary>A top-level application window, in screen pixels (points on macOS, like Avalonia's screen coordinates there).</summary>
-public readonly record struct NativeWindowInfo(IntPtr Id, PixelRect Bounds);
+/// <summary>
+/// A top-level application window, in screen pixels (points on macOS, like Avalonia's screen coordinates there), and the
+/// id of the process that owns it (0 when the platform cannot tell), so the pet can remember an app by name.
+/// </summary>
+public readonly record struct NativeWindowInfo(IntPtr Id, PixelRect Bounds, int ProcessId = 0);
 
 public interface IAudioOutput : IDisposable
 {

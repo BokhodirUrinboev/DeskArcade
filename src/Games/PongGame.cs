@@ -20,7 +20,7 @@ namespace DeskArcade.Games;
 /// ("ps|…"), the guest sends its paddle ("pp|y") and draws everything mirrored, so both play from the left.
 /// The physics live in <see cref="PongTable"/>.
 /// </summary>
-public sealed class PongGame : MiniGame
+public sealed class PongGame : MiniGame, IPetPlayground
 {
     const double BallR = PongTable.BallR, PaddleW = PongTable.PaddleW, PaddleH = PongTable.PaddleH, Grab = 30;
     const double SendEvery = 1.0 / 60, ServeDelay = 1.0, TrailMinSpeed = 300;
@@ -477,4 +477,13 @@ public sealed class PongGame : MiniGame
         _demo = true;
         if (_matchOver && !IsGuest) NewMatch();
     }
+
+    // ------------------------------------------------------------------ the pet keeping you company
+
+    /// <summary>The pet runs along the bottom edge after the ball, clear of the paddles; it never touches it.</summary>
+    public PetFloor PetFloor => new(Host.Arena.Left + 60, Host.Arena.Right - 60, Host.Arena.Bottom);
+
+    public PetToy PetToy => _t.BallInPlay ? new(PetToyKind.Chase, _t.Ball, _t.BallVel, BallR) : new(PetToyKind.None);
+
+    public bool PetTouched(PetTouch touch, Vec2 v) => false;
 }

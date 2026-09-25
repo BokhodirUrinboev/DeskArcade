@@ -43,6 +43,8 @@ public sealed class Tray : IDisposable
         }
         menu.Add(new NativeMenuItem(L.T("Game")) { Menu = games });
         var pets = new NativeMenu();
+        pets.Add(Check(L.T("Pet keeps me company in games"), () => _w.SetPetCompany(!_w.Settings.PetCompany), () => _w.Settings.PetCompany));
+        pets.Add(new NativeMenuItemSeparator());
         foreach (var (kind, name) in PetChoices())
             pets.Add(Radio(name, () => _w.SetPet(kind), () => _w.Settings.PetKind == kind));
         menu.Add(new NativeMenuItem(L.T("Pet")) { Menu = pets });
@@ -76,6 +78,19 @@ public sealed class Tray : IDisposable
         var send = new NativeMenuItem(L.T("Send")) { Menu = emotes };
         _refreshers.Add(() => send.IsEnabled = _w.Lan.Connected);
         lan.Add(send);
+        var gifts = new NativeMenu();
+        foreach (var gift in PetMailer.Gifts)
+        {
+            var g = gift;
+            gifts.Add(Item(PetMailer.GiftName(g), () => _w.PetMail.Send(g)));
+        }
+        var mail = new NativeMenuItem(_w.PetMail.MenuHeader) { Menu = gifts };
+        _refreshers.Add(() =>
+        {
+            mail.Header = _w.PetMail.MenuHeader;
+            mail.IsEnabled = _w.PetMail.CanSend;
+        });
+        lan.Add(mail);
         lan.Add(Item(L.T("Leave"), () => _w.LeaveLan()));
         menu.Add(new NativeMenuItem(L.T("Play over LAN")) { Menu = lan });
         menu.Add(new NativeMenuItemSeparator());
@@ -88,6 +103,16 @@ public sealed class Tray : IDisposable
         foreach (double level in VolumeLevels)
             volume.Add(Radio($"{(int)(level * 100)}%", () => _w.SetVolume(level), () => Math.Abs(_w.Settings.Volume - level) < 0.126));
         menu.Add(new NativeMenuItem(L.T("Volume")) { Menu = volume });
+
+        var petVolume = new NativeMenu();
+        for (int level = 0; level < Games.PetLife.VolumeNames.Length; level++)
+        {
+            int l = level;
+            petVolume.Add(Radio(L.T(Games.PetLife.VolumeNames[l]), () => _w.SetPetVolume(l), () => _w.Settings.PetVolume == l));
+        }
+        petVolume.Add(new NativeMenuItemSeparator());
+        petVolume.Add(new NativeMenuItem(L.T("Softer late in the evening")) { IsEnabled = false });
+        menu.Add(new NativeMenuItem(L.T("Pet volume")) { Menu = petVolume });
 
         var levels = new NativeMenu();
         levels.Add(Check(L.T("Race the computer in solo rounds"), () => _w.SetCpuRival(!_w.Settings.CpuRival), () => _w.Settings.CpuRival));

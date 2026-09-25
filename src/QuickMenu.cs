@@ -24,6 +24,8 @@ public static class QuickMenu
         yield return games;
 
         var pets = Sub(L.T("Pet"));
+        pets.Items.Add(Check(L.T("Pet keeps me company in games"), w.Settings.PetCompany, () => w.SetPetCompany(!w.Settings.PetCompany)));
+        pets.Items.Add(new Separator());
         foreach (var (kind, name) in Tray.PetChoices())
         {
             string k = kind;
@@ -62,6 +64,16 @@ public static class QuickMenu
         lan.Items.Add(Item(L.T("Find games / join by address…"), w.OpenLobby));
         lan.Items.Add(Item(L.T("Durak with co-workers…"), w.OpenDurakRooms));
         lan.Items.Add(Item(L.T("Last Card with co-workers…"), w.OpenLastCardRooms));
+        if (w.PetMail.CanSend)
+        {
+            var mail = Sub(w.PetMail.MenuHeader);
+            foreach (var gift in PetMailer.Gifts)
+            {
+                var g = gift;
+                mail.Items.Add(Item(PetMailer.GiftName(g), () => w.PetMail.Send(g)));
+            }
+            lan.Items.Add(mail);
+        }
         lan.Items.Add(Item(L.T("Leave"), w.LeaveLan));
         yield return lan;
 
@@ -77,6 +89,16 @@ public static class QuickMenu
             double v = level;
             sound.Items.Add(Radio($"{(int)(v * 100)}%", Math.Abs(w.Settings.Volume - v) < 0.126, () => w.SetVolume(v)));
         }
+        sound.Items.Add(new Separator());
+        var petVolume = Sub(L.T("Pet volume"));
+        for (int level = 0; level < Games.PetLife.VolumeNames.Length; level++)
+        {
+            int l = level;
+            petVolume.Items.Add(Radio(L.T(Games.PetLife.VolumeNames[l]), w.Settings.PetVolume == l, () => w.SetPetVolume(l)));
+        }
+        petVolume.Items.Add(new Separator());
+        petVolume.Items.Add(new MenuItem { Header = L.T("Softer late in the evening"), IsEnabled = false });
+        sound.Items.Add(petVolume);
         yield return sound;
 
         var look = Sub(L.T("Accessibility"));

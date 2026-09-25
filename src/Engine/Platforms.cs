@@ -61,6 +61,20 @@ public sealed class Platforms
         return changed;
     }
 
+    /// <summary>
+    /// Names the app that owns a window (the overlay asks the system; null when it cannot tell). Only called when
+    /// something needs it, such as the pet choosing where to nap, never per frame.
+    /// </summary>
+    public Func<IntPtr, string?>? AppResolver { get; set; }
+
+    /// <summary>The app that owns <paramref name="hwnd"/> (its process name), or null.</summary>
+    public string? AppOf(IntPtr hwnd)
+    {
+        if (hwnd == IntPtr.Zero || AppResolver == null) return null;
+        try { return AppResolver(hwnd); }
+        catch { return null; } // the app may have just quit
+    }
+
     /// <summary>How far a window moved during the latest refresh.</summary>
     public Vec2 DeltaOf(IntPtr hwnd) => _deltas.TryGetValue(hwnd, out var d) ? d : default;
 

@@ -16,6 +16,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 | 1.7.2 | 2026-09-24 | `--while`, Solitaire, Last Card, Interns, Blockfall; Pinball and Paper Toss races |
 | 1.8.0 | 2026-09-24 | Somebody to play against in every game, twelve pets, animation, thirteen themes, the Ubuntu overlay and updates, the ☰ menu |
 | 1.8.1 | 2026-09-25 | Five new games: Marble Run, Sheep Herding, Cannon Castles, Reversi, Gomoku |
+| 1.8.2 | late September | Pets join the games, pet mail over the LAN, pets grow up and nap on a favourite window, pet volume |
 | 1.9.0 | late October | Package managers, a feel pass by hand, Flathub |
 | 2.0.0 | mid December | Signed Windows builds, a real Mac, a winter event |
 
@@ -141,6 +142,22 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
   (`ReversiTests`, `GomokuTests`). Not played by hand or across two PCs yet.*
 - [ ] The Russian and Uzbek text for the five games, read by native speakers.
 
+## 1.8.2: the pets' turn
+
+- [x] **The pet joins the games** (tray → Pet → "Pet keeps me company in games", off by default): it bats a loose
+  Hoops ball back, runs under the Pong ball, hides from Whack-a-Bug bugs and may steal a fish in Fishing (the points
+  still count); never during a race or over the LAN. It startles at a buzzer and dances at a new best. *Verified:
+  unit tests for every decision and the race/LAN rule (`PetPlayTests`); demo runs of Hoops, Fishing, Whack-a-Bug and
+  Pong with the pet along. Not played by hand yet.*
+- [x] **Pet mail**: send a co-worker's pet a treat, a ball, a ball of yarn or a chew bone over the LAN; it floats
+  down in a parcel on a parachute. *Verified: unit tests for the messages, resends, limits and queue
+  (`PetMailTests`). Not tried between two PCs yet.*
+- [x] **Growing up and nap spots**: pets go from young to grown-up to wise with age and play, get a little bigger and
+  a second trick, and nap on their favourite app's window; the stats window shows each pet's age and stage.
+  *Verified: unit tests (`PetLifeTests`). Not watched over days yet.*
+- [x] **Pet volume**: Off, Quiet, Normal or Loud for the pet alone, softer late in the evening. *Verified: unit
+  tests for the levels and the evening curve.*
+
 ## 1.9.0: package managers and a feel pass (October)
 
 - [ ] **A feel pass by hand** on the 1.8.0 work, on Windows and Ubuntu: the computer rival's pacing and levels in each
@@ -225,14 +242,8 @@ and using the windows and taskbar as the playing field. LAN notes say how each c
 |---|---|
 | **Pet families** | Two pets at once (a cat and a dog, or two hamsters); they play together, share the treat jar and squabble over the ball |
 | **Costumes** | Hats and scarves per season (the winter scarf from 2.0.0, a pumpkin hat in October, a party hat on the day the stats say you first ran Desk Arcade) |
-| **Pet mail** | A co-worker on the LAN can send your pet a treat or a toy; a little parcel drops from the top of the screen |
-| **Growing up** | A pet that is played with a lot over weeks gets a slightly bigger body and a new trick; the stats window shows its age |
 | **Pet cam** | The pet takes a "photo" (a PNG of the overlay) when it does a trick and you have not looked at it for a while |
 | **Pet garden** | A flowerpot on a window top that the pet waters; flowers bloom over days of play |
-| **Pet vs games** | The pet joins in: it bats a Hoops ball back, chases the Pong ball, hides from the Whack bugs, and steals a fish in Fishing |
-| **Sound reactions** | The pet reacts to the game sounds (a buzzer scares it, a "best" cheer makes it dance) |
-| **Nap spots** | The pet remembers its favourite window (by title) and goes back to sleep on it |
-| **Voice tuning** | A volume slider for the pet alone, and quieter calls in the evening |
 
 ## Ideas for the overlay
 

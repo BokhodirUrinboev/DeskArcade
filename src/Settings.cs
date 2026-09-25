@@ -62,6 +62,8 @@ public sealed class Settings
     public bool CpuRival { get; set; } = true;
     /// <summary>Snow, leaves, petals and the like drifting over the desktop while a game moves (tray → Theme → Theme decorations).</summary>
     public bool ThemeDecor { get; set; } = true;
+    /// <summary>The pet sits with you in the other games and joins in (tray → Pet → Pet keeps me company in games); off by default.</summary>
+    public bool PetCompany { get; set; }
     /// <summary>Remind the player to take a break after this many minutes of play; 0 turns it off.</summary>
     public int BreakMinutes { get; set; }
     /// <summary>When Claude finishes while you were playing, say "back to work" instead of "your turn".</summary>
@@ -70,6 +72,15 @@ public sealed class Settings
     public bool ShareLeaderboard { get; set; }
     /// <summary>The desktop pet: one of <see cref="Games.PetGame.Kinds"/> ("cat" by default).</summary>
     public string PetKind { get; set; } = "cat";
+    /// <summary>The pet's own voice level: 0 off, 1 quiet, 2 normal, 3 loud (see <see cref="Games.PetLife.VolumeFactor"/>).</summary>
+    public int PetVolume { get; set; } = Games.PetLife.DefaultVolume;
+    /// <summary>When each kind of pet was first adopted (its age in the stats window, and part of growing up).</summary>
+    public Dictionary<string, DateTime> PetAdopted { get; set; } = new();
+    /// <summary>
+    /// Naps per app the pet slept on the windows of, by process name (never window titles): the favourite is where it
+    /// goes back to nap. A handful of entries at most (see <see cref="Games.PetLife.RecordNap"/>).
+    /// </summary>
+    public Dictionary<string, int> PetNapSpots { get; set; } = new();
     /// <summary>A <see cref="DeskArcade.ShortcutModifiers"/> name and three letters, for show/hide, next game and bring to cursor.</summary>
     public string ShortcutModifiers { get; set; } = "CtrlAlt";
     public string ShortcutKeys { get; set; } = "GNB";
