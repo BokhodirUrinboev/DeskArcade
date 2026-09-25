@@ -89,6 +89,16 @@ public sealed class Tray : IDisposable
             volume.Add(Radio($"{(int)(level * 100)}%", () => _w.SetVolume(level), () => Math.Abs(_w.Settings.Volume - level) < 0.126));
         menu.Add(new NativeMenuItem(L.T("Volume")) { Menu = volume });
 
+        var petVolume = new NativeMenu();
+        for (int level = 0; level < Games.PetLife.VolumeNames.Length; level++)
+        {
+            int l = level;
+            petVolume.Add(Radio(L.T(Games.PetLife.VolumeNames[l]), () => _w.SetPetVolume(l), () => _w.Settings.PetVolume == l));
+        }
+        petVolume.Add(new NativeMenuItemSeparator());
+        petVolume.Add(new NativeMenuItem(L.T("Softer late in the evening")) { IsEnabled = false });
+        menu.Add(new NativeMenuItem(L.T("Pet volume")) { Menu = petVolume });
+
         var levels = new NativeMenu();
         levels.Add(Check(L.T("Race the computer in solo rounds"), () => _w.SetCpuRival(!_w.Settings.CpuRival), () => _w.Settings.CpuRival));
         levels.Add(new NativeMenuItemSeparator());

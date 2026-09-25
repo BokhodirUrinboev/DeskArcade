@@ -26,7 +26,7 @@ namespace DeskArcade.Games;
 /// pet visits as a faded ghost, and the two greet when they meet. A thought bubble shows what is on its mind.
 /// There is no score to chase, so it is built to sit perfectly still (zero CPU) most of the time.
 /// </summary>
-public sealed class PetGame : MiniGame
+public sealed partial class PetGame : MiniGame
 {
     const double Step = 1.0 / 240, Gravity = 1800, HalfW = 22, Height = 46, CenterLift = 20;
     const double HitR = 27, DragStart = 6, CarryCount = 30, DangleY = 18, MaxThrow = 2600;
@@ -62,7 +62,7 @@ public sealed class PetGame : MiniGame
     public enum FetchStyle { Fetch, Sometimes, Fly, Push, Hop, Watch }
 
     /// <summary>What is in the thought bubble above its head.</summary>
-    public enum Bubble { None, Heart, Sleepy, Ball, Treat, Alarm }
+    public enum Bubble { None, Heart, Sleepy, Ball, Treat, Alarm, Pillow }
 
     enum ThingState { Hidden, Resting, Air, Held, Carried }
 
@@ -222,6 +222,7 @@ public sealed class PetGame : MiniGame
         _fly.IsVisible = false;
         _thingLayer.Children.Add(_fly);
         BuildBubble();
+        BuildLifeBubbles();
         _heartLayer.Children.Add(_bubbleBox);
         _brain.Tick += (_, _) => Think();
     }
@@ -321,7 +322,7 @@ public sealed class PetGame : MiniGame
     }
 
     /// <summary>How long one of the pet's habits lasts, in seconds; 0 if there is no such habit.</summary>
-    public static double ActLength(string act) => ActSeconds.TryGetValue(act, out double s) ? s : 0;
+    public static double ActLength(string act) => ActSeconds.TryGetValue(act, out double s) ? s : PetLife.SecondTrickSeconds(act);
 
     /// <summary>What each animal does with itself when nothing is going on.</summary>
     public static string[] HabitsOf(string kind) => kind switch
@@ -421,7 +422,7 @@ public sealed class PetGame : MiniGame
         _excitedAt = Now;
     }
 
-    bool IsTrick(string act) => act.Length > 0 && act == TrickFor(Kind).Name;
+    bool IsTrick(string act) => act.Length > 0 && (act == TrickFor(Kind).Name || act == PetLife.SecondTrickFor(Kind).Name);
 
     /// <summary>A hopper moves in hops: 0 to 1 through each hop (a frog's are longer and higher than a bunny's).</summary>
     static double HopPhaseOf(string kind, double animT, double speed) => animT * (kind == "frog" ? 2.4 : kind == "parrot" ? 3.6 : 3.2) * Math.Sqrt(speed) % 1;
@@ -471,6 +472,7 @@ public sealed class PetGame : MiniGame
         _art = BuildPet(Kind);
         _art.Root.IsHitTestVisible = false;
         Layer.Children.Insert(Math.Max(0, at), _art.Root);
+        RefreshLife();
         _wingK = 0;
         Draw(0);
     }
@@ -504,6 +506,7 @@ public sealed class PetGame : MiniGame
         if (_fetch == "return") return L.T("Bringing the ball back");
         if (_fetch == "chase") return L.T("After the ball!");
         if (_goal == "treat") return L.T("Off to get a treat");
+        if (_goal == "nap") return L.T("Off to nap on its favourite window");
         if (_begging || _act == "beg") return L.T("Begging for a treat · click the jar");
         if (_act is "groom" or "preen") return L.T("Grooming");
         if (_act is "stalk" or "chatter") return L.T("Hunting the cursor");
@@ -557,6 +560,7 @@ public sealed class PetGame : MiniGame
     public override void Layout()
     {
         RefreshKind();
+        RefreshLife();
         var a = Host.Arena;
         if (!_placed)
         {
@@ -679,7 +683,7 @@ public sealed class PetGame : MiniGame
                 StartAct("yawn"); // a big yawn first; it lies down at the next thought
                 ShowBubble(Bubble.Sleepy, 1.8);
             }
-            else
+            else if (!TryGoNap())
             {
                 GoToSleep();
             }
@@ -914,6 +918,7 @@ public sealed class PetGame : MiniGame
         _speed = 1;
         _mode = Mode.Sleep;
         _sleptAt = Now;
+        RememberNap();
         _night = IsNight(TimeOnly.FromDateTime(DateTime.Now));
         _brain.Interval = TimeSpan.FromSeconds(3 + Rng.NextDouble() * 3); // snores for a while, then goes quiet
         RunBrain();
@@ -1293,6 +1298,7 @@ public sealed class PetGame : MiniGame
             case "treat": _treatWanted = false; break;
             case "company": _companyTriedAt = Now; break;
             case "jar": _begging = false; break;
+            case "nap": NapHere(); break;
         }
         UpdateHud();
     }
@@ -1307,6 +1313,7 @@ public sealed class PetGame : MiniGame
             case "return": DropBall(); break;
             case "treat": EatTreat(); break;
             case "company": Settle(); break;
+            case "nap": NapHere(); break;
             case "jar":
                 _face = _jarPos.X > _pos.X ? 1 : -1;
                 StartAct("beg");
@@ -1380,6 +1387,7 @@ public sealed class PetGame : MiniGame
     {
         _pets++;
         Host.Stats.Add("pet.pets");
+        AddPlay(PetLife.PetPoints);
         bool woke = _mode == Mode.Sleep;
         if (woke) WakeUp();
         _lastStir = Now;
@@ -1466,7 +1474,7 @@ public sealed class PetGame : MiniGame
         if (_mode == Mode.Sleep) WakeUp();
         _mode = Mode.Sit;
         _lastStir = Now;
-        var (name, seconds) = TrickFor(Kind);
+        var (name, seconds) = PickTrick();
         StartAct(name, seconds);
         Host.Stats.Add("pet.tricks");
         switch (name)
@@ -1477,6 +1485,7 @@ public sealed class PetGame : MiniGame
                 Drop(new Vec2(_face * 120, -520));                  // up, over and round
                 Host.Fx.Popup(Center - new Vec2(0, 44), L.T(ParrotWords[Rng.Next(ParrotWords.Length)]), Color.FromRgb(255, 209, 102), 16, 1.4);
                 break;
+            default: StartSecondTrick(name); break;
         }
         Speak(Say.Hello, 0.55, name == "pounce" ? 1.1 : 1);
     }
@@ -1543,6 +1552,7 @@ public sealed class PetGame : MiniGame
                     PlayThrottled("board", 0.3, 0.5); // a second crunch
                 }
                 break;
+            default: StepSecondTrick(k, dt); break;
         }
         if (k < 1) return true;
         string done = _act;
@@ -1779,6 +1789,7 @@ public sealed class PetGame : MiniGame
         _ball.Thrown = false;
         EndFetch();
         Host.Stats.Add("pet.fetches");
+        AddPlay(PetLife.FetchPoints);
         Thrill(0.2);
         Hearts(3);
         ShowBubble(Bubble.Ball, 3);
@@ -1868,6 +1879,7 @@ public sealed class PetGame : MiniGame
         _exertion = Math.Max(0, _exertion - 0.2);
         _lastTreat = _lastStir = Now;
         Host.Stats.Add("pet.treats");
+        AddPlay(PetLife.TreatPoints);
         ShowBubble(Bubble.Heart, 1.8);
         Host.HudChanged();
     }
@@ -2795,6 +2807,7 @@ public sealed class PetGame : MiniGame
                 p.Sx = 1 + 0.06 * env;
                 p.Eyes = "happy";
                 break;
+            default: SecondTrickPose(ref p, act, kk, env, on, t, face); break;
         }
         return p;
     }
@@ -2804,7 +2817,7 @@ public sealed class PetGame : MiniGame
         var pose = PoseOf(Kind, _mode, _act, _actT, _actLen, _animT, _speed, _happyT, _squashT, _face, Gliding);
         _wingK += (pose.Wings - _wingK) * (dt <= 0 ? 1 : Math.Min(1, dt * 12));
         pose.Wings = _wingK;
-        Apply(_art, pose, _face, Center, _swing, _mode == Mode.Sleep, _happyT > 0, Grounded, _mode == Mode.Sleep && _night, Host.Pointer);
+        Apply(_art, pose, _face, BodyCenter(), _swing, _mode == Mode.Sleep, _happyT > 0, Grounded, _mode == Mode.Sleep && _night, Host.Pointer);
     }
 
     /// <summary>Puts a pose onto a drawing: the body, the head, the feet, the extras each animal has, and the eyes.</summary>
@@ -2924,7 +2937,8 @@ public sealed class PetGame : MiniGame
         };
         if (_lastSound.TryGetValue(name, out double t) && now - t < gap) return;
         _lastSound[name] = now;
-        Host.Sound.Play(name, vol, pitch);
+        double gain = VoiceGain(name);
+        if (gain > 0) Host.Sound.Play(name, vol * gain, pitch);
     }
 
     // ------------------------------------------------------------------ the drawings

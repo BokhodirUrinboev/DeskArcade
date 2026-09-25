@@ -65,6 +65,8 @@ public sealed class StatsWindow : Window
             panel.Children.Add(row);
         }
 
+        AddPets(panel, overlay.Settings, stats);
+
         var groups = new[] { "general" }.Concat(overlay.Games.Select(g => g.Id));
         foreach (string groupId in groups)
         {
@@ -76,6 +78,36 @@ public sealed class StatsWindow : Window
         }
 
         Content = new ScrollViewer { Content = panel };
+    }
+
+    /// <summary>Each pet adopted so far: its stage, its age and its play, what the next stage needs, and the favourite nap spot.</summary>
+    static void AddPets(StackPanel panel, Settings settings, Stats stats)
+    {
+        var adopted = Games.PetGame.Kinds.Where(settings.PetAdopted.ContainsKey).ToList();
+        if (adopted.Count == 0) return;
+        panel.Children.Add(Section(L.T("Pets")));
+        var names = Tray.PetChoices().ToDictionary(c => c.Kind, c => c.Name);
+        foreach (string kind in adopted)
+        {
+            var (age, play, stage) = Games.PetGame.LifeOf(settings, stats, kind, DateTime.Now);
+            var row = new Grid { ColumnDefinitions = new ColumnDefinitions("*,Auto,Auto"), Margin = new Thickness(0, 3) };
+            var text = new StackPanel();
+            text.Children.Add(Text(names.TryGetValue(kind, out var name) ? name : kind, 14, FontWeight.SemiBold, "#FFFFFF"));
+            string next = Games.PetLife.NextStage(stage) is { } need
+                ? L.F("Next: {0} at {1} days and {2} play", L.T(Games.PetLife.StageNames[stage + 1]), need.Days, need.Play)
+                : L.T("Knows a second trick · right-click it");
+            text.Children.Add(Text(next, 12, FontWeight.Normal, "#8D97A5"));
+            AddCell(row, 0, text);
+            var stageText = Text(L.T(Games.PetLife.StageNames[stage]), 12, FontWeight.SemiBold, "#FFD166");
+            stageText.Margin = new Thickness(12, 0);
+            AddCell(row, 1, stageText);
+            var ageText = Text(L.F("Age {0} d · play {1}", age, play), 12, FontWeight.Normal, "#AAB3C0");
+            ageText.HorizontalAlignment = HorizontalAlignment.Right;
+            AddCell(row, 2, ageText);
+            panel.Children.Add(row);
+        }
+        if (Games.PetLife.FavouriteSpot(settings.PetNapSpots) is { } spot)
+            panel.Children.Add(Text(L.F("Favourite nap spot: {0}", spot), 12, FontWeight.Normal, "#AAB3C0"));
     }
 
     static Control AchievementRow(Achievement a, Stats stats)
