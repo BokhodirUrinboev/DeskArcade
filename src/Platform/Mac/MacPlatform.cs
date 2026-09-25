@@ -233,7 +233,7 @@ public sealed class MacPlatform : IDesktopPlatform
                 if (wd < 80 || ht < 40) continue;
 
                 CoreFoundation.TryGetLong(info, keys.Number, out long number);
-                result.Add(new NativeWindowInfo((IntPtr)number, new PixelRect(x, y, wd, ht)));
+                result.Add(new NativeWindowInfo((IntPtr)number, new PixelRect(x, y, wd, ht), (int)pid));
             }
         }
         catch (Exception)

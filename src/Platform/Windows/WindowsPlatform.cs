@@ -113,7 +113,7 @@ public sealed class WindowsPlatform : IDesktopPlatform
             if (IgnoredClasses.Contains(Win32.ClassName(h))) return true;
             if (!Win32.TryGetFrameBounds(h, out var rc)) return true;
             if (rc.Right - rc.Left < 80 || rc.Bottom - rc.Top < 40) return true;
-            result.Add(new NativeWindowInfo(h, new PixelRect(rc.Left, rc.Top, rc.Right - rc.Left, rc.Bottom - rc.Top)));
+            result.Add(new NativeWindowInfo(h, new PixelRect(rc.Left, rc.Top, rc.Right - rc.Left, rc.Bottom - rc.Top), (int)pid));
             return true;
         }, IntPtr.Zero);
     }

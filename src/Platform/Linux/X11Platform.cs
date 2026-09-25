@@ -364,7 +364,7 @@ public sealed class X11Platform : IDesktopPlatform
 
             long[] types = ReadLongs(w, _atomWmType);
             if (types.Length > 0 && !types.Contains((long)_atomTypeNormal) && !types.Contains((long)_atomTypeDialog)) continue;
-            result.Add(new NativeWindowInfo(w, new PixelRect(x, y, wd, ht)));
+            result.Add(new NativeWindowInfo(w, new PixelRect(x, y, wd, ht), pid.Length > 0 ? (int)pid[0] : 0));
         }
     }
 

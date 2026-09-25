@@ -133,6 +133,7 @@ public sealed class OverlayWindow : Window, IGameHost
         Daily = new Daily(Settings, Stats);
         _platform = DesktopPlatform.Create();
         Sound = new Sound(_platform) { Enabled = Settings.Sound, Volume = Settings.Volume };
+        Platforms.AppResolver = AppOfWindow;
         Stats.CounterChanged += counter =>
         {
             if (counter != Daily.For(Daily.Today).Counter || !Daily.Check(Daily.Today)) return;
@@ -1252,6 +1253,49 @@ public sealed class OverlayWindow : Window, IGameHost
         Settings.Volume = volume;
         ApplySettings();
         Sound.Play("score", 0.7);
+    }
+
+    /// <summary>The pet's own voice level (0 off … 3 loud); the pet says hello at the new level.</summary>
+    public void SetPetVolume(int level)
+    {
+        Settings.PetVolume = Math.Clamp(level, 0, PetLife.VolumeNames.Length - 1);
+        SaveSettings();
+        _tray?.Refresh();
+        var hello = PetGame.VoicesOf(Settings.PetKind, PetGame.Say.Hello);
+        double gain = PetLife.VoiceGain(Settings.PetVolume, TimeOnly.FromDateTime(DateTime.Now));
+        if (hello.Length > 0 && gain > 0) Sound.Play(hello[0], 0.55 * gain);
+    }
+
+    readonly Dictionary<int, string?> _appNames = new();
+
+    /// <summary>
+    /// The app behind a window, as the pet remembers it: the owning process's name (never the window title, which can
+    /// hold a document or page name). Looked up only when asked, and cached per process.
+    /// </summary>
+    string? AppOfWindow(IntPtr hwnd)
+    {
+        int pid = 0;
+        foreach (var w in _nativeWindows)
+        {
+            if (w.Id != hwnd) continue;
+            pid = w.ProcessId;
+            break;
+        }
+        if (pid <= 0) return null;
+        if (_appNames.TryGetValue(pid, out var known)) return known;
+        string? name = null;
+        try
+        {
+            using var process = Process.GetProcessById(pid);
+            name = PetLife.SpotKey(process.ProcessName);
+        }
+        catch
+        {
+            // gone, or not ours to look at
+        }
+        if (_appNames.Count > 256) _appNames.Clear();
+        _appNames[pid] = name;
+        return name;
     }
 
     public void SetLanguage(string code)
