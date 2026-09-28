@@ -193,6 +193,10 @@ public static class Achievements
         new("jenga-10", "jenga", "Careful now", "Move 10 blocks in one Window Jenga tower", "jenga.best", 10),
         new("jenga-standing", "jenga", "Still standing", "Keep a Window Jenga tower up until the time runs out", "jenga.standing", 1),
         new("jenga-200", "jenga", "Master builder", "Move 200 blocks in Window Jenga", "jenga.moved", 200),
+
+        new("bridge-50", "bridge", "Safe crossing", "Get 50 interns across the Rope Bridge", "bridge.saved", 50),
+        new("bridge-perfect", "bridge", "Nobody fell", "Get all fifteen interns of a round across", "bridge.perfect", 1),
+        new("bridge-planks", "bridge", "Chief engineer", "Lay 200 planks on the Rope Bridge", "bridge.planks", 200),
         new("codebreaker-win", "codebreaker", "Code cracked", "Break a code", "codebreaker.wins", 1),
         new("codebreaker-fast", "codebreaker", "Mind reader", "Break a code in 4 guesses or fewer", "codebreaker.fast", 1),
         new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),

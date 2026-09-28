@@ -1620,5 +1620,24 @@ public static partial class Strings
         ["Master builder"] = "Usta quruvchi",
         ["Move 200 blocks in Window Jenga"] = "«Oynadagi Jenga»da 200 ta g'ishtchani ko'chiring",
         ["Move {0} blocks in Window Jenga"] = "«Oynadagi Jenga»da {0} ta g'ishtchani ko'chiring",
+
+        // rope bridge
+        ["Rope Bridge"] = "Arqon ko'prik",
+        ["drag planks onto the rope before the interns reach the gap — and replace the cracked ones"] = "stajyorlar jarlikka yetguncha taxtalarni arqonga torting — yorilganlarini esa almashtiring",
+        ["{0} of {1} across · click the planks for another round"] = "{1} tadan {0} tasi o'tdi · yangi raund uchun taxtalarni bosing",
+        ["Drag planks onto the rope before the interns reach the gap"] = "Stajyorlar jarlikka yetguncha taxtalarni arqonga torting",
+        ["Interns {0} of {1} · worn planks crack: replace them in time"] = "Stajyorlar {1} tadan {0} · eskigan taxtalar yoriladi — ularni o'z vaqtida almashtiring",
+        ["No planks yet · more are coming"] = "Hozircha taxta yo'q · tez orada keladi",
+        ["Someone is standing on it"] = "Uning ustida kimdir turibdi",
+        ["Aaah!"] = "Voy-y-y!",
+        ["NOBODY FELL!"] = "HECH KIM YIQILMADI!",
+        ["{0} of {1} across"] = "{1} tadan {0} tasi o'tdi",
+        ["Safe crossing"] = "Xavfsiz o'tish",
+        ["Get 50 interns across the Rope Bridge"] = "Arqon ko'prikdan 50 ta stajyorni o'tkazing",
+        ["Nobody fell"] = "Hech kim yiqilmadi",
+        ["Get all fifteen interns of a round across"] = "Raunddagi o'n besh stajyorning hammasini o'tkazing",
+        ["Chief engineer"] = "Bosh muhandis",
+        ["Lay 200 planks on the Rope Bridge"] = "Arqon ko'prikka 200 ta taxta qo'ying",
+        ["Get {0} interns across the Rope Bridge"] = "«Arqon ko'prik»dan {0} ta stajyorni o'tkazing",
     };
 }

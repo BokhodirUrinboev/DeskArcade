@@ -1620,5 +1620,24 @@ public static partial class Strings
         ["Master builder"] = "Мастер-строитель",
         ["Move 200 blocks in Window Jenga"] = "Переложите 200 брусков в «Дженге на окне»",
         ["Move {0} blocks in Window Jenga"] = "Переложите {0} брусков в «Дженге на окне»",
+
+        // rope bridge
+        ["Rope Bridge"] = "Верёвочный мост",
+        ["drag planks onto the rope before the interns reach the gap — and replace the cracked ones"] = "перетащите доски на верёвку, пока стажёры не дошли до пропасти, — и меняйте треснувшие",
+        ["{0} of {1} across · click the planks for another round"] = "перешли {0} из {1} · нажмите на доски для нового раунда",
+        ["Drag planks onto the rope before the interns reach the gap"] = "Перетащите доски на верёвку, пока стажёры не дошли до пропасти",
+        ["Interns {0} of {1} · worn planks crack: replace them in time"] = "Стажёры: {0} из {1} · старые доски трескаются — меняйте их вовремя",
+        ["No planks yet · more are coming"] = "Досок пока нет · скоро будут",
+        ["Someone is standing on it"] = "На ней кто-то стоит",
+        ["Aaah!"] = "А-а-а!",
+        ["NOBODY FELL!"] = "НИКТО НЕ УПАЛ!",
+        ["{0} of {1} across"] = "перешли {0} из {1}",
+        ["Safe crossing"] = "Безопасная переправа",
+        ["Get 50 interns across the Rope Bridge"] = "Переведите 50 стажёров по верёвочному мосту",
+        ["Nobody fell"] = "Никто не упал",
+        ["Get all fifteen interns of a round across"] = "Переведите всех пятнадцать стажёров за раунд",
+        ["Chief engineer"] = "Главный инженер",
+        ["Lay 200 planks on the Rope Bridge"] = "Положите 200 досок на верёвочный мост",
+        ["Get {0} interns across the Rope Bridge"] = "Переведите {0} стажёров по «Верёвочному мосту»",
     };
 }
