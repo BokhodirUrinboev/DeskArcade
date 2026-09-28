@@ -1461,5 +1461,21 @@ public static partial class Strings
         ["Touchdown"] = "Касание",
         ["Land on the strip 5 times"] = "Приземлитесь на полосу 5 раз",
         ["Throw {0} paper planes"] = "Запустите {0} бумажных самолетиков",
+        // ping-pong cups
+        ["Ping-Pong Cups"] = "Мячик в стакан",
+        ["grab the ball, flick it and let go — drop it into the cups; a bounce shot counts double"] = "возьмите мячик, резко бросьте и отпустите — попадите в стаканы; бросок с отскоком считается вдвойне",
+        ["Round over · {0} cups · click the ball for another round"] = "Раунд окончен · стаканов: {0} · нажмите на мячик для нового раунда",
+        ["Balls {0} · cups {1} · flick the ball into a cup"] = "Мячей {0} · стаканов {1} · бросьте мячик в стакан",
+        ["BOUNCE SHOT! +{0}"] = "С ОТСКОКА! +{0}",
+        ["RACK CLEARED!"] = "ВСЕ СТАКАНЫ!",
+        ["+{0} for the balls left · a new rack"] = "+{0} за оставшиеся мячи · новые стаканы",
+        ["{0} cups · {1} points"] = "стаканов: {0} · очков: {1}",
+        ["Splash"] = "Плюх",
+        ["Sink 50 cups"] = "Попадите в 50 стаканов",
+        ["Off the table"] = "С отскоком",
+        ["Sink a bounce shot"] = "Попадите в стакан с отскоком",
+        ["Clean rack"] = "Чистая работа",
+        ["Clear a rack of six in six throws"] = "Выбейте все шесть стаканов за шесть бросков",
+        ["Sink {0} cups in Ping-Pong Cups"] = "Попадите в {0} стаканов в «Мячике в стакан»",
     };
 }

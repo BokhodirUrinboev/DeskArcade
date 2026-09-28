@@ -255,6 +255,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new BlackjackGame(this));
         _games.Add(new CurlingGame(this));
         _games.Add(new PaperPlanesGame(this));
+        _games.Add(new CupsGame(this));
         _games.Add(new PetGame(this));
         StartPetCompany();
 
@@ -699,6 +700,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "blackjack" => L.T("pick a bet and deal — get closer to 21 than the dealer without going over"),
         "curling" => L.T("drag back from your stone and let go — hold the mouse ahead of it to sweep"),
         "planes" => L.T("drag back from the paper plane and let go — warm air above windows lifts it"),
+        "cups" => L.T("grab the ball, flick it and let go — drop it into the cups; a bounce shot counts double"),
         _ => "",
     };
 

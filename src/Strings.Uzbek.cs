@@ -1461,5 +1461,21 @@ public static partial class Strings
         ["Touchdown"] = "Qo'nish",
         ["Land on the strip 5 times"] = "Uchish yo'lagiga 5 marta qo'ning",
         ["Throw {0} paper planes"] = "{0} ta qog'oz samolyotcha uchiring",
+        // ping-pong cups
+        ["Ping-Pong Cups"] = "Stakanga to'p",
+        ["grab the ball, flick it and let go — drop it into the cups; a bounce shot counts double"] = "to'pni ushlang, keskin otib qo'yib yuboring — stakanlarga tushiring; sakrab tushgan to'p ikki barobar hisoblanadi",
+        ["Round over · {0} cups · click the ball for another round"] = "Raund tugadi · {0} ta stakan · yangi raund uchun to'pni bosing",
+        ["Balls {0} · cups {1} · flick the ball into a cup"] = "To'plar {0} · stakanlar {1} · to'pni stakanga oting",
+        ["BOUNCE SHOT! +{0}"] = "SAKRAB TUSHDI! +{0}",
+        ["RACK CLEARED!"] = "HAMMA STAKANLAR!",
+        ["+{0} for the balls left · a new rack"] = "qolgan to'plar uchun +{0} · yangi stakanlar",
+        ["{0} cups · {1} points"] = "{0} ta stakan · {1} ochko",
+        ["Splash"] = "Shalop",
+        ["Sink 50 cups"] = "50 ta stakanga tushiring",
+        ["Off the table"] = "Sakratib",
+        ["Sink a bounce shot"] = "To'pni sakratib stakanga tushiring",
+        ["Clean rack"] = "Toza ish",
+        ["Clear a rack of six in six throws"] = "Oltita stakanni oltita otishda tushiring",
+        ["Sink {0} cups in Ping-Pong Cups"] = "«Stakanga to'p»da {0} ta stakanga tushiring",
     };
 }

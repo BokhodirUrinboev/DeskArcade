@@ -58,6 +58,7 @@ public sealed class Daily
         new("blackjack", "blackjack.wins", 8, "Win {0} hands of Blackjack"),
         new("curling", "curling.stones", 16, "Throw {0} stones in Curling"),
         new("planes", "planes.throws", 12, "Throw {0} paper planes"),
+        new("cups", "cups.sunk", 10, "Sink {0} cups in Ping-Pong Cups"),
     };
 
     readonly Settings _settings;
