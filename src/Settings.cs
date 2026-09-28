@@ -72,6 +72,8 @@ public sealed class Settings
     public bool ShareLeaderboard { get; set; }
     /// <summary>The desktop pet: one of <see cref="Games.PetGame.Kinds"/> ("cat" by default).</summary>
     public string PetKind { get; set; } = "cat";
+    /// <summary>What Typing Race and Word Rain give you to type: "auto" (the interface language), "en", "ru", "uz" or "code".</summary>
+    public string TypingText { get; set; } = "auto";
     /// <summary>The pet's own voice level: 0 off, 1 quiet, 2 normal, 3 loud (see <see cref="Games.PetLife.VolumeFactor"/>).</summary>
     public int PetVolume { get; set; } = Games.PetLife.DefaultVolume;
     /// <summary>When each kind of pet was first adopted (its age in the stats window, and part of growing up).</summary>

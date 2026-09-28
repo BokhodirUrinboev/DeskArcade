@@ -26,6 +26,8 @@ public sealed class OverlayWindow : Window, IGameHost
 {
     readonly bool _demo;
     readonly string? _startGame;
+    readonly string? _snapshot;      // --snapshot file.png: draw the overlay into a picture after a while, then quit
+    readonly double _snapshotDelay = 8;
     readonly Canvas _root = new() { Background = Brushes.Transparent };
     readonly Canvas _gameLayer = new();
     readonly DecorLayer _decor = new();
@@ -66,6 +68,7 @@ public sealed class OverlayWindow : Window, IGameHost
     double _lastAchievementAt = -10;
     int _achievementRow;
     PetGame.Companion? _petPal; // the pet keeping the player company in the other games
+    TypingPad? _pad;             // the typing games' keyboard, while one is being typed into
 
     public Settings Settings { get; } = Settings.Load();
     public Stats Stats { get; } = Stats.Load();
@@ -111,6 +114,11 @@ public sealed class OverlayWindow : Window, IGameHost
         _demo = args.Contains("--demo");
         int gi = Array.IndexOf(args, "--game");
         if (gi >= 0 && gi + 1 < args.Length) _startGame = args[gi + 1];
+        int si = Array.IndexOf(args, "--snapshot");
+        if (si >= 0 && si + 1 < args.Length) _snapshot = args[si + 1];
+        int di = Array.IndexOf(args, "--snapshot-delay");
+        if (di >= 0 && di + 1 < args.Length && double.TryParse(args[di + 1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double delay))
+            _snapshotDelay = Math.Clamp(delay, 0.5, 600);
 
         Title = "Desk Arcade";
         SystemDecorations = SystemDecorations.None;
@@ -230,6 +238,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new CannonGame(this));
         _games.Add(new PinballGame(this));
         _games.Add(new MarbleGame(this));
+        _games.Add(new TypingRaceGame(this));
         _games.Add(new PetGame(this));
         StartPetCompany();
 
@@ -313,6 +322,8 @@ public sealed class OverlayWindow : Window, IGameHost
                 if (!_platform.HasTray)
                     Notice(L.T("No tray icon on this desktop"), L.T("the ☰ button on the scoreboard has the menu"), Color.FromRgb(255, 209, 102));
             }, TimeSpan.FromSeconds(8));
+
+        if (_snapshot is { } shot) DispatcherTimer.RunOnce(() => SaveSnapshot(shot), TimeSpan.FromSeconds(_snapshotDelay));
 
         if (_demo)
         {
@@ -573,6 +584,51 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public void SaveSettings() => Settings.Save();
 
+    /// <summary>
+    /// --snapshot: draws the overlay over a plain desktop blue into a PNG and quits, for screenshots and for checking a
+    /// game's look where there is no desktop to capture (a CI runner, a remote shell). Pair it with --demo and --game.
+    /// </summary>
+    void SaveSnapshot(string path)
+    {
+        try
+        {
+            var size = new PixelSize(Math.Max(1, (int)Bounds.Width), Math.Max(1, (int)Bounds.Height));
+            using var bitmap = new Avalonia.Media.Imaging.RenderTargetBitmap(size, new Vector(96, 96));
+            var backdrop = _root.Background;
+            _root.Background = new SolidColorBrush(Color.FromRgb(40, 78, 120));
+            bitmap.Render(_root);
+            _root.Background = backdrop;
+            bitmap.Save(path);
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine($"snapshot failed: {e.Message}");
+        }
+        Quit();
+    }
+
+    public void CaptureKeyboard(IKeySink sink, Rect near, string title)
+    {
+        if (_demo || !IsVisible) return; // a demo types through its own player; a hidden overlay takes nothing
+        if (_pad == null)
+        {
+            var pad = new TypingPad(this);
+            pad.Closed += (_, _) =>
+            {
+                if (_pad == pad) _pad = null;
+            };
+            _pad = pad;
+        }
+        _pad.Attach(sink, near, title);
+    }
+
+    public void ReleaseKeyboard(IKeySink sink)
+    {
+        if (_pad?.Sink == sink) _pad.Close();
+    }
+
+    public bool HasKeyboard(IKeySink sink) => _pad is { IsActive: true } pad && pad.Sink == sink;
+
     static string HintFor(string id) => id switch
     {
         "hoops" => L.T("drag the ball and flick it into the hoop"),
@@ -614,6 +670,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "solitaire" => L.T("click the stock to turn a card — click or drag cards onto the piles"),
         "pinball" => L.T("click the ball to serve — press by a flipper to flip it, right-click flips both"),
         "marble" => L.T("drag ramps and bumpers out of the tray, then click the funnel — land the marble in the cup"),
+        "typing" => L.T("click the text and type it — the first car over the line wins"),
         _ => "",
     };
 
@@ -709,6 +766,7 @@ public sealed class OverlayWindow : Window, IGameHost
         else
         {
             CancelCapture();
+            _pad?.Close(); // a hidden game takes no typing
             _loopOn = false;
             Hide();
         }
@@ -1491,6 +1549,7 @@ public sealed class OverlayWindow : Window, IGameHost
     {
         if (_quitting) return;
         _quitting = true;
+        _pad?.Close();
         Lan.Stop();
         _board.Stop();
         _boardTimer.Stop();

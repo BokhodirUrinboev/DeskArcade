@@ -135,6 +135,12 @@ public static class Achievements
         new("cannons-hard", "cannons", "Castle breaker", "Beat the computer at Hard or Expert in Cannon Castles", "cannons.hardwins", 1),
         new("cannons-flawless", "cannons", "Untouchable", "Win Cannon Castles without losing a single block", "cannons.flawless", 1),
         new("cannons-duel", "cannons", "Siege of the next desk", "Win a Cannon Castles duel over the LAN", "cannons.duelwins", 1),
+
+        new("typing-40", "typing", "Touch typist", "Finish a race at 40 words per minute", "typing.best", 40),
+        new("typing-80", "typing", "Lightning fingers", "Finish a race at 80 words per minute", "typing.best", 80),
+        new("typing-perfect", "typing", "Not a single typo", "Finish a race without a mistake", "typing.perfect", 1),
+        new("typing-code", "typing", "Ten-finger coder", "Finish 10 races with code", "typing.code", 10),
+        new("typing-wins", "typing", "Pole position", "Win 25 typing races", "typing.wins", 25),
         new("codebreaker-win", "codebreaker", "Code cracked", "Break a code", "codebreaker.wins", 1),
         new("codebreaker-fast", "codebreaker", "Mind reader", "Break a code in 4 guesses or fewer", "codebreaker.fast", 1),
         new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),

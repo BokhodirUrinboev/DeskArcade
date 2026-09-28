@@ -36,6 +36,19 @@ public interface IGameHost
     void ShareAction(Vec2 at, int points);
     void Wake();
     void SaveSettings();
+
+    /// <summary>
+    /// Typing games: opens (or brings back) the small typing window under <paramref name="near"/> (overlay DIPs), which
+    /// takes the keyboard and passes what is typed to <paramref name="sink"/> until <see cref="ReleaseKeyboard"/>. A --demo
+    /// run opens nothing: its games type through their own demo player.
+    /// </summary>
+    void CaptureKeyboard(IKeySink sink, Rect near, string title);
+
+    /// <summary>Closes the typing window if <paramref name="sink"/> has it, and gives the keyboard back to the other windows.</summary>
+    void ReleaseKeyboard(IKeySink sink);
+
+    /// <summary>True while the typing window is open for <paramref name="sink"/> and has the keyboard.</summary>
+    bool HasKeyboard(IKeySink sink);
 }
 
 public sealed record HudInfo(string Score, string Line, string Best);
