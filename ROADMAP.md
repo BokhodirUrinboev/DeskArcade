@@ -5,8 +5,9 @@ in the git history). The next three months are about **getting Desk Arcade in fr
 managers, Flathub and a real Mac test, all free: Desk Arcade is open source and spends nothing.
 Eight new games came early and shipped in 1.7.1, four more with `--while` and the first LAN races in 1.7.2, and
 1.8.0 turned every game into a two-player game: a computer rival or a co-worker in each of them, twelve pets,
-animation everywhere, and an overlay that behaves on a real Ubuntu desktop. 1.8.1 added five games from the ideas list, and 1.8.2 gave the pets their turn. 1.8.3 brings typing (Typing Race,
-Word Rain), reactions and chat with a co-worker, and four more games from the ideas list.
+animation everywhere, and an overlay that behaves on a real Ubuntu desktop. 1.8.1 added five games from the ideas list, and 1.8.2 gave the pets their turn. 1.8.3 brought typing (Typing Race,
+Word Rain), reactions and chat with a co-worker, and four more games from the ideas list. 1.8.4 builds the rest of the
+ideas list: thirteen games and variants, from Backgammon to a rope bridge for the interns.
 
 Each item says how it will be verified. "Demo" means copies on one PC (`--profile`) playing by themselves
 (`--demo`).
@@ -19,6 +20,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 | 1.8.1 | 2026-09-25 | Five new games: Marble Run, Sheep Herding, Cannon Castles, Reversi, Gomoku |
 | 1.8.2 | 2026-09-25 | Pets join the games, pet mail over the LAN, pets grow up and nap on a favourite window, pet volume |
 | 1.8.3 | 2026-09-28 | Typing Race, Word Rain, reactions and chat, Snakes on Windows, co-op Asteroids, Minesweeper and Sudoku |
+| 1.8.4 | when tagged | The rest of the ideas list: Mancala, Blackjack, Curling, Paper Planes, Ping-Pong Cups, Bingo of Work, Kite, Backgammon, Dominoes, Window Jenga, Rope Bridge; Perevodnoy and Salvo rules |
 | 1.9.0 | late October | Package managers, a feel pass by hand, Flathub |
 | 2.0.0 | mid December | Flathub, a real Mac, a winter event |
 
@@ -196,6 +198,47 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 - [ ] The Russian and Uzbek text for all of the above, read by native speakers (the Russian and Uzbek typing texts
   and word lists especially).
 
+## 1.8.4: the rest of the ideas list (on `feature/more-games`, not released yet)
+
+Every game below has UI-free rules with unit tests, a demo player, three achievements, a daily challenge, Russian and
+Uzbek text, and a `--snapshot` check of its demo. Those with a round are races against the computer or a co-worker.
+
+- [x] **Mancala** (`mancala`): Kalah on a wooden board over the taskbar, against the computer at four levels (Expert
+  searches eight moves ahead) or a co-worker. *Verified: `MancalaTests`, including Expert thinking quickly; its search
+  was rewritten to copy bare boards on the stack after the timing test caught six Expert moves taking up to 1.9 s.*
+- [x] **Blackjack** (`blackjack`): ten hands from a hundred chips against the house (hits soft 17, blackjack pays 3:2),
+  with a hint of the book play. *Verified: `BlackjackTests`; demo run.*
+- [x] **Curling** (`curling`): throw stones along the taskbar toward the house and sweep ahead of them; ends against
+  the computer or a co-worker, the thrower's screen sending where the stones came to rest. *Verified: `CurlingTests`;
+  demo run.*
+- [x] **Paper Planes** (`planes`): throw a paper dart that glides, stalls and rides warm air over windows, to land on a
+  window top or the taskbar strip. *Verified: `PaperPlaneTests`; demo run.*
+- [x] **Ping-Pong Cups** (`cups`): flick a ball into six cups on a window top; bounce shots count double.
+  *Verified: `CupsTests`; demo run.*
+- [x] **Bingo of Work** (`bingo`): a card of desk events (Claude finishing, a race won, the pet fed, play before 10 AM)
+  and small goals in the other games, dabbed as they happen whichever game is on; bingos and full houses.
+  *Verified: `BingoTests` (dealing, ticking, clock squares, swaps, saving); demo snapshot.*
+- [x] **Kite** (`kite`): a kite on a string held by the cursor in the desk fan's gusty wind: a taut line holds it up,
+  pulling climbs; clouds and stars to catch, birds and window tops to avoid. *Verified: `KiteTests` (the flight, the
+  string, gusts and lulls, and that a hand can steer it onto a cloud); demo snapshots.*
+- [x] **Backgammon** (`backgammon`): the full rules (the bar, hitting, both dice or the larger, bearing off, gammons),
+  the computer at four levels, a co-worker over the LAN. *Verified: `BackgammonTests` (rules, random games to the end,
+  Hard beating random play); demo snapshots. Not played over the LAN yet.*
+- [x] **Dominoes** (`dominoes`): draw dominoes to fifty along the taskbar, the line turning up the screen's sides when
+  it runs out of room; the computer (Hard remembers what the other side lacks) or a co-worker. *Verified:
+  `DominoTests`; demo snapshot. Not played over the LAN yet.*
+- [x] **Perevodnoy** in Durak: a button on the table switches it on; the defender passes the attack on with a card of
+  the same rank. *Verified: `PerevodnoyTests`, including computer games for two to four players. Not played in a
+  room yet.*
+- [x] **Salvo** in Sea Battle: one shot a turn for every ship afloat, hit or miss; over the LAN the host picks.
+  *Verified: `SalvoTests` (whole computer games end in fewer turns); snapshot of the rules row.*
+- [x] **Window Jenga** (`jenga`): pull blocks slowly out of a tower on a window top and stack them; it sways with the
+  window and falls when the weight leans past what is left. *Verified: `JengaTests` (stability, sway room, careful
+  play lasting); demo snapshot.*
+- [x] **Rope Bridge** (`bridge`): lay and replace planks on a rope between two windows for fifteen interns walking over.
+  *Verified: `BridgeTests` (falls, snapping planks, a keeper who saves the round); demo snapshots.*
+- [ ] The Russian and Uzbek text for all of the above, read by native speakers.
+
 ## 1.9.0: package managers and a feel pass (October)
 
 - [ ] **A feel pass by hand** on the 1.8.0 work, on Windows and Ubuntu: the computer rival's pacing and levels in each
@@ -247,27 +290,21 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 | The typing window on real desktops: it takes the focus on a click (Windows focus rules, GNOME, KDE, macOS), gives it back, and types Russian and Uzbek layouts | Someone typing on each |
 | Chat, reactions, the typing and puzzle races and co-op Asteroids between two real PCs | Two PCs on one network |
 | How Typing Race, Word Rain, Snakes on Windows, Asteroids, Minesweeper and Sudoku feel by hand | Someone playing them |
+| How the 1.8.4 games feel with a real mouse: the kite's pull, the Jenga pull, laying planks, flicking cups | Someone playing them |
+| Backgammon, Dominoes, Perevodnoy rooms and Salvo between two real PCs | Two PCs on one network |
 
 ## Ideas for more mini games
 
-Games that suit the overlay: quick to start, played with the mouse (the overlay never takes the keyboard; a typing
-game gets its own small typing window),
-and using the windows and taskbar as the playing field. LAN notes say how each could work over the network.
+Every idea from the last list is built (1.8.4). Games that suit the overlay: quick to start, played with the mouse
+(the overlay never takes the keyboard; a typing game gets its own small typing window), and using the windows and
+taskbar as the playing field.
 
 | Idea | How it plays | LAN |
 |---|---|---|
-| **Curling** | Slide stones along the taskbar toward a target painted on the floor; knock the rival's stones away | Turns with ghost stones, like the golf duel |
-| **More card games** | Fool's cousins on the same room code: Perevodnoy (pass the attack on), Blackjack against the house, Crazy Eights | Rooms, like Durak |
-| **Window Jenga** | A tower of blocks stands on a window top; pull one block out with a drag and set it on top; the tower leans with every window move | Turns, ghost hands |
-| **Paper Planes** | Fold (click) and throw a paper plane from the corner; it glides through gaps between windows to a landing strip on the taskbar; thermals rise off warm (busy) windows | Distance race |
-| **Kite** | Fly a kite from the taskbar on a string held by the cursor; the wind gusts with the desk fan; catch the clouds and dodge the windows | Two kites, tangle to cut the other's string |
-| **Ping-Pong Cups** | Beer-pong with water cups on a window top; flick the ball from the bottom edge; the cups go down one by one | Turns, ghost balls |
-| **Rope Bridge** | Interns need a bridge between two windows; drag planks into place before they walk off the edge | Co-op |
-| **Bingo of Work** | A card of everyday desk events ("a build passes", "Claude needs you", "10 minutes without a click"); the overlay ticks them off; first line wins | Office board |
-| **Backgammon** | Dice and checkers; doubling cube optional | Turns |
-| **Dominoes** | Tiles laid along the taskbar in a line that bends up the window edges | Rooms for 2–4 |
-| **Mancala** | Seeds in pits along the taskbar; a calm sowing game | Turns |
-| **Battleship Salvo** | Sea Battle with three shots a turn, bigger fleets, a fog of war that lifts | Rooms for 3 |
+| **Mahjong Solitaire** | Pairs of tiles in a heap on a window top; only free tiles can be taken | Race on the same heap |
+| **Nonograms** | A daily picture puzzle: numbers on the rows and columns say which cells to fill | Race on the same puzzle |
+| **Carrom** | Flick the striker on a board laid on a window top to pocket the coins | Turns |
+| **Chess puzzles** | A daily mate in two or three from the Chess board | Race on the same puzzle |
 
 ## Ideas for the pets
 
