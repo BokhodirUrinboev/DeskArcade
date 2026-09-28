@@ -52,6 +52,8 @@ public sealed class Daily
         new("rain", "rain.words", 40, "Zap {0} words in Word Rain"),
         new("snake", "snake.apples", 20, "Eat {0} apples in Snakes on Windows"),
         new("asteroids", "asteroids.rocks", 30, "Destroy {0} rocks in Asteroids"),
+        new("mines", "mines.cleared", 150, "Open {0} safe cells in Minesweeper"),
+        new("sudoku", "sudoku.digits", 40, "Fill in {0} digits in Sudoku"),
     };
 
     readonly Settings _settings;

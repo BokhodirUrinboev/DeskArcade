@@ -249,6 +249,8 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new WordRainGame(this));
         _games.Add(new SnakeGame(this));
         _games.Add(new AsteroidsGame(this));
+        _games.Add(new MinesweeperGame(this));
+        _games.Add(new SudokuGame(this));
         _games.Add(new PetGame(this));
         StartPetCompany();
 
@@ -687,6 +689,8 @@ public sealed class OverlayWindow : Window, IGameHost
         "rain" => L.T("click the typewriter, then type the falling words — don't let them reach the taskbar"),
         "snake" => L.T("click the sleeping snake — it follows your cursor: eat the apples, don't cross your tail"),
         "asteroids" => L.T("click your ship to launch — it follows the cursor; click a rock to fire at it"),
+        "mines" => L.T("click a cell to open it, right-click to flag a mine — open every safe cell"),
+        "sudoku" => L.T("click a cell, then a digit on the pad — every row, column and box holds 1 to 9 once"),
         _ => "",
     };
 
