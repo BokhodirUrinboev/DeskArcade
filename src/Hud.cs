@@ -346,7 +346,7 @@ public sealed class Hud : Border
         {
             true => L.F("vs {0}", who) + " · " + turn,
             false => level.Length > 0 ? turn + " · " + level : turn,
-            _ => L.F("vs {0}", who),
+            _ => opp.Teammate ? L.F("with {0}", who) : L.F("vs {0}", who),
         };
         _pillOppText.Text = turn.Length > 0 ? turn : who;
         ToolTip.SetTip(_pillOpp, opp.MyTurn == null ? _oppText.Text : L.F("vs {0}", who) + " · " + turn);

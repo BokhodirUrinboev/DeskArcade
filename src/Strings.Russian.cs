@@ -1313,5 +1313,23 @@ public static partial class Strings
         ["Golden delicious"] = "Золотое яблочко",
         ["Eat 10 golden apples"] = "Съешьте 10 золотых яблок",
         ["Eat {0} apples in Snakes on Windows"] = "Съешьте {0} яблок в «Змейке на окнах»",
+        // asteroids
+        ["Asteroids"] = "Астероиды",
+        ["click your ship to launch — it follows the cursor; click a rock to fire at it"] = "нажмите на корабль, чтобы взлететь, — он летит за курсором; нажмите на камень, чтобы выстрелить",
+        ["asked {0} for a game"] = "{0} предложена игра",
+        ["Wave {0} · lives {1} · with {2}"] = "Волна {0} · жизни {1} · вместе с {2}",
+        ["Wave {0} · lives {1} · click a rock to fire"] = "Волна {0} · жизни {1} · нажмите на камень, чтобы выстрелить",
+        ["Game over · wave {0} · click your ship to fly again"] = "Игра окончена · волна {0} · нажмите на корабль, чтобы взлететь снова",
+        ["Click your ship to ask {0} for a game"] = "Нажмите на корабль, чтобы предложить игру: {0}",
+        ["Click your ship to launch · it follows the cursor, click rocks to fire"] = "Нажмите на корабль, чтобы взлететь · он летит за курсором, по камням стреляйте щелчком",
+        ["wave {0} · {1} points"] = "волна {0} · очков: {1}",
+        ["with {0}"] = "вместе с {0}",
+        ["Space janitor"] = "Космический дворник",
+        ["Destroy 200 rocks in Asteroids"] = "Уничтожьте 200 камней в «Астероидах»",
+        ["Deep space"] = "Глубокий космос",
+        ["Reach wave 6 in Asteroids"] = "Дойдите до 6-й волны в «Астероидах»",
+        ["Wingman"] = "Ведомый",
+        ["Fly a game of Asteroids with a co-worker"] = "Сыграйте в «Астероиды» вместе с коллегой",
+        ["Destroy {0} rocks in Asteroids"] = "Уничтожьте {0} камней в «Астероидах»",
     };
 }

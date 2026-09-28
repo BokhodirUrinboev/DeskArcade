@@ -51,6 +51,7 @@ public sealed class Daily
         new("typing", "typing.chars", 600, "Type {0} characters in Typing Race"),
         new("rain", "rain.words", 40, "Zap {0} words in Word Rain"),
         new("snake", "snake.apples", 20, "Eat {0} apples in Snakes on Windows"),
+        new("asteroids", "asteroids.rocks", 30, "Destroy {0} rocks in Asteroids"),
     };
 
     readonly Settings _settings;

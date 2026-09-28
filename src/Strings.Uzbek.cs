@@ -1313,5 +1313,23 @@ public static partial class Strings
         ["Golden delicious"] = "Oltin olma",
         ["Eat 10 golden apples"] = "10 ta oltin olma yeng",
         ["Eat {0} apples in Snakes on Windows"] = "«Oynalardagi ilon»da {0} ta olma yeng",
+        // asteroids
+        ["Asteroids"] = "Asteroidlar",
+        ["click your ship to launch — it follows the cursor; click a rock to fire at it"] = "uchish uchun kemangizni bosing — u kursor ortidan uchadi; otish uchun toshni bosing",
+        ["asked {0} for a game"] = "{0}ga o'yin taklif qilindi",
+        ["Wave {0} · lives {1} · with {2}"] = "To'lqin {0} · jon {1} · {2} bilan birga",
+        ["Wave {0} · lives {1} · click a rock to fire"] = "To'lqin {0} · jon {1} · otish uchun toshni bosing",
+        ["Game over · wave {0} · click your ship to fly again"] = "O'yin tugadi · to'lqin {0} · qayta uchish uchun kemani bosing",
+        ["Click your ship to ask {0} for a game"] = "{0}ga o'yin taklif qilish uchun kemangizni bosing",
+        ["Click your ship to launch · it follows the cursor, click rocks to fire"] = "Uchish uchun kemangizni bosing · u kursor ortidan uchadi, toshlarni bosib oting",
+        ["wave {0} · {1} points"] = "to'lqin {0} · {1} ochko",
+        ["with {0}"] = "{0} bilan",
+        ["Space janitor"] = "Kosmik farrosh",
+        ["Destroy 200 rocks in Asteroids"] = "«Asteroidlar»da 200 ta toshni yo'q qiling",
+        ["Deep space"] = "Olis koinot",
+        ["Reach wave 6 in Asteroids"] = "«Asteroidlar»da 6-to'lqinga yeting",
+        ["Wingman"] = "Qanotdosh",
+        ["Fly a game of Asteroids with a co-worker"] = "Hamkasbingiz bilan birga «Asteroidlar» o'ynang",
+        ["Destroy {0} rocks in Asteroids"] = "«Asteroidlar»da {0} ta toshni yo'q qiling",
     };
 }

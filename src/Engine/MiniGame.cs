@@ -55,9 +55,10 @@ public sealed record HudInfo(string Score, string Line, string Best);
 
 /// <summary>
 /// The other side of a two-player game, for the scoreboard's chip: who it is, whether it is the computer (and at which
-/// level, 1–4, or 0 when the game has no levels) and whose turn it is (null when the game has no turns).
+/// level, 1–4, or 0 when the game has no levels) and whose turn it is (null when the game has no turns). A
+/// <paramref name="Teammate"/> plays on your side (co-op), and the chip says "with" rather than "vs".
 /// </summary>
-public sealed record Opponent(string Name, bool IsCpu, int Level, bool? MyTurn);
+public sealed record Opponent(string Name, bool IsCpu, int Level, bool? MyTurn, bool Teammate = false);
 
 public abstract class MiniGame
 {

@@ -248,6 +248,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new TypingRaceGame(this));
         _games.Add(new WordRainGame(this));
         _games.Add(new SnakeGame(this));
+        _games.Add(new AsteroidsGame(this));
         _games.Add(new PetGame(this));
         StartPetCompany();
 
@@ -685,6 +686,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "typing" => L.T("click the text and type it — the first car over the line wins"),
         "rain" => L.T("click the typewriter, then type the falling words — don't let them reach the taskbar"),
         "snake" => L.T("click the sleeping snake — it follows your cursor: eat the apples, don't cross your tail"),
+        "asteroids" => L.T("click your ship to launch — it follows the cursor; click a rock to fire at it"),
         _ => "",
     };
 
