@@ -50,6 +50,7 @@ public sealed class Daily
         new("marble", "marble.cups", 5, "Land {0} marbles in the cup in Marble Run"),
         new("typing", "typing.chars", 600, "Type {0} characters in Typing Race"),
         new("rain", "rain.words", 40, "Zap {0} words in Word Rain"),
+        new("snake", "snake.apples", 20, "Eat {0} apples in Snakes on Windows"),
     };
 
     readonly Settings _settings;

@@ -1298,5 +1298,20 @@ public static partial class Strings
         ["Love it"] = "Juda yoqdi",
         ["Nice!"] = "Ajoyib!",
         ["Lunch?"] = "Tushlik?",
+        // snakes on windows
+        ["Snakes on Windows"] = "Oynalardagi ilon",
+        ["click the sleeping snake — it follows your cursor: eat the apples, don't cross your tail"] = "uxlayotgan ilonni bosing — u kursor ortidan o'rmalaydi: olmalarni yeng, dumingizga tegmang",
+        ["Apples {0} · steer with the cursor · don't cross your tail"] = "Olmalar {0} · kursor bilan boshqaring · dumingizga tegmang",
+        ["Bitten! {0} apples · click the snake to play again"] = "Chaqib oldi! {0} ta olma · qayta o'ynash uchun ilonni bosing",
+        ["Click the sleeping snake · it follows your cursor"] = "Uxlayotgan ilonni bosing · u kursor ortidan o'rmalaydi",
+        ["BITTEN!"] = "CHAQDI!",
+        ["{0} apples · {1} points"] = "{0} ta olma · {1} ochko",
+        ["An apple a day"] = "Kuniga bitta olma",
+        ["Eat 100 apples in Snakes on Windows"] = "«Oynalardagi ilon»da 100 ta olma yeng",
+        ["Python"] = "Piton",
+        ["Eat 30 apples in one game of Snakes on Windows"] = "«Oynalardagi ilon»da bir o'yinda 30 ta olma yeng",
+        ["Golden delicious"] = "Oltin olma",
+        ["Eat 10 golden apples"] = "10 ta oltin olma yeng",
+        ["Eat {0} apples in Snakes on Windows"] = "«Oynalardagi ilon»da {0} ta olma yeng",
     };
 }

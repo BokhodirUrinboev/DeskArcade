@@ -1298,5 +1298,20 @@ public static partial class Strings
         ["Love it"] = "Обожаю",
         ["Nice!"] = "Здорово!",
         ["Lunch?"] = "Обед?",
+        // snakes on windows
+        ["Snakes on Windows"] = "Змейка на окнах",
+        ["click the sleeping snake — it follows your cursor: eat the apples, don't cross your tail"] = "нажмите на спящую змейку — она ползет за курсором: ешьте яблоки и не задевайте хвост",
+        ["Apples {0} · steer with the cursor · don't cross your tail"] = "Яблок: {0} · рулите курсором · не задевайте хвост",
+        ["Bitten! {0} apples · click the snake to play again"] = "Укус! Яблок: {0} · нажмите на змейку, чтобы сыграть снова",
+        ["Click the sleeping snake · it follows your cursor"] = "Нажмите на спящую змейку · она ползет за курсором",
+        ["BITTEN!"] = "УКУС!",
+        ["{0} apples · {1} points"] = "яблок: {0} · очков: {1}",
+        ["An apple a day"] = "По яблоку в день",
+        ["Eat 100 apples in Snakes on Windows"] = "Съешьте 100 яблок в «Змейке на окнах»",
+        ["Python"] = "Питон",
+        ["Eat 30 apples in one game of Snakes on Windows"] = "Съешьте 30 яблок за одну игру в «Змейке на окнах»",
+        ["Golden delicious"] = "Золотое яблочко",
+        ["Eat 10 golden apples"] = "Съешьте 10 золотых яблок",
+        ["Eat {0} apples in Snakes on Windows"] = "Съешьте {0} яблок в «Змейке на окнах»",
     };
 }
