@@ -48,6 +48,12 @@ public sealed class Daily
         new("cannons", "cannons.blocks", 20, "Knock down {0} castle blocks in Cannon Castles"),
         new("pinball", "pinball.bumpers", 60, "Hit {0} bumpers in Pinball"),
         new("marble", "marble.cups", 5, "Land {0} marbles in the cup in Marble Run"),
+        new("typing", "typing.chars", 600, "Type {0} characters in Typing Race"),
+        new("rain", "rain.words", 40, "Zap {0} words in Word Rain"),
+        new("snake", "snake.apples", 20, "Eat {0} apples in Snakes on Windows"),
+        new("asteroids", "asteroids.rocks", 30, "Destroy {0} rocks in Asteroids"),
+        new("mines", "mines.cleared", 150, "Open {0} safe cells in Minesweeper"),
+        new("sudoku", "sudoku.digits", 40, "Fill in {0} digits in Sudoku"),
     };
 
     readonly Settings _settings;

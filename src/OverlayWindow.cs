@@ -26,10 +26,13 @@ public sealed class OverlayWindow : Window, IGameHost
 {
     readonly bool _demo;
     readonly string? _startGame;
+    readonly string? _snapshot;      // --snapshot file.png: draw the overlay into a picture after a while, then quit
+    readonly double _snapshotDelay = 8;
     readonly Canvas _root = new() { Background = Brushes.Transparent };
     readonly Canvas _gameLayer = new();
     readonly DecorLayer _decor = new();
     readonly Canvas _hudLayer = new();
+    readonly Canvas _reactLayer = new() { IsHitTestVisible = false }; // reactions floating in from the co-worker
     readonly List<MiniGame> _games = new();
     readonly List<HitShape> _hitShapes = new();
     readonly List<HitShape> _pushedHitShapes = new();
@@ -66,6 +69,7 @@ public sealed class OverlayWindow : Window, IGameHost
     double _lastAchievementAt = -10;
     int _achievementRow;
     PetGame.Companion? _petPal; // the pet keeping the player company in the other games
+    TypingPad? _pad;             // the typing games' keyboard, while one is being typed into
 
     public Settings Settings { get; } = Settings.Load();
     public Stats Stats { get; } = Stats.Load();
@@ -75,6 +79,11 @@ public sealed class OverlayWindow : Window, IGameHost
     public LanLink Lan { get; } = new();
     /// <summary>Gifts for a co-worker's pet, and parcels for ours.</summary>
     public PetMailer PetMail { get; private set; } = null!;
+    /// <summary>Chat and reactions with the co-worker.</summary>
+    public ChatHub Chat { get; private set; } = null!;
+    Border? _bubble;             // a chat message that came in with the chat closed
+    IDisposable? _bubbleTimer;
+    Rect _bubbleRect;
     OfficeBoard _board = null!;
     BoardEntry _boardEntry = new(OfficeBoard.InstanceId, "", "", new Dictionary<string, long>());
     readonly DispatcherTimer _boardTimer = new() { Interval = TimeSpan.FromSeconds(5) };
@@ -111,6 +120,11 @@ public sealed class OverlayWindow : Window, IGameHost
         _demo = args.Contains("--demo");
         int gi = Array.IndexOf(args, "--game");
         if (gi >= 0 && gi + 1 < args.Length) _startGame = args[gi + 1];
+        int si = Array.IndexOf(args, "--snapshot");
+        if (si >= 0 && si + 1 < args.Length) _snapshot = args[si + 1];
+        int di = Array.IndexOf(args, "--snapshot-delay");
+        if (di >= 0 && di + 1 < args.Length && double.TryParse(args[di + 1], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double delay))
+            _snapshotDelay = Math.Clamp(delay, 0.5, 600);
 
         Title = "Desk Arcade";
         SystemDecorations = SystemDecorations.None;
@@ -128,6 +142,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _root.Children.Add(_gameLayer);
         _root.Children.Add(Fx.Layer);
         _root.Children.Add(_decor.Layer);
+        _root.Children.Add(_reactLayer);
         _root.Children.Add(_hudLayer);
         Content = _root;
 
@@ -230,6 +245,12 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new CannonGame(this));
         _games.Add(new PinballGame(this));
         _games.Add(new MarbleGame(this));
+        _games.Add(new TypingRaceGame(this));
+        _games.Add(new WordRainGame(this));
+        _games.Add(new SnakeGame(this));
+        _games.Add(new AsteroidsGame(this));
+        _games.Add(new MinesweeperGame(this));
+        _games.Add(new SudokuGame(this));
         _games.Add(new PetGame(this));
         StartPetCompany();
 
@@ -268,6 +289,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _hudLayer.Children.Add(_raceLabel);
         _race = new RaceMode(this);
         PetMail = new PetMailer(this);
+        Chat = new ChatHub(this);
 
         PlaceWindow();
         UpdateArena();
@@ -313,6 +335,8 @@ public sealed class OverlayWindow : Window, IGameHost
                 if (!_platform.HasTray)
                     Notice(L.T("No tray icon on this desktop"), L.T("the ☰ button on the scoreboard has the menu"), Color.FromRgb(255, 209, 102));
             }, TimeSpan.FromSeconds(8));
+
+        if (_snapshot is { } shot) DispatcherTimer.RunOnce(() => SaveSnapshot(shot), TimeSpan.FromSeconds(_snapshotDelay));
 
         if (_demo)
         {
@@ -497,6 +521,7 @@ public sealed class OverlayWindow : Window, IGameHost
         {
             Current?.CollectHitShapes(_hitShapes);
             if (_hud != null) _hitShapes.Add(HitShape.Box(_hud.Area));
+            if (_bubble != null) _hitShapes.Add(HitShape.Box(_bubbleRect));
         }
         bool capture = _captured || HudBusy;
         if (capture == _pushedCapture && _hitShapes.SequenceEqual(_pushedHitShapes)) return;
@@ -573,6 +598,52 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public void SaveSettings() => Settings.Save();
 
+    /// <summary>
+    /// --snapshot: draws the overlay over a plain desktop blue into a PNG and quits, for screenshots and for checking a
+    /// game's look where there is no desktop to capture (a CI runner, a remote shell). Pair it with --demo and --game.
+    /// </summary>
+    void SaveSnapshot(string path)
+    {
+        try
+        {
+            var size = new PixelSize(Math.Max(1, (int)Bounds.Width), Math.Max(1, (int)Bounds.Height));
+            using var bitmap = new Avalonia.Media.Imaging.RenderTargetBitmap(size, new Vector(96, 96));
+            var backdrop = _root.Background;
+            _root.Background = new SolidColorBrush(Color.FromRgb(40, 78, 120));
+            UpdateLayout(); // what was added since the last frame has no size until laid out
+            bitmap.Render(_root);
+            _root.Background = backdrop;
+            bitmap.Save(path);
+        }
+        catch (Exception e)
+        {
+            Console.Error.WriteLine($"snapshot failed: {e.Message}");
+        }
+        Quit();
+    }
+
+    public void CaptureKeyboard(IKeySink sink, Rect near, string title)
+    {
+        if (_demo || !IsVisible) return; // a demo types through its own player; a hidden overlay takes nothing
+        if (_pad == null)
+        {
+            var pad = new TypingPad(this);
+            pad.Closed += (_, _) =>
+            {
+                if (_pad == pad) _pad = null;
+            };
+            _pad = pad;
+        }
+        _pad.Attach(sink, near, title);
+    }
+
+    public void ReleaseKeyboard(IKeySink sink)
+    {
+        if (_pad?.Sink == sink) _pad.Close();
+    }
+
+    public bool HasKeyboard(IKeySink sink) => _pad is { IsActive: true } pad && pad.Sink == sink;
+
     static string HintFor(string id) => id switch
     {
         "hoops" => L.T("drag the ball and flick it into the hoop"),
@@ -614,6 +685,12 @@ public sealed class OverlayWindow : Window, IGameHost
         "solitaire" => L.T("click the stock to turn a card — click or drag cards onto the piles"),
         "pinball" => L.T("click the ball to serve — press by a flipper to flip it, right-click flips both"),
         "marble" => L.T("drag ramps and bumpers out of the tray, then click the funnel — land the marble in the cup"),
+        "typing" => L.T("click the text and type it — the first car over the line wins"),
+        "rain" => L.T("click the typewriter, then type the falling words — don't let them reach the taskbar"),
+        "snake" => L.T("click the sleeping snake — it follows your cursor: eat the apples, don't cross your tail"),
+        "asteroids" => L.T("click your ship to launch — it follows the cursor; click a rock to fire at it"),
+        "mines" => L.T("click a cell to open it, right-click to flag a mine — open every safe cell"),
+        "sudoku" => L.T("click a cell, then a digit on the pad — every row, column and box holds 1 to 9 once"),
         _ => "",
     };
 
@@ -709,6 +786,7 @@ public sealed class OverlayWindow : Window, IGameHost
         else
         {
             CancelCapture();
+            _pad?.Close(); // a hidden game takes no typing
             _loopOn = false;
             Hide();
         }
@@ -844,6 +922,14 @@ public sealed class OverlayWindow : Window, IGameHost
             case "quit": Quit(); break;
             case "durak-rooms": OpenDurakRooms(); break;
             case "lastcard-rooms": OpenLastCardRooms(); break;
+            // chat for scripts and tests: turn it on or off, send a line, send a reaction (its number)
+            case "chat-on": Chat.SetEnabled(true); break;
+            case "chat-off": Chat.SetEnabled(false); break;
+            case "chat-open": Chat.Open(); break;
+            case var c when c.StartsWith("chat:", StringComparison.Ordinal): Chat.Send(c[5..]); break;
+            case var r when r.StartsWith("react:", StringComparison.Ordinal) && int.TryParse(r[6..], out int n) && Enum.IsDefined(typeof(Reaction), n):
+                Chat.React((Reaction)n);
+                break;
             case var g when g.StartsWith("game:", StringComparison.Ordinal): SwitchGame(g[5..]); break;
             case var t when t.StartsWith("task:", StringComparison.OrdinalIgnoreCase): TaskStarted(t[5..]); break;
             case var t when t.StartsWith("task-end:", StringComparison.Ordinal):
@@ -1127,6 +1213,102 @@ public sealed class OverlayWindow : Window, IGameHost
     }
 
     public void LeaveLan() => Lan.Stop();
+
+    /// <summary>
+    /// A reaction floats up the screen: the co-worker's big and from the lower middle, with their name under it; your own
+    /// smaller, by the scoreboard, as a receipt that it went.
+    /// </summary>
+    public void ShowReaction(Reaction reaction, string line, bool mine)
+    {
+        var (clip, volume, pitch) = mine ? ("pop", 0.3, 1.4) : ReactionArt.Sound(reaction);
+        Sound.Play(clip, volume, pitch);
+        if (!IsVisible) return;
+        var holder = new Canvas { IsHitTestVisible = false };
+        var icon = ReactionArt.Icon(reaction);
+        var scale = new ScaleTransform(0.2, 0.2);
+        icon.RenderTransform = scale; // only the picture grows; the name under it stays readable
+        holder.Children.Add(icon);
+        var label = new TextBlock
+        {
+            Text = ReactionArt.Name(reaction) + " · " + line, FontFamily = Fx.Font, FontSize = 13, FontWeight = FontWeight.Bold,
+            Foreground = Brushes.White, Background = Engine.Art.Brush(200, 18, 20, 28), Padding = new Thickness(7, 2),
+        };
+        label.Measure(Size.Infinity);
+        double size = mine ? 0.8 : 1.7, rise = mine ? 50 : 260;
+        Engine.Art.At(label, -label.DesiredSize.Width / 2, 24 * size + 4);
+        holder.Children.Add(label);
+        var move = new TranslateTransform();
+        holder.RenderTransform = move;
+        var b = _hud.Area;
+        var at = mine ? new Vec2(b.Left + b.Width / 2, b.Bottom + 110)
+            : new Vec2(Arena.Left + Arena.Width * (0.35 + Random.Shared.NextDouble() * 0.3), Arena.Bottom - 110);
+        Canvas.SetLeft(holder, at.X);
+        Canvas.SetTop(holder, at.Y);
+        _reactLayer.Children.Add(holder);
+        Fx.Anims.Add(mine ? 1.6 : 2.8, k =>
+        {
+            double pop = Ease.OutBack(Math.Min(1, k / 0.18));
+            scale.ScaleX = scale.ScaleY = size * pop;
+            move.Y = -rise * Ease.OutCubic(k);
+            move.X = Math.Sin(k * Math.PI * 3) * 10;
+            holder.Opacity = k < 0.75 ? 1 : (1 - k) / 0.25;
+        }, Ease.Linear, () => _reactLayer.Children.Remove(holder));
+        Wake();
+    }
+
+    /// <summary>A chat message that came in with the chat closed: a speech bubble under the scoreboard; a click on it opens the chat.</summary>
+    public void ShowChatBubble(string from, string text)
+    {
+        Sound.Play("chat", 0.45);
+        if (!IsVisible) return;
+        HideChatBubble();
+        var t = Themes.Current;
+        var panel = new StackPanel { Spacing = 2 };
+        panel.Children.Add(new TextBlock { Text = from, FontFamily = Fx.Font, FontSize = 12, FontWeight = FontWeight.Bold, Foreground = Engine.Art.Brush(t.Gold) });
+        panel.Children.Add(new TextBlock
+        {
+            Text = text.Length > 160 ? text[..160] + "…" : text, FontFamily = Fx.Font, FontSize = 14, Foreground = Brushes.White,
+            TextWrapping = TextWrapping.Wrap, MaxWidth = 300,
+        });
+        panel.Children.Add(new TextBlock { Text = L.T("click to reply"), FontFamily = Fx.Font, FontSize = 10, Foreground = Engine.Art.Brush("#AAB3C0") });
+        var bubble = new Border
+        {
+            Child = panel, CornerRadius = new CornerRadius(12), Padding = new Thickness(12, 8), BorderThickness = new Thickness(1.5),
+            Background = Engine.Art.Brush(Color.FromArgb(238, t.Ink.R, t.Ink.G, t.Ink.B)), BorderBrush = Engine.Art.Brush(t.Accent),
+            Cursor = new Cursor(StandardCursorType.Hand),
+        };
+        bubble.PointerPressed += (_, e) =>
+        {
+            e.Handled = true;
+            HideChatBubble();
+            Chat.Open();
+        };
+        _bubble = bubble;
+        _hudLayer.Children.Add(bubble);
+        bubble.Measure(Size.Infinity);
+        double w = bubble.DesiredSize.Width, h = bubble.DesiredSize.Height;
+        var b = _hud.Area;
+        double x = Math.Clamp(b.Right - w, Arena.Left + 4, Math.Max(Arena.Left + 4, Arena.Right - w - 4));
+        double y = b.Bottom + 44 + h < Arena.Bottom ? b.Bottom + 44 : Math.Max(Arena.Top + 4, b.Top - h - 10);
+        Canvas.SetLeft(bubble, x);
+        Canvas.SetTop(bubble, y);
+        _bubbleRect = new Rect(x, y, w, h);
+        bubble.Opacity = 0;
+        Fx.Anims.Add(0.25, k => bubble.Opacity = k, Ease.OutQuad);
+        _bubbleTimer = DispatcherTimer.RunOnce(HideChatBubble, TimeSpan.FromSeconds(10));
+        PushHitShapes();
+        Wake();
+    }
+
+    void HideChatBubble()
+    {
+        _bubbleTimer?.Dispose();
+        _bubbleTimer = null;
+        if (_bubble == null) return;
+        _hudLayer.Children.Remove(_bubble);
+        _bubble = null;
+        PushHitShapes();
+    }
 
     public string LanStatus => Lan.State switch
     {
@@ -1491,6 +1673,7 @@ public sealed class OverlayWindow : Window, IGameHost
     {
         if (_quitting) return;
         _quitting = true;
+        _pad?.Close();
         Lan.Stop();
         _board.Stop();
         _boardTimer.Stop();

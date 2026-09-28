@@ -5,7 +5,8 @@ in the git history). The next three months are about **getting Desk Arcade in fr
 managers, Flathub, a real Mac test, and the visibility SignPath asked for before it signs Windows builds.
 Eight new games came early and shipped in 1.7.1, four more with `--while` and the first LAN races in 1.7.2, and
 1.8.0 turned every game into a two-player game: a computer rival or a co-worker in each of them, twelve pets,
-animation everywhere, and an overlay that behaves on a real Ubuntu desktop. 1.8.1 added five games from the ideas list, and 1.8.2 gave the pets their turn.
+animation everywhere, and an overlay that behaves on a real Ubuntu desktop. 1.8.1 added five games from the ideas list, and 1.8.2 gave the pets their turn. 1.8.3 brings typing (Typing Race,
+Word Rain), reactions and chat with a co-worker, and four more games from the ideas list.
 
 Each item says how it will be verified. "Demo" means copies on one PC (`--profile`) playing by themselves
 (`--demo`).
@@ -17,6 +18,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 | 1.8.0 | 2026-09-24 | Somebody to play against in every game, twelve pets, animation, thirteen themes, the Ubuntu overlay and updates, the ☰ menu |
 | 1.8.1 | 2026-09-25 | Five new games: Marble Run, Sheep Herding, Cannon Castles, Reversi, Gomoku |
 | 1.8.2 | 2026-09-25 | Pets join the games, pet mail over the LAN, pets grow up and nap on a favourite window, pet volume |
+| 1.8.3 | 2026-09-28 | Typing Race, Word Rain, reactions and chat, Snakes on Windows, co-op Asteroids, Minesweeper and Sudoku |
 | 1.9.0 | late October | Package managers, a feel pass by hand, Flathub |
 | 2.0.0 | mid December | Signed Windows builds, a real Mac, a winter event |
 
@@ -158,6 +160,42 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 - [x] **Pet volume**: Off, Quiet, Normal or Loud for the pet alone, softer late in the evening. *Verified: unit
   tests for the levels and the evening curve.*
 
+## 1.8.3: typing, talking and four more games (shipped 2026-09-28)
+
+- [x] **Typing Race** (`typing`): type a text on a panel and race little cars to the line: the computer's typist at the
+  CPU level (28 to 82 words a minute, with pauses and typos) or a co-worker over the LAN on the same text; English,
+  Russian, Uzbek or code (several lines, the indentation filled in). The overlay still never takes the keyboard: a
+  small typing window (`TypingPad`) opens under the game while it is typed into and hands the keyboard back on Esc or
+  a click elsewhere. *Verified: unit tests for the typing, look-alike keys, indentation, speeds and the computer's
+  typist, and that every text types on an ordinary keyboard (`TypingTests`); demo runs in English and code; two copies
+  over loopback raced the same text, each saw the other's car and the host won. Not typed into by hand yet.*
+- [x] **Word Rain** (`rain`): words fall onto the window tops and the taskbar; type one and the typewriter zaps it;
+  three lives, levels every ten words, a race against the computer or a co-worker. *Verified: unit tests for the
+  targeting, scoring, levels and lives (`WordRainTests`); demo runs, and two copies linked over loopback (each
+  saw the other's zaps). A full LAN race round not yet.*
+- [x] **Reactions and chat** with the paired co-worker: eight drawn reactions float up their screen; a chat window
+  (off until first opened, nothing saved) with receipts, a bubble under the scoreboard for a message that comes in
+  with the chat closed, and a refusal plus one "wants to chat" when chat is off. *Verified: unit tests for the
+  protocol, cleaning, limits, receipts and refusals (`ChatTests`); two copies over loopback: a message arrived and
+  showed as the bubble, and reactions were sent (the float itself checked in a snapshot, not yet seen arriving on
+  the other copy). Not tried between two PCs yet.*
+- [x] **Snakes on Windows** (`snake`): a snake follows the cursor in curves to apples on the window tops (riding
+  along with them) and about the desktop; golden apples; only its own tail ends the game. *Verified: unit tests for
+  the steering, edges, growth and the tail (`SnakeTests`, which caught a body that stayed one straight segment);
+  demo runs.*
+- [x] **Asteroids** (`asteroids`): the ship follows the cursor, a click on a rock fires at it, rocks split, waves
+  grow; alone a race, over the LAN **co-op**: two ships in one field, five lives and one score, the host running the
+  rocks. *Verified: unit tests for the waves, splits, shots, lives and two ships (`AsteroidsTests`); two copies over
+  loopback showed the same rocks, both ships and one score.*
+- [x] **Minesweeper** (`mines`) and **Sudoku** (`sudoku`), each with a daily puzzle the same for everyone and a time
+  race (fewer seconds win) against the computer, or a co-worker on the same seeded board or puzzle. *Verified: unit
+  tests for the boards, the first safe click, chords, seeded boards, the Sudoku generator's unique solutions and the
+  solver (`PuzzleTests`); demo runs of both.*
+- [x] **`--snapshot <file.png>`**: draws the overlay into a picture and quits, for screenshots where there is no
+  desktop to capture; every new game above was checked with it.
+- [ ] The Russian and Uzbek text for all of the above, read by native speakers (the Russian and Uzbek typing texts
+  and word lists especially).
+
 ## 1.9.0: package managers and a feel pass (October)
 
 - [ ] **A feel pass by hand** on the 1.8.0 work, on Windows and Ubuntu: the computer rival's pacing and levels in each
@@ -165,16 +203,14 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
   mouse, notes here.*
 - [ ] **The Ubuntu overlay on real desktops**: GNOME on Wayland and Xorg, KDE Plasma 6, XFCE: always on top, every
   workspace, focus never taken, the tray notice on stock GNOME. *Verified: a checklist run on each, recorded here.*
-- [ ] **winget.** Sign the Microsoft CLA on
-  [winget-pkgs#437055](https://github.com/microsoft/winget-pkgs/pull/437055) and see the first submission
-  through moderator review, then submit 1.8.0. *Verified: `winget install ImperiumGames.DeskArcade` on a
-  clean Windows Sandbox.*
-- [ ] **Automatic package updates.** After the GitHub Release is published, the release workflow stamps the
-  Homebrew cask and the Scoop manifest and pushes them to
-  [homebrew-tap](https://github.com/BokhodirUrinboev/homebrew-tap) and
-  [scoop-bucket](https://github.com/BokhodirUrinboev/scoop-bucket), and opens the winget update with
-  `wingetcreate update --submit`. Needs a fine-grained token as a repository secret. *Verified: the 1.9.0
-  tag updates all three without a hand-made commit.*
+- [ ] **winget.** The Microsoft CLA on [winget-pkgs#437055](https://github.com/microsoft/winget-pkgs/pull/437055)
+  is signed (2026-09-28); the first submission waits for a moderator. Once it is in, run the Package managers
+  workflow with the latest version. *Verified: `winget install ImperiumGames.DeskArcade` on a clean Windows Sandbox.*
+- [x] **Automatic package updates** (#42): after the GitHub Release is published, `packages.yml` stamps the Homebrew
+  cask and the Scoop manifest and pushes them to [homebrew-tap](https://github.com/BokhodirUrinboev/homebrew-tap)
+  and [scoop-bucket](https://github.com/BokhodirUrinboev/scoop-bucket), and submits winget with wingetcreate once
+  winget-pkgs has the package. *Verified: a run by hand for 1.8.2 passed with nothing to push. The first tag that
+  updates them for real is still to come.*
 - [ ] **Release dry run** with the Node 24 action versions from #18, before the 1.9.0 tag. *Verified:
   Actions → Release → Run workflow builds every package.*
 - [ ] **Pet voice tuning** after a listen on real speakers, and a volume slider for the pet alone.
@@ -182,8 +218,8 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 
 ## 2.0.0: Linux, macOS and the season (November to December)
 
-- [ ] **Flathub.** Pick the app id (`io.github.BokhodirUrinboev.DeskArcade` unless the `imperiumgames.com`
-  domain can be verified), attach a `linux-x64` publish tarball to each release for an `archive` source, add
+- [ ] **Flathub.** Use the app id `io.github.BokhodirUrinboev.DeskArcade` (Imperium Games is a name, not a company
+  with a domain to verify), attach a `linux-x64` publish tarball to each release for an `archive` source, add
   screenshots to the metainfo, and replace the `xdg-config/autostart` permission with the Background portal.
   Then open the submission against `flathub/flathub`. *Verified: `flatpak-builder-lint` and `appstreamcli
   validate` pass; the bundle runs on Ubuntu 24.04.*
@@ -212,27 +248,28 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 | macOS: click-through, window list, hotkeys, sound | A Mac |
 | The Node 24 action versions in the release workflow | A release dry run |
 | The setup's "arcade" PATH option (added, then removed on uninstall); `--while` with the overlay on a Linux desktop and on macOS | Windows Sandbox; a Linux PC and a Mac |
+| The typing window on real desktops: it takes the focus on a click (Windows focus rules, GNOME, KDE, macOS), gives it back, and types Russian and Uzbek layouts | Someone typing on each |
+| Chat, reactions, the typing and puzzle races and co-op Asteroids between two real PCs | Two PCs on one network |
+| How Typing Race, Word Rain, Snakes on Windows, Asteroids, Minesweeper and Sudoku feel by hand | Someone playing them |
 
 ## Ideas for more mini games
 
-Games that suit the overlay: quick to start, played with the mouse (the overlay never takes the keyboard),
+Games that suit the overlay: quick to start, played with the mouse (the overlay never takes the keyboard; a typing
+game gets its own small typing window),
 and using the windows and taskbar as the playing field. LAN notes say how each could work over the network.
 
 | Idea | How it plays | LAN |
 |---|---|---|
 | **Curling** | Slide stones along the taskbar toward a target painted on the floor; knock the rival's stones away | Turns with ghost stones, like the golf duel |
 | **More card games** | Fool's cousins on the same room code: Perevodnoy (pass the attack on), Blackjack against the house, Crazy Eights | Rooms, like Durak |
-| **Asteroids** | Rocks drift and bounce around the closed box; steer a ship with the mouse and click to fire | Co-op: two ships, one field |
 | **Window Jenga** | A tower of blocks stands on a window top; pull one block out with a drag and set it on top; the tower leans with every window move | Turns, ghost hands |
 | **Paper Planes** | Fold (click) and throw a paper plane from the corner; it glides through gaps between windows to a landing strip on the taskbar; thermals rise off warm (busy) windows | Distance race |
 | **Kite** | Fly a kite from the taskbar on a string held by the cursor; the wind gusts with the desk fan; catch the clouds and dodge the windows | Two kites, tangle to cut the other's string |
 | **Ping-Pong Cups** | Beer-pong with water cups on a window top; flick the ball from the bottom edge; the cups go down one by one | Turns, ghost balls |
 | **Rope Bridge** | Interns need a bridge between two windows; drag planks into place before they walk off the edge | Co-op |
-| **Snakes on Windows** | A snake crawls along the edges of windows; steer it with the cursor to apples; do not cross your own tail | Two snakes, one desktop |
 | **Bingo of Work** | A card of everyday desk events ("a build passes", "Claude needs you", "10 minutes without a click"); the overlay ticks them off; first line wins | Office board |
 | **Backgammon** | Dice and checkers; doubling cube optional | Turns |
 | **Dominoes** | Tiles laid along the taskbar in a line that bends up the window edges | Rooms for 2–4 |
-| **Sudoku / Minesweeper** | Puzzle pads for the quiet minutes; a mouse-only number pad | Daily challenge race: same puzzle, first to finish |
 | **Mancala** | Seeds in pits along the taskbar; a calm sowing game | Turns |
 | **Battleship Salvo** | Sea Battle with three shots a turn, bigger fleets, a fog of war that lifts | Rooms for 3 |
 
