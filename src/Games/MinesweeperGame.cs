@@ -49,7 +49,7 @@ public sealed class MinesweeperGame : MiniGame
     CellView[] _views = Array.Empty<CellView>();
     MinesweeperRules _rules = null!;
     int _size = 1, _lanRound, _session = -1;
-    bool _daily, _racing, _placed, _demo, _seeded;
+    bool _daily, _racing, _placed, _seeded;
     Vec2 _origin;
     double _scale = 1, _elapsed, _pulse;
     Rect _sizeRect, _modeRect, _newRect;
@@ -378,7 +378,6 @@ public sealed class MinesweeperGame : MiniGame
     /// <summary>A small solver: flags what must be mines, chords what must be safe, and guesses when it has to.</summary>
     public override void DemoTick()
     {
-        _demo = true;
         if (_rules.Over)
         {
             NewBoard();
