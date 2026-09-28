@@ -1516,5 +1516,25 @@ public static partial class Strings
         ["Office regular"] = "Ofis doimiysi",
         ["Get 10 bingos"] = "10 marta bingo qiling",
         ["Dab {0} squares in Bingo of Work"] = "«Ish bingosi»da {0} ta katakchani belgilang",
+
+        // kite
+        ["Kite"] = "Varrak",
+        ["click the kite — the string follows your cursor; pull to climb, catch the clouds, dodge the birds"] = "varrakni bosing — ip kursoringizga ergashadi; balandlash uchun torting, bulutlarni tuting, qushlardan qoching",
+        ["{0}s · clouds {1} · pull the string to climb"] = "{0} s · bulutlar {1} · balandlash uchun ipni torting",
+        ["Flight over · {0} clouds · click the kite to fly again"] = "Parvoz tugadi · {0} ta bulut · yana uchirish uchun varrakni bosing",
+        ["Click the kite to fly it — the string follows your cursor"] = "Uchirish uchun varrakni bosing — ip kursoringizga ergashadi",
+        ["It hit the ground"] = "Yerga urildi",
+        ["Snagged on a window"] = "Oynaga ilinib qoldi",
+        ["A bird flew into it"] = "Unga qush urilib ketdi",
+        ["{0} in a row!"] = "Ketma-ket {0} ta!",
+        ["FLIGHT OVER"] = "PARVOZ TUGADI",
+        ["{0} clouds · {1} stars · {2} points"] = "{0} ta bulut · {1} ta yulduz · {2} ochko",
+        ["Head in the clouds"] = "Bulutlar orasida",
+        ["Catch 100 clouds with the kite"] = "Varrak bilan 100 ta bulut tuting",
+        ["Steady hands"] = "Mustahkam qo'l",
+        ["Fly a whole minute without a crash"] = "Bir daqiqa davomida yiqilmasdan uching",
+        ["High flyer"] = "Baland parvoz",
+        ["Score 250 in one kite flight"] = "Varrakning bitta parvozida 250 ochko to'plang",
+        ["Catch {0} clouds with the Kite"] = "«Varrak»da {0} ta bulut tuting",
     };
 }

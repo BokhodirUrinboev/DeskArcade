@@ -1516,5 +1516,25 @@ public static partial class Strings
         ["Office regular"] = "Завсегдатай офиса",
         ["Get 10 bingos"] = "Соберите 10 бинго",
         ["Dab {0} squares in Bingo of Work"] = "Отметьте {0} клетки в «Рабочем бинго»",
+
+        // kite
+        ["Kite"] = "Воздушный змей",
+        ["click the kite — the string follows your cursor; pull to climb, catch the clouds, dodge the birds"] = "нажмите на змея — нить следует за курсором; тяните, чтобы набрать высоту, ловите облака, уворачивайтесь от птиц",
+        ["{0}s · clouds {1} · pull the string to climb"] = "{0} с · облаков: {1} · тяните нить, чтобы набрать высоту",
+        ["Flight over · {0} clouds · click the kite to fly again"] = "Полёт окончен · облаков: {0} · нажмите на змея, чтобы запустить снова",
+        ["Click the kite to fly it — the string follows your cursor"] = "Нажмите на змея, чтобы запустить его — нить следует за курсором",
+        ["It hit the ground"] = "Упал на землю",
+        ["Snagged on a window"] = "Зацепился за окно",
+        ["A bird flew into it"] = "В него врезалась птица",
+        ["{0} in a row!"] = "{0} подряд!",
+        ["FLIGHT OVER"] = "ПОЛЁТ ОКОНЧЕН",
+        ["{0} clouds · {1} stars · {2} points"] = "облаков: {0} · звёзд: {1} · очков: {2}",
+        ["Head in the clouds"] = "Витая в облаках",
+        ["Catch 100 clouds with the kite"] = "Поймайте змеем 100 облаков",
+        ["Steady hands"] = "Твёрдая рука",
+        ["Fly a whole minute without a crash"] = "Пролетайте целую минуту без падений",
+        ["High flyer"] = "Высокий полёт",
+        ["Score 250 in one kite flight"] = "Наберите 250 очков за один полёт змея",
+        ["Catch {0} clouds with the Kite"] = "Поймайте {0} облаков «Воздушным змеем»",
     };
 }
