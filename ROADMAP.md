@@ -2,7 +2,7 @@
 
 1.7.0 shipped on 2026-09-21 with natural pet voices and animal behaviour (the 1.6.0 and 1.7.0 roadmap is
 in the git history). The next three months are about **getting Desk Arcade in front of people**: package
-managers, Flathub, a real Mac test, and the visibility SignPath asked for before it signs Windows builds.
+managers, Flathub and a real Mac test, all free: Desk Arcade is open source and spends nothing.
 Eight new games came early and shipped in 1.7.1, four more with `--while` and the first LAN races in 1.7.2, and
 1.8.0 turned every game into a two-player game: a computer rival or a co-worker in each of them, twelve pets,
 animation everywhere, and an overlay that behaves on a real Ubuntu desktop. 1.8.1 added five games from the ideas list, and 1.8.2 gave the pets their turn. 1.8.3 brings typing (Typing Race,
@@ -20,7 +20,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 | 1.8.2 | 2026-09-25 | Pets join the games, pet mail over the LAN, pets grow up and nap on a favourite window, pet volume |
 | 1.8.3 | 2026-09-28 | Typing Race, Word Rain, reactions and chat, Snakes on Windows, co-op Asteroids, Minesweeper and Sudoku |
 | 1.9.0 | late October | Package managers, a feel pass by hand, Flathub |
-| 2.0.0 | mid December | Signed Windows builds, a real Mac, a winter event |
+| 2.0.0 | mid December | Flathub, a real Mac, a winter event |
 
 ## 1.7.1: eight new games (shipped 2026-09-22)
 
@@ -224,12 +224,8 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
   Then open the submission against `flathub/flathub`. *Verified: `flatpak-builder-lint` and `appstreamcli
   validate` pass; the bundle runs on Ubuntu 24.04.*
 - [ ] **A real Mac.** Run the macOS build on Apple Silicon and Intel: click-through, the window list, hotkeys,
-  sound, the tray. Fix what breaks, and decide on an Apple Developer ID for notarization (needed for
-  homebrew/cask itself). *Verified: a checklist run on both Macs, recorded here.*
-- [ ] **Reapply to SignPath Foundation** (declined on 2026-09-18 for too little visibility) once the package
-  managers and Flathub listings, a README with screenshots and a short demo GIF, and download numbers from
-  1.8 and 1.9 are in place. With the certificate, Windows builds stop tripping SmartScreen. *Verified: the
-  2.0.0 installers carry a valid signature.*
+  sound, the tray. Fix what breaks. The app stays ad-hoc signed (free), so the first launch keeps its right-click →
+  Open step. *Verified: a checklist run on both Macs, recorded here.*
 - [ ] **Winter event** (from 2026-12-15): snow settling on window tops, a snowball mode for Slingshot and
   scarves for the pets, switched on by the seasonal theme. *Verified: demo run with the date set to
   December.*
