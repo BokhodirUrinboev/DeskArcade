@@ -1375,5 +1375,21 @@ public static partial class Strings
         ["Solve 7 daily Sudoku puzzles"] = "Решите 7 судоку дня",
         ["Open {0} safe cells in Minesweeper"] = "Откройте {0} безопасных клеток в «Сапере»",
         ["Fill in {0} digits in Sudoku"] = "Впишите {0} цифр в судоку",
+        // mancala
+        ["Mancala"] = "Манкала",
+        ["click one of your pits to sow its seeds — the last seed in your store plays again"] = "нажмите на свою лунку, чтобы посеять семена — последнее семя в вашем амбаре дает еще ход",
+        ["Game over · click the board to ask for a rematch"] = "Игра окончена · нажмите на доску, чтобы предложить реванш",
+        ["Game over · click the board for a new game"] = "Игра окончена · нажмите на доску для новой игры",
+        ["Sowing…"] = "Сеем…",
+        ["Your turn · click one of your pits (the bottom row)"] = "Ваш ход · нажмите на одну из своих лунок (нижний ряд)",
+        ["Last seed in your store · go again!"] = "Последнее семя в амбаре · ходите еще!",
+        ["{0} goes again"] = "{0} ходит еще раз",
+        ["Seed saver"] = "Хранитель семян",
+        ["Win a game of Mancala"] = "Выиграйте партию в манкалу",
+        ["Master sower"] = "Мастер сева",
+        ["Beat the Mancala CPU on Hard or Expert"] = "Обыграйте компьютер в манкалу на уровне «Сложный» или «Эксперт»",
+        ["Big harvest"] = "Богатый урожай",
+        ["Capture 10 seeds with one move"] = "Захватите 10 семян за один ход",
+        ["Sow {0} seeds in Mancala"] = "Посейте {0} семян в манкале",
     };
 }

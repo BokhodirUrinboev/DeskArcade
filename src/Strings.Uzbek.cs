@@ -1375,5 +1375,21 @@ public static partial class Strings
         ["Solve 7 daily Sudoku puzzles"] = "Kunning 7 ta sudokusini yeching",
         ["Open {0} safe cells in Minesweeper"] = "«Sapyor»da {0} ta xavfsiz katakni oching",
         ["Fill in {0} digits in Sudoku"] = "Sudokuga {0} ta raqam yozing",
+        // mancala
+        ["Mancala"] = "Mankala",
+        ["click one of your pits to sow its seeds — the last seed in your store plays again"] = "urug'larni ekish uchun o'z chuqurchangizni bosing — oxirgi urug' omboringizga tushsa, yana yurasiz",
+        ["Game over · click the board to ask for a rematch"] = "O'yin tugadi · revansh so'rash uchun taxtani bosing",
+        ["Game over · click the board for a new game"] = "O'yin tugadi · yangi o'yin uchun taxtani bosing",
+        ["Sowing…"] = "Ekilmoqda…",
+        ["Your turn · click one of your pits (the bottom row)"] = "Sizning navbatingiz · o'z chuqurchalaringizdan birini bosing (pastki qator)",
+        ["Last seed in your store · go again!"] = "Oxirgi urug' omboringizda · yana yuring!",
+        ["{0} goes again"] = "{0} yana yuradi",
+        ["Seed saver"] = "Urug' saqlovchi",
+        ["Win a game of Mancala"] = "Mankalada bir o'yinni yuting",
+        ["Master sower"] = "Ekish ustasi",
+        ["Beat the Mancala CPU on Hard or Expert"] = "Mankalada kompyuterni «Qiyin» yoki «Ekspert» darajasida yuting",
+        ["Big harvest"] = "Mo'l hosil",
+        ["Capture 10 seeds with one move"] = "Bir yurishda 10 ta urug'ni oling",
+        ["Sow {0} seeds in Mancala"] = "Mankalada {0} ta urug' eking",
     };
 }

@@ -251,6 +251,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new AsteroidsGame(this));
         _games.Add(new MinesweeperGame(this));
         _games.Add(new SudokuGame(this));
+        _games.Add(new MancalaGame(this));
         _games.Add(new PetGame(this));
         StartPetCompany();
 
@@ -691,6 +692,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "asteroids" => L.T("click your ship to launch — it follows the cursor; click a rock to fire at it"),
         "mines" => L.T("click a cell to open it, right-click to flag a mine — open every safe cell"),
         "sudoku" => L.T("click a cell, then a digit on the pad — every row, column and box holds 1 to 9 once"),
+        "mancala" => L.T("click one of your pits to sow its seeds — the last seed in your store plays again"),
         _ => "",
     };
 
