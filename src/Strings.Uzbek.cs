@@ -1536,5 +1536,26 @@ public static partial class Strings
         ["High flyer"] = "Baland parvoz",
         ["Score 250 in one kite flight"] = "Varrakning bitta parvozida 250 ochko to'plang",
         ["Catch {0} clouds with the Kite"] = "«Varrak»da {0} ta bulut tuting",
+
+        // backgammon
+        ["Backgammon"] = "Nard",
+        ["click ROLL, then a checker and where it goes — bring all fifteen home and bear them off first"] = "«TASHLASH»ni bosing, so'ng toshni va uni qayerga qo'yishni — o'n beshtasini uyga olib kelib, birinchi bo'lib chiqaring",
+        ["Your turn · click ROLL · pips {0}–{1}"] = "Sizning navbatingiz · «TASHLASH»ni bosing · qolgan yo'l {0}–{1}",
+        ["Your move · click a checker, then where it goes"] = "Sizning yurishingiz · toshni, so'ng uni qayerga qo'yishni bosing",
+        ["No moves this time"] = "Bu safar yurish yo'q",
+        ["{0} can't move"] = "{0} yura olmaydi",
+        ["Hit!"] = "Urildi!",
+        ["{0} hits!"] = "{0} urib oldi!",
+        ["a backgammon: triple"] = "bekgammon: uch barobar",
+        ["a gammon: double"] = "mars: ikki barobar",
+        ["{0}–{1} off"] = "chiqarildi {0}–{1}",
+        ["ROLL"] = "TASHLASH",
+        ["Borne off"] = "Hammasi uyda",
+        ["Win a game of Backgammon"] = "Nardda bir o'yinni yuting",
+        ["Gammon"] = "Mars",
+        ["Win before the other side bears off a single checker"] = "Raqib bitta ham tosh chiqarmasdan yuting",
+        ["Backgammon master"] = "Nard ustasi",
+        ["Beat the Hard computer at Backgammon"] = "Nardda «Qiyin» darajadagi kompyuterni yuting",
+        ["Bear off {0} checkers in Backgammon"] = "«Nard»da {0} ta tosh chiqaring",
     };
 }

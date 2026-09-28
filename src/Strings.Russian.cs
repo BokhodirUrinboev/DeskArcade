@@ -1536,5 +1536,26 @@ public static partial class Strings
         ["High flyer"] = "Высокий полёт",
         ["Score 250 in one kite flight"] = "Наберите 250 очков за один полёт змея",
         ["Catch {0} clouds with the Kite"] = "Поймайте {0} облаков «Воздушным змеем»",
+
+        // backgammon
+        ["Backgammon"] = "Нарды",
+        ["click ROLL, then a checker and where it goes — bring all fifteen home and bear them off first"] = "нажмите «БРОСОК», затем на шашку и куда её поставить — приведите все пятнадцать домой и выведите их первым",
+        ["Your turn · click ROLL · pips {0}–{1}"] = "Ваш ход · нажмите «БРОСОК» · очки пути {0}–{1}",
+        ["Your move · click a checker, then where it goes"] = "Ваш ход · нажмите на шашку, затем куда её поставить",
+        ["No moves this time"] = "Ходов нет",
+        ["{0} can't move"] = "{0}: ходов нет",
+        ["Hit!"] = "Сбил!",
+        ["{0} hits!"] = "{0} сбивает!",
+        ["a backgammon: triple"] = "бэкгаммон: втройне",
+        ["a gammon: double"] = "марс: вдвойне",
+        ["{0}–{1} off"] = "выведено {0}–{1}",
+        ["ROLL"] = "БРОСОК",
+        ["Borne off"] = "Все дома",
+        ["Win a game of Backgammon"] = "Выиграйте партию в нарды",
+        ["Gammon"] = "Марс",
+        ["Win before the other side bears off a single checker"] = "Выиграйте, пока соперник не вывел ни одной шашки",
+        ["Backgammon master"] = "Мастер нард",
+        ["Beat the Hard computer at Backgammon"] = "Обыграйте в нарды компьютер на уровне «Сложно»",
+        ["Bear off {0} checkers in Backgammon"] = "Выведите {0} шашек в «Нардах»",
     };
 }

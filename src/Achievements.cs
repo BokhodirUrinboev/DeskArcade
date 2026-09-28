@@ -179,6 +179,10 @@ public static class Achievements
         new("kite-clouds", "kite", "Head in the clouds", "Catch 100 clouds with the kite", "kite.clouds", 100),
         new("kite-clean", "kite", "Steady hands", "Fly a whole minute without a crash", "kite.clean", 1),
         new("kite-best", "kite", "High flyer", "Score 250 in one kite flight", "kite.best", 250),
+
+        new("backgammon-win", "backgammon", "Borne off", "Win a game of Backgammon", "backgammon.wins", 1),
+        new("backgammon-gammon", "backgammon", "Gammon", "Win before the other side bears off a single checker", "backgammon.gammons", 1),
+        new("backgammon-hard", "backgammon", "Backgammon master", "Beat the Hard computer at Backgammon", "backgammon.hardwins", 1),
         new("codebreaker-win", "codebreaker", "Code cracked", "Break a code", "codebreaker.wins", 1),
         new("codebreaker-fast", "codebreaker", "Mind reader", "Break a code in 4 guesses or fewer", "codebreaker.fast", 1),
         new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),
