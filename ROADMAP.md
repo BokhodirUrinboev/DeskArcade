@@ -20,7 +20,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 | 1.8.1 | 2026-09-25 | Five new games: Marble Run, Sheep Herding, Cannon Castles, Reversi, Gomoku |
 | 1.8.2 | 2026-09-25 | Pets join the games, pet mail over the LAN, pets grow up and nap on a favourite window, pet volume |
 | 1.8.3 | 2026-09-28 | Typing Race, Word Rain, reactions and chat, Snakes on Windows, co-op Asteroids, Minesweeper and Sudoku |
-| 1.8.4 | when tagged | The rest of the ideas list: Mancala, Blackjack, Curling, Paper Planes, Ping-Pong Cups, Bingo of Work, Kite, Backgammon, Dominoes, Window Jenga, Rope Bridge; Perevodnoy and Salvo rules |
+| 1.8.4 | next | The rest of the ideas list: Mancala, Blackjack, Curling, Paper Planes, Ping-Pong Cups, Bingo of Work, Kite, Backgammon, Dominoes, Window Jenga, Rope Bridge; Perevodnoy and Salvo rules |
 | 1.9.0 | late October | Package managers, a feel pass by hand, Flathub |
 | 2.0.0 | mid December | Flathub, a real Mac, a winter event |
 
@@ -198,7 +198,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 - [ ] The Russian and Uzbek text for all of the above, read by native speakers (the Russian and Uzbek typing texts
   and word lists especially).
 
-## 1.8.4: the rest of the ideas list (on `feature/more-games`, not released yet)
+## 1.8.4: the rest of the ideas list (next)
 
 Every game below has UI-free rules with unit tests, a demo player, three achievements, a daily challenge, Russian and
 Uzbek text, and a `--snapshot` check of its demo. Those with a round are races against the computer or a co-worker.
