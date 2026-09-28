@@ -160,6 +160,7 @@ public class TranslationCoverageTests
             yield return a.Description;
         }
         foreach (var c in Daily.Pool) yield return c.Text;
+        foreach (var s in DeskArcade.Games.BingoCard.Desk) yield return s.Text; // shown through L.F(square.Text, amount)
     }
 
     // strings made only of numbers, placeholders and symbols ("+{0}") need no translation

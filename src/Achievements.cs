@@ -171,6 +171,10 @@ public static class Achievements
         new("cups-50", "cups", "Splash", "Sink 50 cups", "cups.sunk", 50),
         new("cups-bounce", "cups", "Off the table", "Sink a bounce shot", "cups.bounce", 1),
         new("cups-clean", "cups", "Clean rack", "Clear a rack of six in six throws", "cups.clean", 1),
+
+        new("bingo-line", "bingo", "Bingo!", "Get three in a line on a Bingo of Work card", "bingo.lines", 1),
+        new("bingo-full", "bingo", "Full house", "Dab all nine squares of a Bingo of Work card", "bingo.full", 1),
+        new("bingo-10", "bingo", "Office regular", "Get 10 bingos", "bingo.lines", 10),
         new("codebreaker-win", "codebreaker", "Code cracked", "Break a code", "codebreaker.wins", 1),
         new("codebreaker-fast", "codebreaker", "Mind reader", "Break a code in 4 guesses or fewer", "codebreaker.fast", 1),
         new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),

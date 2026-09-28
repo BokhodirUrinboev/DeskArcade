@@ -59,6 +59,7 @@ public sealed class Daily
         new("curling", "curling.stones", 16, "Throw {0} stones in Curling"),
         new("planes", "planes.throws", 12, "Throw {0} paper planes"),
         new("cups", "cups.sunk", 10, "Sink {0} cups in Ping-Pong Cups"),
+        new("bingo", "bingo.squares", 3, "Dab {0} squares in Bingo of Work"),
     };
 
     readonly Settings _settings;

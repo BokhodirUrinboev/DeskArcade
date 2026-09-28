@@ -256,6 +256,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new CurlingGame(this));
         _games.Add(new PaperPlanesGame(this));
         _games.Add(new CupsGame(this));
+        _games.Add(new BingoGame(this));
         _games.Add(new PetGame(this));
         StartPetCompany();
 
@@ -701,6 +702,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "curling" => L.T("drag back from your stone and let go — hold the mouse ahead of it to sweep"),
         "planes" => L.T("drag back from the paper plane and let go — warm air above windows lifts it"),
         "cups" => L.T("grab the ball, flick it and let go — drop it into the cups; a bounce shot counts double"),
+        "bingo" => L.T("squares dab themselves as you work and play — three in a line is a bingo"),
         _ => "",
     };
 
@@ -893,7 +895,7 @@ public sealed class OverlayWindow : Window, IGameHost
         catch { /* clipboard busy */ }
     }
 
-    internal void Notice(string title, string sub, Color color)
+    public void Notice(string title, string sub, Color color)
     {
         if (!IsVisible) return;
         // popups drift upward, so start well clear of the scoreboard (or above it when it sits low)

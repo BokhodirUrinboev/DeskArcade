@@ -76,6 +76,8 @@ public sealed class Settings
     public string TypingText { get; set; } = "auto";
     /// <summary>Chat with the co-worker on the LAN link: off until the chat is first opened (see <see cref="ChatHub"/>).</summary>
     public bool LanChat { get; set; }
+    /// <summary>The Bingo of Work card in play (see <see cref="Games.BingoCard.Save"/>); null deals a new one.</summary>
+    public string? Bingo { get; set; }
     /// <summary>The pet's own voice level: 0 off, 1 quiet, 2 normal, 3 loud (see <see cref="Games.PetLife.VolumeFactor"/>).</summary>
     public int PetVolume { get; set; } = Games.PetLife.DefaultVolume;
     /// <summary>When each kind of pet was first adopted (its age in the stats window, and part of growing up).</summary>
