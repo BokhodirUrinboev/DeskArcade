@@ -18,6 +18,8 @@ namespace DeskArcade.Games;
 /// defender attacks next; after a take, the player after the defender attacks.</item>
 /// <item>After each bout the players draw back up to six: the attacker first, the defender last.</item>
 /// <item>Once the deck is empty, a player without cards is out. The last one holding cards is the durak.</item>
+/// <item>Perevodnoy (<see cref="Transfers"/>): before beating anything, the defender may lay a card of the same rank as
+/// the attack and pass it all on to the next player, who defends against every card, and may pass it on in turn.</item>
 /// </list>
 /// Cards are numbered suit × 9 + (rank − 6): ranks 6–14 (jack 11, queen 12, king 13, ace 14), suits
 /// ♠ 0, ♣ 1, ♦ 2, ♥ 3.
@@ -62,10 +64,14 @@ public sealed class DurakRules
     /// <summary>Counts every accepted action, so a view can tell it's out of date.</summary>
     public int Version { get; private set; }
 
-    public DurakRules(int players, Random rng)
+    /// <summary>Perevodnoy ("pass-it-on fool"): the defender may pass the attack on (see <see cref="Transfer"/>).</summary>
+    public bool Transfers { get; }
+
+    public DurakRules(int players, Random rng, bool transfers = false)
     {
         if (players is < 2 or > 6) throw new ArgumentOutOfRangeException(nameof(players));
         Players = players;
+        Transfers = transfers;
         Deck = Enumerable.Range(0, DeckSize).OrderBy(_ => rng.Next()).ToList();
         TrumpCard = Deck[0];
         TrumpSuit = Suit(TrumpCard);
@@ -147,6 +153,32 @@ public sealed class DurakRules
         Array.Clear(Done);
         Changed();
         AutoEnd();
+        return true;
+    }
+
+    /// <summary>
+    /// Perevodnoy: whether the defender may pass the attack on with <paramref name="card"/>: nothing beaten yet, the
+    /// card's rank the attack's, and the next player able to answer every card (and the bout's limit not passed).
+    /// </summary>
+    public bool CanTransfer(int seat, int card)
+    {
+        if (!Transfers || Over || seat != Defender || Taking || Table.Count == 0 || Table.Any(p => p.Beaten)) return false;
+        if (!Hands[seat].Contains(card) || Rank(card) != Rank(Table[0].Attack)) return false;
+        int next = Next(seat), cards = Table.Count + 1;
+        return next != seat && cards <= (Bout == 1 ? 5 : HandSize) && cards <= Hands[next].Count;
+    }
+
+    /// <summary>The defender lays <paramref name="card"/> beside the attack and passes it on: the next player now defends.</summary>
+    public bool Transfer(int seat, int card)
+    {
+        if (!CanTransfer(seat, card)) return false;
+        Hands[seat].Remove(card);
+        Table.Add(new Pair { Attack = card });
+        Attacker = seat;
+        Defender = Next(seat);
+        Limit = Math.Min(Bout == 1 ? 5 : HandSize, Hands[Defender].Count);
+        Array.Clear(Done);
+        Changed();
         return true;
     }
 
@@ -238,7 +270,7 @@ public sealed class DurakRules
 
     /// <summary>
     /// The computer's next action for <paramref name="seat"/>, or null if it has nothing to do right now.
-    /// Kinds: "attack" (card), "defend" (index, card), "take", "pass".
+    /// Kinds: "attack" (card), "defend" (index, card), "transfer" (card), "take", "pass".
     /// </summary>
     public (string Kind, int Card, int Index)? CpuAction(int seat)
     {
@@ -247,6 +279,9 @@ public sealed class DurakRules
         if (seat == Defender)
         {
             if (Taking || Unbeaten == 0) return null;
+            // Perevodnoy: pass it on with the cheapest card of the rank (a trump only once the deck runs low)
+            int pass = hand.Where(c => CanTransfer(seat, c)).OrderBy(Worth).DefaultIfEmpty(-1).First();
+            if (pass >= 0 && (Suit(pass) != TrumpSuit || Deck.Count <= 6)) return ("transfer", pass, -1);
             // beat the strongest unbeaten card first with the cheapest card that does it
             var used = new HashSet<int>();
             (int Index, int Card)? first = null;
@@ -282,6 +317,7 @@ public sealed class DurakRules
     {
         "attack" => Attack(seat, card),
         "defend" => Defend(seat, index, card),
+        "transfer" => Transfer(seat, card),
         "take" => Take(seat),
         "pass" => Pass(seat),
         _ => false,

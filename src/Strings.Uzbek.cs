@@ -1585,5 +1585,12 @@ public static partial class Strings
         ["Stone cold"] = "Sovuqqon",
         ["Beat the Hard computer in a Dominoes match"] = "Dominoda «Qiyin» darajadagi kompyuterni yuting",
         ["Lay {0} tiles in Dominoes"] = "«Domino»da {0} ta tosh qo'ying",
+
+        // perevodnoy
+        ["Beat each card, lay one of the same rank to pass it on, or take"] = "Har bir kartani uring, o'tkazish uchun xuddi shu qiymatdagi kartani qo'ying yoki oling",
+        ["Variant: Perevodnoy (pass it on)"] = "Turi: o'tkazma",
+        ["Variant: Podkidnoy (throw-in)"] = "Turi: tashlama",
+        ["Not me!"] = "Men emas!",
+        ["Pass an attack on 10 times in Perevodnoy"] = "O'tkazma durakda hujumni 10 marta o'tkazing",
     };
 }

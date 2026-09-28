@@ -105,6 +105,7 @@ public static class Achievements
         new("seabattle-win", "seabattle", "Admiral", "Win a game of Sea Battle", "seabattle.wins", 1),
         new("durak-win", "durak", "Not the fool", "Get rid of your cards before someone else in Durak", "durak.wins", 1),
         new("durak-ten", "durak", "Card shark", "Escape being the durak 10 times", "durak.wins", 10),
+        new("durak-transfer", "durak", "Not me!", "Pass an attack on 10 times in Perevodnoy", "durak.transfers", 10),
         new("memory-win", "memory", "Total recall", "Clear a Memory board", "memory.wins", 1),
         new("memory-pairs", "memory", "Matchmaker", "Find 100 pairs", "memory.pairs", 100),
 

@@ -1585,5 +1585,12 @@ public static partial class Strings
         ["Stone cold"] = "Хладнокровие",
         ["Beat the Hard computer in a Dominoes match"] = "Обыграйте в домино компьютер на уровне «Сложно»",
         ["Lay {0} tiles in Dominoes"] = "Выложите {0} костяшек в «Домино»",
+
+        // perevodnoy
+        ["Beat each card, lay one of the same rank to pass it on, or take"] = "Отбейте каждую карту, положите карту того же достоинства, чтобы перевести, или возьмите",
+        ["Variant: Perevodnoy (pass it on)"] = "Вариант: переводной",
+        ["Variant: Podkidnoy (throw-in)"] = "Вариант: подкидной",
+        ["Not me!"] = "Не я!",
+        ["Pass an attack on 10 times in Perevodnoy"] = "Переведите атаку 10 раз в переводного дурака",
     };
 }

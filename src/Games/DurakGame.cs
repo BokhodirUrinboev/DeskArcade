@@ -278,6 +278,8 @@ public sealed class DurakView
     public int Version { get; set; }
     /// <summary>The last action number the host has handled from this player.</summary>
     public int Ack { get; set; }
+    /// <summary>Perevodnoy: the defender may pass the attack on (see <see cref="DurakRules.Transfers"/>).</summary>
+    public bool Transfers { get; set; }
 
     public int Players => Names.Length;
     public int Unbeaten => Table.Count(p => p[1] < 0);
@@ -288,8 +290,17 @@ public sealed class DurakView
         Counts = r.Hands.Select(h => h.Count).ToArray(), Table = r.Table.Select(p => new[] { p.Attack, p.Defense }).ToList(),
         TrumpCard = r.TrumpCard, TrumpSuit = r.TrumpSuit, Deck = r.Deck.Count, Discarded = r.Discarded,
         Attacker = r.Attacker, Defender = r.Defender, Taking = r.Taking, Done = r.Done.ToArray(), Out = r.Out.ToArray(),
-        Limit = r.Limit, Over = r.Over, Durak = r.Durak, Version = r.Version, Ack = ack,
+        Limit = r.Limit, Over = r.Over, Durak = r.Durak, Version = r.Version, Ack = ack, Transfers = r.Transfers,
     };
+
+    /// <summary>Perevodnoy: whether <paramref name="card"/> looks able to pass the attack on (the host's rules have the last word).</summary>
+    public bool CanTransfer(int card)
+    {
+        if (!Transfers || Over || Seat != Defender || Taking || Table.Count == 0 || Table.Any(p => p[1] >= 0)) return false;
+        if (DurakRules.Rank(card) != DurakRules.Rank(Table[0][0])) return false;
+        int next = CardTable.NextSeat(Seat, Players, 1, Out);
+        return next != Seat && next < Counts.Length && Counts[next] >= Table.Count + 1 && Table.Count < DurakRules.HandSize;
+    }
 
     public bool Beats(int defense, int attack) =>
         DurakRules.Suit(defense) == DurakRules.Suit(attack) ? DurakRules.Rank(defense) > DurakRules.Rank(attack) : DurakRules.Suit(defense) == TrumpSuit;
@@ -365,6 +376,7 @@ public sealed class DurakGame : MiniGame, IRoomGame
     string _drawnPanel = "";
     int _bridgedSession = -1; // the LAN session this table last opened a room for
     bool _announced, _demo;
+    bool _transfers; // Perevodnoy for the games this table deals (a guest follows the host's)
     Rect _area;  // the table on the screen
     Rect _table; // the same, in table coordinates (everything is drawn in these and the root is moved)
     Vec2 _origin;
@@ -384,6 +396,7 @@ public sealed class DurakGame : MiniGame, IRoomGame
         _room.Changed += () => Avalonia.Threading.Dispatcher.UIThread.Post(OnRoomChanged);
         _room.MessageArrived += () => Avalonia.Threading.Dispatcher.UIThread.Post(Host.Wake);
         _hostTimer.Tick += (_, _) => HostTick();
+        _transfers = host.Settings.Levels.TryGetValue("durak.transfer", out int t) && t == 1;
     }
 
     /// <summary>The host's game loop: guests' moves, computer turns and views, whatever the overlay shows.</summary>
@@ -442,6 +455,7 @@ public sealed class DurakGame : MiniGame, IRoomGame
         if (v.Out[v.Seat]) return L.T("You're out of cards · watching the others finish");
         if (v.Seat == v.Defender)
             return v.Taking ? L.T("You take the cards · the others may still throw in")
+                : v.Unbeaten > 0 && v.Transfers && v.Table.All(p => p[1] < 0) ? L.T("Beat each card, lay one of the same rank to pass it on, or take")
                 : v.Unbeaten > 0 ? L.T("Beat each card (click a card on the table first to choose) or take") : L.F("{0} may throw in more", Name(v.Attacker));
         if (v.Table.Count == 0)
             return v.Seat == v.Attacker ? L.F("Your attack on {0} · play any card", Name(v.Defender)) : L.F("{0} attacks {1}", Name(v.Attacker), Name(v.Defender));
@@ -520,7 +534,7 @@ public sealed class DurakGame : MiniGame, IRoomGame
 
     void NewDeal()
     {
-        _rules = new DurakRules(_names.Length, Rng);
+        _rules = new DurakRules(_names.Length, Rng, _transfers);
         // action numbers carry on across deals, so a late copy of a move from the last deal can't count in this one
         if (_lastSeq.Length != _names.Length) _lastSeq = new int[_names.Length];
         if (_dropped.Length != _names.Length) _dropped = new bool[_names.Length];
@@ -570,6 +584,12 @@ public sealed class DurakGame : MiniGame, IRoomGame
         if (v.Seat == v.Defender)
         {
             if (v.Taking) return;
+            if (_target < 0 && v.CanTransfer(card)) // a card of the attack's rank passes it on (pick a table card first to beat with it instead)
+            {
+                if (!_demo) Host.Stats.Add("durak.transfers");
+                Do("transfer", card, -1);
+                return;
+            }
             int index = _target >= 0 && _target < v.Table.Count && v.Table[_target][1] < 0 && v.Beats(card, v.Table[_target][0]) ? _target
                 : v.Table.FindIndex(p => p[1] < 0 && v.Beats(card, p[0]));
             if (index < 0)
@@ -588,7 +608,7 @@ public sealed class DurakGame : MiniGame, IRoomGame
         if (_mode == Mode.Guest) SendAction(kind, card, index);
         else if (_rules != null && _rules.Act(_view!.Seat, kind, card, index))
         {
-            Host.Sound.Play(kind == "take" ? "whoosh" : "board", 0.45, 1.5);
+            Host.Sound.Play(kind is "take" or "transfer" ? "whoosh" : "board", 0.45, 1.5);
             _cpuT = CpuDelay;
             RefreshView();
         }
@@ -863,7 +883,7 @@ public sealed class DurakGame : MiniGame, IRoomGame
     // ------------------------------------------------------------------ drawing
 
     /// <summary>What the start panel shows depends on: the room's state and who is in it.</summary>
-    string PanelKey() => $"{_mode}|{_room.State}|{_room.Code}|{string.Join(",", _room.Seats().Select(s => s.Name + s.Connected))}";
+    string PanelKey() => $"{_mode}|{_room.State}|{_room.Code}|{_transfers}|{string.Join(",", _room.Seats().Select(s => s.Name + s.Connected))}";
 
     /// <summary>
     /// Lays the table out for the current view. The static parts are drawn afresh; the cards are placed through
@@ -941,6 +961,7 @@ public sealed class DurakGame : MiniGame, IRoomGame
             }
             Button(L.T("Room setup…"), a.Center.X, y + 70, 260, OpenSetup);
             Button(L.T("Leave the room"), a.Center.X, y + 130, 200, LeaveRoom);
+            VariantButton(y + 190);
             return;
         }
         if (_mode == Mode.Guest && _room.State is RoomState.Joining or RoomState.Joined)
@@ -955,6 +976,20 @@ public sealed class DurakGame : MiniGame, IRoomGame
         }
         Button(L.T("Play with co-workers…"), a.Center.X, y + 70, 260, OpenSetup);
         if (_mode is Mode.Guest or Mode.Hosting) Button(L.T("Leave the room"), a.Center.X, y + 130, 200, LeaveRoom);
+        else VariantButton(y + 130);
+    }
+
+    /// <summary>Podkidnoy or Perevodnoy for the next deal; the choice is remembered.</summary>
+    void VariantButton(double y)
+    {
+        Button(_transfers ? L.T("Variant: Perevodnoy (pass it on)") : L.T("Variant: Podkidnoy (throw-in)"), _table.Center.X, y, 340, () =>
+        {
+            _transfers = !_transfers;
+            Host.Settings.Levels["durak.transfer"] = _transfers ? 1 : 0;
+            Host.SaveSettings();
+            Host.Sound.Play("click", 0.3, 1.3);
+            Changed();
+        });
     }
 
     void OpenSetup() => SetupRequested?.Invoke();
