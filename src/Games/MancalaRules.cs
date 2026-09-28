@@ -120,13 +120,13 @@ public sealed class MancalaRules
     {
         int side = Turn, best = -1;
         double bestValue = double.NegativeInfinity;
+        Span<int> next = stackalloc int[14];
         foreach (int p in LegalPits().OrderBy(_ => rng.Next()))
         {
-            var next = Clone();
-            next.Play(p);
-            double v = next.Turn == side && !next.Over
-                ? Search(next, depth, double.NegativeInfinity, double.PositiveInfinity, side) // a free turn: still ours
-                : Search(next, depth - 1, double.NegativeInfinity, double.PositiveInfinity, side);
+            _b.CopyTo(next);
+            int after = Sow(next, side, p);
+            // a free turn is still ours, and does not use up the depth; only a better move than the best so far matters
+            double v = Search(next, after, after == side ? depth : depth - 1, bestValue, double.PositiveInfinity, side);
             if (v > bestValue)
             {
                 bestValue = v;
@@ -136,37 +136,82 @@ public sealed class MancalaRules
         return best;
     }
 
-    static double Search(MancalaRules g, int depth, double alpha, double beta, int me)
+    /// <summary>
+    /// Alpha-beta over bare boards, which it copies on the stack: no allocations, so Expert's eight moves stay quick on the
+    /// UI thread. Moves that earn a free turn are tried first, as they are most often the best and cut the rest short.
+    /// </summary>
+    static double Search(ReadOnlySpan<int> b, int turn, int depth, double alpha, double beta, int me)
     {
-        if (g.Over || depth <= 0) return Value(g, me);
-        bool mine = g.Turn == me;
+        if (turn < 0 || depth <= 0) return Value(b, turn < 0, me);
+        bool mine = turn == me;
         double best = mine ? double.NegativeInfinity : double.PositiveInfinity;
-        foreach (int p in g.LegalPits())
+        Span<int> next = stackalloc int[14];
+        for (int pass = 0; pass < 2; pass++)
         {
-            var next = g.Clone();
-            next.Play(p);
-            double v = Search(next, next.Turn == g.Turn && !next.Over ? depth : depth - 1, alpha, beta, me);
-            if (mine)
+            for (int p = Pits - 1; p >= 0; p--)
             {
-                best = Math.Max(best, v);
-                alpha = Math.Max(alpha, v);
+                int seeds = b[turn * 7 + p];
+                if (seeds == 0 || (seeds == Pits - p) != (pass == 0)) continue; // pass 0: the free turns
+                b.CopyTo(next);
+                int after = Sow(next, turn, p);
+                double v = Search(next, after, after == turn ? depth : depth - 1, alpha, beta, me);
+                if (mine)
+                {
+                    best = Math.Max(best, v);
+                    alpha = Math.Max(alpha, v);
+                }
+                else
+                {
+                    best = Math.Min(best, v);
+                    beta = Math.Min(beta, v);
+                }
+                if (beta <= alpha) return best;
             }
-            else
-            {
-                best = Math.Min(best, v);
-                beta = Math.Min(beta, v);
-            }
-            if (beta <= alpha) break;
         }
         return best;
     }
 
-    /// <summary>The store difference, with a little weight for seeds still on this side of the board.</summary>
-    static double Value(MancalaRules g, int me)
+    /// <summary>
+    /// <see cref="Play"/> on a bare board, for the search: sows <paramref name="side"/>'s <paramref name="pit"/> and
+    /// returns the side to move next, or -1 once the game is over (the last seeds swept into their stores).
+    /// </summary>
+    static int Sow(Span<int> b, int side, int pit)
     {
-        double stores = g.Score(me) - g.Score(1 - me);
-        if (g.Over) return stores * 100;
-        double side = Enumerable.Range(0, Pits).Sum(p => g[PitOf(me, p)]) - Enumerable.Range(0, Pits).Sum(p => g[PitOf(1 - me, p)]);
+        int from = side * 7 + pit, seeds = b[from], store = side == 0 ? 6 : 13, skip = side == 0 ? 13 : 6, at = from;
+        b[from] = 0;
+        while (seeds > 0)
+        {
+            at = at == 13 ? 0 : at + 1;
+            if (at == skip) continue;
+            b[at]++;
+            seeds--;
+        }
+        if (at != store && (at < 7 ? 0 : 1) == side && b[at] == 1 && b[12 - at] > 0)
+        {
+            b[store] += b[12 - at] + 1;
+            b[12 - at] = 0;
+            b[at] = 0;
+        }
+        int left0 = 0, left1 = 0;
+        for (int p = 0; p < Pits; p++)
+        {
+            left0 += b[p];
+            left1 += b[7 + p];
+        }
+        if (left0 > 0 && left1 > 0) return at == store ? side : 1 - side;
+        for (int p = 0; p < Pits; p++) b[p] = b[7 + p] = 0;
+        b[6] += left0;
+        b[13] += left1;
+        return -1;
+    }
+
+    /// <summary>The store difference, with a little weight for seeds still on this side of the board.</summary>
+    static double Value(ReadOnlySpan<int> b, bool over, int me)
+    {
+        double stores = b[Store(me)] - b[Store(1 - me)];
+        if (over) return stores * 100;
+        int side = 0;
+        for (int p = 0; p < Pits; p++) side += b[PitOf(me, p)] - b[PitOf(1 - me, p)];
         return stores + side * 0.1;
     }
 }
