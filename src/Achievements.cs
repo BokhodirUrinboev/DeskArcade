@@ -183,6 +183,10 @@ public static class Achievements
         new("backgammon-win", "backgammon", "Borne off", "Win a game of Backgammon", "backgammon.wins", 1),
         new("backgammon-gammon", "backgammon", "Gammon", "Win before the other side bears off a single checker", "backgammon.gammons", 1),
         new("backgammon-hard", "backgammon", "Backgammon master", "Beat the Hard computer at Backgammon", "backgammon.hardwins", 1),
+
+        new("dominoes-out", "dominoes", "Domino!", "Lay your last tile and go out", "dominoes.outs", 1),
+        new("dominoes-win", "dominoes", "First to fifty", "Win a match of Dominoes", "dominoes.wins", 1),
+        new("dominoes-hard", "dominoes", "Stone cold", "Beat the Hard computer in a Dominoes match", "dominoes.hardwins", 1),
         new("codebreaker-win", "codebreaker", "Code cracked", "Break a code", "codebreaker.wins", 1),
         new("codebreaker-fast", "codebreaker", "Mind reader", "Break a code in 4 guesses or fewer", "codebreaker.fast", 1),
         new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),

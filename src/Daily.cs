@@ -62,6 +62,7 @@ public sealed class Daily
         new("bingo", "bingo.squares", 3, "Dab {0} squares in Bingo of Work"),
         new("kite", "kite.clouds", 15, "Catch {0} clouds with the Kite"),
         new("backgammon", "backgammon.off", 15, "Bear off {0} checkers in Backgammon"),
+        new("dominoes", "dominoes.played", 20, "Lay {0} tiles in Dominoes"),
     };
 
     readonly Settings _settings;
