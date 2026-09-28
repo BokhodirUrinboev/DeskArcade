@@ -1254,5 +1254,23 @@ public static partial class Strings
         ["{0} won · finish the text for your speed"] = "{0} yutdi · tezligingizni bilish uchun matnni oxirigacha tering",
         ["You won! Click the text for the next race"] = "G'alaba! Keyingi poyga uchun matnni bosing",
         ["You won!"] = "G'alaba!",
+        // word rain
+        ["Word Rain"] = "So'z yomg'iri",
+        ["click the typewriter, then type the falling words — don't let them reach the taskbar"] = "yozuv mashinkasini bosing va tushayotgan so'zlarni tering — ularni vazifalar paneliga yetkazmang",
+        ["Paused · click the typewriter to go on"] = "Pauza · davom ettirish uchun yozuv mashinkasini bosing",
+        ["Level {0} · lives {1} · combo ×{2}"] = "Daraja {0} · jon {1} · seriya ×{2}",
+        ["Game over · {0} words · click the typewriter to play again"] = "O'yin tugadi · {0} ta so'z · qayta o'ynash uchun mashinkani bosing",
+        ["Click the typewriter to start · {0}"] = "Boshlash uchun yozuv mashinkasini bosing · {0}",
+        ["{0} words · level {1} · {2} points"] = "{0} ta so'z · daraja {1} · {2} ochko",
+        ["LEVEL {0}"] = "DARAJA {0}",
+        ["faster, and longer words"] = "tezroq, so'zlar esa uzunroq",
+        ["SPLASH!"] = "SHALOP!",
+        ["Weather report"] = "Ob-havo ma'lumoti",
+        ["Zap 250 falling words"] = "250 ta tushayotgan so'zni urib tushiring",
+        ["Monsoon"] = "Musson",
+        ["Reach level 8 in Word Rain"] = "«So'z yomg'iri»da 8-darajaga yeting",
+        ["Clear skies"] = "Musaffo osmon",
+        ["Zap 25 words in a row without a miss"] = "Ketma-ket 25 ta so'zni xatosiz urib tushiring",
+        ["Zap {0} words in Word Rain"] = "«So'z yomg'iri»da {0} ta so'zni urib tushiring",
     };
 }

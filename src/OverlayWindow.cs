@@ -239,6 +239,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new PinballGame(this));
         _games.Add(new MarbleGame(this));
         _games.Add(new TypingRaceGame(this));
+        _games.Add(new WordRainGame(this));
         _games.Add(new PetGame(this));
         StartPetCompany();
 
@@ -671,6 +672,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "pinball" => L.T("click the ball to serve — press by a flipper to flip it, right-click flips both"),
         "marble" => L.T("drag ramps and bumpers out of the tray, then click the funnel — land the marble in the cup"),
         "typing" => L.T("click the text and type it — the first car over the line wins"),
+        "rain" => L.T("click the typewriter, then type the falling words — don't let them reach the taskbar"),
         _ => "",
     };
 

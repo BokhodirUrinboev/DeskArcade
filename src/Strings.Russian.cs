@@ -1254,5 +1254,23 @@ public static partial class Strings
         ["{0} won · finish the text for your speed"] = "Победа за {0} · допечатайте текст, чтобы узнать свою скорость",
         ["You won! Click the text for the next race"] = "Победа! Нажмите на текст для следующей гонки",
         ["You won!"] = "Победа!",
+        // word rain
+        ["Word Rain"] = "Дождь из слов",
+        ["click the typewriter, then type the falling words — don't let them reach the taskbar"] = "нажмите на пишущую машинку и печатайте падающие слова — не дайте им долететь до панели задач",
+        ["Paused · click the typewriter to go on"] = "Пауза · нажмите на пишущую машинку, чтобы продолжить",
+        ["Level {0} · lives {1} · combo ×{2}"] = "Уровень {0} · жизни {1} · серия ×{2}",
+        ["Game over · {0} words · click the typewriter to play again"] = "Игра окончена · слов: {0} · нажмите на машинку, чтобы сыграть снова",
+        ["Click the typewriter to start · {0}"] = "Нажмите на пишущую машинку, чтобы начать · {0}",
+        ["{0} words · level {1} · {2} points"] = "слов: {0} · уровень {1} · очков: {2}",
+        ["LEVEL {0}"] = "УРОВЕНЬ {0}",
+        ["faster, and longer words"] = "быстрее, и слова длиннее",
+        ["SPLASH!"] = "ПЛЮХ!",
+        ["Weather report"] = "Прогноз погоды",
+        ["Zap 250 falling words"] = "Собейте 250 падающих слов",
+        ["Monsoon"] = "Муссон",
+        ["Reach level 8 in Word Rain"] = "Дойдите до 8-го уровня в «Дожде из слов»",
+        ["Clear skies"] = "Ясное небо",
+        ["Zap 25 words in a row without a miss"] = "Собейте 25 слов подряд без промаха",
+        ["Zap {0} words in Word Rain"] = "Собейте {0} слов в «Дожде из слов»",
     };
 }

@@ -49,6 +49,7 @@ public sealed class Daily
         new("pinball", "pinball.bumpers", 60, "Hit {0} bumpers in Pinball"),
         new("marble", "marble.cups", 5, "Land {0} marbles in the cup in Marble Run"),
         new("typing", "typing.chars", 600, "Type {0} characters in Typing Race"),
+        new("rain", "rain.words", 40, "Zap {0} words in Word Rain"),
     };
 
     readonly Settings _settings;

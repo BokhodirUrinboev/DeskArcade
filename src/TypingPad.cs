@@ -84,13 +84,22 @@ public sealed class TypingPad : Window
         Focus();
     }
 
-    /// <summary>Centred under the game's panel, or above it when there is no room below; always on the overlay's screen.</summary>
+    /// <summary>
+    /// Centred under the game's panel, on the screen rather than the play area, so under a game standing on the floor it
+    /// goes over the taskbar, where it hides nothing of the game; above the panel when the screen has no room below.
+    /// </summary>
     void Place(Rect near)
     {
-        var arena = _overlay.Arena;
-        double x = Math.Clamp(near.Center.X - PadW / 2, arena.Left + 4, Math.Max(arena.Left + 4, arena.Right - PadW - 4));
-        double y = near.Bottom + 10 + PadH <= arena.Bottom - 4 ? near.Bottom + 10 : Math.Max(arena.Top + 4, near.Top - PadH - 10);
-        Position = _overlay.PointToScreen(new Point(x, y));
+        var top = _overlay.PointToScreen(near.TopLeft);
+        var bottom = _overlay.PointToScreen(near.BottomRight);
+        var screen = _overlay.Screens.ScreenFromPoint(top) ?? _overlay.Screens.Primary;
+        double scaling = screen?.Scaling ?? 1;
+        var bounds = screen?.Bounds ?? new PixelRect(top.X - 2000, top.Y - 2000, 4000, 4000);
+        int w = (int)Math.Ceiling(PadW * scaling), h = (int)Math.Ceiling(PadH * scaling), gap = (int)(10 * scaling);
+        int x = Math.Clamp((top.X + bottom.X - w) / 2, bounds.X + 4, Math.Max(bounds.X + 4, bounds.Right - w - 4));
+        int y = Math.Min(bottom.Y + gap, bounds.Bottom - h);
+        if (y < bottom.Y - 12 * scaling) y = Math.Max(bounds.Y + 4, top.Y - h - gap); // no room below: above instead
+        Position = new PixelPoint(x, y);
     }
 
     void Paint()
