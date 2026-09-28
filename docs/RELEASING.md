@@ -1,8 +1,9 @@
 # Releasing Desk Arcade
 
 This page covers how releases are built and published, every file a release ships, Windows code
-signing, and the manual steps for winget and Flathub. The workflows are
-[`.github/workflows/release.yml`](../.github/workflows/release.yml) and
+signing, publishing to the package managers, and the manual steps for Flathub. The workflows are
+[`.github/workflows/release.yml`](../.github/workflows/release.yml),
+[`.github/workflows/packages.yml`](../.github/workflows/packages.yml) and
 [`.github/workflows/ci.yml`](../.github/workflows/ci.yml).
 
 ## Contents
@@ -12,6 +13,7 @@ signing, and the manual steps for winget and Flathub. The workflows are
 - [Identifiers that must never change](#identifiers-that-must-never-change)
 - [Building packages locally](#building-packages-locally)
 - [Windows code signing](#windows-code-signing)
+- [Package managers](#package-managers)
 - [winget](#winget)
 - [Homebrew and Scoop](#homebrew-and-scoop)
 - [Flatpak and Flathub](#flatpak-and-flathub)
@@ -35,8 +37,10 @@ The **Release** workflow then runs:
 | Windows installers | windows-latest | Publishes the x64, x64 standalone and ARM64 exes and builds their installers. On release tags with SignPath set up, it has SignPath sign the exes before packing and the installers afterwards, then verifies the signatures (see [Windows code signing](#windows-code-signing)) |
 | macOS arm64 / x64 | macos-latest / macos-15-intel | Publishes `osx-arm64` / `osx-x64`, builds `DeskArcade.app`, zips it, then unzips the zip and launch-tests the app (see [macOS](#macos)) |
 | Publish release | ubuntu-latest | Only for tag pushes, and only if every build succeeded: creates the GitHub Release with a download table and generated notes |
+| Package managers | ubuntu-24.04 / windows-latest | `packages.yml`, after the release: pushes the new cask and Scoop manifest to the tap and the bucket, and submits the winget manifests once winget-pkgs has the package (see [Package managers](#package-managers)) |
 
 Only the publish job has `contents: write`; everything else is read-only. The Windows job also has `actions: read`, so SignPath can download the artifacts it signs.
+The package-manager jobs write to other repositories with tokens of their own (see [Package managers](#package-managers)).
 
 **Dry run:** run the Release workflow by hand (Actions → Release → Run workflow) with the version from
 the csproj. It builds and uploads every package as workflow artifacts but publishes nothing.
@@ -63,7 +67,8 @@ to a pull request cancels that PR's older run.
 | `DeskArcade-X.Y.Z-macos-x64.zip` | macOS 14+ on Intel | `DeskArcade.app`, ad-hoc signed, not notarized |
 
 All three Windows installers share one AppId, so any of them upgrades any other in place. The Flatpak
-and the winget manifests are not release artifacts; they are built or submitted by hand (below).
+and the package-manager manifests are not release artifacts: `packages.yml` publishes the manifests, and
+the Flatpak is built by hand (below).
 
 **In-app updates depend on these names.** The game picks its download by name (`UpdateChecker.AssetName`):
 the Windows setups, `deskarcade_X.Y.Z_amd64.deb` / `_arm64.deb` for a `.deb` install and
@@ -161,6 +166,32 @@ With your own certificate in `Cert:\CurrentUser\My`, run
 `.\build-installer.ps1 -SignCertThumbprint <thumbprint>`: `build.ps1` signs the exe after publishing and
 Inno Setup's `SignTool` directive signs Setup and the uninstaller.
 
+## Package managers
+
+After `release.yml` publishes a release, it runs `packages.yml`:
+
+- **Homebrew and Scoop** (ubuntu-24.04): `packaging/Update-PackageManifests.ps1` downloads the release's
+  macOS zips and Windows installers, fills their version and SHA256 into the cask and the Scoop manifest,
+  and the job pushes them to the tap and the bucket as "Desk Arcade X.Y.Z". When they already have that
+  version, nothing is pushed, but `git push --dry-run` still checks that the token can push.
+- **winget** (windows-latest): `packaging/winget/Update-WingetManifests.ps1` stamps the manifests and a
+  pinned [wingetcreate](https://github.com/microsoft/winget-create) submits them, opening a pull request
+  on microsoft/winget-pkgs from the fork `BokhodirUrinboev/winget-pkgs`. The job skips when winget-pkgs
+  doesn't have the package yet, already has the version, or already has an open pull request for it.
+
+To publish an existing release again (after a failed push, a renewed token, or once winget accepts the
+package), run **Actions → Package managers → Run workflow** with its version.
+
+The jobs write with two repository secrets (Settings → Secrets and variables → Actions). A job whose
+secret is missing skips with a warning; an expired token fails it. Give each token an expiry (a year is
+fine; GitHub emails before it runs out) and renew it by creating a new one the same way and replacing the
+secret.
+
+| Secret | Token | Access |
+|---|---|---|
+| `PACKAGING_TOKEN` | [Fine-grained](https://github.com/settings/personal-access-tokens/new) | Only the repositories `homebrew-tap` and `scoop-bucket`, with Contents: Read and write |
+| `WINGET_TOKEN` | [Classic](https://github.com/settings/tokens/new) | The `public_repo` scope only; wingetcreate doesn't support fine-grained tokens |
+
 ## winget
 
 `packaging/winget/manifests/` holds manifest templates (schema 1.10: version, installer and en-US
@@ -185,40 +216,26 @@ attached to the release: rebuilt installers have different digests.
 **Submitting to winget-pkgs:** the first submission,
 [microsoft/winget-pkgs#437055](https://github.com/microsoft/winget-pkgs/pull/437055) (1.5.0), passed
 validation and waits for the Microsoft CLA to be signed (comment `@microsoft-github-policy-service agree`
-on the pull request) and for a moderator. Steps for each version:
+on the pull request) and for a moderator. Until it is merged, `packages.yml` skips winget. After that,
+every release is submitted for you; to bring winget up to date with the releases made in the meantime,
+run the Package managers workflow by hand with the latest version.
 
-1. Fork [microsoft/winget-pkgs](https://github.com/microsoft/winget-pkgs).
-2. Copy the three files from `dist\winget\X.Y.Z` to
-   `manifests/i/ImperiumGames/DeskArcade/X.Y.Z/` in the fork.
-3. Run `winget validate --manifest manifests/i/ImperiumGames/DeskArcade/X.Y.Z` and open a pull request.
-   The pipeline installs the package in a sandbox; the first submission of a new package also gets a
-   manual review.
-
-Alternatively, [wingetcreate](https://github.com/microsoft/winget-create) does the fork and pull request
-for you: `wingetcreate submit --token <GitHub PAT> dist\winget\X.Y.Z`. Once the package is accepted,
-later versions can use `wingetcreate update ImperiumGames.DeskArcade --version X.Y.Z --urls <x64 url>
-<arm64 url> --submit`.
+To submit by hand instead, `wingetcreate submit dist\winget\X.Y.Z` signs in to GitHub in the browser
+and opens the pull request from your fork. The pipeline installs the package in a sandbox before a
+moderator merges it.
 
 ## Homebrew and Scoop
 
 `packaging/homebrew/deskarcade.rb` (a cask for the macOS zips) and `packaging/scoop/deskarcade.json` (the
-Inno Setup installers, which Scoop unpacks without running them) are stamped for the current release.
-For a new release:
+Inno Setup installers, which Scoop unpacks without running them) are the templates that `packages.yml`
+stamps and publishes after each release (see [Package managers](#package-managers)). Their version and
+digests are from whichever release was last stamped into them; the script replaces both, so the
+templates don't need updating after a release. To stamp them by hand:
 
 ```powershell
 # Downloads the macOS zips and Windows installers, fills in version, URLs and SHA256,
 # and writes dist\homebrew\deskarcade.rb and dist\scoop\deskarcade.json
 .\packaging\Update-PackageManifests.ps1 -Version 1.4.0
-```
-
-Copy the stamped files back over the templates so the repository always holds the current release,
-then publish them:
-
-```bash
-# in a clone of each repository
-cp dist/homebrew/deskarcade.rb  <homebrew-tap>/Casks/deskarcade.rb
-cp dist/scoop/deskarcade.json   <scoop-bucket>/bucket/deskarcade.json
-# commit "Desk Arcade X.Y.Z" in both and push
 ```
 
 **Published** since 1.7.0:

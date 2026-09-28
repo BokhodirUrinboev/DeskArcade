@@ -7,7 +7,8 @@
 # Reads the templates in packaging\winget\manifests and writes the stamped copies to
 # dist\winget\<version> (or -OutDir), then runs "winget validate" on them when winget is available.
 # The installer file names come from the template URLs, with the template version replaced.
-# Submitting to winget-pkgs is a separate, manual step: see docs/RELEASING.md.
+# After each release, .github/workflows/packages.yml runs this and submits the result to winget-pkgs once the
+# package is there: see docs/RELEASING.md.
 param(
     [Parameter(Mandatory)][string]$Version,
     [string]$InstallerDir,
