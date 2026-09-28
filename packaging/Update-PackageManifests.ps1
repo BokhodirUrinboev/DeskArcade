@@ -6,7 +6,8 @@
 #
 # Reads packaging\homebrew\deskarcade.rb and packaging\scoop\deskarcade.json and writes the stamped copies to
 # dist\homebrew and dist\scoop (or -OutDir). The templates keep their own version and placeholder hashes.
-# Publishing them to the Homebrew tap and the Scoop bucket is a manual step: see docs/RELEASING.md.
+# After each release, .github/workflows/packages.yml runs this on Linux and pushes the stamped copies to the
+# Homebrew tap and the Scoop bucket: see docs/RELEASING.md. Paths use '/', which Windows accepts too.
 param(
     [Parameter(Mandatory)][string]$Version,
     [string]$AssetDir,
@@ -15,7 +16,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 if ($Version -notmatch '^\d+\.\d+\.\d+$') { throw "Version must look like 1.2.3 (got '$Version')" }
-if (-not $OutDir) { $OutDir = Join-Path $PSScriptRoot '..\dist' }
+if (-not $OutDir) { $OutDir = Join-Path (Split-Path $PSScriptRoot) 'dist' }
 $base = "https://github.com/BokhodirUrinboev/DeskArcade/releases/download/v$Version"
 
 function Get-AssetHash([string]$name) {
@@ -37,18 +38,18 @@ function Get-AssetHash([string]$name) {
 $utf8 = New-Object System.Text.UTF8Encoding $false
 
 # Homebrew: one zip per architecture.
-$cask = Get-Content -Raw (Join-Path $PSScriptRoot 'homebrew\deskarcade.rb')
+$cask = Get-Content -Raw (Join-Path $PSScriptRoot 'homebrew/deskarcade.rb')
 $old = [regex]::Match($cask, 'version "([^"]+)"').Groups[1].Value
 $cask = $cask.Replace("version `"$old`"", "version `"$Version`"")
 # only the 64-hex digests: "arch arm: "arm64", intel: "x64"" uses the same keys
 $cask = [regex]::Replace($cask, 'arm:\s+"[0-9a-f]{64}"', "arm:   `"$(Get-AssetHash "DeskArcade-$Version-macos-arm64.zip")`"")
 $cask = [regex]::Replace($cask, 'intel: "[0-9a-f]{64}"', "intel: `"$(Get-AssetHash "DeskArcade-$Version-macos-x64.zip")`"")
 New-Item -ItemType Directory -Force (Join-Path $OutDir 'homebrew') | Out-Null
-[IO.File]::WriteAllText((Join-Path $OutDir 'homebrew\deskarcade.rb'), $cask, $utf8)
+[IO.File]::WriteAllText((Join-Path $OutDir 'homebrew/deskarcade.rb'), $cask, $utf8)
 
 # Scoop: the Inno Setup installers, which Scoop unpacks without running them.
 # Edited as text, not through ConvertTo-Json, which would reflow the whole file in Windows PowerShell.
-$scoop = Get-Content -Raw (Join-Path $PSScriptRoot 'scoop\deskarcade.json')
+$scoop = Get-Content -Raw (Join-Path $PSScriptRoot 'scoop/deskarcade.json')
 $old = [regex]::Match($scoop, '"version": "([^"]+)"').Groups[1].Value
 $scoop = $scoop.Replace("`"version`": `"$old`"", "`"version`": `"$Version`"")
 $scoop = $scoop.Replace("download/v$old/DeskArcade-Setup-$old-", "download/v$Version/DeskArcade-Setup-$Version-")
@@ -58,6 +59,6 @@ foreach ($arch in @(@('64bit', 'standalone'), @('arm64', 'arm64'))) {
 }
 if ($scoop -notmatch "`"version`": `"$([regex]::Escape($Version))`"") { throw 'Could not stamp the Scoop manifest' }
 New-Item -ItemType Directory -Force (Join-Path $OutDir 'scoop') | Out-Null
-[IO.File]::WriteAllText((Join-Path $OutDir 'scoop\deskarcade.json'), $scoop, $utf8)
+[IO.File]::WriteAllText((Join-Path $OutDir 'scoop/deskarcade.json'), $scoop, $utf8)
 
-Write-Host "Wrote $(Join-Path $OutDir 'homebrew\deskarcade.rb') and $(Join-Path $OutDir 'scoop\deskarcade.json')"
+Write-Host "Wrote $(Join-Path $OutDir 'homebrew/deskarcade.rb') and $(Join-Path $OutDir 'scoop/deskarcade.json')"
