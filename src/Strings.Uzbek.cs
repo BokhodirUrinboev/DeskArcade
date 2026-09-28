@@ -1601,5 +1601,24 @@ public static partial class Strings
         ["the host picks"] = "o'yin egasi tanlaydi",
         ["Broadside"] = "Bort zalpi",
         ["Win a game of Sea Battle with salvo rules"] = "Dengiz jangida zalp qoidalari bilan yuting",
+
+        // window jenga
+        ["Window Jenga"] = "Oynadagi Jenga",
+        ["drag a block out of the tower slowly, then lay it on top — don't let the weight lean past what is left"] = "minoradan bir g'ishtchani sekin torting va tepasiga qo'ying — og'irlik qolgan g'ishtchalardan chiqib ketmasin",
+        ["The tower fell · click its base for a new one"] = "Minora qulab tushdi · yangisi uchun uning asosini bosing",
+        ["Time's up and it still stands · click its base for a new one"] = "Vaqt tugadi, minora esa turibdi · yangisi uchun uning asosini bosing",
+        ["Click a place on top to lay the block"] = "G'ishtchani qo'yish uchun tepadagi joyni bosing",
+        ["{0}s · drag a block out slowly, then lay it on top"] = "{0} s · g'ishtchani sekin torting va tepasiga qo'ying",
+        ["Drag a block out slowly, then click the top to lay it"] = "G'ishtchani sekin torting, so'ng qo'yish uchun tepani bosing",
+        ["STILL STANDING!"] = "HALI TURIBDI!",
+        ["{0} blocks moved"] = "{0} ta g'ishtcha ko'chirildi",
+        ["CRASH!"] = "QULADI!",
+        ["Careful now"] = "Ehtiyot bo'ling",
+        ["Move 10 blocks in one Window Jenga tower"] = "«Oynadagi Jenga»ning bitta minorasida 10 ta g'ishtchani ko'chiring",
+        ["Still standing"] = "Hali turibdi",
+        ["Keep a Window Jenga tower up until the time runs out"] = "«Oynadagi Jenga» minorasini vaqt tugaguncha ushlab turing",
+        ["Master builder"] = "Usta quruvchi",
+        ["Move 200 blocks in Window Jenga"] = "«Oynadagi Jenga»da 200 ta g'ishtchani ko'chiring",
+        ["Move {0} blocks in Window Jenga"] = "«Oynadagi Jenga»da {0} ta g'ishtchani ko'chiring",
     };
 }

@@ -1601,5 +1601,24 @@ public static partial class Strings
         ["the host picks"] = "выбирает хозяин игры",
         ["Broadside"] = "Бортовой залп",
         ["Win a game of Sea Battle with salvo rules"] = "Выиграйте морской бой по правилам залпа",
+
+        // window jenga
+        ["Window Jenga"] = "Дженга на окне",
+        ["drag a block out of the tower slowly, then lay it on top — don't let the weight lean past what is left"] = "медленно вытяните брусок из башни и положите его наверх — не дайте весу выйти за оставшиеся бруски",
+        ["The tower fell · click its base for a new one"] = "Башня упала · нажмите на её основание, чтобы построить новую",
+        ["Time's up and it still stands · click its base for a new one"] = "Время вышло, а башня стоит · нажмите на её основание, чтобы построить новую",
+        ["Click a place on top to lay the block"] = "Нажмите на место наверху, чтобы положить брусок",
+        ["{0}s · drag a block out slowly, then lay it on top"] = "{0} с · медленно вытяните брусок и положите его наверх",
+        ["Drag a block out slowly, then click the top to lay it"] = "Медленно вытяните брусок, затем нажмите наверху, чтобы положить его",
+        ["STILL STANDING!"] = "СТОИТ!",
+        ["{0} blocks moved"] = "переложено брусков: {0}",
+        ["CRASH!"] = "ГРОХОТ!",
+        ["Careful now"] = "Осторожно",
+        ["Move 10 blocks in one Window Jenga tower"] = "Переложите 10 брусков в одной башне «Дженги на окне»",
+        ["Still standing"] = "Всё ещё стоит",
+        ["Keep a Window Jenga tower up until the time runs out"] = "Удержите башню «Дженги на окне» до конца времени",
+        ["Master builder"] = "Мастер-строитель",
+        ["Move 200 blocks in Window Jenga"] = "Переложите 200 брусков в «Дженге на окне»",
+        ["Move {0} blocks in Window Jenga"] = "Переложите {0} брусков в «Дженге на окне»",
     };
 }

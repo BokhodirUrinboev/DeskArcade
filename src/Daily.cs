@@ -63,6 +63,7 @@ public sealed class Daily
         new("kite", "kite.clouds", 15, "Catch {0} clouds with the Kite"),
         new("backgammon", "backgammon.off", 15, "Bear off {0} checkers in Backgammon"),
         new("dominoes", "dominoes.played", 20, "Lay {0} tiles in Dominoes"),
+        new("jenga", "jenga.moved", 12, "Move {0} blocks in Window Jenga"),
     };
 
     readonly Settings _settings;

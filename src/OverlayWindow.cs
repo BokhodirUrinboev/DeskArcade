@@ -260,6 +260,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new KiteGame(this));
         _games.Add(new BackgammonGame(this));
         _games.Add(new DominoGame(this));
+        _games.Add(new JengaGame(this));
         _games.Add(new PetGame(this));
         StartPetCompany();
 
@@ -709,6 +710,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "kite" => L.T("click the kite — the string follows your cursor; pull to climb, catch the clouds, dodge the birds"),
         "backgammon" => L.T("click ROLL, then a checker and where it goes — bring all fifteen home and bear them off first"),
         "dominoes" => L.T("click a tile that fits an end of the line on the taskbar — nothing fits? draw from the boneyard"),
+        "jenga" => L.T("drag a block out of the tower slowly, then lay it on top — don't let the weight lean past what is left"),
         _ => "",
     };
 

@@ -189,6 +189,10 @@ public static class Achievements
         new("dominoes-out", "dominoes", "Domino!", "Lay your last tile and go out", "dominoes.outs", 1),
         new("dominoes-win", "dominoes", "First to fifty", "Win a match of Dominoes", "dominoes.wins", 1),
         new("dominoes-hard", "dominoes", "Stone cold", "Beat the Hard computer in a Dominoes match", "dominoes.hardwins", 1),
+
+        new("jenga-10", "jenga", "Careful now", "Move 10 blocks in one Window Jenga tower", "jenga.best", 10),
+        new("jenga-standing", "jenga", "Still standing", "Keep a Window Jenga tower up until the time runs out", "jenga.standing", 1),
+        new("jenga-200", "jenga", "Master builder", "Move 200 blocks in Window Jenga", "jenga.moved", 200),
         new("codebreaker-win", "codebreaker", "Code cracked", "Break a code", "codebreaker.wins", 1),
         new("codebreaker-fast", "codebreaker", "Mind reader", "Break a code in 4 guesses or fewer", "codebreaker.fast", 1),
         new("lan-win", "general", "Office rival", "Beat a co-worker over the LAN", "lan.wins", 1),
