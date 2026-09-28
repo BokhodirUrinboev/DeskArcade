@@ -56,6 +56,7 @@ public sealed class Daily
         new("sudoku", "sudoku.digits", 40, "Fill in {0} digits in Sudoku"),
         new("mancala", "mancala.sown", 60, "Sow {0} seeds in Mancala"),
         new("blackjack", "blackjack.wins", 8, "Win {0} hands of Blackjack"),
+        new("curling", "curling.stones", 16, "Throw {0} stones in Curling"),
     };
 
     readonly Settings _settings;
