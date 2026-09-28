@@ -17,7 +17,9 @@ namespace DeskArcade.Games;
 /// a sunk ship darkens square by square; the enemy's fleet surfaces when the game is over. The grip above
 /// the grids (or a right-drag) moves them. Over the LAN each fleet stays on its own PC: only shots and their
 /// results cross the link, and a shot is re-sent until its answer arrives. The host fires first. The CPU has
-/// four levels, from a random shooter to one that hunts where the most ships could still lie.
+/// four levels, from a random shooter to one that hunts where the most ships could still lie. Under the grids the rules
+/// switch (before the first shot; over the LAN the host's count): classic, or salvo, where each turn is one shot for
+/// every ship the shooter still has afloat, hit or miss.
 /// </summary>
 public sealed class SeaBattleGame : MiniGame
 {
@@ -46,6 +48,8 @@ public sealed class SeaBattleGame : MiniGame
     sbyte[] _chart = new sbyte[N * N], _cpuChart = new sbyte[N * N];
     Phase _phase;
     bool _myTurn, _placed, _demo, _wasLan, _meReady, _peerReady, _revealShown, _quiet;
+    bool _salvo; // salvo rules: a shot per ship afloat each turn, hit or miss
+    int _shotsLeft; // salvo: shots left in the turn being played
     Vec2 _origin;
     double _cell, _cpuIn = -1, _resendT;
     int _gameNo = 1, _shotSeq, _lastAnswered, _pendingSq = -1, _lastShotAtMe = -1, _flights, _lossStreak;
@@ -60,6 +64,7 @@ public sealed class SeaBattleGame : MiniGame
         Layer.Children.Add(_board);
         _handle = new DragHandle(host, Id, Title);
         Layer.Children.Add(_handle.Visual);
+        _salvo = host.Settings.Levels.TryGetValue("seabattle.salvo", out int salvo) && salvo == 1;
     }
 
     public override string Id => "seabattle";
@@ -89,7 +94,9 @@ public sealed class SeaBattleGame : MiniGame
             Phase.Setup when _meReady => L.F("Waiting for {0} to get ready…", Rival),
             Phase.Setup => L.T("Click your grid to move your ships · click the enemy grid to start"),
             Phase.Over => L.T("Game over · click a grid for a rematch"),
-            _ => _myTurn ? L.T("Your shot · click the enemy grid · a hit shoots again") : L.F("{0} is aiming…", Rival),
+            _ => !_myTurn ? L.F("{0} is aiming…", Rival)
+                : _salvo ? L.F("Your salvo · {0} shots left · click the enemy grid", _shotsLeft)
+                : L.T("Your shot · click the enemy grid · a hit shoots again"),
         },
         LanOn ? L.F("Wins {0}", Host.Stats.Get("seabattle.wins"))
             : L.F("Wins {0} · CPU {1}", Host.Stats.Get("seabattle.wins"), L.T(LevelNames[CpuLevel - 1])));
@@ -100,7 +107,9 @@ public sealed class SeaBattleGame : MiniGame
     // _origin, so a drag moves one transform. Screen() converts for hit shapes, the pointer, the grip and the effects.
     Rect MyGrid => new(0, _cell, _cell * N, _cell * N);
     Rect EnemyGrid => new(_cell * (N + 1.5), _cell, _cell * N, _cell * N);
-    Rect Whole => new(-8, -4, _cell * (2 * N + 1.5) + 16, _cell * (N + 1) + 12);
+    Rect Whole => new(-8, -4, _cell * (2 * N + 1.5) + 16, _cell * (N + 2) + 12);
+    /// <summary>The row under the grids that says (and in setup switches) the rules.</summary>
+    Rect RulesRow => new(0, _cell * (N + 1) + _cell * 0.2, _cell * (2 * N + 1.5), _cell * 0.8);
 
     Vec2 Screen(Vec2 board) => board + _origin;
     Rect Screen(Rect board) => new(board.X + _origin.X, board.Y + _origin.Y, board.Width, board.Height);
@@ -108,8 +117,8 @@ public sealed class SeaBattleGame : MiniGame
     public override void Layout()
     {
         var a = Host.Arena;
-        double cell = Math.Floor(Math.Min(Math.Min(a.Width * 0.8 / (2 * N + 1.5), a.Height * 0.7 / (N + 1)), 32));
-        double w = cell * (2 * N + 1.5), h = cell * (N + 1);
+        double cell = Math.Floor(Math.Min(Math.Min(a.Width * 0.8 / (2 * N + 1.5), a.Height * 0.7 / (N + 2)), 32));
+        double w = cell * (2 * N + 1.5), h = cell * (N + 2);
         if (!_placed)
         {
             _placed = true;
@@ -208,6 +217,15 @@ public sealed class SeaBattleGame : MiniGame
             _handle.Begin(p, _origin, anywhere: true); // the grip, or a right-drag anywhere on the grids
             return true;
         }
+        if (_phase == Phase.Setup && !_meReady && (!LanOn || IsHost) && RulesRow.Contains((p - _origin).ToPoint()))
+        {
+            _salvo = !_salvo;
+            Host.Settings.Levels["seabattle.salvo"] = _salvo ? 1 : 0;
+            Host.SaveSettings();
+            Host.Sound.Play("click", 0.3, 1.3);
+            Changed();
+            return false;
+        }
         int mine = CellAt(MyGrid, _cell, p - _origin), theirs = CellAt(EnemyGrid, _cell, p - _origin);
         switch (_phase)
         {
@@ -248,10 +266,17 @@ public sealed class SeaBattleGame : MiniGame
     void Start()
     {
         _phase = Phase.Playing;
-        _myTurn = IsHost;
-        if (!_myTurn && !LanOn) _cpuIn = CpuDelay;
+        StartTurn(mine: IsHost);
         Host.Sound.Play("score", 0.4, 0.8);
         Changed();
+    }
+
+    /// <summary>A turn begins: under salvo rules, one shot for each ship the shooter has afloat (both screens count alike).</summary>
+    void StartTurn(bool mine)
+    {
+        _myTurn = mine;
+        _shotsLeft = SeaTurns.Shots(_salvo, mine ? _fleet.ShipsLeft : EnemyShipsLeft);
+        if (!mine && !LanOn) _cpuIn = CpuDelay;
     }
 
     void Fire(int sq)
@@ -274,11 +299,7 @@ public sealed class SeaBattleGame : MiniGame
         SeaChart.Record(_chart, sq, r);
         if (r.Kind is ShotKind.Sunk or ShotKind.Win) Host.Stats.Add("seabattle.sunk");
         if (r.Kind == ShotKind.Win) GameOver(true);
-        else if (r.Kind == ShotKind.Miss)
-        {
-            _myTurn = false;
-            if (!LanOn) _cpuIn = CpuDelay;
-        }
+        else if (SeaTurns.Passes(_salvo, ref _shotsLeft, r.Kind)) StartTurn(mine: false);
         Shell(atMe: false, sq, r);
         Touched();
     }
@@ -289,7 +310,7 @@ public sealed class SeaBattleGame : MiniGame
         var r = _fleet.Shoot(sq);
         _lastShotAtMe = sq;
         if (r.Kind == ShotKind.Win) GameOver(false);
-        else if (r.Kind == ShotKind.Miss) _myTurn = true;
+        else if (SeaTurns.Passes(_salvo, ref _shotsLeft, r.Kind)) StartTurn(mine: true);
         Shell(atMe: true, sq, r);
         Touched();
         return r;
@@ -377,6 +398,7 @@ public sealed class SeaBattleGame : MiniGame
         if (won)
         {
             Host.Stats.Add("seabattle.wins");
+            if (_salvo) Host.Stats.Add("seabattle.salvowins");
             if (LanOn)
             {
                 Host.Stats.Add("seabattle.lanwins");
@@ -441,7 +463,7 @@ public sealed class SeaBattleGame : MiniGame
                 int sq = SeaChart.NextShot(_cpuChart, Rng, CpuLevel);
                 var r = TakeShot(sq);
                 SeaChart.Record(_cpuChart, sq, r);
-                if (r.Kind is ShotKind.Hit or ShotKind.Sunk) _cpuIn = CpuDelay; // a hit shoots again
+                if (_phase == Phase.Playing && !_myTurn) _cpuIn = CpuDelay; // a hit shoots again (or the salvo goes on)
             }
         }
         if (_demo) DemoStep();
@@ -459,7 +481,7 @@ public sealed class SeaBattleGame : MiniGame
     }
 
     // ------------------------------------------------------------------ LAN
-    // "rd|game"                      ready (repeated while in setup)
+    // "rd|game|salvo"                ready (repeated while in setup); the host's salvo flag (1/0) sets the rules
     // "sh|game|seq|square"           a shot, re-sent until its answer arrives
     // "rs|game|seq|square|kind|ship" the answer (kind m/h/s/w; ship = sunk squares)
     // "nw|game"                      rematch
@@ -480,6 +502,11 @@ public sealed class SeaBattleGame : MiniGame
             switch (f[0])
             {
                 case "rd":
+                    if (!IsHost && f.Length >= 3 && (f[2] == "1") != _salvo)
+                    {
+                        _salvo = f[2] == "1"; // the host's rules
+                        Changed();
+                    }
                     _peerReady = true;
                     if (_meReady && _phase == Phase.Setup) Start();
                     break;
@@ -509,7 +536,7 @@ public sealed class SeaBattleGame : MiniGame
         if (_phase == Phase.Over) Host.Lan.Send($"fl|{_gameNo}|{_fleet.Encode()}");
     }
 
-    void SendReady() => Host.Lan.Send($"rd|{_gameNo}");
+    void SendReady() => Host.Lan.Send($"rd|{_gameNo}|{(_salvo ? 1 : 0)}");
 
     /// <summary>"3,4,5" to squares on the board; false for anything that is not a list of squares (the peer's text is untrusted).</summary>
     static bool TryParseSquares(string text, out int[] squares)
@@ -542,6 +569,7 @@ public sealed class SeaBattleGame : MiniGame
         Label(LanOn ? Host.Lan.PeerName : L.T("Enemy waters"), EnemyGrid);
         DrawGrid(MyGrid);
         DrawGrid(EnemyGrid);
+        DrawRules();
 
         foreach (var ship in _fleet.Ships)
         {
@@ -556,6 +584,28 @@ public sealed class SeaBattleGame : MiniGame
         SyncMarks(force: true);
         DrawReveal(animate: false);
         DrawHints();
+    }
+
+    /// <summary>The rules under the grids; in setup a chip that switches them (the host's, over the LAN).</summary>
+    void DrawRules()
+    {
+        var row = RulesRow;
+        string text = _salvo ? L.T("Salvo rules: one shot for each of your ships afloat") : L.T("Classic rules: a hit shoots again");
+        bool setup = _phase == Phase.Setup && !_meReady;
+        bool mayPick = !LanOn || IsHost;
+        if (setup) text += " · " + (mayPick ? L.T("click to switch") : L.T("the host picks"));
+        double size = Math.Max(10, _cell * 0.42);
+        if (setup && mayPick)
+            _canvas.Children.Add(Place(new Border
+            {
+                Width = row.Width * 0.7, Height = row.Height, CornerRadius = new CornerRadius(row.Height / 2), Background = Art.Brush(70, 90, 140, 200),
+                BorderBrush = Art.Brush(Grid), BorderThickness = new Thickness(1),
+            }, row.Left + row.Width * 0.15, row.Top));
+        _canvas.Children.Add(Place(new TextBlock
+        {
+            Text = text, FontFamily = Fx.Font, FontSize = size, FontWeight = FontWeight.Bold, Foreground = Art.Brush(setup ? Colors.White : Foam),
+            Width = row.Width, TextAlignment = TextAlignment.Center,
+        }, row.Left, row.Top + row.Height / 2 - size * 0.7));
     }
 
     void DrawGrid(Rect g)

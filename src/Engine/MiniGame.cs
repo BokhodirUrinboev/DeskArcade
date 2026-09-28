@@ -37,6 +37,12 @@ public interface IGameHost
     void Wake();
     void SaveSettings();
 
+    /// <summary>A short notice under the scoreboard, e.g. something a game saw happen while another one was on.</summary>
+    void Notice(string title, string sub, Avalonia.Media.Color color);
+
+    /// <summary>Switches to another game, as the game menu would.</summary>
+    void SwitchGame(string id);
+
     /// <summary>
     /// Typing games: opens (or brings back) the small typing window under <paramref name="near"/> (overlay DIPs), which
     /// takes the keyboard and passes what is typed to <paramref name="sink"/> until <see cref="ReleaseKeyboard"/>. A --demo

@@ -209,3 +209,13 @@ public static class SeaChart
         return top[rng.Next(top.Count)];
     }
 }
+
+/// <summary>Whose turn it is: classic rules (a hit shoots again) or salvo (one shot for each ship afloat, hit or miss).</summary>
+public static class SeaTurns
+{
+    /// <summary>Shots in a turn: the shooter's ships afloat under salvo rules (classic turns aren't counted).</summary>
+    public static int Shots(bool salvo, int shipsAfloat) => salvo ? shipsAfloat : 0;
+
+    /// <summary>After a shot that didn't end the game: true when the turn passes to the other side.</summary>
+    public static bool Passes(bool salvo, ref int shotsLeft, ShotKind kind) => salvo ? --shotsLeft <= 0 : kind == ShotKind.Miss;
+}

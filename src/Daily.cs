@@ -54,6 +54,17 @@ public sealed class Daily
         new("asteroids", "asteroids.rocks", 30, "Destroy {0} rocks in Asteroids"),
         new("mines", "mines.cleared", 150, "Open {0} safe cells in Minesweeper"),
         new("sudoku", "sudoku.digits", 40, "Fill in {0} digits in Sudoku"),
+        new("mancala", "mancala.sown", 60, "Sow {0} seeds in Mancala"),
+        new("blackjack", "blackjack.wins", 8, "Win {0} hands of Blackjack"),
+        new("curling", "curling.stones", 16, "Throw {0} stones in Curling"),
+        new("planes", "planes.throws", 12, "Throw {0} paper planes"),
+        new("cups", "cups.sunk", 10, "Sink {0} cups in Ping-Pong Cups"),
+        new("bingo", "bingo.squares", 3, "Dab {0} squares in Bingo of Work"),
+        new("kite", "kite.clouds", 15, "Catch {0} clouds with the Kite"),
+        new("backgammon", "backgammon.off", 15, "Bear off {0} checkers in Backgammon"),
+        new("dominoes", "dominoes.played", 20, "Lay {0} tiles in Dominoes"),
+        new("jenga", "jenga.moved", 12, "Move {0} blocks in Window Jenga"),
+        new("bridge", "bridge.saved", 10, "Get {0} interns across the Rope Bridge"),
     };
 
     readonly Settings _settings;

@@ -251,6 +251,17 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new AsteroidsGame(this));
         _games.Add(new MinesweeperGame(this));
         _games.Add(new SudokuGame(this));
+        _games.Add(new MancalaGame(this));
+        _games.Add(new BlackjackGame(this));
+        _games.Add(new CurlingGame(this));
+        _games.Add(new PaperPlanesGame(this));
+        _games.Add(new CupsGame(this));
+        _games.Add(new BingoGame(this));
+        _games.Add(new KiteGame(this));
+        _games.Add(new BackgammonGame(this));
+        _games.Add(new DominoGame(this));
+        _games.Add(new JengaGame(this));
+        _games.Add(new BridgeGame(this));
         _games.Add(new PetGame(this));
         StartPetCompany();
 
@@ -691,6 +702,17 @@ public sealed class OverlayWindow : Window, IGameHost
         "asteroids" => L.T("click your ship to launch — it follows the cursor; click a rock to fire at it"),
         "mines" => L.T("click a cell to open it, right-click to flag a mine — open every safe cell"),
         "sudoku" => L.T("click a cell, then a digit on the pad — every row, column and box holds 1 to 9 once"),
+        "mancala" => L.T("click one of your pits to sow its seeds — the last seed in your store plays again"),
+        "blackjack" => L.T("pick a bet and deal — get closer to 21 than the dealer without going over"),
+        "curling" => L.T("drag back from your stone and let go — hold the mouse ahead of it to sweep"),
+        "planes" => L.T("drag back from the paper plane and let go — warm air above windows lifts it"),
+        "cups" => L.T("grab the ball, flick it and let go — drop it into the cups; a bounce shot counts double"),
+        "bingo" => L.T("squares dab themselves as you work and play — three in a line is a bingo"),
+        "kite" => L.T("click the kite — the string follows your cursor; pull to climb, catch the clouds, dodge the birds"),
+        "backgammon" => L.T("click ROLL, then a checker and where it goes — bring all fifteen home and bear them off first"),
+        "dominoes" => L.T("click a tile that fits an end of the line on the taskbar — nothing fits? draw from the boneyard"),
+        "jenga" => L.T("drag a block out of the tower slowly, then lay it on top — don't let the weight lean past what is left"),
+        "bridge" => L.T("drag planks onto the rope before the interns reach the gap — and replace the cracked ones"),
         _ => "",
     };
 
@@ -883,7 +905,7 @@ public sealed class OverlayWindow : Window, IGameHost
         catch { /* clipboard busy */ }
     }
 
-    internal void Notice(string title, string sub, Color color)
+    public void Notice(string title, string sub, Color color)
     {
         if (!IsVisible) return;
         // popups drift upward, so start well clear of the scoreboard (or above it when it sits low)
