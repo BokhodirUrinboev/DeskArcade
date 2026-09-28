@@ -28,6 +28,13 @@ public sealed partial class Sound
             double f = 1800 * Math.Exp(-t * 14) + 220;
             return Math.Sin(2 * Math.PI * f * t) * Math.Exp(-t * 16) * 0.4 + Noise() * Math.Exp(-t * 90) * 0.12;
         });
+        // a message arriving: two soft, rounded notes going up
+        _clips["chat"] = Render(0.32, t =>
+        {
+            double f = t < 0.09 ? 740 : 988;
+            double local = t < 0.09 ? t : t - 0.09;
+            return (Math.Sin(2 * Math.PI * f * t) + Math.Sin(4 * Math.PI * f * t) * 0.15) * Math.Min(1, local / 0.006) * Math.Exp(-local * 14) * 0.35;
+        });
         // a desk bell, the kind on a hotel counter
         _clips["ding"] = Render(1.1, t =>
             (Math.Sin(2 * Math.PI * 2093 * t) + Math.Sin(2 * Math.PI * 5230 * t) * 0.3 * Math.Exp(-t * 6) +

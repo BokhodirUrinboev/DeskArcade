@@ -52,7 +52,8 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 - **41 games, 114 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
 - **Play with the person at the next desk** over the local network: Air Hockey (best of 3), Pong,
   H-O-R-S-E, Mini Golf, Archery and Cannon Castles duels, a typing race, board games, Sea Battle and score races in twenty-four games. You see
-  what the other player does: their ball, arrow or puck, and a marker wherever they pop, whack or stack.
+  what the other player does: their ball, arrow or puck, and a marker wherever they pop, whack or stack. Send them a
+  reaction that floats up their screen, or chat (off until you open it; nothing is saved).
 - **Office leaderboard** (opt-in): today's best scores of everyone on the network who shares theirs.
 - **Thirteen themes** (including a seasonal one) that dress the scoreboard, boards, tables, pieces and pet, with light
   decorations drifting over the desktop; a **break reminder**; and twelve desktop pets that fetch, beg for treats,
@@ -142,6 +143,16 @@ seats and take over for anyone who drops out. Several rooms can run on one netwo
 pet…** (also in the ☰ menu's **Play over LAN**) posts their desktop pet a treat or a toy. Windows asks
 once whether to allow Desk Arcade on private networks; say yes on both PCs.
 
+**Reactions and chat** go to the co-worker you are paired with, and nobody else. **React** (tray or ☰ → Play over
+LAN) sends a thumbs up, a party popper, a coffee, a laugh, a flame, a heart, a star or a slice of pizza, which floats
+up their screen with your name under it (a party makes a pet keeping them company dance). **Chat with {name}…** opens
+a small chat window with the same reactions along the top: Enter sends, Esc closes, a tick shows that a message
+arrived. A message that comes in while the chat is closed shows as a bubble under the scoreboard; click it to reply.
+Chat is off until you open it for the first time, and **Chat is on** in the same menu turns it off again; while it is
+off, a co-worker's messages are turned away and you only hear that they want to chat. Nothing said is saved:
+the conversation lives in memory for as long as the two of you stay paired. Messages are plain text, at most 280
+characters, and a burst of them is slowed down on the receiving side.
+
 ## Scoreboard, stats and achievements
 
 The scoreboard is a small pill showing the game icon, score and best, then who you are playing: **CPU ·
@@ -185,7 +196,7 @@ broadcasts your user name and today's scores on UDP port 47821 every 20 seconds,
 | ☰ on the scoreboard | The quick menu: game, pet, CPU difficulty, theme, sound, LAN, stats, hide, exit |
 | Drag the grip above a board or table (or right-drag the board) | Move it; the place is remembered (**tray → Reset positions** forgets it) |
 | Tray icon, left-click | Show or hide |
-| Tray icon menu | Game, pet, CPU difficulty (every game with a computer opponent, and the race toggle), theme, break reminder, office leaderboard, play over LAN (emotes and gifts for a co-worker's pet too), volume, pet volume, language, Claude Code options, updates, stats, monitor, reset, exit |
+| Tray icon menu | Game, pet, CPU difficulty (every game with a computer opponent, and the race toggle), theme, break reminder, office leaderboard, play over LAN (emotes, reactions, chat and gifts for a co-worker's pet too), volume, pet volume, language, Claude Code options, updates, stats, monitor, reset, exit |
 
 On macOS the shortcuts are **Control+Option+G/N/B**. **Tray → Shortcuts…** changes the modifier keys and the
 letters (Windows applies them at once; Linux and macOS from the next start).
@@ -477,6 +488,8 @@ exception you can switch off:
   automatically** in the tray menu.
 - **LAN play:** only when you host or join a game does it talk to other computers on your local network
   (UDP port 47820). It sends your user name and the game moves, and nothing leaves the local network.
+  Reactions and chat messages go over the same link to the one co-worker you are paired with; chat is off until
+  you open it, and nothing said is written to disk.
 - **Durak and Last Card rooms:** only when you create or join a room does it talk to other computers on your local
   network (UDP port 47822). It sends your user name and the game, and nothing leaves the local network.
 - **Office leaderboard:** off unless you turn it on. While it is on, it broadcasts your user name and

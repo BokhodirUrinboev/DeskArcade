@@ -78,6 +78,23 @@ public sealed class Tray : IDisposable
         var send = new NativeMenuItem(L.T("Send")) { Menu = emotes };
         _refreshers.Add(() => send.IsEnabled = _w.Lan.Connected);
         lan.Add(send);
+        var reactions = new NativeMenu();
+        foreach (var r in ReactionArt.All)
+        {
+            var reaction = r;
+            reactions.Add(Item(ReactionArt.Name(r), () => _w.Chat.React(reaction)));
+        }
+        var react = new NativeMenuItem(L.T("React")) { Menu = reactions };
+        _refreshers.Add(() => react.IsEnabled = _w.Lan.Connected);
+        lan.Add(react);
+        var chat = Item(_w.Chat.MenuHeader, () => _w.Chat.Open());
+        _refreshers.Add(() =>
+        {
+            chat.Header = _w.Chat.MenuHeader;
+            chat.IsEnabled = _w.Lan.Connected;
+        });
+        lan.Add(chat);
+        lan.Add(Check(L.T("Chat is on"), () => _w.Chat.SetEnabled(!_w.Settings.LanChat), () => _w.Settings.LanChat));
         var gifts = new NativeMenu();
         foreach (var gift in PetMailer.Gifts)
         {

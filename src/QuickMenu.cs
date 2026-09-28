@@ -74,6 +74,18 @@ public static class QuickMenu
             }
             lan.Items.Add(mail);
         }
+        if (w.Lan.Connected)
+        {
+            var react = Sub(L.T("React"));
+            foreach (var r in ReactionArt.All)
+            {
+                var reaction = r;
+                react.Items.Add(Item(ReactionArt.Name(r), () => w.Chat.React(reaction)));
+            }
+            lan.Items.Add(react);
+            lan.Items.Add(Item(w.Chat.MenuHeader, w.Chat.Open));
+        }
+        lan.Items.Add(Check(L.T("Chat is on"), w.Settings.LanChat, () => w.Chat.SetEnabled(!w.Settings.LanChat)));
         lan.Items.Add(Item(L.T("Leave"), w.LeaveLan));
         yield return lan;
 

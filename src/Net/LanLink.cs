@@ -71,6 +71,10 @@ public sealed class LanLink : IDisposable
     public event Action<double, double, int>? ActionReceived;
     /// <summary>Raised when a pet-mail message ("pm|…", see <see cref="PetMail"/>) arrives; it bypasses the game inbox, so mail reaches the pet whatever game is on.</summary>
     public event Action<string>? MailReceived;
+    /// <summary>Raised when a chat message ("ch|…", see <see cref="ChatLink"/>) arrives; like mail it bypasses the game inbox.</summary>
+    public event Action<string>? ChatReceived;
+    /// <summary>Raised when the peer sends a reaction (a <see cref="Reaction"/>).</summary>
+    public event Action<Reaction>? ReactionReceived;
 
     /// <summary>Counts connections, so games can tell a new session from the one they already set up.</summary>
     public int Session { get; private set; }
@@ -153,6 +157,8 @@ public sealed class LanLink : IDisposable
     }
 
     public void SendEmote(int index) => Send($"em|{index}");
+
+    public void SendReaction(Reaction reaction) => Send(string.Create(CultureInfo.InvariantCulture, $"rx|{(int)reaction}"));
 
     /// <summary>Tells the peer about a click, pop or whack at (<paramref name="x"/>, <paramref name="y"/>), fractions of our arena.</summary>
     public void SendAction(double x, double y, int points) =>
@@ -325,6 +331,16 @@ public sealed class LanLink : IDisposable
         if (kind == PetMail.Tag)
         {
             MailReceived?.Invoke(msg);
+            return;
+        }
+        if (kind == ChatLink.Tag)
+        {
+            ChatReceived?.Invoke(msg);
+            return;
+        }
+        if (kind == "rx")
+        {
+            if (int.TryParse(body, NumberStyles.Integer, CultureInfo.InvariantCulture, out int r) && Enum.IsDefined(typeof(Reaction), r)) ReactionReceived?.Invoke((Reaction)r);
             return;
         }
         if (kind == "em")
