@@ -1592,5 +1592,14 @@ public static partial class Strings
         ["Variant: Podkidnoy (throw-in)"] = "Turi: tashlama",
         ["Not me!"] = "Men emas!",
         ["Pass an attack on 10 times in Perevodnoy"] = "O'tkazma durakda hujumni 10 marta o'tkazing",
+
+        // salvo
+        ["Your salvo · {0} shots left · click the enemy grid"] = "Sizning zalpingiz · {0} ta o'q qoldi · dushman maydonini bosing",
+        ["Salvo rules: one shot for each of your ships afloat"] = "Zalp qoidalari: suzib yurgan har bir kemangiz uchun bitta o'q",
+        ["Classic rules: a hit shoots again"] = "Klassik qoidalar: tekkizsangiz yana otasiz",
+        ["click to switch"] = "almashtirish uchun bosing",
+        ["the host picks"] = "o'yin egasi tanlaydi",
+        ["Broadside"] = "Bort zalpi",
+        ["Win a game of Sea Battle with salvo rules"] = "Dengiz jangida zalp qoidalari bilan yuting",
     };
 }

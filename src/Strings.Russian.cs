@@ -1592,5 +1592,14 @@ public static partial class Strings
         ["Variant: Podkidnoy (throw-in)"] = "Вариант: подкидной",
         ["Not me!"] = "Не я!",
         ["Pass an attack on 10 times in Perevodnoy"] = "Переведите атаку 10 раз в переводного дурака",
+
+        // salvo
+        ["Your salvo · {0} shots left · click the enemy grid"] = "Ваш залп · осталось выстрелов: {0} · нажмите на поле противника",
+        ["Salvo rules: one shot for each of your ships afloat"] = "Правила залпа: по выстрелу за каждый ваш корабль на плаву",
+        ["Classic rules: a hit shoots again"] = "Классические правила: попал — стреляй ещё",
+        ["click to switch"] = "нажмите, чтобы сменить",
+        ["the host picks"] = "выбирает хозяин игры",
+        ["Broadside"] = "Бортовой залп",
+        ["Win a game of Sea Battle with salvo rules"] = "Выиграйте морской бой по правилам залпа",
     };
 }

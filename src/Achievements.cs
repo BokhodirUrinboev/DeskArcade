@@ -103,6 +103,7 @@ public static class Achievements
         new("gomoku-hard", "gomoku", "Five alive", "Beat the Gomoku CPU on Hard or Expert", "gomoku.hardwins", 1),
         new("gomoku-quick", "gomoku", "Quick five", "Win Gomoku with fewer than 15 stones", "gomoku.quickwins", 1),
         new("seabattle-win", "seabattle", "Admiral", "Win a game of Sea Battle", "seabattle.wins", 1),
+        new("seabattle-salvo", "seabattle", "Broadside", "Win a game of Sea Battle with salvo rules", "seabattle.salvowins", 1),
         new("durak-win", "durak", "Not the fool", "Get rid of your cards before someone else in Durak", "durak.wins", 1),
         new("durak-ten", "durak", "Card shark", "Escape being the durak 10 times", "durak.wins", 10),
         new("durak-transfer", "durak", "Not me!", "Pass an attack on 10 times in Perevodnoy", "durak.transfers", 10),
