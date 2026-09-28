@@ -9,7 +9,7 @@
 
 #define MyAppName      "Desk Arcade"
 #define MyAppExeName   "DeskArcade.exe"
-#define MyAppPublisher "Imperium Games"
+#define MyAppPublisher "Bokhodir Urinboev"
 #define MyAppGuid      "8F3C2A6E-5B7D-4E1A-9C2F-6D4B8A1E7C35"
 ; Must match the mutex name in src/Program.cs
 #define AppMutex       "DeskArcade.SingleInstance.v1"

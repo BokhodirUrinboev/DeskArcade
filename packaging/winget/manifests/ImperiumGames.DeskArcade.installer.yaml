@@ -18,7 +18,7 @@ UpgradeBehavior: install
 ProductCode: '{8F3C2A6E-5B7D-4E1A-9C2F-6D4B8A1E7C35}_is1'
 AppsAndFeaturesEntries:
   - DisplayName: Desk Arcade
-    Publisher: Imperium Games
+    Publisher: Bokhodir Urinboev
     ProductCode: '{8F3C2A6E-5B7D-4E1A-9C2F-6D4B8A1E7C35}_is1'
 InstallationMetadata:
   DefaultInstallLocation: '%LOCALAPPDATA%\Programs\Desk Arcade'

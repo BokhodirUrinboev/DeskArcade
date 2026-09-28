@@ -4,14 +4,14 @@
 PackageIdentifier: ImperiumGames.DeskArcade
 PackageVersion: 0.0.0
 PackageLocale: en-US
-Publisher: Imperium Games
+Publisher: Bokhodir Urinboev
 PublisherUrl: https://github.com/BokhodirUrinboev
 PublisherSupportUrl: https://github.com/BokhodirUrinboev/DeskArcade/issues
 PackageName: Desk Arcade
 PackageUrl: https://github.com/BokhodirUrinboev/DeskArcade
 License: MIT
 LicenseUrl: https://github.com/BokhodirUrinboev/DeskArcade/blob/main/LICENSE
-Copyright: Copyright (c) 2026 Imperium Games
+Copyright: Copyright (c) 2026 Bokhodir Urinboev
 ShortDescription: Mini-games that play on top of your desktop in a transparent overlay.
 Description: |-
   Desk Arcade plays small games on top of your windows while a build, a deploy or Claude Code is working:

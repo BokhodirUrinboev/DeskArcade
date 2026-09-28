@@ -3,7 +3,7 @@ Version: @VERSION@
 Section: games
 Priority: optional
 Architecture: @ARCH@
-Maintainer: Imperium Games <maintainer@example.com>
+Maintainer: Bokhodir Urinboev <bokhodir.urinboev@gmail.com>
 Installed-Size: @SIZE@
 Depends: libc6, libgcc-s1, libstdc++6, libx11-6, libxext6, libxi6, libxrandr2, libxcursor1, libxfixes3, libice6, libsm6, libfontconfig1, libpulse0, procps
 Recommends: libgl1, libssl3t64 | libssl3, gnome-shell-extension-appindicator

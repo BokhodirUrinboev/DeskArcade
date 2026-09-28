@@ -490,4 +490,4 @@ versions, copyright notices and license texts are in
 
 Desk Arcade is released under the [MIT License](LICENSE).
 
-Copyright © 2026 Imperium Games.
+Copyright © 2026 Bokhodir Urinboev.

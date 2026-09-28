@@ -94,7 +94,7 @@ cat > "$APP/Contents/Info.plist" <<EOF
   <key>NSHighResolutionCapable</key>
   <true/>
   <key>NSHumanReadableCopyright</key>
-  <string>© 2026 Imperium Games</string>
+  <string>© 2026 Bokhodir Urinboev</string>
 </dict>
 </plist>
 EOF
