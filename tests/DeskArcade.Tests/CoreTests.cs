@@ -601,9 +601,11 @@ public class SeaBattleTests
     }
 }
 
-[Collection("lan")] // every LAN test binds UDP port 47820, so they take turns
+[Collection("lan")] // the LAN tests bind UDP ports, so they take turns
 public class LanLinkTests
 {
+    const int TestPort = 47893; // not the real port: a copy of Desk Arcade running on this PC must not hear these
+
     static bool WaitFor(Func<bool> condition, int ms = 5000)
     {
         var until = DateTime.UtcNow.AddMilliseconds(ms);
@@ -627,16 +629,16 @@ public class LanLinkTests
     [Fact]
     public async System.Threading.Tasks.Task HostAndGuestPairOverLoopbackAndExchangeMessages()
     {
-        using var host = new DeskArcade.Net.LanLink();
-        using var guest = new DeskArcade.Net.LanLink();
+        using var host = new DeskArcade.Net.LanLink(TestPort);
+        using var guest = new DeskArcade.Net.LanLink(TestPort);
         host.Host("chess");
         Assert.Equal(DeskArcade.Net.LanState.Waiting, host.State);
 
-        var found = await DeskArcade.Net.LanLink.FindHosts(TimeSpan.FromSeconds(0.8));
+        var found = await DeskArcade.Net.LanLink.FindHosts(TimeSpan.FromSeconds(0.8), TestPort);
         var me = Assert.Single(found, h => h.GameId == "chess");
         Assert.False(me.Busy);
 
-        guest.Join(new System.Net.IPEndPoint(System.Net.IPAddress.Loopback, DeskArcade.Net.LanLink.Port));
+        guest.Join(new System.Net.IPEndPoint(System.Net.IPAddress.Loopback, TestPort));
         Assert.True(WaitFor(() => host.Connected && guest.Connected), "the two links never paired");
         Assert.Equal("chess", guest.GameId);
 

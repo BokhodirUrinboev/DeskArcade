@@ -31,6 +31,12 @@ public sealed class LanLink : IDisposable
     public const int Port = 47820;
     const string Magic = "DA1";
     const double TimeoutSeconds = 3, PingSeconds = 0.5, HelloSeconds = 0.7, GameSeconds = 1;
+    /// <summary>
+    /// A hello from the guest we are already playing with counts as it coming back (a new session) only this long after
+    /// its last one: a guest that timed out has been quiet for <see cref="TimeoutSeconds"/>, while a duplicated broadcast
+    /// or a hello re-sent before our welcome arrived comes within one <see cref="HelloSeconds"/>.
+    /// </summary>
+    const double RejoinSeconds = 2.5;
     const int MaxInbox = 2000; // while the overlay is hidden nothing drains the inbox: keep only the latest
 
     readonly ConcurrentQueue<string> _inbox = new();
@@ -38,7 +44,11 @@ public sealed class LanLink : IDisposable
     UdpClient? _udp;
     CancellationTokenSource? _cts;
     IPEndPoint? _peer, _target; // _target: the one host a guest asked to join, or null for the first to answer
-    DateTime _lastHeard, _lastSent, _lastGameSent;
+    DateTime _lastHeard, _lastSent, _lastGameSent, _lastHello;
+    readonly int _port;
+
+    /// <param name="port">The UDP port hosts listen on; another one only for tests, so they never meet a running copy.</param>
+    public LanLink(int port = Port) => _port = port;
 
     public LanRole Role { get; private set; }
     public LanState State { get; private set; }
@@ -91,7 +101,7 @@ public sealed class LanLink : IDisposable
         {
             var udp = new UdpClient(AddressFamily.InterNetwork);
             udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, false);
-            udp.Client.Bind(new IPEndPoint(IPAddress.Any, Port));
+            udp.Client.Bind(new IPEndPoint(IPAddress.Any, _port));
             Begin(udp, LanRole.Host, gameId);
         }
         catch (SocketException)
@@ -133,12 +143,13 @@ public sealed class LanLink : IDisposable
     }
 
     /// <summary>Broadcasts a probe and collects the hosts that answer within <paramref name="wait"/>.</summary>
-    public static async Task<List<LanHost>> FindHosts(TimeSpan wait)
+    /// <param name="port">The port hosts listen on (another one only for tests).</param>
+    public static async Task<List<LanHost>> FindHosts(TimeSpan wait, int port = Port)
     {
         var hosts = new Dictionary<string, LanHost>();
         using var udp = new UdpClient(new IPEndPoint(IPAddress.Any, 0)) { EnableBroadcast = true };
-        TrySend(udp, new IPEndPoint(IPAddress.Broadcast, Port), "find|");
-        TrySend(udp, new IPEndPoint(IPAddress.Loopback, Port), "find|");
+        TrySend(udp, new IPEndPoint(IPAddress.Broadcast, port), "find|");
+        TrySend(udp, new IPEndPoint(IPAddress.Loopback, port), "find|");
         using var cts = new CancellationTokenSource(wait);
         try
         {
@@ -272,12 +283,15 @@ public sealed class LanLink : IDisposable
         }
         if (kind == "hello" && Role == LanRole.Host)
         {
-            // first guest wins; the same guest re-sending hello (lost welcome) is answered again
+            // first guest wins; the same guest re-sending hello (a lost welcome, a broadcast seen twice) is answered again
             if (_peer == null || _peer.Equals(from))
             {
-                // the guest we are playing with timed out on its side and joined again: it starts its games
-                // fresh, so this is a new session here too, or the two sides' duels and races fall out of step
-                bool rejoined = State == LanState.Connected && _peer != null;
+                // the guest we are playing with timed out on its side and joined again: it starts its games fresh, so
+                // this is a new session here too, or the two sides' duels and races fall out of step. A hello right
+                // after the last one is the same join, not a new one: counting those looped "Connected" on the host
+                var now = DateTime.UtcNow;
+                bool rejoined = State == LanState.Connected && _peer != null && (now - _lastHello).TotalSeconds > RejoinSeconds;
+                _lastHello = now;
                 lock (_gate) _peer = from;
                 PeerName = body;
                 TrySend(udp, from, $"welcome|{GameId}|{MyName}");
@@ -292,7 +306,9 @@ public sealed class LanLink : IDisposable
             else TrySend(udp, from, "busy|");
             return;
         }
-        if (kind == "welcome" && Role == LanRole.Guest && State == LanState.Waiting && (_target == null || _target.Address.Equals(from.Address)))
+        // a host answers from its port, and when we asked one host it may answer from another of its addresses
+        // (a PC with a VPN or virtual adapters): only that host heard our hello, so its welcome is taken from any
+        if (kind == "welcome" && Role == LanRole.Guest && State == LanState.Waiting && from.Port == (_target?.Port ?? _port))
         {
             var parts = body.Split('|', 2);
             lock (_gate) _peer = from;
@@ -362,8 +378,8 @@ public sealed class LanLink : IDisposable
 
     async Task TimerLoop(UdpClient udp, CancellationToken ct)
     {
-        var broadcast = new IPEndPoint(IPAddress.Broadcast, Port);
-        var loopback = new IPEndPoint(IPAddress.Loopback, Port); // a second --profile copy on this machine
+        var broadcast = new IPEndPoint(IPAddress.Broadcast, _port);
+        var loopback = new IPEndPoint(IPAddress.Loopback, _port); // a second --profile copy on this machine
         string hello = $"hello|{MyName}";
         while (!ct.IsCancellationRequested)
         {
