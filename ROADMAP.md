@@ -18,7 +18,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 | 1.8.0 | 2026-09-24 | Somebody to play against in every game, twelve pets, animation, thirteen themes, the Ubuntu overlay and updates, the ☰ menu |
 | 1.8.1 | 2026-09-25 | Five new games: Marble Run, Sheep Herding, Cannon Castles, Reversi, Gomoku |
 | 1.8.2 | 2026-09-25 | Pets join the games, pet mail over the LAN, pets grow up and nap on a favourite window, pet volume |
-| 1.8.3 | next | Typing Race, Word Rain, reactions and chat, Snakes on Windows, co-op Asteroids, Minesweeper and Sudoku |
+| 1.8.3 | 2026-09-28 | Typing Race, Word Rain, reactions and chat, Snakes on Windows, co-op Asteroids, Minesweeper and Sudoku |
 | 1.9.0 | late October | Package managers, a feel pass by hand, Flathub |
 | 2.0.0 | mid December | Signed Windows builds, a real Mac, a winter event |
 
@@ -160,7 +160,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 - [x] **Pet volume**: Off, Quiet, Normal or Loud for the pet alone, softer late in the evening. *Verified: unit
   tests for the levels and the evening curve.*
 
-## 1.8.3: typing, talking and five more games (next)
+## 1.8.3: typing, talking and four more games (shipped 2026-09-28)
 
 - [x] **Typing Race** (`typing`): type a text on a panel and race little cars to the line: the computer's typist at the
   CPU level (28 to 82 words a minute, with pauses and typos) or a co-worker over the LAN on the same text; English,
