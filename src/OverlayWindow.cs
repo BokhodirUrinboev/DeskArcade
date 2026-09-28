@@ -254,6 +254,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new MancalaGame(this));
         _games.Add(new BlackjackGame(this));
         _games.Add(new CurlingGame(this));
+        _games.Add(new PaperPlanesGame(this));
         _games.Add(new PetGame(this));
         StartPetCompany();
 
@@ -697,6 +698,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "mancala" => L.T("click one of your pits to sow its seeds — the last seed in your store plays again"),
         "blackjack" => L.T("pick a bet and deal — get closer to 21 than the dealer without going over"),
         "curling" => L.T("drag back from your stone and let go — hold the mouse ahead of it to sweep"),
+        "planes" => L.T("drag back from the paper plane and let go — warm air above windows lifts it"),
         _ => "",
     };
 
