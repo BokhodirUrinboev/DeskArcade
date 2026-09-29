@@ -21,6 +21,7 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 - [Updating](#updating)
 - [Claude Code integration](#claude-code-integration)
 - [Play while a command runs](#play-while-a-command-runs)
+- [At work](#at-work)
 - [Building from source](#building-from-source)
 - [Project structure](#project-structure)
 - [Troubleshooting](#troubleshooting)
@@ -49,7 +50,11 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
   level and whose turn it is.
 - **Boards move.** Chess, checkers, the card tables and the other boards have a grip above them: drag it (or
   right-drag the board) to put the game where you want it, and it stays there.
-- **56 games, 161 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
+- **Help with the working day** (tray or ☰ → **At work**): the overlay steps aside for presentations and full-screen
+  apps; breaks for your eyes, back and water by time at the computer; meeting warnings from your calendar; focus blocks
+  with the games as the break; timers and sticky notes; coffee invites for co-workers; a chime when a download or a
+  program finishes; and a word when the working day is over.
+- **56 games, 170 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
 - **Play with the person at the next desk** over the local network: Air Hockey (best of 3), Pong,
   H-O-R-S-E, Mini Golf, Archery and Cannon Castles duels, a typing race, co-op Asteroids, board games, Sea Battle and score races in twenty-seven games. You see
   what the other player does: their ball, arrow or puck, and a marker wherever they pop, whack or stack. Send them a
@@ -159,6 +164,10 @@ four-letter code; the others pick the room from the list or type the code (plus 
 the network blocks broadcasts). The host chooses 2, 3 or 4 seats and starts; computer players fill the empty
 seats and take over for anyone who drops out. Several rooms can run on one network. Rooms use UDP port 47822.
 
+**Across buildings, or from home:** broadcasts stay inside one network, but **Find games / join by address…** also
+takes a host name, so two PCs on a free VPN such as Tailscale or ZeroTier can pair by typing the other's VPN address
+or name (the host's tray shows its addresses). This has not been tried on a real VPN yet.
+
 **Send** in the same menu pops a quick emote ("gg", "One more?"…) up on the other screen, and **Send {name}'s
 pet…** (also in the ☰ menu's **Play over LAN**) posts their desktop pet a treat or a toy. Windows asks
 once whether to allow Desk Arcade on private networks; say yes on both PCs.
@@ -196,7 +205,7 @@ with your progress; click it to jump to the game. Finish it on consecutive days 
 
 **Stats & achievements** in the tray menu (or `DeskArcade --signal stats`) opens a window with time
 played and best score per game, each pet you have adopted with its age, its life stage and what the next stage needs
-(and the pet's favourite nap spot), and all 161 achievements with their progress. Stats live in
+(and the pet's favourite nap spot), today at the computer, and all 170 achievements with their progress. Stats live in
 `stats.json` next to your settings and can be reset from the tray.
 
 **Office leaderboard:** **tray → Office leaderboard** shows today's best hoops streak, baskets, Air Hockey
@@ -213,10 +222,10 @@ broadcasts your user name and today's scores on UDP port 47821 every 20 seconds,
 | **Ctrl+Alt+B** | Bring the ball, bow, paddle or pet to the cursor (a penalty stroke in Mini Golf) |
 | Click the scoreboard | Open the game tabs |
 | Drag the scoreboard | Move it |
-| ☰ on the scoreboard | The quick menu: game, pet, CPU difficulty, theme, sound, LAN, stats, hide, exit |
+| ☰ on the scoreboard | The quick menu: game, pet, at work, CPU difficulty, theme, sound, LAN, stats, hide, exit |
 | Drag the grip above a board or table (or right-drag the board) | Move it; the place is remembered (**tray → Reset positions** forgets it) |
 | Tray icon, left-click | Show or hide |
-| Tray icon menu | Game, pet, CPU difficulty (every game with a computer opponent, and the race toggle), theme, break reminder, office leaderboard, play over LAN (emotes, reactions, chat and gifts for a co-worker's pet too), volume, pet volume, language, Claude Code options, updates, stats, monitor, reset, exit |
+| Tray icon menu | Game, pet, at work (breaks, meetings, focus, timers, notes, invites, downloads, the end of the day), CPU difficulty (every game with a computer opponent, and the race toggle), theme, office leaderboard, play over LAN (emotes, reactions, chat and gifts for a co-worker's pet too), volume, pet volume, language, Claude Code options, updates, stats, monitor, reset, exit |
 
 On macOS the shortcuts are **Control+Option+G/N/B**. **Tray → Shortcuts…** changes the modifier keys and the
 letters (Windows applies them at once; Linux and macOS from the next start).
@@ -239,8 +248,9 @@ other games: it sits on the taskbar (on the pier in Fishing), reacts to the game
 Whack-a-Bug and Fishing without ever deciding a race or a LAN game (see Desktop Pet above). It only moves when
 something happens, so an idle overlay still costs nothing.
 
-**Tray → Break reminder** nudges you after 15 to 60 minutes of play (five minutes away counts as a break),
-and can make the "Claude is done" notice say **back to work** when you were playing while Claude worked.
+**Tray → At work → Breaks → Break reminder** nudges you after 15 to 60 minutes of play (five minutes away counts as a
+break), and can make the "Claude is done" notice say **back to work** when you were playing while Claude worked. The
+breaks by time at the computer are described under [At work](#at-work).
 
 **Tray → Accessibility** has **Reduce motion** (no particle bursts; popups appear in place) and
 **Colour-blind friendly colours** (greens become sky blue and reds vermillion, and Connect Four discs are
@@ -253,6 +263,7 @@ DeskArcade --signal toggle|next|summon|show|hide|expand|stats|shortcuts|quit|gam
 DeskArcade --signal lan-host|lan-join|lan-find|lan-leave
 DeskArcade --signal durak-rooms|durak-solo:2|durak-host:abcd|durak-join:abcd|durak-start:4|durak-leave
 DeskArcade --signal lastcard-rooms|lastcard-solo:2|lastcard-host:abcd|lastcard-join:abcd|lastcard-start:4|lastcard-leave
+DeskArcade --signal breathe|stretch|eyes|water|drank|dayend|focus|focus:50|focus-stop|note|atwork|coffee|lunch|walk
 ```
 
 ## Language
@@ -410,6 +421,67 @@ captures none of it). The Flatpak runs commands inside its sandbox, where your t
 The scoreboard shows the command next to Claude Code's status, so you can use both at once. Playing when a
 command finishes earns the "It's compiling" achievement.
 
+## At work
+
+**Tray → At work** (also in the ☰ menu) is for the working day around the games. Everything in it stays on your
+computer, except coffee invites, which are off until you turn them on.
+
+- **Steps aside for presentations.** While a full-screen window fills the overlay's monitor (a slide show, a video,
+  a browser after F11, a game) or Windows presentation settings are on, the overlay hides, and it comes back when
+  that ends. Notices due in the meantime wait, silently, until it is over. **Hide while presenting or in full
+  screen** is on by default. On Linux only X11 apps are seen, so a native Wayland app in full screen goes unnoticed;
+  and sharing a single window in Teams or Zoom cannot be detected anywhere, so **Ctrl+Alt+G** still hides it by hand.
+- **Breaks by time at the computer**, not time played (**At work → Breaks**, all off by default). **Look away every
+  20 minutes (20-20-20)** shows a 20-second card to rest your eyes on something far away; **Stretch after 30 to 90
+  minutes at the computer** walks you through a one-minute stretch with a little figure to copy (shoulders, head,
+  wrists, then stand and reach); **Water every 60 to 120 minutes** asks for a glass. Time counts while the keyboard or
+  mouse was used in the last two minutes; two minutes away rest the eyes and five minutes away are a real break. A
+  break never interrupts a presentation, a meeting or a focus block: it waits for the end. The game pauses under the
+  card. **Breathe for a minute** (box breathing: in, hold, out, hold, four seconds each), **Stretch now** and **I drank
+  a glass of water** are there any time. The idle time comes from Windows, macOS, libXss on Xorg, and GNOME or KDE
+  over D-Bus on Wayland; anywhere else the overlay watches the cursor, which misses typing.
+- **Meeting warnings** from your calendar. In **At work → Meetings → Connect a calendar…** paste its .ics link
+  (Outlook: Settings → Calendar → Shared calendars → Publish a calendar → ICS; Google Calendar: Settings → your
+  calendar → Secret address in iCal format) or pick an .ics file, and **Check** it. A notice comes 1 to 15 minutes
+  before a meeting (your choice), the game pauses a minute before, and "starting now" at the start; the scoreboard
+  counts down ("Standup in 4:59"), and **Hide the overlay during meetings** keeps it away until the meeting ends.
+  Repeats, time zones, moved and cancelled meetings are read the way Outlook and Google write them. The link is
+  read every 15 minutes; the meetings are never sent anywhere.
+- **Focus blocks** in the Pomodoro way: 25, 50 or 90 minutes with the games out of sight, then a 5 to 15 minute break
+  with them back, and every fourth break 15 minutes long. Chat, reactions and invites wait for the break (**Hold chat
+  and invites while focusing**), and a co-worker you are paired with over the LAN hears that you are focusing.
+- **Timers and sticky notes.** **Timer** rings after 5 to 60 minutes. **New sticky note…** puts a note on the
+  desktop: drag it anywhere, drop it on a window top and it rides along with that window; click it to edit it or give
+  it a reminder, and tick it when it is done.
+- **Coffee, lunch or a walk** with co-workers: **Invite co-workers** asks everyone on the network who has **Invites
+  from co-workers** on, "coffee in 5 minutes?"; they answer **I'm in** or **Not now** on a card, and you hear who is
+  coming. Someone in a focus block answers "focusing" by itself and sees the invite at the break.
+- **Downloads and other waits.** **Tell me when downloads finish** chimes when a browser download in your Downloads
+  folder is done. From a terminal, `--wait-pid`, `--wait-file` and `--wait-url` chime when a program ends, a file is
+  ready or a server answers, and `arcade gh run watch --exit-status` plays while a GitHub Actions run finishes.
+- **The end of the day.** Pick when your working day ends; at that time, if you have been at the computer, a card
+  sums up the day (time at the computer, focus blocks, meetings, breaks, water, play), and an hour later, still there,
+  a gentle "still here?".
+- **Today at work…** shows the day so far and the meetings still ahead today, and holds the settings that need
+  typing: the calendar, the end of the day and the Downloads folder.
+
+With the overlay hidden, a notice or a card peeks out on its own for a moment, without the game or the scoreboard.
+Nine achievements go with all this (from Far sighted to Tea's ready), and Bingo of Work cards can ask for a stretch,
+a glass of water, a focus block or a minute of breathing.
+
+From a terminal; each returns at once, and starts Desk Arcade first when it is not running:
+
+```bash
+deskarcade --timer 10m Tea                          # a timer with a label: 10m, 1h30m, 90s, 1:30
+deskarcade --note "Call the bank back"              # a sticky note
+deskarcade --focus 50                               # a focus block (the usual length without a number)
+deskarcade --wait-pid 4242                          # a chime when that program ends
+deskarcade --wait-file ~/Downloads/big.iso          # ... when that file is there and has stopped growing
+deskarcade --wait-url http://localhost:8080/health  # ... when that address answers
+```
+
+On Windows run `DeskArcade.exe` the same way (it sits next to `arcade.cmd`).
+
 ## Building from source
 
 **Requirements:** the [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0). The Windows
@@ -458,6 +530,7 @@ Releases are built and published by GitHub Actions when a `vX.Y.Z` tag is pushed
 | `src/Stats.cs`, `src/Achievements.cs`, `src/StatsWindow.cs` | Counters, achievements and the stats window |
 | `src/OverlayWindow.cs` | The transparent, topmost window: frame loop, input, signals |
 | `src/TaskRunner.cs`, `packaging/windows/arcade.cmd` | `--while`: runs a command and reports it to the overlay |
+| `src/Office`, `src/OfficeDesk*.cs` | At work: rules without UI (`IcsCalendar` and `RRule` for .ics calendars, `MeetingWatch`, `BodyBreaks`, `FocusTimer`, `EndOfDay`, `DownloadWatch`), and the overlay's side of it: break cards (`CoachCard`), sticky notes, invites (`Net/OfficeInvites`), the At work menu and window, and the command-line options (`OfficeCli`) |
 | `tests/DeskArcade.Tests`, `tests/smoke.sh` | Unit tests; the start-and-quit check CI runs on real hardware |
 | `installer/`, `packaging/` | Inno Setup script, `.deb`, AppImage, Flatpak, winget, Homebrew, Scoop and macOS packaging |
 | `.github/workflows` | CI on every pull request, releases on version tags |
@@ -483,6 +556,8 @@ The UI is built with [Avalonia](https://avaloniaui.net/), so the games contain n
 | A ball or the pet is out of reach | **Ctrl+Alt+B** brings it to the cursor; **Reset positions** restores the defaults. |
 | Shortcuts do nothing on Ubuntu | On Wayland, allow them when the portal asks, or set up custom shortcuts as described above. |
 | No sound on Ubuntu | Install `libpulse0`. It works with PulseAudio and PipeWire. |
+| Meeting warnings never come | **At work → Today at work… → Check** reads the calendar and says what it found. Some company Outlook accounts do not allow publishing a calendar; an exported .ics file works instead, but only until the next change. |
+| The overlay hides by itself | Something is in full screen on its monitor, or Windows presentation settings are on. Turn off **At work → Hide while presenting or in full screen** if you would rather hide it yourself. |
 | The game crashed | Details are in `crash.log` in the settings folder. |
 
 ## Code signing policy
@@ -508,13 +583,17 @@ exception you can switch off:
   automatically** in the tray menu.
 - **LAN play:** only when you host or join a game does it talk to other computers on your local network
   (UDP port 47820). It sends your user name and the game moves, and nothing leaves the local network.
-  Reactions and chat messages go over the same link to the one co-worker you are paired with; chat is off until
-  you open it, and nothing said is written to disk.
+  Reactions, chat messages and a note that you started a focus block go over the same link to the one co-worker
+  you are paired with; chat is off until you open it, and nothing said is written to disk.
 - **Durak and Last Card rooms:** only when you create or join a room does it talk to other computers on your local
   network (UDP port 47822). It sends your user name and the game, and nothing leaves the local network.
 - **Office leaderboard:** off unless you turn it on. While it is on, it broadcasts your user name and
   today's scores to your local network (UDP port 47821) every 20 seconds, and nothing leaves the local
   network.
+- **Coffee invites:** off unless you turn them on (sending one turns them on). While they are on, invites and answers
+  are broadcast on your local network (UDP port 47823) with your user name, and nothing leaves the local network.
+- **Calendar:** only if you connect one. Its .ics link is fetched from the address you gave (your calendar
+  provider) every 15 minutes; the meetings stay on your computer and are never sent anywhere.
 
 There is no account, no telemetry and no analytics. Settings, scores and stats stay on your computer.
 
