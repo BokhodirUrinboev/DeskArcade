@@ -165,6 +165,30 @@ public sealed class WindowsPlatform : IDesktopPlatform
 
     public IAudioOutput? OpenAudio(int sampleRate) => WaveOutAudio.TryOpen(sampleRate);
 
+    public double? IdleSeconds()
+    {
+        var info = new Win32.LASTINPUTINFO { cbSize = (uint)Marshal.SizeOf<Win32.LASTINPUTINFO>() };
+        if (!Win32.GetLastInputInfo(ref info)) return null;
+        return unchecked((uint)Environment.TickCount - info.dwTime) / 1000.0; // both are GetTickCount, which wraps
+    }
+
+    /// <summary>
+    /// Presentation settings, or a foreground window without a title bar that covers the monitor: a slide show, a video
+    /// or a game in full screen, a browser after F11. A maximised window keeps its title bar, so an auto-hidden taskbar
+    /// (which lets it cover the whole monitor) does not count.
+    /// </summary>
+    public bool IsFullScreenOn(PixelRect monitor)
+    {
+        if (Win32.SHQueryUserNotificationState(out int state) == 0 && state == Win32.QUNS_PRESENTATION_MODE) return true;
+        IntPtr fg = Win32.GetForegroundWindow();
+        if (fg == IntPtr.Zero || fg == _hwnd) return false;
+        Win32.GetWindowThreadProcessId(fg, out uint pid);
+        if (pid == _selfPid || IgnoredClasses.Contains(Win32.ClassName(fg))) return false;
+        if ((Win32.GetWindowLong(fg, Win32.GWL_STYLE) & Win32.WS_CAPTION) == Win32.WS_CAPTION) return false;
+        if (!Win32.GetWindowRect(fg, out var rc)) return false;
+        return Office.FullScreen.Covers(new PixelRect(rc.Left, rc.Top, rc.Right - rc.Left, rc.Bottom - rc.Top), monitor);
+    }
+
     public bool AutostartEnabled
     {
         get

@@ -47,6 +47,8 @@ public sealed class StatsWindow : Window
             L.F("Time played {0} · achievements {1}/{2}", Duration(stats.TotalSeconds), stats.UnlockedCount, Achievements.All.Length),
             13, FontWeight.Normal, "#AAB3C0"));
         panel.Children.Add(Text(overlay.DailyLine, 13, FontWeight.SemiBold, "#FFD166"));
+        panel.Children.Add(Text(L.F("At the computer today {0} · focus blocks {1} · breaks {2} · water {3}", OfficeDesk.Duration(overlay.Office.ActiveToday),
+            stats.Today("work.focus"), stats.Today("work.eye") + stats.Today("work.stretch"), stats.Today("work.water")), 13, FontWeight.Normal, "#AAB3C0"));
 
         panel.Children.Add(Section(L.T("Games")));
         foreach (var game in overlay.Games)
@@ -67,12 +69,17 @@ public sealed class StatsWindow : Window
 
         AddPets(panel, overlay.Settings, stats);
 
-        var groups = new[] { "general" }.Concat(overlay.Games.Select(g => g.Id));
+        var groups = new[] { "general", "work" }.Concat(overlay.Games.Select(g => g.Id));
         foreach (string groupId in groups)
         {
             var list = Achievements.All.Where(a => a.GameId == groupId).ToList();
             if (list.Count == 0) continue;
-            string heading = groupId == "general" ? L.T("General") : L.T(overlay.Games.First(g => g.Id == groupId).Title);
+            string heading = groupId switch
+            {
+                "general" => L.T("General"),
+                "work" => L.T("At work"),
+                _ => L.T(overlay.Games.First(g => g.Id == groupId).Title),
+            };
             panel.Children.Add(Section(heading));
             foreach (var a in list) panel.Children.Add(AchievementRow(a, stats));
         }

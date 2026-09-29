@@ -55,6 +55,9 @@ public static class Program
         //   DeskArcade --while <command> [arguments...]   runs the command and shows it on the scoreboard
         if (run >= 0) return TaskRunner.Run(command);
 
+        //   DeskArcade --timer 10m Tea | --note text | --focus [minutes] | --wait-pid N | --wait-file path | --wait-url url
+        if (OfficeCli.TryRun(args, out int officeCode)) return officeCode;
+
         using var mutex = new Mutex(true, MutexBaseName + InstanceSuffix, out bool isFirst);
         if (!isFirst)
         {

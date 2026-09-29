@@ -7,7 +7,8 @@ Eight new games came early and shipped in 1.7.1, four more with `--while` and th
 1.8.0 turned every game into a two-player game: a computer rival or a co-worker in each of them, twelve pets,
 animation everywhere, and an overlay that behaves on a real Ubuntu desktop. 1.8.1 added five games from the ideas list, and 1.8.2 gave the pets their turn. 1.8.3 brought typing (Typing Race,
 Word Rain), reactions and chat with a co-worker, and four more games from the ideas list. 1.8.4 builds the rest of the
-ideas list: thirteen games and variants, from Backgammon to a rope bridge for the interns.
+ideas list: thirteen games and variants, from Backgammon to a rope bridge for the interns. 1.8.5 turns to the working
+day around the games: **At work**, for the problems office workers have besides waiting for a build.
 
 Each item says how it will be verified. "Demo" means copies on one PC (`--profile`) playing by themselves
 (`--demo`).
@@ -21,7 +22,7 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 | 1.8.2 | 2026-09-25 | Pets join the games, pet mail over the LAN, pets grow up and nap on a favourite window, pet volume |
 | 1.8.3 | 2026-09-28 | Typing Race, Word Rain, reactions and chat, Snakes on Windows, co-op Asteroids, Minesweeper and Sudoku |
 | 1.8.4 | 2026-09-28 | The rest of the ideas list: Mancala, Blackjack, Curling, Paper Planes, Ping-Pong Cups, Bingo of Work, Kite, Backgammon, Dominoes, Window Jenga, Rope Bridge; Perevodnoy and Salvo rules |
-| 1.8.5 | next | A LAN fix: a guest's repeated hello looped "Connected" on the host |
+| 1.8.5 | next | At work: presenting mode, breaks by time at the computer, meeting warnings, focus blocks, timers and notes, coffee invites, download waits, the end of the day; and a LAN fix |
 | 1.9.0 | late October | Package managers, a feel pass by hand, Flathub |
 | 2.0.0 | mid December | Flathub, a real Mac, a winter event |
 
@@ -240,6 +241,54 @@ Uzbek text, and a `--snapshot` check of its demo. Those with a round are races a
   *Verified: `BridgeTests` (falls, snapping planks, a keeper who saves the round); demo snapshots.*
 - [ ] The Russian and Uzbek text for all of the above, read by native speakers.
 
+## 1.8.5: at work (next)
+
+The games help with one office problem, the dead time while something builds. 1.8.5 takes on the others: getting
+caught with a game on a shared screen, sitting for hours, missed meetings, interruptions, arranging coffee, waiting on
+downloads, and staying late. Everything is under **tray or ☰ → At work**, stays on the PC (only coffee invites use the
+network, and only when turned on), and costs nothing while idle but a one-second timer.
+
+- [x] **A guest's repeated hello no longer loops "Connected" on the host.** *Verified: `LanRejoinTests`.*
+- [x] **Presenting mode** (on by default): the overlay hides while a full-screen window fills its monitor or Windows
+  presentation settings are on, and comes back after; notices due meanwhile wait silently. Windows reads
+  `SHQueryUserNotificationState` and the foreground window (no title bar, covering the monitor, so a maximised window
+  with an auto-hidden taskbar does not count); X11 the active window's `_NET_WM_STATE_FULLSCREEN`; macOS the frontmost
+  window's bounds. *Verified: unit tests for the geometry. Not seen live: the Windows session was locked while it was
+  tested, so no window could take the foreground (see below).*
+- [x] **Breaks by time at the computer**: 20-20-20 eye breaks, a one-minute stretch with a figure to copy, water, and
+  **Breathe for a minute** (box breathing) at any time, on a card that pauses the game; the idle time from
+  `GetLastInputInfo`, `CGEventSourceSecondsSinceLastEventType`, libXss, or Mutter's IdleMonitor and
+  `org.freedesktop.ScreenSaver` over D-Bus on Wayland. The play-time break reminder moved under At work → Breaks.
+  *Verified: `BodyBreakTests`, `ExerciseTests`; snapshots of the eye, stretch, breathing and water cards; the idle time
+  read live on Windows 11.*
+- [x] **Meeting warnings** from an .ics link or file (Outlook's published calendar, Google's secret iCal address): a
+  heads-up 1 to 15 minutes before, the game paused a minute before, "starting now", a countdown on the scoreboard, and
+  optionally the overlay hidden for the meeting. The reader follows RRULE (DAILY to YEARLY with INTERVAL, COUNT, UNTIL,
+  BYDAY with ordinals, BYMONTHDAY, BYMONTH, BYSETPOS, WKST), RDATE, EXDATE, moved and cancelled occurrences, and time
+  zones by system name, a CLDR name table (the app runs without ICU) or the file's VTIMEZONE. *Verified:
+  `CalendarTests` (a weekly meeting across the October clock change, Outlook and Google zone names, last Friday, last
+  working day, second Tuesday, the 31st, exceptions), `MeetingWatchTests`. Not tried against a real Outlook or Google
+  account yet.*
+- [x] **Focus blocks** (25, 50 or 90 minutes; 5 to 15 minute breaks; every fourth break 15 minutes): the overlay steps
+  aside, chat, reactions and invites wait for the break, and the paired co-worker hears that you are focusing.
+  *Verified: `FocusTimerTests`.*
+- [x] **Timers and sticky notes**: timers from the menu or `deskarcade --timer 10m Tea`; notes that ride along on the
+  window top they are dropped on, with reminders. *Verified: `WorkDayTests` for the durations; a snapshot with a
+  timer on the scoreboard and a note.*
+- [x] **Coffee, lunch and walk invites** on UDP port 47823, opt-in, answered on a card; a focusing co-worker answers
+  "focusing" by itself. *Verified: `OfficeInviteTests` (the wire format and a live receive over loopback); two copies
+  on one PC: one's invite showed as a card on the other. Not tried between two PCs yet.*
+- [x] **Downloads and other waits**: a chime when a browser download finishes in the Downloads folder, and
+  `--wait-pid`, `--wait-file` and `--wait-url`. *Verified: `WaitTests`.*
+- [x] **The end of the day**: at the time set, the day's summary on a card; an hour later, still there, "still
+  here?". *Verified: `WorkDayTests`; a snapshot of the card.*
+- [x] **Peeking out**: with the overlay hidden, a notice or a card shows on its own without the game or the
+  scoreboard. *Verified: a snapshot of a water card with the overlay hidden.*
+- [x] **Nine achievements** (170 in all), four Bingo of Work squares, the Russian and Uzbek text, the README, and the
+  Flatpak's missing `--share=network` (LAN play, updates and now the calendar need it), read access to the Downloads
+  folder and the two idle-time D-Bus names. *Verified: `TranslationCoverageTests`.*
+- [ ] The Russian and Uzbek text of At work, read by native speakers.
+
 ## 1.9.0: package managers and a feel pass (October)
 
 - [ ] **A feel pass by hand** on the 1.8.0 work, on Windows and Ubuntu: the computer rival's pacing and levels in each
@@ -293,6 +342,10 @@ Uzbek text, and a `--snapshot` check of its demo. Those with a round are races a
 | How Typing Race, Word Rain, Snakes on Windows, Asteroids, Minesweeper and Sudoku feel by hand | Someone playing them |
 | How the 1.8.4 games feel with a real mouse: the kite's pull, the Jenga pull, laying planks, flicking cups | Someone playing them |
 | Backgammon, Dominoes, Perevodnoy rooms and Salvo between two real PCs | Two PCs on one network |
+| Presenting mode live: a slide show, a video in full screen, a browser after F11 and Windows presentation settings on Windows; full-screen X11 apps on GNOME and KDE; macOS | An unlocked desktop session on each |
+| The breaks' idle time on GNOME and KDE under Wayland (Mutter IdleMonitor, org.freedesktop.ScreenSaver) and on macOS | A Wayland session of each, and a Mac |
+| Meeting warnings from a real Outlook published calendar and a Google secret iCal address | Accounts with meetings in them |
+| Coffee invites and "focusing" between two real PCs; pairing over Tailscale or ZeroTier by address | Two PCs on one network, and on a VPN |
 
 ## Ideas for more mini games
 

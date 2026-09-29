@@ -32,7 +32,7 @@ public sealed class Hud : Border
     readonly Dictionary<string, Border> _tabs = new();
 
     // full board
-    readonly Grid _board = new() { RowDefinitions = new RowDefinitions("Auto,Auto,Auto,Auto,Auto,Auto") };
+    readonly Grid _board = new() { RowDefinitions = new RowDefinitions("Auto,Auto,Auto,Auto,Auto,Auto,Auto") };
     readonly TextBlock _score = Text(30, FontWeight.Black, "#FFFFFF");
     readonly TextBlock _title = Text(11, FontWeight.Bold, "#9AA4B2");
     readonly TextBlock _best = Text(12, FontWeight.SemiBold, "#FFD166");
@@ -46,6 +46,9 @@ public sealed class Hud : Border
     readonly Border _taskChip;
     readonly Ellipse _taskDot = new() { Width = 8, Height = 8 };
     readonly TextBlock _taskText = Text(11, FontWeight.SemiBold, "#FFFFFF");
+    readonly Border _officeChip;
+    readonly Ellipse _officeDot = new() { Width = 8, Height = 8 };
+    readonly TextBlock _officeText = Text(11, FontWeight.SemiBold, "#FFFFFF");
 
     // compact pill
     readonly StackPanel _pill = new() { Orientation = Orientation.Horizontal };
@@ -57,6 +60,9 @@ public sealed class Hud : Border
     readonly TextBlock _pillOppText = Text(11, FontWeight.SemiBold, "#FFFFFF");
     readonly Ellipse _pillDot = new() { Width = 8, Height = 8, IsVisible = false };
     readonly Ellipse _pillTaskDot = new() { Width = 8, Height = 8, IsVisible = false };
+    readonly Border _pillOffice;
+    readonly Ellipse _pillOfficeDot = new() { Width = 7, Height = 7 };
+    readonly TextBlock _pillOfficeText = Text(11, FontWeight.SemiBold, "#FFFFFF");
     readonly TextBlock _menuButton = Text(15, FontWeight.Bold, "#C9D1DC");
     readonly TextBlock _menuTabText = Text(15, FontWeight.Bold, "#C9D1DC");
     readonly ScaleTransform _scoreScale = new(), _oppScale = new();
@@ -75,6 +81,7 @@ public sealed class Hud : Border
     DateTime? _taskSince;
     TimeSpan? _taskTook;
     int _taskCode, _taskFlashes;
+    bool _officeUrgent;
     bool _expanded, _pressed, _dragging, _menuOpen, _shownOnce;
     Vec2 _pressAt, _dragOffset;
     Opponent? _opponent;
@@ -172,6 +179,12 @@ public sealed class Hud : Border
         _taskChip = Chip(_taskDot, _taskText);
         Grid.SetRow(_taskChip, 5);
         _board.Children.Add(_taskChip);
+
+        _officeText.TextTrimming = TextTrimming.CharacterEllipsis;
+        _officeText.MaxWidth = ExpandedWidth - 50;
+        _officeChip = Chip(_officeDot, _officeText);
+        Grid.SetRow(_officeChip, 6);
+        _board.Children.Add(_officeChip);
         _board.Transitions = new Transitions
         {
             new DoubleTransition { Property = OpacityProperty, Duration = TimeSpan.FromMilliseconds(140) },
@@ -198,6 +211,14 @@ public sealed class Hud : Border
         _pillDot.VerticalAlignment = VerticalAlignment.Center;
         _pillTaskDot.Margin = new Thickness(6, 0, 0, 0);
         _pillTaskDot.VerticalAlignment = VerticalAlignment.Center;
+        _pillOfficeDot.Margin = new Thickness(0, 0, 4, 0);
+        _pillOfficeDot.VerticalAlignment = VerticalAlignment.Center;
+        _pillOffice = new Border
+        {
+            CornerRadius = new CornerRadius(8), Padding = new Thickness(6, 1, 7, 2), Margin = new Thickness(8, 0, 0, 0),
+            VerticalAlignment = VerticalAlignment.Center, IsVisible = false,
+            Child = new StackPanel { Orientation = Orientation.Horizontal, Children = { _pillOfficeDot, _pillOfficeText } },
+        };
         _menuButton.Text = "☰";
         _menuTabText.Text = "☰";
         _menuButton.Margin = new Thickness(9, 0, 0, 1);
@@ -218,6 +239,7 @@ public sealed class Hud : Border
         _pill.Children.Add(_pillOpp);
         _pill.Children.Add(_pillDot);
         _pill.Children.Add(_pillTaskDot);
+        _pill.Children.Add(_pillOffice);
         _pill.Children.Add(_menuButton);
 
         Child = new Panel { Children = { _pill, _board } };
@@ -488,6 +510,29 @@ public sealed class Hud : Border
         ToolTip.SetTip(_pillTaskDot, text);
     }
 
+    /// <summary>
+    /// The at-work line (see <see cref="OfficeDesk"/>): the next meeting, the focus block or break, a timer. The board
+    /// shows <paramref name="text"/> in full; the pill a short <paramref name="brief"/> ("4:59") with the dot, and the
+    /// whole line as its tooltip. <paramref name="urgent"/> makes the dot pulse. Null hides both.
+    /// </summary>
+    public void SetOffice(string? text, string? brief = null, Color? dot = null, bool urgent = false)
+    {
+        bool show = !string.IsNullOrEmpty(text);
+        _officeChip.IsVisible = _pillOffice.IsVisible = show;
+        _officeUrgent = show && urgent;
+        if (!show) return;
+        var c = Art.Safe(dot ?? Color.Parse("#78C8FF"));
+        var fill = Art.Brush(c);
+        _officeDot.Fill = _pillOfficeDot.Fill = fill;
+        var bg = Art.Brush(Art.Blend(c, Color.Parse("#12141C"), 0.78));
+        _officeChip.Background = _pillOffice.Background = bg;
+        if (_officeText.Text != text) _officeText.Text = text;
+        string shortText = brief ?? text!;
+        if (_pillOfficeText.Text != shortText) _pillOfficeText.Text = shortText;
+        ToolTip.SetTip(_pillOffice, text);
+        if (!_officeUrgent) _officeDot.Opacity = _pillOfficeDot.Opacity = 1;
+    }
+
     /// <summary>"4:05" or "1:02:03".</summary>
     public static string FormatWait(TimeSpan t) =>
         t.TotalHours >= 1 ? $"{(int)t.TotalHours}:{t.Minutes:00}:{t.Seconds:00}" : $"{(int)t.TotalMinutes}:{t.Seconds:00}";
@@ -525,6 +570,8 @@ public sealed class Hud : Border
         {
             _taskDot.Opacity = _taskChip.Opacity = _pillTaskDot.Opacity = 1;
         }
+
+        if (_officeUrgent) _officeDot.Opacity = _pillOfficeDot.Opacity = _blinkOn || Fx.ReducedMotion ? 1 : 0.3;
 
         // waiting on the other side: the turn dot breathes
         _oppDot.Opacity = _pillOppDot.Opacity = _opponent?.MyTurn == false && !_blinkOn && !Fx.ReducedMotion ? 0.3 : 1;

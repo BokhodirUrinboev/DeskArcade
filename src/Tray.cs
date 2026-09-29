@@ -48,6 +48,7 @@ public sealed class Tray : IDisposable
         foreach (var (kind, name) in PetChoices())
             pets.Add(Radio(name, () => _w.SetPet(kind), () => _w.Settings.PetKind == kind));
         menu.Add(new NativeMenuItem(L.T("Pet")) { Menu = pets });
+        menu.Add(OfficeMenu.ToNative(OfficeMenu.Build(_w), _refreshers));
         menu.Add(Item(L.T("Next game") + "   (" + Shortcuts.Label(HotkeyAction.NextGame) + ")", () => _w.NextGame()));
         menu.Add(Item(L.T("Bring to cursor") + "   (" + Shortcuts.Label(HotkeyAction.Summon) + ")", () => _w.SummonToCursor()));
         menu.Add(Item(L.T("Stats & achievements…"), () => _w.OpenStats()));
@@ -152,13 +153,6 @@ public sealed class Tray : IDisposable
         themes.Add(new NativeMenuItemSeparator());
         themes.Add(Check(L.T("Theme decorations"), () => _w.SetThemeDecor(!_w.Settings.ThemeDecor), () => _w.Settings.ThemeDecor));
         menu.Add(new NativeMenuItem(L.T("Theme")) { Menu = themes });
-
-        var breaks = new NativeMenu();
-        foreach (int minutes in new[] { 0, 15, 20, 30, 45, 60 })
-            breaks.Add(Radio(minutes == 0 ? L.T("Off") : L.F("After {0} minutes of play", minutes), () => _w.SetBreakMinutes(minutes), () => _w.Settings.BreakMinutes == minutes));
-        breaks.Add(new NativeMenuItemSeparator());
-        breaks.Add(Check(L.T("Say “back to work” when Claude is done"), () => Toggle(s => s.BackToWork = !s.BackToWork), () => _w.Settings.BackToWork));
-        menu.Add(new NativeMenuItem(L.T("Break reminder")) { Menu = breaks });
 
         var access = new NativeMenu();
         access.Add(Check(L.T("Reduce motion"), () => Toggle(s => s.ReducedMotion = !s.ReducedMotion), () => _w.Settings.ReducedMotion));

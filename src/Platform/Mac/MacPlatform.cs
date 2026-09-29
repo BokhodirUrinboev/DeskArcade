@@ -312,6 +312,69 @@ public sealed class MacPlatform : IDesktopPlatform
 
     public IAudioOutput? OpenAudio(int sampleRate) => AudioQueueOutput.TryOpen(sampleRate);
 
+    // ------------------------------------------------------------------ idle time & full screen
+
+    bool _idleFailed;
+
+    public double? IdleSeconds()
+    {
+        if (_idleFailed) return null;
+        try
+        {
+            double seconds = CoreGraphics.CGEventSourceSecondsSinceLastEventType(CoreGraphics.CombinedSessionState, CoreGraphics.AnyInputEventType);
+            return double.IsFinite(seconds) && seconds >= 0 ? seconds : null;
+        }
+        catch (Exception)
+        {
+            _idleFailed = true;
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// The frontmost window of another app covers the monitor: an app in full screen (it has a Space of its own, which
+    /// the overlay joins), a slide show or a video. Windows above the normal layer (Keynote's slide show, a screen
+    /// saver) count when they cover it; the first normal window decides otherwise.
+    /// </summary>
+    public bool IsFullScreenOn(PixelRect monitor)
+    {
+        if (_windowsFailed) return false;
+        IntPtr list = IntPtr.Zero;
+        try
+        {
+            _windowKeys ??= CoreGraphics.LoadWindowKeys();
+            if (_windowKeys is not { } keys) return false;
+            list = CoreGraphics.CGWindowListCopyWindowInfo(
+                CoreGraphics.WindowListOptionOnScreenOnly | CoreGraphics.WindowListExcludeDesktopElements, CoreGraphics.NullWindowId);
+            if (list == IntPtr.Zero) return false;
+            nint count = CoreFoundation.CFArrayGetCount(list);
+            for (nint i = 0; i < count; i++)
+            {
+                IntPtr info = CoreFoundation.CFArrayGetValueAtIndex(list, i);
+                if (!CoreFoundation.IsDictionary(info)) continue;
+                if (!CoreFoundation.TryGetLong(info, keys.Layer, out long layer) || layer < 0) continue;
+                if (!CoreFoundation.TryGetLong(info, keys.OwnerPid, out long pid) || pid == _selfPid) continue;
+                if (!CoreFoundation.TryGetDouble(info, keys.Alpha, out double alpha) || alpha <= 0) continue;
+                IntPtr bounds = CoreFoundation.CFDictionaryGetValue(info, keys.Bounds);
+                if (!CoreFoundation.IsDictionary(bounds) || CoreGraphics.CGRectMakeWithDictionaryRepresentation(bounds, out var rect) == 0)
+                    continue;
+                var r = new PixelRect((int)Math.Floor(rect.Origin.X), (int)Math.Floor(rect.Origin.Y),
+                    (int)Math.Ceiling(rect.Size.Width), (int)Math.Ceiling(rect.Size.Height));
+                bool covers = Office.FullScreen.Covers(r, monitor);
+                if (covers || layer == 0) return covers;
+            }
+            return false;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+        finally
+        {
+            if (list != IntPtr.Zero) CoreFoundation.CFRelease(list);
+        }
+    }
+
     static string LaunchAgentFile => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library", "LaunchAgents", LaunchAgentLabel + ".plist");
 

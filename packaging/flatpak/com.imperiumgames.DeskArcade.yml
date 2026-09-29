@@ -29,6 +29,16 @@ finish-args:
   # points at the scoreboard's menu instead.
   - --talk-name=org.kde.StatusNotifierWatcher
   - --own-name=org.kde.StatusNotifierItem-2-0
+  # Time since the last key or mouse input, for the breaks that count time at the computer (LinuxIdle.cs):
+  # GNOME's Mutter answers on the first name, KDE Plasma on the second. On Xorg libXss answers instead.
+  - --talk-name=org.gnome.Mutter.IdleMonitor
+  - --talk-name=org.freedesktop.ScreenSaver
+  # The local network and the internet: playing a co-worker over the LAN, the office leaderboard and coffee
+  # invites (UDP broadcasts that never leave the LAN), the update check, and a calendar's .ics link for the
+  # meeting warnings.
+  - --share=network
+  # "Tell me when downloads finish" watches the Downloads folder, only reading the names of the files in it.
+  - --filesystem=xdg-download:ro
   # Settings, high scores and crash.log in ~/.config/DeskArcade (src/Settings.cs), shared with the
   # .deb and AppImage, and "Start when I sign in" in ~/.config/autostart (X11Platform.cs).
   # deskarcade.sh points XDG_CONFIG_HOME at ~/.config so the app writes to these host folders.
