@@ -1386,6 +1386,9 @@ public sealed class OverlayWindow : Window, IGameHost
         Wake();
     }
 
+    /// <summary>The LAN session the "Connected" notice was last shown for: state changes can arrive in a bunch.</summary>
+    int _noticedSession = -1;
+
     void OnLanStateChanged()
     {
         _race.Reset();
@@ -1393,7 +1396,11 @@ public sealed class OverlayWindow : Window, IGameHost
         {
             if (Lan.Role == LanRole.Guest) SwitchGame(Lan.GameId);
             SetOverlayVisible(true);
-            Notice(L.T("Connected"), L.F("Playing with {0}", Lan.PeerName), Color.FromRgb(61, 220, 132));
+            if (Lan.Session != _noticedSession)
+            {
+                _noticedSession = Lan.Session;
+                Notice(L.T("Connected"), L.F("Playing with {0}", Lan.PeerName), Color.FromRgb(61, 220, 132));
+            }
         }
         else if (Lan.State == LanState.Waiting && Lan.Role == LanRole.Host)
             Notice(L.T("Hosting"), L.T("Waiting for a player to join…"), Color.FromRgb(77, 163, 255));

@@ -67,6 +67,8 @@ public class HockeyTableTests
 [Collection("lan")]
 public class LanGameFollowTests
 {
+    const int TestPort = 47894; // not the real port: a copy of Desk Arcade running on this PC must not hear these
+
     static bool WaitFor(Func<bool> condition, int ms = 5000)
     {
         var until = DateTime.UtcNow.AddMilliseconds(ms);
@@ -81,14 +83,14 @@ public class LanGameFollowTests
     [Fact]
     public void AGuestJoinsIntoTheGameTheHostSwitchedToWhileWaitingAndFollowsLaterSwitchesOnce()
     {
-        using var host = new LanLink();
-        using var guest = new LanLink();
+        using var host = new LanLink(TestPort);
+        using var guest = new LanLink(TestPort);
         host.Host("hockey");
         host.SendGame("chess"); // switched games before anyone joined
 
         var switches = new List<string>();
         guest.GameChanged += id => { lock (switches) switches.Add(id); };
-        guest.Join(new System.Net.IPEndPoint(System.Net.IPAddress.Loopback, LanLink.Port));
+        guest.Join(new System.Net.IPEndPoint(System.Net.IPAddress.Loopback, TestPort));
         Assert.True(WaitFor(() => host.Connected && guest.Connected), "the two links never paired");
         Assert.Equal("chess", guest.GameId);
 
@@ -102,10 +104,10 @@ public class LanGameFollowTests
     [Fact]
     public void RivalActionsArriveAsFractionsOfTheArena()
     {
-        using var host = new LanLink();
-        using var guest = new LanLink();
+        using var host = new LanLink(TestPort);
+        using var guest = new LanLink(TestPort);
         host.Host("whack");
-        guest.Join(new System.Net.IPEndPoint(System.Net.IPAddress.Loopback, LanLink.Port));
+        guest.Join(new System.Net.IPEndPoint(System.Net.IPAddress.Loopback, TestPort));
         Assert.True(WaitFor(() => host.Connected && guest.Connected));
 
         (double X, double Y, int Pts)? got = null;
