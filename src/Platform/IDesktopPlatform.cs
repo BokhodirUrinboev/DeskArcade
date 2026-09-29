@@ -70,6 +70,18 @@ public interface IDesktopPlatform : IDisposable
     IAudioOutput? OpenAudio(int sampleRate);
 
     bool AutostartEnabled { get; set; }
+
+    /// <summary>
+    /// Seconds since the last keyboard or mouse input anywhere on the desktop, for the breaks that count time at the
+    /// computer; null when the platform cannot tell (the overlay then watches the cursor instead).
+    /// </summary>
+    double? IdleSeconds() => null;
+
+    /// <summary>
+    /// True while a full-screen window (a slide show, a video, a game, a browser in full screen) fills the monitor
+    /// given in screen pixels (points on macOS), or the system says a presentation is on. The overlay steps aside then.
+    /// </summary>
+    bool IsFullScreenOn(PixelRect monitor) => false;
 }
 
 public static class DesktopPlatform

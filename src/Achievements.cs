@@ -15,6 +15,16 @@ public static class Achievements
         new("its-compiling", "general", "It's compiling", "Be playing when a --while command finishes 10 times", "task.done", 10),
         new("race-cpu", "general", "Pacesetter", "Beat the computer in 10 races", "race.cpuwins", 10),
 
+        new("work-eyes", "work", "Far sighted", "Take 50 eye breaks", "work.eye", 50),
+        new("work-stretch", "work", "Limber", "Finish 25 stretch breaks", "work.stretch", 25),
+        new("work-water", "work", "Hydrated", "Drink 50 glasses of water", "work.water", 50),
+        new("work-focus", "work", "Deep work", "Finish 10 focus blocks", "work.focus", 10),
+        new("work-breathe", "work", "Breathe easy", "Breathe for a minute 10 times", "work.breathe", 10),
+        new("work-meetings", "work", "Right on time", "Get a heads-up before 20 meetings", "work.meetings", 20),
+        new("work-invites", "work", "Coffee club", "Go for coffee, lunch or a walk with co-workers 5 times", "work.invites", 5),
+        new("work-notes", "work", "Note to self", "Tick off 10 sticky notes", "work.notes", 10),
+        new("work-timers", "work", "Tea's ready", "Let 10 timers ring", "work.timers", 10),
+
         new("hoops-100", "hoops", "Hundred baskets", "Score 100 baskets", "hoops.baskets", 100),
         new("hoops-swish", "hoops", "Nothing but net", "Score 25 swishes", "hoops.swishes", 25),
         new("hoops-streak", "hoops", "Unstoppable", "Make 10 baskets in a row", "hoops.streak", 10),

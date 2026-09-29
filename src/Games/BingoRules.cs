@@ -58,6 +58,10 @@ public sealed class BingoCard
         new("morning", Morning, 1, "Play before 10 AM"),
         new("lunch", Lunch, 1, "Play at lunchtime (12–2 PM)"),
         new("evening", Evening, 1, "Play after 6 PM"),
+        new("stretch", "work.stretch", 1, "Take a stretch break"),
+        new("water", "work.water", 1, "Drink a glass of water"),
+        new("focus", "work.focus", 1, "Finish a focus block"),
+        new("breathe", "work.breathe", 1, "Breathe for a minute"),
     };
 
     /// <summary>

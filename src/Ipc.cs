@@ -14,6 +14,18 @@ public static class Ipc
 {
     static string PipeName => "DeskArcade.Signal.v1" + Program.InstanceSuffix;
 
+    /// <summary>Messages whose text after the prefix keeps its spelling: a --while label, a path, a web address, a note.</summary>
+    static readonly string[] KeepCase = { "task:", "wait-file:", "wait-url:", "timer:", "note:", "chat:" };
+
+    /// <summary>The message as the overlay handles it: trimmed, and lower-cased unless its text must keep its spelling.</summary>
+    public static string Normalize(string line)
+    {
+        var msg = line.Trim();
+        foreach (string prefix in KeepCase)
+            if (msg.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) return prefix + msg[prefix.Length..];
+        return msg.ToLowerInvariant();
+    }
+
     public static bool Send(string message, int timeoutMs = 150)
     {
         try
@@ -45,9 +57,7 @@ public static class Ipc
                     string? line;
                     while ((line = await reader.ReadLineAsync(ct)) != null)
                     {
-                        var msg = line.Trim();
-                        // a --while label keeps the command's own spelling
-                        if (!msg.StartsWith("task:", StringComparison.OrdinalIgnoreCase)) msg = msg.ToLowerInvariant();
+                        var msg = Normalize(line);
                         if (msg.Length > 0) onMessage(msg);
                     }
                 }

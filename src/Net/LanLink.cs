@@ -85,6 +85,8 @@ public sealed class LanLink : IDisposable
     public event Action<string>? ChatReceived;
     /// <summary>Raised when the peer sends a reaction (a <see cref="Reaction"/>).</summary>
     public event Action<Reaction>? ReactionReceived;
+    /// <summary>Raised when the peer starts a focus block (the minutes it has left) or ends it (0).</summary>
+    public event Action<int>? FocusReceived;
 
     /// <summary>Counts connections, so games can tell a new session from the one they already set up.</summary>
     public int Session { get; private set; }
@@ -168,6 +170,9 @@ public sealed class LanLink : IDisposable
     }
 
     public void SendEmote(int index) => Send($"em|{index}");
+
+    /// <summary>Tells the peer a focus block started (<paramref name="minutesLeft"/>) or ended (0).</summary>
+    public void SendFocus(int minutesLeft) => Send(string.Create(CultureInfo.InvariantCulture, $"fo|{Math.Clamp(minutesLeft, 0, 600)}"));
 
     public void SendReaction(Reaction reaction) => Send(string.Create(CultureInfo.InvariantCulture, $"rx|{(int)reaction}"));
 
@@ -357,6 +362,11 @@ public sealed class LanLink : IDisposable
         if (kind == "rx")
         {
             if (int.TryParse(body, NumberStyles.Integer, CultureInfo.InvariantCulture, out int r) && Enum.IsDefined(typeof(Reaction), r)) ReactionReceived?.Invoke((Reaction)r);
+            return;
+        }
+        if (kind == "fo")
+        {
+            if (int.TryParse(body, NumberStyles.None, CultureInfo.InvariantCulture, out int left) && left <= 600) FocusReceived?.Invoke(left);
             return;
         }
         if (kind == "em")

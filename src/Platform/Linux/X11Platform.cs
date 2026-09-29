@@ -33,8 +33,9 @@ public sealed class X11Platform : IDesktopPlatform
     readonly long _selfPid = Environment.ProcessId;
     readonly IntPtr _atomClientList, _atomWmState, _atomHidden, _atomWmType, _atomTypeNormal, _atomTypeDialog;
     readonly IntPtr _atomFrameExtents, _atomGtkFrameExtents, _atomWmPid, _atomWmDesktop, _atomCurrentDesktop, _atomTakeFocus;
-    readonly IntPtr _atomBypassCompositor, _atomUserTime;
+    readonly IntPtr _atomBypassCompositor, _atomUserTime, _atomActiveWindow, _atomFullscreen;
     readonly long[] _overlayStates = Array.Empty<long>();
+    readonly LinuxIdle _idle = new(IsWaylandSession);
 
     Window? _overlay;
     IntPtr _win;
@@ -80,6 +81,8 @@ public sealed class X11Platform : IDesktopPlatform
         _atomTakeFocus = Atom("WM_TAKE_FOCUS");
         _atomBypassCompositor = Atom("_NET_WM_BYPASS_COMPOSITOR");
         _atomUserTime = Atom("_NET_WM_USER_TIME");
+        _atomActiveWindow = Atom("_NET_ACTIVE_WINDOW");
+        _atomFullscreen = Atom("_NET_WM_STATE_FULLSCREEN");
         _overlayStates = Ewmh.OverlayStates.Select(name => (long)Atom(name)).ToArray();
     }
 
@@ -474,6 +477,29 @@ public sealed class X11Platform : IDesktopPlatform
 
     public IAudioOutput? OpenAudio(int sampleRate) => PulseAudio.TryOpen(sampleRate);
 
+    // ------------------------------------------------------------------ idle time & full screen
+
+    public double? IdleSeconds() => _idle.Seconds(_dpy, _root);
+
+    /// <summary>
+    /// The active window (_NET_ACTIVE_WINDOW) in the _NET_WM_STATE_FULLSCREEN state on the overlay's monitor. Under
+    /// Wayland only X11 apps are seen, so a native Wayland app in full screen goes unnoticed.
+    /// </summary>
+    public bool IsFullScreenOn(PixelRect monitor)
+    {
+        if (_dpy == IntPtr.Zero) return false;
+        long[] active = ReadLongs(_root, _atomActiveWindow);
+        if (active.Length == 0 || !Ewmh.IsRealWindow(active[0])) return false;
+        var w = (IntPtr)active[0];
+        if (w == _win) return false;
+        long[] pid = ReadLongs(w, _atomWmPid);
+        if (pid.Length > 0 && pid[0] == _selfPid) return false;
+        if (!ReadLongs(w, _atomWmState).Contains((long)_atomFullscreen)) return false;
+        if (X11.XGetWindowAttributes(_dpy, w, out var attributes) == 0 || attributes.MapState != X11.IsViewable) return false;
+        if (!X11.XTranslateCoordinates(_dpy, w, _root, 0, 0, out int x, out int y, out _)) return false;
+        return Office.FullScreen.Covers(new PixelRect(x, y, attributes.Width, attributes.Height), monitor);
+    }
+
     static string AutostartFile => Path.Combine(
         Environment.GetEnvironmentVariable("XDG_CONFIG_HOME") is { Length: > 0 } xdg
             ? xdg
@@ -501,6 +527,7 @@ public sealed class X11Platform : IDesktopPlatform
     public void Dispose()
     {
         _disposed = true;
+        _idle.Dispose();
         _portal?.Dispose(); // closes the portal session and its D-Bus connection
         _portal = null;
         _hkRunning = false;

@@ -24,6 +24,22 @@ internal static class Win32
     public const int DWMWA_EXTENDED_FRAME_BOUNDS = 9;
     public const int DWMWA_CLOAKED = 14;
 
+    public const int GWL_STYLE = -16;
+    public const int WS_CAPTION = 0x00C00000;
+    /// <summary>SHQueryUserNotificationState: Windows "presentation settings" are on (a projector, "I am giving a presentation").</summary>
+    public const int QUNS_PRESENTATION_MODE = 4;
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct LASTINPUTINFO
+    {
+        public uint cbSize;
+        public uint dwTime;
+    }
+
+    [DllImport("user32.dll")] public static extern bool GetLastInputInfo(ref LASTINPUTINFO info);
+    [DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
+    [DllImport("shell32.dll")] public static extern int SHQueryUserNotificationState(out int state);
+
     [StructLayout(LayoutKind.Sequential)]
     public struct POINT { public int X, Y; }
 

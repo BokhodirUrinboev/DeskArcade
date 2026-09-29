@@ -33,6 +33,7 @@ public sealed class OverlayWindow : Window, IGameHost
     readonly DecorLayer _decor = new();
     readonly Canvas _hudLayer = new();
     readonly Canvas _reactLayer = new() { IsHitTestVisible = false }; // reactions floating in from the co-worker
+    readonly Canvas _officeLayer = new(); // at work: break cards, sticky notes, invites (see OfficeDesk)
     readonly List<MiniGame> _games = new();
     readonly List<HitShape> _hitShapes = new();
     readonly List<HitShape> _pushedHitShapes = new();
@@ -70,6 +71,7 @@ public sealed class OverlayWindow : Window, IGameHost
     int _achievementRow;
     PetGame.Companion? _petPal; // the pet keeping the player company in the other games
     TypingPad? _pad;             // the typing games' keyboard, while one is being typed into
+    bool _peeking;               // shown only for an at-work card or notice: the game and scoreboard stay out of sight
 
     public Settings Settings { get; } = Settings.Load();
     public Stats Stats { get; } = Stats.Load();
@@ -81,6 +83,8 @@ public sealed class OverlayWindow : Window, IGameHost
     public PetMailer PetMail { get; private set; } = null!;
     /// <summary>Chat and reactions with the co-worker.</summary>
     public ChatHub Chat { get; private set; } = null!;
+    /// <summary>At work: breaks, meetings, focus, timers, notes, invites, downloads, presenting.</summary>
+    public OfficeDesk Office { get; private set; } = null!;
     Border? _bubble;             // a chat message that came in with the chat closed
     IDisposable? _bubbleTimer;
     Rect _bubbleRect;
@@ -95,8 +99,21 @@ public sealed class OverlayWindow : Window, IGameHost
     public IReadOnlyList<MiniGame> Games => _games;
     public MiniGame? Current { get; private set; }
     public bool OverlayVisible => IsVisible;
+    /// <summary>Up for real, with the game and the scoreboard: not just peeking out for an at-work card or notice.</summary>
+    bool Shown => IsVisible && !_peeking;
     /// <summary>A --demo run: the games play themselves, and nothing they do should move the player's saved levels.</summary>
     public bool Demo => _demo;
+    /// <summary>A --snapshot run, which draws itself into a picture and quits.</summary>
+    public bool Snapshotting => _snapshot != null;
+    /// <summary>The operating system's side of the overlay (idle time, full-screen windows...).</summary>
+    public IDesktopPlatform Desktop => _platform;
+    /// <summary>The monitor the overlay is on, in screen pixels (points on macOS).</summary>
+    public PixelRect? MonitorBounds => CurrentScreen()?.Bounds;
+    public Hud Scoreboard => _hud;
+    /// <summary>Where the at-work cards, notes and invites are drawn: over the games, under the scoreboard.</summary>
+    public Canvas OfficeLayer => _officeLayer;
+    /// <summary>True while the overlay is up only for an at-work card or notice (see <see cref="SetPeek"/>).</summary>
+    public bool IsPeeking => _peeking;
     public UpdateInfo? AvailableUpdate => _update;
 
     public bool AutostartEnabled
@@ -143,6 +160,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _root.Children.Add(Fx.Layer);
         _root.Children.Add(_decor.Layer);
         _root.Children.Add(_reactLayer);
+        _root.Children.Add(_officeLayer);
         _root.Children.Add(_hudLayer);
         Content = _root;
 
@@ -301,6 +319,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _race = new RaceMode(this);
         PetMail = new PetMailer(this);
         Chat = new ChatHub(this);
+        Office = new OfficeDesk(this);
 
         PlaceWindow();
         UpdateArena();
@@ -315,6 +334,7 @@ public sealed class OverlayWindow : Window, IGameHost
         Lan.ActionReceived += (x, y, pts) => Dispatcher.UIThread.Post(() => ShowRivalAction(x, y, pts));
         Lan.EmoteReceived += i => Dispatcher.UIThread.Post(() =>
         {
+            if (Office.Quiet) return; // a focus block: emotes are not worth a word afterwards
             Sound.Play("best", 0.35, 1.5);
             Notice(L.T(LanLink.Emotes[i]), L.F("from {0}", Lan.PeerName), Color.FromRgb(255, 209, 102));
         });
@@ -325,6 +345,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _hudHoverTimer.Start();
         _statsTimer.Start();
         if (Settings.ShareLeaderboard) StartBoard();
+        Office.Start();
         if (Settings.CheckForUpdates && (Settings.LastUpdateCheck is not DateTime lastCheck || DateTime.UtcNow - lastCheck > TimeSpan.FromHours(20)))
             DispatcherTimer.RunOnce(() => CheckForUpdates(manual: false), TimeSpan.FromSeconds(25));
 
@@ -410,6 +431,7 @@ public sealed class OverlayWindow : Window, IGameHost
         UpdateArena();
         PlaceHud();
         Current?.Layout();
+        Office?.Layout();
         RefreshPlatforms();
         PushHitShapes();
         Wake();
@@ -464,7 +486,7 @@ public sealed class OverlayWindow : Window, IGameHost
 
     void UpdatePointer()
     {
-        if (_captured || HudBusy)
+        if (_captured || HudBusy || Office.IsInteracting)
         {
             Pointer = _eventPointer; // the captured pointer keeps reporting even outside our shapes
             return;
@@ -474,7 +496,7 @@ public sealed class OverlayWindow : Window, IGameHost
 
     void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (e.Handled || Current == null || _captured) return;
+        if (e.Handled || Current == null || _captured || _peeking || Office.HoldsGame) return;
         if (_paused)
         {
             Resume();
@@ -524,17 +546,25 @@ public sealed class OverlayWindow : Window, IGameHost
         PushHitShapes();
     }
 
+    /// <summary>Something outside the game took or gave up an area of the mouse (an at-work card, a note).</summary>
+    public void HitShapesChanged()
+    {
+        PushHitShapes();
+        Wake();
+    }
+
     /// <summary>Tell the platform which areas take the mouse (only when that changed).</summary>
     void PushHitShapes()
     {
         _hitShapes.Clear();
         if (IsVisible)
         {
-            Current?.CollectHitShapes(_hitShapes);
-            if (_hud != null) _hitShapes.Add(HitShape.Box(_hud.Area));
+            if (!_peeking && Office?.HoldsGame != true) Current?.CollectHitShapes(_hitShapes);
+            if (_hud != null && !_peeking) _hitShapes.Add(HitShape.Box(_hud.Area));
             if (_bubble != null) _hitShapes.Add(HitShape.Box(_bubbleRect));
+            Office?.CollectHitShapes(_hitShapes);
         }
-        bool capture = _captured || HudBusy;
+        bool capture = _captured || HudBusy || Office?.IsInteracting == true;
         if (capture == _pushedCapture && _hitShapes.SequenceEqual(_pushedHitShapes)) return;
         _pushedHitShapes.Clear();
         _pushedHitShapes.AddRange(_hitShapes);
@@ -571,8 +601,9 @@ public sealed class OverlayWindow : Window, IGameHost
         _lastTick = now;
 
         UpdatePointer();
+        if (_captured && Office.HoldsGame) CancelCapture(); // a break card came up mid-throw: the throw is off
         bool busy = _captured || _hud.IsPressed; // an open menu takes the mouse but needs no frames
-        if (Current != null && !_paused)
+        if (Current != null && !_paused && !_peeking && !Office.HoldsGame)
         {
             bool playing = Current.Update(dt) || _captured;
             if (playing)
@@ -585,6 +616,7 @@ public sealed class OverlayWindow : Window, IGameHost
             busy |= playing;
             if (_petPal != null) busy |= _petPal.Update(dt, playing);
         }
+        busy |= Office.Update(dt);
         busy |= Fx.Update(dt);
         busy |= _hud.Update(dt);
         busy |= _decor.Update(dt, busy, Themes.Current, Arena, Platforms.Items); // only rides along with other motion
@@ -771,12 +803,13 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public void NextGame()
     {
-        if (!IsVisible) SetOverlayVisible(true);
+        if (!Shown) SetOverlayVisible(true);
         int i = Current == null ? -1 : _games.IndexOf(Current);
         SwitchGame(_games[(i + 1) % _games.Count].Id);
     }
 
-    public void ToggleOverlay() => SetOverlayVisible(!IsVisible);
+    /// <summary>Shows or hides the overlay; while it only peeks out for an at-work card, the shortcut brings the game back.</summary>
+    public void ToggleOverlay() => SetOverlayVisible(!IsVisible || _peeking);
 
     /// <summary>
     /// Hide from the ☰ menu. Without a tray the only ways back are the shortcut, "deskarcade --signal show" and the next
@@ -798,6 +831,16 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public void SetOverlayVisible(bool visible)
     {
+        if (_peeking)
+        {
+            EndPeek(); // up for a card or a notice: showing it for real keeps it up, hiding puts it away as before
+            if (visible)
+            {
+                Office.OverlayShown();
+                _tray?.Refresh();
+                return;
+            }
+        }
         if (visible == IsVisible) return;
         if (visible)
         {
@@ -811,13 +854,64 @@ public sealed class OverlayWindow : Window, IGameHost
             _pad?.Close(); // a hidden game takes no typing
             _loopOn = false;
             Hide();
+            Office.OverlayHidden(); // a break card or an invite put away with it does not peek back
         }
         _tray?.Refresh();
     }
 
+    /// <summary>
+    /// Shows the hidden overlay for an at-work card or notice only (a meeting warning, a stretch, a timer): the game, the
+    /// pet and the scoreboard stay out of sight and the game stays paused. False puts it away again. Showing the overlay
+    /// for real in the meantime (the shortcut, the tray) keeps it up with everything back.
+    /// </summary>
+    public void SetPeek(bool on)
+    {
+        if (on == _peeking) return;
+        if (on)
+        {
+            if (IsVisible) return;
+            _peeking = true;
+            CancelCapture();
+            _gameLayer.IsVisible = false;
+            if (_petPal != null) _petPal.Layer.Opacity = 0;
+            _hud.IsVisible = false;
+            Show();
+            _platform.AttachOverlay(this);
+            PlaceOnMonitor();
+            return;
+        }
+        EndPeek();
+        _loopOn = false;
+        Hide();
+        _tray?.Refresh();
+    }
+
+    void EndPeek()
+    {
+        if (!_peeking) return;
+        _peeking = false;
+        _gameLayer.IsVisible = true;
+        if (_petPal != null) _petPal.Layer.Opacity = 1;
+        _hud.IsVisible = true;
+        PushHitShapes();
+        Wake();
+    }
+
+    /// <summary>Freezes the current game the way "Pause the game when Claude finishes" does: a click on it resumes.</summary>
+    public void PauseGame(string title, string sub, Color color)
+    {
+        if (!IsVisible || _peeking || _paused || Current == null) return;
+        _paused = true;
+        CancelCapture();
+        Fx.Popup(new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.42), title, color, 34, 3.0, sub);
+        Wake();
+    }
+
+    public void RefreshTray() => _tray?.Refresh();
+
     public void SummonToCursor()
     {
-        if (!IsVisible) SetOverlayVisible(true);
+        if (!Shown) SetOverlayVisible(true);
         UpdatePointer();
         Current?.Summon(Pointer);
         PushHitShapes();
@@ -862,7 +956,7 @@ public sealed class OverlayWindow : Window, IGameHost
         int i = current == null ? -1 : all.ToList().FindIndex(s => ScreenKey(s) == ScreenKey(current));
         Settings.MonitorName = ScreenKey(all[(i + 1) % all.Count]);
         SaveSettings();
-        if (!IsVisible) SetOverlayVisible(true);
+        if (!Shown) SetOverlayVisible(true);
         else PlaceOnMonitor();
     }
 
@@ -953,6 +1047,7 @@ public sealed class OverlayWindow : Window, IGameHost
                 Chat.React((Reaction)n);
                 break;
             case var g when g.StartsWith("game:", StringComparison.Ordinal): SwitchGame(g[5..]); break;
+            case var o when Office.Signal(o): break;
             case var t when t.StartsWith("task:", StringComparison.OrdinalIgnoreCase): TaskStarted(t[5..]); break;
             case var t when t.StartsWith("task-end:", StringComparison.Ordinal):
                 TaskEnded(int.TryParse(t[9..], out int code) ? code : 1);
@@ -1427,7 +1522,7 @@ public sealed class OverlayWindow : Window, IGameHost
         }
         Resume();
         _hud.SetClaude(ClaudeStatus.Working, _claudeSince);
-        if (Settings.ClaudeAutoShow && !IsVisible) SetOverlayVisible(true);
+        if (Settings.ClaudeAutoShow && !Shown) SetOverlayVisible(true);
     }
 
     void ClaudeAlert(ClaudeStatus status, string sound, string title, Color color)
@@ -1437,7 +1532,7 @@ public sealed class OverlayWindow : Window, IGameHost
         if (backToWork) title = L.T("Claude is done · back to work");
         _claudeSince = null;
         _hud.SetClaude(status, null, waited);
-        if (status == ClaudeStatus.Done && IsVisible && Current != null) Stats.Add("claude.done");
+        if (status == ClaudeStatus.Done && Shown && Current != null) Stats.Add("claude.done");
         if (Settings.ClaudeNotify)
         {
             Sound.Play(sound, 0.9);
@@ -1448,13 +1543,13 @@ public sealed class OverlayWindow : Window, IGameHost
                     : L.F("{0} · waited {1}", sub, Hud.FormatWait(w));
             Notice(title, sub, color);
         }
-        if (Settings.ClaudePause && IsVisible && !_paused && Current != null)
+        if (Settings.ClaudePause && Shown && !_paused && Current != null)
         {
             _paused = true;
             CancelCapture();
             Fx.Popup(new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.42), L.T("PAUSED"), Colors.White, 34, 3.0, L.T("click the game to resume"));
         }
-        if (Settings.ClaudeAutoHide && IsVisible)
+        if (Settings.ClaudeAutoHide && Shown)
         {
             // leave the notice on screen for a moment, then get out of the way (hiding also pauses the game)
             DispatcherTimer.RunOnce(() =>
@@ -1472,7 +1567,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _playedWhileTask = 0;
         Resume();
         _hud.SetTask(TaskStatus.Running, _taskLabel, _taskSince);
-        if (!IsVisible) SetOverlayVisible(true); // running a command this way means "let me play meanwhile"
+        if (!Shown) SetOverlayVisible(true); // running a command this way means "let me play meanwhile"
     }
 
     /// <summary>The --while command ended: passed on exit code 0, failed otherwise.</summary>
@@ -1483,7 +1578,7 @@ public sealed class OverlayWindow : Window, IGameHost
         bool passed = exitCode == 0;
         _taskSince = null;
         _hud.SetTask(passed ? TaskStatus.Passed : TaskStatus.Failed, _taskLabel, null, took, exitCode);
-        if (IsVisible && Current != null && _playedWhileTask >= 5) Stats.Add("task.done");
+        if (Shown && Current != null && _playedWhileTask >= 5) Stats.Add("task.done");
 
         Sound.Play(passed ? "done" : "attention", 0.9);
         string sub = passed ? L.F("{0} · took {1}", _taskLabel, Hud.FormatWait(took)) : L.F("{0} · exit code {1}", _taskLabel, exitCode);
@@ -1706,6 +1801,7 @@ public sealed class OverlayWindow : Window, IGameHost
         Lan.Stop();
         _board.Stop();
         _boardTimer.Stop();
+        Office.Dispose();
         SaveSettings();
         _cts.Cancel();
         _loopOn = false;

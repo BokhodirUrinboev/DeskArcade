@@ -33,6 +33,8 @@ public static class QuickMenu
         }
         yield return pets;
 
+        yield return OfficeMenu.ToMenuItem(OfficeMenu.Build(w));
+
         var cpu = Sub(L.T("CPU difficulty"));
         if (w.Current is { HasCpuLevels: true } current)
         {

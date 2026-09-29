@@ -6,6 +6,19 @@ using System.Text.Json.Serialization;
 
 namespace DeskArcade;
 
+/// <summary>
+/// A sticky note on the desktop: its text, where it sits (from the arena's top-left corner) and, if it has one, when it
+/// reminds. Notes stay in settings.json on this PC.
+/// </summary>
+public sealed class StickyNote
+{
+    public string Id { get; set; } = Guid.NewGuid().ToString("N")[..8];
+    public string Text { get; set; } = "";
+    public DateTime? Due { get; set; }
+    public double X { get; set; }
+    public double Y { get; set; }
+}
+
 public sealed class Settings
 {
     public string Game { get; set; } = "hoops";
@@ -90,6 +103,46 @@ public sealed class Settings
     /// <summary>A <see cref="DeskArcade.ShortcutModifiers"/> name and three letters, for show/hide, next game and bring to cursor.</summary>
     public string ShortcutModifiers { get; set; } = "CtrlAlt";
     public string ShortcutKeys { get; set; } = "GNB";
+
+    // at work (see OfficeDesk)
+
+    /// <summary>Step aside while a full-screen app, a slide show or Windows presentation settings are on (on by default).</summary>
+    public bool HideWhenFullScreen { get; set; } = true;
+    /// <summary>The calendar meetings are read from: an .ics link (https, http or webcal) or an .ics file; null is off.</summary>
+    public string? CalendarUrl { get; set; }
+    /// <summary>Minutes before a meeting for the heads-up; 0 leaves only "a minute to go" and "starting now".</summary>
+    public int MeetingWarnMinutes { get; set; } = 5;
+    /// <summary>Pause the game a minute before a meeting.</summary>
+    public bool MeetingPause { get; set; } = true;
+    /// <summary>Hide the overlay while a meeting is on.</summary>
+    public bool MeetingHide { get; set; }
+    /// <summary>The 20-20-20 eye breaks.</summary>
+    public bool EyeBreaks { get; set; }
+    /// <summary>A stretch after this many minutes at the computer; 0 is off.</summary>
+    public int StretchMinutes { get; set; }
+    /// <summary>A glass of water after this many minutes at the computer; 0 is off.</summary>
+    public int WaterMinutes { get; set; }
+    public int FocusMinutes { get; set; } = 25;
+    public int FocusBreakMinutes { get; set; } = 5;
+    /// <summary>After a focus break, start the next block by itself.</summary>
+    public bool FocusAuto { get; set; }
+    /// <summary>Hold chat, reactions and invites while a focus block runs, and show them at the break.</summary>
+    public bool FocusQuiet { get; set; } = true;
+    /// <summary>The end of the working day ("18:00"), or null for no end-of-day note.</summary>
+    public string? WorkEnd { get; set; }
+    /// <summary>The days (yyyy-MM-dd) the end-of-day wrap-up and the "still here?" were last shown.</summary>
+    public string? WorkEndWrapped { get; set; }
+    public string? WorkEndNudged { get; set; }
+    /// <summary>Coffee, lunch and walk invites with co-workers on the local network (opt-in: it sends the user name).</summary>
+    public bool OfficeInvites { get; set; }
+    /// <summary>Chime when a browser download finishes in the Downloads folder.</summary>
+    public bool WatchDownloads { get; set; }
+    /// <summary>The folder watched for downloads; null is the usual Downloads folder.</summary>
+    public string? DownloadsFolder { get; set; }
+    /// <summary>Timers still running, so a restart keeps them.</summary>
+    public List<Office.DeskTimer> Timers { get; set; } = new();
+    /// <summary>The sticky notes on the desktop.</summary>
+    public List<StickyNote> Notes { get; set; } = new();
 
     // daily challenge (see Daily)
     public string? DailyDate { get; set; }

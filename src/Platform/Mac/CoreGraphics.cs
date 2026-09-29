@@ -31,6 +31,11 @@ internal static class CoreGraphics
     /// <summary>The kCGWindow* keys of a window-info dictionary.</summary>
     public readonly record struct WindowKeys(IntPtr Number, IntPtr Layer, IntPtr Bounds, IntPtr Alpha, IntPtr OwnerPid);
 
+    /// <summary>kCGEventSourceStateCombinedSessionState, and kCGAnyInputEventType for "any input at all".</summary>
+    public const int CombinedSessionState = 0;
+    public const uint AnyInputEventType = 0xFFFFFFFF;
+
+    [DllImport(Lib)] public static extern double CGEventSourceSecondsSinceLastEventType(int stateId, uint eventType);
     [DllImport(Lib)] public static extern IntPtr CGEventCreate(IntPtr source);
     [DllImport(Lib)] public static extern CGPoint CGEventGetLocation(IntPtr cgEvent);
     [DllImport(Lib)] public static extern IntPtr CGWindowListCopyWindowInfo(uint option, uint relativeToWindow);

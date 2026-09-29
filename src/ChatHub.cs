@@ -36,6 +36,8 @@ public sealed class ChatHub
     readonly List<Line> _lines = new();
     int _session = -1;
     bool _knocked;
+    int _held;          // messages that came in during a focus block, shown at the break
+    string _heldLast = "";
     double _lastReactionIn = double.NegativeInfinity, _lastReactionOut = double.NegativeInfinity;
 
     public ChatHub(OverlayWindow w)
@@ -105,7 +107,12 @@ public sealed class ChatHub
         {
             case ChatEventKind.Message:
                 Add(new Line { Id = e.Id, Text = e.Text, State = State.Received });
-                if (!ChatWindow.IsOpen) _w.ShowChatBubble(Peer, e.Text);
+                if (_w.Office.Quiet && !ChatWindow.IsOpen)
+                {
+                    _held++; // delivered (the receipt went back), shown at the break
+                    _heldLast = e.Text;
+                }
+                else if (!ChatWindow.IsOpen) _w.ShowChatBubble(Peer, e.Text);
                 else _w.Sound.Play("chat", 0.3);
                 break;
             case ChatEventKind.Delivered:
@@ -123,8 +130,19 @@ public sealed class ChatHub
         }
     }
 
+    /// <summary>The focus block is over: what came in during it shows as one bubble.</summary>
+    public void ReleaseHeld()
+    {
+        if (_held == 0) return;
+        int held = _held;
+        _held = 0;
+        if (!Connected || ChatWindow.IsOpen) return;
+        _w.ShowChatBubble(Peer, held == 1 ? _heldLast : L.F("{0} messages while you focused · the last: {1}", held, _heldLast));
+    }
+
     void OnReaction(Reaction r)
     {
+        if (_w.Office.Quiet) return; // a focus block: a reaction is not worth keeping for later
         if (!Connected || Now - _lastReactionIn < ReactionEvery) return; // a flood of them shows as a trickle
         _lastReactionIn = Now;
         _w.ShowReaction(r, L.F("from {0}", Peer), mine: false);
@@ -145,6 +163,7 @@ public sealed class ChatHub
         _link.Reset();
         _lines.Clear();
         _knocked = false;
+        _held = 0;
         _timer.Stop();
         Changed?.Invoke();
     }
