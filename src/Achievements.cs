@@ -31,6 +31,9 @@ public static class Achievements
         new("lanes-five", "general", "Five lanes", "Light five status lanes at once", "lanes.lit", 5),
 
         // 1.8.6 · the programmer's day
+        new("work-standup", "work", "Ready for standup", "Copy the standup notes 5 times", "work.standup", 5),
+        new("work-three", "work", "Three for three", "Finish all of today's three 5 times", "work.three", 5),
+        new("work-pushed", "work", "Clean desk", "Leave 10 days with every repo committed and pushed", "work.pushed", 10),
 
         new("work-join", "work", "Straight in", "Join 10 meetings with a Join button", "work.joined", 10),
         new("work-sounds", "work", "In the zone", "Listen to focus sounds for 10 hours", "work.sounds", 600),

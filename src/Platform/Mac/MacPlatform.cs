@@ -375,6 +375,29 @@ public sealed class MacPlatform : IDesktopPlatform
         }
     }
 
+    bool _frontmostFailed;
+
+    /// <summary>NSWorkspace.sharedWorkspace.frontmostApplication.processIdentifier; null when there is no frontmost app.</summary>
+    public int? ForegroundProcessId()
+    {
+        if (_frontmostFailed) return null;
+        try
+        {
+            IntPtr cls = ObjC.objc_getClass("NSWorkspace");
+            IntPtr workspace = cls == IntPtr.Zero ? IntPtr.Zero : ObjC.GetObject(cls, "sharedWorkspace");
+            if (!ObjC.RespondsTo(workspace, "frontmostApplication")) return null;
+            IntPtr app = ObjC.GetObject(workspace, "frontmostApplication");
+            if (!ObjC.RespondsTo(app, "processIdentifier")) return null;
+            int pid = unchecked((int)ObjC.GetInteger(app, "processIdentifier")); // a pid_t: the low 32 bits of the register
+            return pid > 0 ? pid : null;
+        }
+        catch (Exception)
+        {
+            _frontmostFailed = true;
+            return null;
+        }
+    }
+
     static string LaunchAgentFile => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library", "LaunchAgents", LaunchAgentLabel + ".plist");
 

@@ -25,7 +25,15 @@ public sealed class Stats
         public string? Day { get; set; }
         /// <summary>The same counters for today only, for the office leaderboard.</summary>
         public Dictionary<string, long> Today { get; set; } = new();
+        /// <summary>The work counters of earlier days, by local date (yyyy-MM-dd), for the standup notes.</summary>
+        public Dictionary<string, Dictionary<string, long>> Days { get; set; } = new();
     }
+
+    /// <summary>How many earlier days <see cref="OnDay"/> keeps.</summary>
+    public const int HistoryDays = 60;
+
+    /// <summary>The counters a day keeps when it is over: the working day's (time at the computer, focus blocks, meetings, breaks...) and the time played.</summary>
+    public static bool KeptForTheDay(string counter) => counter.StartsWith("work.", StringComparison.Ordinal) || counter == "play.ms";
 
     Data _data = new();
     bool _dirty;
@@ -93,9 +101,44 @@ public sealed class Stats
     {
         string day = DayOf(Clock());
         if (_data.Day == day) return;
+        KeepDay();
         _data.Day = day;
         _data.Today.Clear();
         _dirty = true;
+    }
+
+    /// <summary>The day is over: its work counters go into the history, which keeps the last <see cref="HistoryDays"/> days.</summary>
+    void KeepDay()
+    {
+        _data.Days ??= new();
+        if (_data.Day is string past)
+        {
+            var kept = _data.Today.Where(kv => KeptForTheDay(kv.Key) && kv.Value != 0).ToDictionary(kv => kv.Key, kv => kv.Value);
+            if (kept.Count > 0) _data.Days[past] = kept;
+        }
+        string oldest = DayOf(Clock().AddDays(-HistoryDays));
+        foreach (string old in _data.Days.Keys.Where(k => string.CompareOrdinal(k, oldest) < 0).ToList()) _data.Days.Remove(old);
+    }
+
+    /// <summary>
+    /// The work counters of a day: today's as they stand, an earlier day's as it ended (empty when nothing was kept for
+    /// it, or it is more than <see cref="HistoryDays"/> days ago).
+    /// </summary>
+    public IReadOnlyDictionary<string, long> OnDay(DateOnly day)
+    {
+        RollDay();
+        string key = day.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+        if (key == _data.Day) return _data.Today.Where(kv => KeptForTheDay(kv.Key)).ToDictionary(kv => kv.Key, kv => kv.Value);
+        return _data.Days != null && _data.Days.TryGetValue(key, out var kept) ? kept : new Dictionary<string, long>();
+    }
+
+    /// <summary>A counter summed over the days from <paramref name="from"/> up to (not including) <paramref name="to"/>.</summary>
+    public long OverDays(string counter, DateOnly from, DateOnly to)
+    {
+        long sum = 0;
+        for (var d = from; d < to; d = d.AddDays(1))
+            if (OnDay(d).TryGetValue(counter, out long v)) sum += v;
+        return sum;
     }
 
     /// <summary>Adds to a running total, e.g. baskets scored.</summary>

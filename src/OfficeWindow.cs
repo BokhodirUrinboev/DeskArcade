@@ -82,6 +82,7 @@ public sealed class OfficeWindow : Window
                 }
             }
         }
+        AddRoomToFocus(panel, desk);
 
         // --- meetings
         panel.Children.Add(Section(L.T("Meetings")));
@@ -168,6 +169,8 @@ public sealed class OfficeWindow : Window
         panel.Children.Add(Row(Text(L.T("My working day ends at"), 13, FontWeight.Normal, "#E6EAF0"), _end));
         panel.Children.Add(Text(L.T("Then you get the day's summary; an hour later, still at the computer, a nudge to go home."), 12, FontWeight.Normal, "#AAB3C0"));
 
+        AddMyDay(panel, overlay, desk);
+
         // --- downloads
         panel.Children.Add(Section(L.T("Downloads")));
         _watch.Content = L.T("Tell me when downloads finish");
@@ -203,6 +206,83 @@ public sealed class OfficeWindow : Window
             panel.Children.Add(new TextBlock { Text = example, FontFamily = new FontFamily("Cascadia Mono, Consolas, DejaVu Sans Mono, Menlo, monospace"), FontSize = 12, Foreground = Art.Brush("#C9D1DC") });
 
         Content = new ScrollViewer { Content = panel };
+    }
+
+    // ------------------------------------------------------------------ my day
+
+    static string LocalClock(DateTime utc) => TimeZoneInfo.ConvertTimeFromUtc(utc, TimeZoneInfo.Local).ToString("HH:mm", CultureInfo.InvariantCulture);
+
+    /// <summary>The free stretches between the rest of today's meetings, when a calendar is connected.</summary>
+    static void AddRoomToFocus(StackPanel panel, OfficeDesk desk)
+    {
+        var free = desk.FreeStretchesToday().Take(6).ToList();
+        if (free.Count == 0) return;
+        panel.Children.Add(Text(L.T("Free between meetings:"), 13, FontWeight.SemiBold, "#AAB3C0"));
+        foreach (var f in free)
+            panel.Children.Add(Text($"{LocalClock(f.Start)}–{LocalClock(f.End)}  " + L.F("{0} free", AppTime.HoursMinutes((int)f.Length.TotalMinutes)), 13, FontWeight.Normal, "#E6EAF0"));
+        if (desk.PlannedFocus is DateTime at)
+            panel.Children.Add(Text(L.F("A focus block starts at {0}", LocalClock(at)), 13, FontWeight.Normal, "#B388FF"));
+    }
+
+    /// <summary>The morning card, today's three, the standup notes, the wait report, git before you go and where the day went.</summary>
+    void AddMyDay(StackPanel panel, OverlayWindow overlay, OfficeDesk desk)
+    {
+        var s = overlay.Settings;
+        panel.Children.Add(Section(L.T("My day")));
+        var morning = new CheckBox { Content = Wrapped(L.T("A morning card on the first activity of a working day: standup notes, room to focus, today's three")), IsChecked = s.MorningCard };
+        morning.IsCheckedChanged += (_, _) => desk.SetMorningCard(morning.IsChecked == true);
+        panel.Children.Add(morning);
+
+        var three = new Button { Content = L.T("Today's three…") };
+        three.Click += (_, _) => desk.OpenThree();
+        var standup = new Button { Content = L.T("Copy standup notes") };
+        standup.Click += (_, _) => desk.CopyStandup();
+        var waits = new Button { Content = L.T("The wait report…") };
+        waits.Click += (_, _) => desk.OpenWaitReport();
+        panel.Children.Add(new WrapPanel { Children = { Spaced(three), Spaced(standup), Spaced(waits) } });
+
+        var repos = desk.RepoNames;
+        panel.Children.Add(Text(repos.Count == 0 ? OfficeDesk.AddReposHint : L.F("Repos: {0}", string.Join(", ", repos)), 12, FontWeight.Normal, "#AAB3C0"));
+        var git = new CheckBox { Content = Wrapped(L.T("Git before you go: the end-of-day card lists repos with changes not committed, commits not pushed and stashes, half an hour earlier on Fridays")), IsChecked = s.GitBeforeYouGo };
+        git.IsCheckedChanged += (_, _) => desk.SetGitBeforeYouGo(git.IsChecked == true);
+        panel.Children.Add(git);
+
+        var apps = new CheckBox { Content = Wrapped(L.T("Where the day went: note the program in front once a minute (its name, never a window title), kept 30 days on this PC")), IsChecked = s.TrackApps };
+        apps.IsCheckedChanged += (_, _) => desk.SetTrackApps(apps.IsChecked == true);
+        panel.Children.Add(apps);
+        if (desk.AppsLine(DateOnly.FromDateTime(DateTime.Now)) is string today)
+            panel.Children.Add(Text(L.F("Today: {0}", today), 13, FontWeight.Normal, "#E6EAF0"));
+        var csv = new Button { Content = L.T("Save as CSV…"), IsEnabled = desk.HasAppTime };
+        var saved = Text("", 12, FontWeight.Normal, "#AAB3C0");
+        csv.Click += async (_, _) =>
+        {
+            var file = await StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
+            {
+                Title = L.T("Save where the day went"), SuggestedFileName = "where-the-day-went.csv", DefaultExtension = "csv",
+                FileTypeChoices = new[] { new FilePickerFileType("CSV") { Patterns = new[] { "*.csv" } } },
+            });
+            if (file == null) return;
+            try
+            {
+                await using var stream = await file.OpenWriteAsync();
+                await using var writer = new System.IO.StreamWriter(stream, new System.Text.UTF8Encoding(true));
+                await writer.WriteAsync(desk.AppsCsv());
+                saved.Text = L.F("Saved: {0}", file.Name);
+            }
+            catch (Exception e)
+            {
+                saved.Text = L.F("Couldn't save it: {0}", e.Message);
+            }
+        };
+        panel.Children.Add(Row(csv, saved));
+    }
+
+    static TextBlock Wrapped(string text) => new() { Text = text, TextWrapping = TextWrapping.Wrap, FontSize = 13 };
+
+    static Control Spaced(Control c)
+    {
+        c.Margin = new Thickness(0, 0, 8, 4);
+        return c;
     }
 
     static StackPanel Row(params Control[] children)

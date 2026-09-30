@@ -82,6 +82,13 @@ public interface IDesktopPlatform : IDisposable
     /// given in screen pixels (points on macOS), or the system says a presentation is on. The overlay steps aside then.
     /// </summary>
     bool IsFullScreenOn(PixelRect monitor) => false;
+
+    /// <summary>
+    /// The id of the process that owns the window in front (the foreground or active window, the frontmost app), for
+    /// "where the day went"; null when there is none or the platform cannot tell. Only the process is looked at,
+    /// never a window title.
+    /// </summary>
+    int? ForegroundProcessId() => null;
 }
 
 public static class DesktopPlatform
@@ -107,5 +114,6 @@ public sealed class NullPlatform : IDesktopPlatform
     public bool RegisterHotkeys(Action<HotkeyAction> onHotkey, HotkeySet keys) => false;
     public IAudioOutput? OpenAudio(int sampleRate) => null;
     public bool AutostartEnabled { get => false; set { } }
+    public int? ForegroundProcessId() => null;
     public void Dispose() { }
 }

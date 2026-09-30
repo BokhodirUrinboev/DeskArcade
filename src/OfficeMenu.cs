@@ -127,6 +127,25 @@ public static class OfficeMenu
             end.Add(new() { Header = () => time, Click = () => d.SetWorkEnd(time), Checked = () => s.WorkEnd == time, Radio = true });
         root.Add(new() { Header = () => L.T("End of the day"), Children = end });
 
+        // my day: the morning card, today's three, standup notes, the wait report, git before you go, where the day went
+        var day = new List<MenuNode>
+        {
+            new() { Header = () => L.T("Show the morning card"), Click = d.ShowMorningNow },
+            new() { Header = () => L.T("Today's three…"), Click = d.OpenThree },
+            new() { Header = () => L.T("Copy standup notes"), Click = d.CopyStandup },
+            new() { Header = () => L.T("The wait report…"), Click = d.OpenWaitReport },
+            new()
+            {
+                Header = () => d.PlannedFocus is DateTime at ? L.F("Cancel the focus block at {0}", TimeZoneInfo.ConvertTimeFromUtc(at, TimeZoneInfo.Local).ToString("HH:mm", System.Globalization.CultureInfo.InvariantCulture)) : L.T("No focus block planned"),
+                Click = d.CancelPlannedFocus, Enabled = () => d.PlannedFocus != null,
+            },
+            MenuNode.Line(),
+            new() { Header = () => L.T("Morning card"), Click = () => d.SetMorningCard(!s.MorningCard), Checked = () => s.MorningCard },
+            new() { Header = () => L.T("Git before you go"), Click = () => d.SetGitBeforeYouGo(!s.GitBeforeYouGo), Checked = () => s.GitBeforeYouGo },
+            new() { Header = () => L.T("Where the day went"), Click = () => d.SetTrackApps(!s.TrackApps), Checked = () => s.TrackApps },
+        };
+        root.Add(new() { Header = () => L.T("My day"), Children = day });
+
         root.Add(new() { Header = () => L.T("Tell me when downloads finish"), Click = () => d.SetWatchDownloads(!s.WatchDownloads), Checked = () => s.WatchDownloads });
         root.Add(new() { Header = () => L.T("Hide while presenting or in full screen"), Click = () => d.SetHideWhenFullScreen(!s.HideWhenFullScreen), Checked = () => s.HideWhenFullScreen });
         root.Add(MenuNode.Line());
