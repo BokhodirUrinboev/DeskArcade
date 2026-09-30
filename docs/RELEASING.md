@@ -19,6 +19,7 @@ signing, publishing to the package managers, and the manual steps for Flathub. T
 - [Chocolatey](#chocolatey)
 - [AUR](#aur)
 - [The web page](#the-web-page)
+- [The VS Code extension](#the-vs-code-extension)
 - [Flatpak and Flathub](#flatpak-and-flathub)
 - [AppImage](#appimage)
 - [macOS](#macos)
@@ -302,6 +303,33 @@ Source: GitHub Actions. It is then at https://bokhodirurinboev.github.io/DeskArc
 The GIFs come from `tools/record-gifs.ps1`, which runs each game's demo with `--record` (numbered frames of the
 overlay, over stand-in windows) and turns the frames into looping GIFs with ffmpeg; `tools/record-gifs.csv` lists the
 games, how long to record and how to crop.
+
+## The VS Code extension
+
+`integrations/vscode/` is the extension (`ImperiumGames.desk-arcade`). The release workflow's `vscode` job runs its unit
+tests, sets its version to the release's (`npm version`) and packages
+`desk-arcade-<version>.vsix`, which goes into the GitHub Release with the other files. After the release, the
+`vscode-publish` job publishes that `.vsix` to each registry whose token is set, and skips the others with a note in
+the log. CI runs the unit tests on every push, and the integration tests in a real VS Code under `xvfb`.
+
+**One-time setup**, both free:
+
+1. **Visual Studio Marketplace.** Sign in at https://marketplace.visualstudio.com/manage with a Microsoft account and
+   create the publisher `ImperiumGames` (the id in `package.json`). In Azure DevOps (https://dev.azure.com, the same
+   account), User settings → Personal access tokens → New token: organization **All accessible organizations**, scope
+   **Marketplace → Manage**. Put it in the `VSCE_PAT` secret.
+2. **Open VSX** (VSCodium, Cursor and the other editors that don't use Microsoft's marketplace). Sign in at
+   https://open-vsx.org with GitHub, sign the publisher agreement in the profile, create a token under Access Tokens,
+   and claim the namespace once: `npx ovsx create-namespace ImperiumGames -p <token>`. Put the token in the `OVSX_PAT`
+   secret.
+
+The next tag then publishes the extension to both. To try a build by hand:
+
+```bash
+cd integrations/vscode
+npm ci && npm test
+npx vsce package          # desk-arcade-<version>.vsix; install it with Extensions → ⋯ → Install from VSIX…
+```
 
 ## Flatpak and Flathub
 
