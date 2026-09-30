@@ -148,6 +148,12 @@ public sealed class Settings
     public List<Office.DeskTimer> Timers { get; set; } = new();
     /// <summary>The sticky notes on the desktop.</summary>
     public List<StickyNote> Notes { get; set; } = new();
+    /// <summary>The focus sound (At work → Focus sounds): "brown", "pink", "rain" or "cafe".</summary>
+    public string FocusSound { get; set; } = "brown";
+    /// <summary>Play the focus sound by itself during focus blocks.</summary>
+    public bool FocusSoundInBlocks { get; set; }
+    /// <summary>The focus sound's own volume, 0 to 1: the games' volume and their Sound switch leave it alone.</summary>
+    public double FocusSoundVolume { get; set; } = 0.5;
 
     // for programmers (see Dev/)
 

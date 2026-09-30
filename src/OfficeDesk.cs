@@ -71,6 +71,7 @@ public sealed partial class OfficeDesk : IDisposable
         _day.NudgedOn = S.WorkEndNudged;
         _tick.Tick += (_, _) => Tick();
         InitInvites();
+        InitKnocks();
     }
 
     Settings S => _w.Settings;
@@ -111,6 +112,7 @@ public sealed partial class OfficeDesk : IDisposable
     {
         if (_card != null) into.Add(HitShape.Box(_card.Area));
         if (_inviteCard != null) into.Add(HitShape.Box(_inviteCardRect));
+        CollectCardShapes(into);
         CollectNoteShapes(into);
     }
 
@@ -141,6 +143,7 @@ public sealed partial class OfficeDesk : IDisposable
         CancelDrag();
         if (_card != null) CloseCard(later: true);
         HideInviteCard();
+        CardsOverlayHidden();
     }
 
     /// <summary>Shows the overlay for real, also when it only peeks out for a card or a notice.</summary>
@@ -170,6 +173,9 @@ public sealed partial class OfficeDesk : IDisposable
 
         StepMeetings(utc, now);
         StepFocus(utc);
+        StepMeetingCards(utc);
+        StepFocusSounds(dt);
+        StepKnocks(utc);
         StepTimers(utc);
         StepNotes(utc);
         StepWaits(dt);
@@ -227,6 +233,7 @@ public sealed partial class OfficeDesk : IDisposable
             CancelDrag();
             if (_card != null) CloseCard(later: true);
             HideInviteCard();
+            HoldCards();
             _peekUntil = DateTime.MinValue;
             if (_w.IsPeeking) _w.SetPeek(false);
         }
@@ -304,7 +311,7 @@ public sealed partial class OfficeDesk : IDisposable
 
     void UpdatePeek()
     {
-        bool want = !_fullScreen && (_card != null || _inviteCard != null || _dragging != null || DateTime.UtcNow < _peekUntil);
+        bool want = !_fullScreen && (_card != null || _inviteCard != null || CardsUp || _dragging != null || DateTime.UtcNow < _peekUntil);
         if (want && !_w.OverlayVisible) _w.SetPeek(true);
         else if (!want && _w.IsPeeking) _w.SetPeek(false);
     }
@@ -392,6 +399,7 @@ public sealed partial class OfficeDesk : IDisposable
     /// <summary>At-work signals; false for anything else, which the overlay handles itself.</summary>
     public bool Signal(string msg)
     {
+        if (DaySignal(msg)) return true; // focus sounds, knocks, join
         switch (msg)
         {
             case "breathe": Breathe(); return true;
@@ -606,7 +614,7 @@ public sealed partial class OfficeDesk : IDisposable
             {
                 case MeetingCue.Warn:
                     int minutes = Math.Max(1, (int)Math.Round((m.Start - utc).TotalMinutes));
-                    Say(L.F("{0} in {1} minutes", title, minutes), L.F("at {0}", Clock(m.Start)), Orange);
+                    MeetingNotice(cue, m, L.F("{0} in {1} minutes", title, minutes), L.F("at {0}", Clock(m.Start)), Orange);
                     _w.Stats.Add("work.meetings");
                     break;
                 case MeetingCue.Soon:
@@ -616,9 +624,10 @@ public sealed partial class OfficeDesk : IDisposable
                         _w.PauseGame(L.F("{0} in a minute", title), L.T("the game is paused · click it to resume"), Orange);
                     }
                     else Say(L.F("{0} in a minute", title), L.F("at {0}", Clock(m.Start)), Orange);
+                    MeetingSoon(m);
                     break;
                 case MeetingCue.Start:
-                    Say(L.F("{0} is starting", title), m.End > m.Start ? L.F("until {0}", Clock(m.End)) : L.T("have a good one"), Red, "done");
+                    MeetingNotice(cue, m, L.F("{0} is starting", title), m.End > m.Start ? L.F("until {0}", Clock(m.End)) : L.T("have a good one"), Red, "done");
                     break;
             }
         }

@@ -57,6 +57,7 @@ public static class OfficeMenu
         focus.Add(new() { Header = () => L.T("Start the next block after the break"), Click = () => d.SetFocusAuto(!s.FocusAuto), Checked = () => s.FocusAuto });
         focus.Add(new() { Header = () => L.T("Hold chat and invites while focusing"), Click = () => d.SetFocusQuiet(!s.FocusQuiet), Checked = () => s.FocusQuiet });
         root.Add(new() { Header = () => L.T("Focus"), Children = focus });
+        root.Add(d.FocusSoundsMenu());
 
         // timers
         var timers = TimerLengths.Select(m => new MenuNode { Header = () => L.F("{0} minutes", m), Click = () => d.AddTimer(TimeSpan.FromMinutes(m), "") }).ToList();
@@ -96,6 +97,7 @@ public static class OfficeMenu
             new() { Header = () => s.CalendarUrl == null ? L.T("Connect a calendar…") : L.T("Calendar…"), Click = d.OpenWindow },
             MenuNode.Line(),
         };
+        meetings.Insert(0, d.JoinMenuItem());
         foreach (int m in WarnChoices)
             meetings.Add(new() { Header = () => m == 0 ? L.T("Only a minute before") : L.F("{0} minutes before", m), Click = () => d.SetMeetingWarn(m), Checked = () => s.MeetingWarnMinutes == m, Radio = true });
         meetings.Add(MenuNode.Line());
@@ -117,6 +119,7 @@ public static class OfficeMenu
         invites.Add(MenuNode.Line());
         invites.Add(new() { Header = () => L.T("Invites from co-workers"), Click = () => d.SetInvites(!s.OfficeInvites), Checked = () => s.OfficeInvites });
         root.Add(new() { Header = () => L.T("Invite co-workers"), Children = invites });
+        root.Add(d.KnockMenu());
 
         // the end of the day
         var end = new List<MenuNode> { new() { Header = () => L.T("Off"), Click = () => d.SetWorkEnd(null), Checked = () => s.WorkEnd == null, Radio = true } };
@@ -145,9 +148,12 @@ public static class OfficeMenu
         }
         if (node.Click is Action click) item.Click += (_, _) => click();
         if (node.Checked != null) item.ToggleType = node.Radio ? NativeMenuItemToggleType.Radio : NativeMenuItemToggleType.CheckBox;
+        item.IsVisible = node.Header().Length > 0;
         refreshers.Add(() =>
         {
-            item.Header = node.Header();
+            string header = node.Header();
+            item.Header = header;
+            item.IsVisible = header.Length > 0; // as in the ☰ menu, a line with nothing to say (a free knock slot) is left out
             if (node.Checked is Func<bool> on) item.IsChecked = on();
             if (node.Enabled is Func<bool> enabled) item.IsEnabled = enabled();
         });

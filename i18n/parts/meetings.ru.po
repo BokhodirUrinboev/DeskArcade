@@ -1,0 +1,225 @@
+# Desk Arcade: Russian (ru), 1.8.7 · Join buttons, focus sounds and knocks.
+# The English text is the msgid. Keep {0}-style placeholders, "·" separators and "×" as they are, and keep
+# the number last in "Best {0}"-style lines (the compact scoreboard shows only the last word).
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. ---- Join buttons on meeting cards
+msgid "Starting now"
+msgstr "Начинается"
+
+msgid "In a minute"
+msgstr "Через минуту"
+
+#, c-sharp-format
+msgid "Join {0}"
+msgstr "Подключиться: {0}"
+
+msgid "No call to join now"
+msgstr "Сейчас нет звонка"
+
+msgid "a meeting's link shows here from 15 minutes before"
+msgstr "ссылка на встречу появится здесь за 15 минут до начала"
+
+msgid "Straight in"
+msgstr "Одним кликом"
+
+msgid "Join 10 meetings with a Join button"
+msgstr "Подключитесь к 10 встречам кнопкой «Подключиться»"
+
+#. ---- focus sounds
+msgid "Focus sounds"
+msgstr "Звуки для фокуса"
+
+msgid "Brown noise"
+msgstr "Коричневый шум"
+
+msgid "Pink noise"
+msgstr "Розовый шум"
+
+msgid "Rain"
+msgstr "Дождь"
+
+msgid "Café"
+msgstr "Кафе"
+
+#, c-sharp-format
+msgid "Playing: {0}"
+msgstr "Играет: {0}"
+
+#, c-sharp-format
+msgid "{0} in focus blocks"
+msgstr "{0} — во время фокуса"
+
+msgid "Nothing playing"
+msgstr "Ничего не играет"
+
+msgid "Stop the sound"
+msgstr "Выключить звук"
+
+msgid "Play it during focus blocks"
+msgstr "Включать во время фокуса"
+
+msgid "No sound device"
+msgstr "Нет звукового устройства"
+
+msgid "focus sounds need speakers or headphones"
+msgstr "для звуков нужны колонки или наушники"
+
+msgid "it starts when the meeting or the presentation is over"
+msgstr "зазвучит, когда закончится встреча или показ"
+
+msgid "In the zone"
+msgstr "В потоке"
+
+msgid "Listen to focus sounds for 10 hours"
+msgstr "Слушайте звуки для фокуса 10 часов"
+
+#. ---- knock first
+msgid "Knock on…"
+msgstr "Постучаться к…"
+
+#, c-sharp-format
+msgid "Knock on {0}"
+msgstr "Постучаться: {0}"
+
+msgid "Knock"
+msgstr "Постучать"
+
+msgid "about the API, 5 min"
+msgstr "насчёт API, 5 минут"
+
+msgid "Turn on invites from co-workers to knock"
+msgstr "Чтобы стучаться, включите приглашения от коллег"
+
+msgid "Nobody heard yet: their invites need to be on too"
+msgstr "Пока никого: у коллег тоже должны быть включены приглашения"
+
+msgid "available"
+msgstr "доступен"
+
+#, c-sharp-format
+msgid "available, next meeting in {0} min"
+msgstr "доступен, до встречи {0} мин"
+
+msgid "in a focus block"
+msgstr "в фокусе"
+
+#, c-sharp-format
+msgid "in a focus block, {0} min left"
+msgstr "в фокусе, осталось {0} мин"
+
+msgid "in a meeting"
+msgstr "на встрече"
+
+#, c-sharp-format
+msgid "in a meeting, {0} min left"
+msgstr "на встрече, осталось {0} мин"
+
+msgid "they will see it now"
+msgstr "увидит сейчас"
+
+#, c-sharp-format
+msgid "You knocked on {0}"
+msgstr "Вы постучались: {0}"
+
+msgid "Couldn't knock"
+msgstr "Не удалось постучаться"
+
+msgid "They have gone"
+msgstr "Коллеги уже нет в сети"
+
+msgid "nobody by that name is on the network now"
+msgstr "в сети сейчас никого с таким именем"
+
+msgid "Nobody to knock on"
+msgstr "Не к кому постучаться"
+
+msgid "co-workers show up here when their invites are on"
+msgstr "коллеги появятся здесь, когда у них включены приглашения"
+
+#, c-sharp-format
+msgid "{0} has your knock"
+msgstr "{0}: стук получен"
+
+msgid "their answer comes here"
+msgstr "ответ придёт сюда"
+
+#, c-sharp-format
+msgid "{0} is in a meeting"
+msgstr "{0} на встрече"
+
+msgid "they will see your knock at their break"
+msgstr "увидит ваш стук на перерыве"
+
+#, c-sharp-format
+msgid "they will see your knock at their break, in about {0} min"
+msgstr "увидит ваш стук на перерыве, примерно через {0} мин"
+
+#, c-sharp-format
+msgid "No answer from {0}"
+msgstr "{0} не отвечает"
+
+msgid "their Desk Arcade may be closed, or its invites off"
+msgstr "возможно, Desk Arcade коллеги закрыт или приглашения выключены"
+
+#, c-sharp-format
+msgid "about “{0}”"
+msgstr "по поводу «{0}»"
+
+#, c-sharp-format
+msgid "{0}: come over!"
+msgstr "{0}: заходите!"
+
+#, c-sharp-format
+msgid "{0}: in 10 minutes"
+msgstr "{0}: через 10 минут"
+
+#, c-sharp-format
+msgid "{0}: after lunch"
+msgstr "{0}: после обеда"
+
+#, c-sharp-format
+msgid "{0} is knocking"
+msgstr "{0} стучится"
+
+#, c-sharp-format
+msgid "{0} knocks on your door"
+msgstr "Стуков в вашу дверь: {0}"
+
+#, c-sharp-format
+msgid "and {0} more after these"
+msgstr "и ещё {0} после них"
+
+msgid "Come over"
+msgstr "Заходите"
+
+msgid "In 10 minutes"
+msgstr "Через 10 минут"
+
+msgid "After lunch"
+msgstr "После обеда"
+
+msgid "come over"
+msgstr "заходите"
+
+msgid "in 10 minutes"
+msgstr "через 10 минут"
+
+msgid "after lunch"
+msgstr "после обеда"
+
+#, c-sharp-format
+msgid "{0} knows"
+msgstr "{0} в курсе"
+
+msgid "Open door"
+msgstr "Открытая дверь"
+
+msgid "Answer 5 knocks"
+msgstr "Ответьте на 5 стуков"
