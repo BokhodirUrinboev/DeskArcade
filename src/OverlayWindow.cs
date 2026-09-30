@@ -296,6 +296,7 @@ public sealed partial class OverlayWindow : Window, IGameHost
         // 1.8.6 · Spot the Bug
 
         // 1.8.6 · arcade (Load Balancer, Pipeline)
+        _games.Add(new LoadBalancerGame(this));
 
         _games.Add(new PetGame(this));
         StartPetCompany();
@@ -785,6 +786,7 @@ public sealed partial class OverlayWindow : Window, IGameHost
         // 1.8.6 · Spot the Bug
 
         // 1.8.6 · arcade
+        "servers" => L.T("click the load balancer to start — drag each request onto a server before it times out"),
 
         _ => "",
     };

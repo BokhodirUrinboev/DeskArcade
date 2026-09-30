@@ -40,6 +40,9 @@ public static class Achievements
         // 1.8.6 · arcade
         new("freecell-win", "solitaire", "Free and clear", "Solve a FreeCell deal", "solitaire.freecell", 1),
         new("spider-win", "solitaire", "Eight legs", "Solve a game of Spider", "solitaire.spider", 1),
+        new("servers-500", "servers", "Uptime", "Serve 500 requests in Load Balancer", "servers.served", 500),
+        new("servers-wave", "servers", "Black Friday", "Reach wave 8 in Load Balancer", "servers.wave", 8),
+        new("servers-clean", "servers", "Five nines", "Clear 5 waves without losing a request", "servers.clean", 5),
 
 
         new("hoops-100", "hoops", "Hundred baskets", "Score 100 baskets", "hoops.baskets", 100),

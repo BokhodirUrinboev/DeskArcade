@@ -74,6 +74,7 @@ public sealed class Daily
         // 1.8.6 · Spot the Bug
 
         // 1.8.6 · arcade
+        new("servers", "servers.served", 40, "Serve {0} requests in Load Balancer"),
 
     };
 

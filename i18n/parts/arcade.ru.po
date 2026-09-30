@@ -79,3 +79,121 @@ msgstr "Восемь лап"
 
 msgid "Solve a game of Spider"
 msgstr "Разложите «Паука»"
+
+msgid "Load Balancer"
+msgstr "Балансировщик"
+
+msgid "Click the load balancer to start · drag requests to the servers"
+msgstr "Нажмите на балансировщик, чтобы начать · перетаскивайте запросы на серверы"
+
+#, c-sharp-format
+msgid "Down at wave {0} · click the load balancer for another game"
+msgstr "Сервис упал на волне {0} · нажмите на балансировщик для новой игры"
+
+#, c-sharp-format
+msgid "Wave {0} · lives {1} · budget {2} · drag requests to a server"
+msgstr "Волна {0} · жизни {1} · бюджет {2} · перетаскивайте запросы на сервер"
+
+#, c-sharp-format
+msgid "Load Balancer · wave {0}, {1} requests served, {2} points 🖥️"
+msgstr "Балансировщик · волна {0}, обслужено запросов: {1}, очков: {2} 🖥️"
+
+msgid "no budget · clear a wave for more"
+msgstr "нет бюджета · пройдите волну, чтобы получить ещё"
+
+#, c-sharp-format
+msgid "cooling down · {0} s"
+msgstr "остывает · {0} с"
+
+msgid "Server racked"
+msgstr "Сервер установлен"
+
+msgid "rebooting"
+msgstr "перезагрузка"
+
+msgid "full"
+msgstr "занят"
+
+msgid "timed out"
+msgstr "время вышло"
+
+msgid "queue full"
+msgstr "очередь полна"
+
+msgid "OVERHEATED · rebooting"
+msgstr "ПЕРЕГРЕВ · перезагрузка"
+
+#, c-sharp-format
+msgid "{0} requests · timeouts {1} s"
+msgstr "запросов: {0} · тайм-аут {1} с"
+
+msgid "TRAFFIC SPIKE!"
+msgstr "ВСПЛЕСК ТРАФИКА!"
+
+msgid "rack a server if you can"
+msgstr "установите сервер, если можете"
+
+msgid "WAVE CLEARED"
+msgstr "ВОЛНА ПРОЙДЕНА"
+
+#, c-sharp-format
+msgid "+{0} · the budget grows"
+msgstr "+{0} · бюджет растёт"
+
+msgid "no request lost"
+msgstr "ни один запрос не потерян"
+
+#, c-sharp-format
+msgid "+{0} cache hit"
+msgstr "+{0} попадание в кэш"
+
+msgid "SERVICE DOWN"
+msgstr "СЕРВИС УПАЛ"
+
+#, c-sharp-format
+msgid "wave {0} · {1} served · {2} points"
+msgstr "волна {0} · обслужено {1} · очков {2}"
+
+#, c-sharp-format
+msgid "rebooting {0}"
+msgstr "перезагрузка {0}"
+
+msgid "hot · slow"
+msgstr "горячий · медленно"
+
+msgid "LOAD BALANCER · click to start"
+msgstr "БАЛАНСИРОВЩИК · нажмите, чтобы начать"
+
+msgid "LOAD BALANCER"
+msgstr "БАЛАНСИРОВЩИК"
+
+msgid "+ rack"
+msgstr "+ сервер"
+
+msgid "budget 0"
+msgstr "бюджет 0"
+
+msgid "click the load balancer to start — drag each request onto a server before it times out"
+msgstr "нажмите на балансировщик — перетаскивайте каждый запрос на сервер, пока не вышло время"
+
+msgid "Uptime"
+msgstr "Аптайм"
+
+msgid "Serve 500 requests in Load Balancer"
+msgstr "Обслужите 500 запросов в Балансировщике"
+
+msgid "Black Friday"
+msgstr "Чёрная пятница"
+
+msgid "Reach wave 8 in Load Balancer"
+msgstr "Дойдите до 8-й волны в Балансировщике"
+
+msgid "Five nines"
+msgstr "Пять девяток"
+
+msgid "Clear 5 waves without losing a request"
+msgstr "Пройдите 5 волн, не потеряв ни одного запроса"
+
+#, c-sharp-format
+msgid "Serve {0} requests in Load Balancer"
+msgstr "Обслужите {0} запросов в Балансировщике"

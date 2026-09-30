@@ -79,3 +79,121 @@ msgstr "Sakkiz oyoq"
 
 msgid "Solve a game of Spider"
 msgstr "«O'rgimchak»ni bir marta yeching"
+
+msgid "Load Balancer"
+msgstr "Yuk taqsimlagich"
+
+msgid "Click the load balancer to start · drag requests to the servers"
+msgstr "Boshlash uchun yuk taqsimlagichni bosing · so'rovlarni serverlarga suring"
+
+#, c-sharp-format
+msgid "Down at wave {0} · click the load balancer for another game"
+msgstr "{0}-to'lqinda xizmat to'xtadi · yangi o'yin uchun yuk taqsimlagichni bosing"
+
+#, c-sharp-format
+msgid "Wave {0} · lives {1} · budget {2} · drag requests to a server"
+msgstr "To'lqin {0} · jon {1} · byudjet {2} · so'rovlarni serverga suring"
+
+#, c-sharp-format
+msgid "Load Balancer · wave {0}, {1} requests served, {2} points 🖥️"
+msgstr "Yuk taqsimlagich · {0}-to'lqin, {1} ta so'rov bajarildi, {2} ochko 🖥️"
+
+msgid "no budget · clear a wave for more"
+msgstr "byudjet yo'q · ko'proq olish uchun to'lqinni o'ting"
+
+#, c-sharp-format
+msgid "cooling down · {0} s"
+msgstr "sovumoqda · {0} s"
+
+msgid "Server racked"
+msgstr "Server o'rnatildi"
+
+msgid "rebooting"
+msgstr "qayta yuklanmoqda"
+
+msgid "full"
+msgstr "band"
+
+msgid "timed out"
+msgstr "vaqt tugadi"
+
+msgid "queue full"
+msgstr "navbat to'la"
+
+msgid "OVERHEATED · rebooting"
+msgstr "QIZIB KETDI · qayta yuklanmoqda"
+
+#, c-sharp-format
+msgid "{0} requests · timeouts {1} s"
+msgstr "{0} ta so'rov · kutish {1} s"
+
+msgid "TRAFFIC SPIKE!"
+msgstr "TRAFIK KESKIN OSHDI!"
+
+msgid "rack a server if you can"
+msgstr "iloji bo'lsa server o'rnating"
+
+msgid "WAVE CLEARED"
+msgstr "TO'LQIN O'TILDI"
+
+#, c-sharp-format
+msgid "+{0} · the budget grows"
+msgstr "+{0} · byudjet oshdi"
+
+msgid "no request lost"
+msgstr "birorta so'rov yo'qolmadi"
+
+#, c-sharp-format
+msgid "+{0} cache hit"
+msgstr "+{0} keshdan"
+
+msgid "SERVICE DOWN"
+msgstr "XIZMAT TO'XTADI"
+
+#, c-sharp-format
+msgid "wave {0} · {1} served · {2} points"
+msgstr "{0}-to'lqin · {1} ta bajarildi · {2} ochko"
+
+#, c-sharp-format
+msgid "rebooting {0}"
+msgstr "qayta yuklanmoqda {0}"
+
+msgid "hot · slow"
+msgstr "qizigan · sekin"
+
+msgid "LOAD BALANCER · click to start"
+msgstr "YUK TAQSIMLAGICH · boshlash uchun bosing"
+
+msgid "LOAD BALANCER"
+msgstr "YUK TAQSIMLAGICH"
+
+msgid "+ rack"
+msgstr "+ server"
+
+msgid "budget 0"
+msgstr "byudjet 0"
+
+msgid "click the load balancer to start — drag each request onto a server before it times out"
+msgstr "yuk taqsimlagichni bosing — har bir so'rovni vaqti tugamasdan serverga suring"
+
+msgid "Uptime"
+msgstr "Uzluksiz ishlash"
+
+msgid "Serve 500 requests in Load Balancer"
+msgstr "Yuk taqsimlagichda 500 ta so'rovni bajaring"
+
+msgid "Black Friday"
+msgstr "Qora juma"
+
+msgid "Reach wave 8 in Load Balancer"
+msgstr "Yuk taqsimlagichda 8-to'lqinga yeting"
+
+msgid "Five nines"
+msgstr "Beshta to'qqiz"
+
+msgid "Clear 5 waves without losing a request"
+msgstr "Birorta so'rovni yo'qotmasdan 5 ta to'lqinni o'ting"
+
+#, c-sharp-format
+msgid "Serve {0} requests in Load Balancer"
+msgstr "Yuk taqsimlagichda {0} ta so'rovni bajaring"
