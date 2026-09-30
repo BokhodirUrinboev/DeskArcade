@@ -31,8 +31,11 @@ public abstract class CardRoomView
     public int Players => Names.Length;
 }
 
-/// <summary>A move in a room card game: its kind and up to two numbers, as a player's action message carries them.</summary>
-public readonly record struct RoomMove(string Kind, int A = -1, int B = -1);
+/// <summary>
+/// A move in a room game: its kind, up to two numbers, and a little text (a stroke, a guess), as a player's action
+/// message carries them. The text is cleaned of "|" and line breaks on the way.
+/// </summary>
+public readonly record struct RoomMove(string Kind, int A = -1, int B = -1, string Text = "");
 
 /// <summary>
 /// What is due at a table when nobody is waited on: a computer's move for <see cref="Seat"/>, or the host's own step
@@ -335,7 +338,8 @@ public abstract class CardRoomGame<TView> : MiniGame, IRoomGame where TView : Ca
     void SendAction(RoomMove move)
     {
         _nextSeq = Math.Max(_nextSeq, View?.Ack ?? 0) + 1;
-        var message = string.Create(CultureInfo.InvariantCulture, $"{Tag}a|{_nextSeq}|{move.Kind}|{move.A}|{move.B}");
+        string text = new((move.Text ?? "").Where(c => c != '|' && !char.IsControl(c)).ToArray());
+        var message = string.Create(CultureInfo.InvariantCulture, $"{Tag}a|{_nextSeq}|{move.Kind}|{move.A}|{move.B}") + (text.Length > 0 ? "|" + text : "");
         _outbox.Add((_nextSeq, message));
         _room.SendToHost(message);
         _resendT = 0;
@@ -460,12 +464,12 @@ public abstract class CardRoomGame<TView> : MiniGame, IRoomGame where TView : Ca
             if (!HasRules || msg.Seat >= _seatOfGuest.Length || _seatOfGuest[msg.Seat] is not (>= 0 and var seat)) continue;
             var f = msg.Body.Split('|');
             // moves are taken strictly in order: a repeat or one that jumped ahead waits for the re-send
-            if (f.Length != 5 || f[0] != Tag + "a" || !int.TryParse(f[1], out int seq) || seq != _lastSeq[seat] + 1 ||
+            if (f.Length is not (5 or 6) || f[0] != Tag + "a" || !int.TryParse(f[1], out int seq) || seq != _lastSeq[seat] + 1 ||
                 !int.TryParse(f[3], NumberStyles.Integer, CultureInfo.InvariantCulture, out int a) ||
                 !int.TryParse(f[4], NumberStyles.Integer, CultureInfo.InvariantCulture, out int b))
                 continue;
             _lastSeq[seat] = seq; // handled, whether or not the rules accept it; the view tells the player
-            var move = new RoomMove(f[2], a, b);
+            var move = new RoomMove(f[2], a, b, f.Length == 6 ? f[5] : "");
             if (move.Kind == "again")
             {
                 if (View is { Over: true }) NewGame();

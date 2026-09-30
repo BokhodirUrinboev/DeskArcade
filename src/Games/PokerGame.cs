@@ -427,7 +427,7 @@ public sealed class PokerGame : CardRoomGame<PokerView>
             BorderBrush = turn ? GoldBrush : Art.Brush(Color.FromArgb(90, 255, 255, 255)), BorderThickness = new Thickness(turn ? 2.5 : 1),
         };
         Place(plate, p.X - w / 2, p.Y - h / 2);
-        string name = s == v.Seat ? L.T("You") : v.Names[s] + (v.Cpu[s] && !Solo ? " · " + L.T("CPU") : "");
+        string name = s == v.Seat ? L.T("You") : v.Names[s] + (v.Cpu[s] && v.Human[s] && !Solo ? " · " + L.T("CPU") : "");
         Label(Clip(name, 17), p.X, p.Y - h / 2 + 5, 14, gone ? Color.FromRgb(150, 150, 150) : Colors.White, center: true);
         string chips = gone ? L.F("out · place {0}", v.Places[s]) : L.F("{0} chips", v.Stacks[s].ToString("N0", CultureInfo.InvariantCulture));
         Label(chips, p.X, p.Y - h / 2 + 25, 13, gone ? Color.FromRgb(150, 150, 150) : Gold, center: true);

@@ -274,7 +274,8 @@ public sealed class RoomLink : IDisposable
             catch (OperationCanceledException) { return; }
             catch (ObjectDisposedException) { return; }
             catch (SocketException) { continue; }
-            if (r.Buffer.Length > 8192 || ct.IsCancellationRequested) continue;
+            // a whole drawing rides in each Draw & Guess view; older games' messages are far smaller
+            if (r.Buffer.Length > 60_000 || ct.IsCancellationRequested) continue;
             string text = Encoding.UTF8.GetString(r.Buffer);
             if (!text.StartsWith(Magic + "|", StringComparison.Ordinal)) continue;
             try { Handle(r.RemoteEndPoint, text[(Magic.Length + 1)..], ct); }

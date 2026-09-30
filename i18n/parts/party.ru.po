@@ -255,3 +255,108 @@ msgstr "Ответьте верно за две секунды 20 раз"
 #, c-sharp-format
 msgid "Answer {0} questions right in Quiz Night"
 msgstr "Ответьте верно на {0} вопросов в Викторине"
+
+msgid "Draw & Guess"
+msgstr "Рисуй и угадывай"
+
+msgid "Draw the word for the others to guess · type your guesses"
+msgstr "Нарисуйте слово, чтобы другие угадали · вводите свои догадки"
+
+#, c-sharp-format
+msgid "With {0} computers"
+msgstr "С {0} компьютерами"
+
+msgid "You won · click New game"
+msgstr "Вы победили · нажмите «Новая игра»"
+
+#, c-sharp-format
+msgid "{0} won · click New game"
+msgstr "{0} победил · нажмите «Новая игра»"
+
+msgid "Pick a word to draw"
+msgstr "Выберите слово, которое нарисуете"
+
+#, c-sharp-format
+msgid "{0} is picking a word"
+msgstr "{0} выбирает слово"
+
+#, c-sharp-format
+msgid "Draw: {0}"
+msgstr "Нарисуйте: {0}"
+
+#, c-sharp-format
+msgid "The word was: {0}"
+msgstr "Это было слово: {0}"
+
+msgid "You got it! · the others are still guessing"
+msgstr "Угадали! · остальные ещё гадают"
+
+#, c-sharp-format
+msgid "{0} is drawing · type your guess"
+msgstr "{0} рисует · вводите догадку"
+
+msgid "YOU GOT IT!"
+msgstr "УГАДАЛИ!"
+
+msgid "close!"
+msgstr "почти!"
+
+#, c-sharp-format
+msgid "Draw & Guess · place {0} of {1} with {2} points ✏️"
+msgstr "Рисуй и угадывай · {0}-е место из {1} с {2} очками ✏️"
+
+msgid "Your guess"
+msgstr "Ваша догадка"
+
+#, c-sharp-format
+msgid "{0} is picking a word…"
+msgstr "{0} выбирает слово…"
+
+msgid "The word was"
+msgstr "Это было слово"
+
+#, c-sharp-format
+msgid "Turn {0} of {1}"
+msgstr "Ход {0} из {1}"
+
+msgid "Players"
+msgstr "Игроки"
+
+msgid "Guesses"
+msgstr "Догадки"
+
+#, c-sharp-format
+msgid "{0} guessed it!"
+msgstr "{0} угадал!"
+
+#, c-sharp-format
+msgid "{0}: {1} · close!"
+msgstr "{0}: {1} · почти!"
+
+msgid "Click here and type your guess · Enter sends it"
+msgstr "Нажмите сюда и введите догадку · Enter отправляет"
+
+msgid "Clear"
+msgstr "Очистить"
+
+msgid "draw the word on the board, or type your guesses — the sooner you get it, the more it scores"
+msgstr "рисуйте слово на доске или вводите догадки — чем раньше угадаете, тем больше очков"
+
+msgid "Guess 25 words in Draw & Guess"
+msgstr "Угадайте 25 слов в игре «Рисуй и угадывай»"
+
+msgid "Clear as day"
+msgstr "Яснее ясного"
+
+msgid "Have your drawings guessed 25 times"
+msgstr "Пусть ваши рисунки угадают 25 раз"
+
+msgid "Quick eye"
+msgstr "Зоркий глаз"
+
+msgid "Be the first to guess 10 times"
+msgstr "Угадайте первым 10 раз"
+
+#, c-sharp-format
+msgid "Guess {0} words in Draw & Guess"
+msgstr "Угадайте {0} слова в игре «Рисуй и угадывай»"

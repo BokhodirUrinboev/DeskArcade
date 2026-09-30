@@ -299,7 +299,7 @@ public sealed class HeartsGame : CardRoomGame<HeartsView>
             Background = Art.Brush(Color.FromArgb(210, ink.R, ink.G, ink.B)),
             BorderBrush = turn ? GoldBrush : Art.Brush(Color.FromArgb(90, 255, 255, 255)), BorderThickness = new Thickness(turn ? 2.5 : 1),
         }, p.X - w / 2, p.Y - h / 2);
-        string name = s == v.Seat ? L.T("You") : v.Names[s] + (v.Cpu[s] && !Solo ? " · " + L.T("CPU") : "");
+        string name = s == v.Seat ? L.T("You") : v.Names[s] + (v.Cpu[s] && v.Human[s] && !Solo ? " · " + L.T("CPU") : "");
         Label(name.Length > 18 ? name[..17] + "…" : name, p.X, p.Y - h / 2 + 5, 14, Colors.White, center: true);
         string score = v.HandOver && v.HandPoints[s] > 0 ? L.F("{0} points (+{1})", v.Scores[s], v.HandPoints[s])
             : v.Taken[s] > 0 ? L.F("{0} points · {1} this hand", v.Scores[s], v.Taken[s]) : L.F("{0} points", v.Scores[s]);

@@ -67,6 +67,7 @@ public sealed class Daily
         new("bridge", "bridge.saved", 10, "Get {0} interns across the Rope Bridge"),
         // 1.8.6 · party games
         new("quiz", "quiz.right", 7, "Answer {0} questions right in Quiz Night"),
+        new("draw", "draw.guessed", 3, "Guess {0} words in Draw & Guess"),
 
         // 1.8.6 · card games
         new("poker", "poker.pots", 5, "Win {0} pots in Poker"),
