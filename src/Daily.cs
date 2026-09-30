@@ -66,6 +66,7 @@ public sealed class Daily
         new("jenga", "jenga.moved", 12, "Move {0} blocks in Window Jenga"),
         new("bridge", "bridge.saved", 10, "Get {0} interns across the Rope Bridge"),
         // 1.8.6 · party games
+        new("quiz", "quiz.right", 7, "Answer {0} questions right in Quiz Night"),
 
         // 1.8.6 · card games
         new("poker", "poker.pots", 5, "Win {0} pots in Poker"),

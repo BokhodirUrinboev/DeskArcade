@@ -48,6 +48,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Quiz Night's question packs, and Draw & Guess's words and the computer's pictures -->
+    <EmbeddedResource Include="quiz\*.json" LogicalName="quiz/%(Filename)%(Extension)" WithCulture="false" />
+    <EmbeddedResource Include="draw\*.json;draw\*.txt" LogicalName="draw/%(Filename)%(Extension)" WithCulture="false" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- the unit tests are their own project -->
     <Compile Remove="tests/**" />
     <None Remove="tests/**" />

@@ -73,6 +73,11 @@ public sealed class RoomLink : IDisposable
     public string Game { get; init; } = Durak;
     /// <summary>How many people the room seats, the host included: <see cref="MaxSeats"/> for the card games, up to <see cref="MaxCapacity"/> for a quiz.</summary>
     public int Capacity { get; init; } = MaxSeats;
+    /// <summary>
+    /// The port rooms are found and joined on: <see cref="Port"/>, or another one for tests, so a copy of Desk Arcade
+    /// running on the same PC never hears them.
+    /// </summary>
+    public int ListenPort { get; init; } = Port;
 
     /// <summary>Raised on a background thread when the state or the roster changes.</summary>
     public event Action? Changed;
@@ -106,7 +111,7 @@ public sealed class RoomLink : IDisposable
         UdpClient? udp = null;
         try
         {
-            var listener = NewListener();
+            var listener = NewListener(ListenPort);
             udp = new UdpClient(new IPEndPoint(IPAddress.Any, 0)) { EnableBroadcast = true };
             lock (_gate)
             {
@@ -125,11 +130,11 @@ public sealed class RoomLink : IDisposable
         }
     }
 
-    static UdpClient NewListener()
+    static UdpClient NewListener(int port)
     {
         var l = new UdpClient(AddressFamily.InterNetwork) { ExclusiveAddressUse = false };
         l.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-        l.Client.Bind(new IPEndPoint(IPAddress.Any, Port));
+        l.Client.Bind(new IPEndPoint(IPAddress.Any, port));
         return l;
     }
 
@@ -181,11 +186,11 @@ public sealed class RoomLink : IDisposable
     // ------------------------------------------------------------------ discovery
 
     /// <summary>Asks the network for rooms and collects the answers that arrive within <paramref name="wait"/>.</summary>
-    public static async Task<List<RoomInfo>> FindRooms(TimeSpan wait, IPEndPoint? address = null)
+    public static async Task<List<RoomInfo>> FindRooms(TimeSpan wait, IPEndPoint? address = null, int port = Port)
     {
         var rooms = new Dictionary<string, RoomInfo>();
         using var udp = new UdpClient(new IPEndPoint(IPAddress.Any, 0)) { EnableBroadcast = true };
-        foreach (var to in Targets(address)) TrySend(udp, to, "rfind");
+        foreach (var to in Targets(address, port)) TrySend(udp, to, "rfind");
         using var cts = new CancellationTokenSource(wait);
         try
         {
@@ -202,9 +207,9 @@ public sealed class RoomLink : IDisposable
         return rooms.Values.OrderBy(r => r.Code).ToList();
     }
 
-    static IEnumerable<IPEndPoint> Targets(IPEndPoint? address) => address != null
-        ? new[] { new IPEndPoint(address.Address, Port) }
-        : new[] { new IPEndPoint(IPAddress.Broadcast, Port), new IPEndPoint(IPAddress.Loopback, Port) };
+    static IEnumerable<IPEndPoint> Targets(IPEndPoint? address, int port = Port) => address != null
+        ? new[] { new IPEndPoint(address.Address, port) }
+        : new[] { new IPEndPoint(IPAddress.Broadcast, port), new IPEndPoint(IPAddress.Loopback, port) };
 
     // ------------------------------------------------------------------ plumbing
 
@@ -450,7 +455,7 @@ public sealed class RoomLink : IDisposable
             switch (State)
             {
                 case RoomState.Joining:
-                    foreach (var to in Targets(_target)) TrySend(udp, to, $"rjoin|{Code}|{Clean(MyName)}|{_nonce}{GameField}");
+                    foreach (var to in Targets(_target, ListenPort)) TrySend(udp, to, $"rjoin|{Code}|{Clean(MyName)}|{_nonce}{GameField}");
                     if ((now - _lastHeard).TotalSeconds > TimeoutSeconds * 1.5)
                     {
                         Refusal = "notfound";
