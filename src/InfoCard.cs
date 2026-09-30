@@ -9,7 +9,7 @@ using DeskArcade.Engine;
 namespace DeskArcade;
 
 /// <summary>A button on an <see cref="InfoCard"/>: its label, whether it is the main one (in the theme's accent), and what it does.</summary>
-public sealed record CardAction(string Label, bool Main, Action Click);
+public sealed record InfoAction(string Label, bool Main, Action Click);
 
 /// <summary>
 /// A card in the middle of the overlay that says something and waits for a button: the first-run tour and the year at
@@ -24,7 +24,7 @@ public sealed class InfoCard
     public Rect Area { get; private set; }
 
     /// <param name="art">A picture about <see cref="ArtSize"/> square, or null.</param>
-    public InfoCard(Rect arena, string step, string title, IReadOnlyList<string> lines, IReadOnlyList<CardAction> actions, Control? art = null)
+    public InfoCard(Rect arena, string step, string title, IReadOnlyList<string> lines, IReadOnlyList<InfoAction> actions, Control? art = null)
     {
         var t = Themes.Current;
         var words = new StackPanel { Spacing = 5, VerticalAlignment = VerticalAlignment.Center };

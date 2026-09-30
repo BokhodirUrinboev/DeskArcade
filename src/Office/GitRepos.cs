@@ -17,7 +17,7 @@ public sealed record Commit(string Hash, DateTime WhenUtc, string Subject);
 public sealed record RepoCommits(string Repo, string Folder, IReadOnlyList<Commit> Commits, bool NoEmail = false, string? Problem = null);
 
 /// <summary>A pull request of yours that was merged.</summary>
-public sealed record PullRequest(int Number, string Title, string Url, DateTime MergedUtc);
+public sealed record MergedPull(int Number, string Title, string Url, DateTime MergedUtc);
 
 /// <summary>
 /// What "git before you go" finds in a repo: files changed and not committed, commits on local branches that no remote
@@ -90,7 +90,7 @@ public static class GitRepos
     /// <paramref name="folder"/> belongs to, through gh (the caller checks that gh is installed). Empty when gh is not
     /// signed in or the folder is not a GitHub repo.
     /// </summary>
-    public static async Task<List<PullRequest>> MergedPullsAsync(string folder, DateTime fromUtc, DateTime toUtc, CancellationToken ct = default)
+    public static async Task<List<MergedPull>> MergedPullsAsync(string folder, DateTime fromUtc, DateTime toUtc, CancellationToken ct = default)
     {
         string since = fromUtc.AddDays(-1).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
         var result = await Cli.RunAsync("gh", new[]
@@ -98,13 +98,13 @@ public static class GitRepos
             "pr", "list", "--state", "merged", "--author", "@me", "--limit", "30", "--search", "merged:>=" + since,
             "--json", "number,title,url,mergedAt",
         }, folder, TimeSpan.FromSeconds(20), ct).ConfigureAwait(false);
-        return result.Ok ? ParseMergedPulls(result.Output, fromUtc, toUtc) : new List<PullRequest>();
+        return result.Ok ? ParseMergedPulls(result.Output, fromUtc, toUtc) : new List<MergedPull>();
     }
 
     /// <summary>gh's JSON (number, title, url, mergedAt), the ones merged in the range, in the order merged.</summary>
-    public static List<PullRequest> ParseMergedPulls(string json, DateTime fromUtc, DateTime toUtc)
+    public static List<MergedPull> ParseMergedPulls(string json, DateTime fromUtc, DateTime toUtc)
     {
-        var pulls = new List<PullRequest>();
+        var pulls = new List<MergedPull>();
         try
         {
             using var doc = JsonDocument.Parse(json);
@@ -118,7 +118,7 @@ public static class GitRepos
                 int number = pr.TryGetProperty("number", out var n) && n.TryGetInt32(out int num) ? num : 0;
                 string title = pr.TryGetProperty("title", out var t) && t.ValueKind == JsonValueKind.String ? t.GetString() ?? "" : "";
                 string url = pr.TryGetProperty("url", out var u) && u.ValueKind == JsonValueKind.String ? u.GetString() ?? "" : "";
-                pulls.Add(new PullRequest(number, title.Trim(), url, at));
+                pulls.Add(new MergedPull(number, title.Trim(), url, at));
             }
         }
         catch (JsonException)

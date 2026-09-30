@@ -219,7 +219,7 @@ public sealed partial class OfficeDesk
     {
         public required DateOnly Day;
         public List<RepoCommits> Repos { get; } = new();
-        public List<PullRequest> Pulls { get; } = new();
+        public List<MergedPull> Pulls { get; } = new();
         public List<string> Meetings { get; } = new();
         public long MeetingCount, Focus, ActiveSeconds;
         public bool NoRepos;
@@ -245,7 +245,7 @@ public sealed partial class OfficeDesk
         {
             var commits = Task.WhenAll(repos.Select(r => GitRepos.CommitsAsync(r, fromUtc, toUtc, cts.Token)));
             bool gh = repos.Count > 0 && Cli.Has("gh");
-            var pulls = gh ? Task.WhenAll(repos.Select(r => GitRepos.MergedPullsAsync(r, fromUtc, toUtc, cts.Token))) : Task.FromResult(Array.Empty<List<PullRequest>>());
+            var pulls = gh ? Task.WhenAll(repos.Select(r => GitRepos.MergedPullsAsync(r, fromUtc, toUtc, cts.Token))) : Task.FromResult(Array.Empty<List<MergedPull>>());
             var meetings = _calendar is IcsCalendar calendar ? Task.Run(() => calendar.Between(fromUtc, toUtc)) : Task.FromResult(new List<Meeting>());
             notes.Repos.AddRange(await commits);
             // two folders of one GitHub repo (worktrees, clones) list the same pull requests

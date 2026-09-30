@@ -55,12 +55,12 @@ public sealed partial class OverlayWindow
         if (!Shown) SetOverlayVisible(true);
         const int Steps = 3;
         string counter = L.F("{0} of {1}", step + 1, Steps);
-        var actions = new List<CardAction>();
-        if (step > 0) actions.Add(new CardAction(L.T("Back"), false, () => TourStep(step - 1)));
-        else actions.Add(new CardAction(L.T("Skip"), false, CloseCard));
+        var actions = new List<InfoAction>();
+        if (step > 0) actions.Add(new InfoAction(L.T("Back"), false, () => TourStep(step - 1)));
+        else actions.Add(new InfoAction(L.T("Skip"), false, CloseCard));
         actions.Add(step < Steps - 1
-            ? new CardAction(L.T("Next"), true, () => TourStep(step + 1))
-            : new CardAction(L.T("Let's play"), true, () =>
+            ? new InfoAction(L.T("Next"), true, () => TourStep(step + 1))
+            : new InfoAction(L.T("Let's play"), true, () =>
             {
                 CloseCard();
                 Stats.Add("tour.done");
@@ -123,8 +123,8 @@ public sealed partial class OverlayWindow
         InfoCard? card = null;
         card = new InfoCard(Arena, L.T("Desk Arcade"), YearInReview.Title(year), lines, new[]
         {
-            new CardAction(L.T("Close"), false, CloseCard),
-            new CardAction(L.T("Save as a picture"), true, () => SaveCardPicture(card!)),
+            new InfoAction(L.T("Close"), false, CloseCard),
+            new InfoAction(L.T("Save as a picture"), true, () => SaveCardPicture(card!)),
         }, TourArt.Calendar(year));
         ShowCard(card);
         Sound.Play("best", 0.6);

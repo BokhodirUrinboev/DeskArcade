@@ -498,3 +498,14 @@ public class RepoWatchTests
         }
     }
 }
+
+public class IpcCaseTests
+{
+    [Theory]
+    [InlineData("three:Review the PR|Write Notes", "three:Review the PR|Write Notes")]
+    [InlineData("status:running|Deploy|Staging EU|vscode", "status:running|Deploy|Staging EU|vscode")]
+    [InlineData("agent:working|claude|S1|C:/Code/Api||||", "agent:working|claude|S1|C:/Code/Api||||")]
+    [InlineData("repo-add:C:/Code/Api", "repo-add:C:/Code/Api")]
+    [InlineData("  SHOW  ", "show")]
+    public void TextAfterAKnownPrefixKeepsItsSpelling(string line, string expected) => Assert.Equal(expected, Ipc.Normalize(line));
+}
