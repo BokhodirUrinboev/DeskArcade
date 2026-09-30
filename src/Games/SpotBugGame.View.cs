@@ -145,9 +145,12 @@ public sealed partial class SpotBugGame
             _origin = _handle.Saved() ?? new Vec2(a.Center.X - W * _scale / 2, a.Top + Math.Max(DragHandle.Height + 16, (a.Height - tallest * _scale) / 2));
         }
         if (CheckSession() || LanOn && _mode == Mode.Daily) NewRound();
+        if (_paintedColorBlind != Art.ColorBlind) ThemeChanged(); // the overlay lays the game out again when colour-blind mode is toggled
         Place();
         Host.HudChanged();
     }
+
+    bool _paintedColorBlind;
 
     void Place()
     {
@@ -396,7 +399,7 @@ public sealed partial class SpotBugGame
 
         // header: mode, New, the language chips, the clock and where we are
         _modeChip.Text = LanOn ? L.T("LAN race") : daily ? L.T("Daily snippet") : L.T("Round of ten");
-        _newChip.Text = L.T("New");
+        _newChip.Text = L.T("New round");
         double x = Pad;
         _modeRect = PlaceChip(_modeBack, _modeChip, ref x, Row1Y);
         _modeBack.Opacity = _modeChip.Opacity = LanOn || CanSwitchMode ? 1 : 0.5;
@@ -413,7 +416,8 @@ public sealed partial class SpotBugGame
             bool on = LanOn ? k == 0 : k == _lang;
             back.Fill = Art.Brush(on ? Art.Blend(t.Accent, t.Ink, 0.3) : Color.FromArgb(40, t.Accent.R, t.Accent.G, t.Accent.B));
             back.Stroke = Art.Brush(Color.FromArgb(on ? (byte)230 : (byte)110, t.Accent.R, t.Accent.G, t.Accent.B));
-            back.Opacity = text.Opacity = langLocked && !on ? 0.4 : daily ? 0.55 : 1;
+            back.Opacity = text.Opacity = langLocked && !on ? 0.4 : 1;
+            back.IsVisible = text.IsVisible = !daily; // the daily snippet is the same for everyone, whatever the filter
         }
         _progress.Text = snippet == null ? "" : (daily ? "#" + DailyNumber.ToString(CultureInfo.InvariantCulture) : L.F("{0}/{1}", _round.Index + 1, _round.Snippets.Count))
             + " · " + SpotBugDeck.LanguageName(snippet.Lang) + " · " + L.T(MiniGame.LevelNames[(int)snippet.Level]);
@@ -651,6 +655,7 @@ public sealed partial class SpotBugGame
     {
         var t = Themes.Current;
         _palette = SpotBugSyntax.PaletteFor(t);
+        _paintedColorBlind = Art.ColorBlind;
         _inks.Clear();
         _back.Fill = Art.Brush(Color.FromArgb(240, t.Ink.R, t.Ink.G, t.Ink.B));
         _back.Stroke = Art.Brush(Color.FromArgb(150, t.Accent.R, t.Accent.G, t.Accent.B));

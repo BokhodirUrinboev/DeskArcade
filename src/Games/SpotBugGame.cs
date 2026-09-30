@@ -22,8 +22,8 @@ public sealed partial class SpotBugGame : MiniGame
 {
     enum Mode { Round, Daily }
 
-    // the daily snippet's result and the streak, kept with the game's other small numbers in the settings
-    const string LangKey = "spotbug.lang", DayKey = "spotbug.day", DayFoundKey = "spotbug.dayfound", DayClicksKey = "spotbug.dayclicks",
+    // the chips, the daily snippet's result and the streak, kept with the game's other small numbers in the settings
+    const string LangKey = "spotbug.lang", ModeKey = "spotbug.daily", StartedKey = "spotbug.daystarted", DayKey = "spotbug.day", DayFoundKey = "spotbug.dayfound", DayClicksKey = "spotbug.dayclicks",
         DaySecondsKey = "spotbug.dayseconds", LastFoundKey = "spotbug.lastfound", StreakKey = "spotbug.streak";
     const double RevealDelay = 0.4;
 
@@ -37,7 +37,8 @@ public sealed partial class SpotBugGame : MiniGame
     {
         _lang = Math.Clamp(Get(LangKey), 0, SpotBugDeck.Languages.Length);
         BuildView();
-        NewRound();
+        if (Get(ModeKey) == 1) OpenDaily();
+        else NewRound();
         L.Changed += () =>
         {
             Draw();
@@ -128,6 +129,7 @@ public sealed partial class SpotBugGame : MiniGame
     {
         CheckSession();
         _mode = Mode.Round;
+        if (!LanOn) RememberMode();
         _seeded = LanOn;
         var rng = LanOn ? new Random(MinesweeperRules.DailySeed(DateTime.Today, "spotbug-lan", ++_lanRound)) : Rng;
         _round = new SpotBugRound(SpotBugDeck.Round(rng, LangFilter));
@@ -139,9 +141,21 @@ public sealed partial class SpotBugGame : MiniGame
     void OpenDaily()
     {
         _mode = Mode.Daily;
+        RememberMode();
         _round = new SpotBugRound(new[] { DailySnippet });
         _racing = _revealing = false;
+        // started today and never finished (the program was closed on it): that was the day's one try
+        if (!DailyDone && Get(StartedKey) == Today) RecordDaily(found: false, clicks: 0, seconds: (int)_round.Fuse);
         ShowRound(animate: false);
+    }
+
+    /// <summary>The mode chip is remembered, so the next start opens on the daily snippet or a round as it was left.</summary>
+    void RememberMode()
+    {
+        int mode = _mode == Mode.Daily ? 1 : 0;
+        if (Get(ModeKey) == mode) return;
+        Set(ModeKey, mode);
+        Host.SaveSettings();
     }
 
     void Begin()
@@ -152,6 +166,11 @@ public sealed partial class SpotBugGame : MiniGame
         {
             _racing = true;
             Host.RoundStarted();
+        }
+        if (Shown == Mode.Daily)
+        {
+            Set(StartedKey, Today);
+            Host.SaveSettings();
         }
         Host.Sound.Play("whoosh", 0.3, 1.2);
         ShowRound(animate: true);
@@ -227,7 +246,7 @@ public sealed partial class SpotBugGame : MiniGame
     void RevealSoon()
     {
         _revealing = true;
-        if (Shown == Mode.Daily) RecordDaily();
+        if (Shown == Mode.Daily) RecordDaily(_round.LastFound, _round.Clicks, Math.Max(1, (int)Math.Round(_round.LastSeconds)));
         Anims.After(RevealDelay, () =>
         {
             _revealing = false;
@@ -247,15 +266,14 @@ public sealed partial class SpotBugGame : MiniGame
     }
 
     /// <summary>The daily snippet was tried: keep the result for today and move the streak.</summary>
-    void RecordDaily()
+    void RecordDaily(bool found, int clicks, int seconds)
     {
         if (DailyDone) return;
         int today = Today;
-        bool found = _round.LastFound;
         Set(DayKey, today);
         Set(DayFoundKey, found ? 1 : 0);
-        Set(DayClicksKey, _round.Clicks);
-        Set(DaySecondsKey, Math.Max(1, (int)Math.Round(_round.LastSeconds)));
+        Set(DayClicksKey, clicks);
+        Set(DaySecondsKey, seconds);
         int streak = SpotBugStreak.After(Get(LastFoundKey), Get(StreakKey), today, found);
         Set(StreakKey, streak);
         if (found)
@@ -422,7 +440,7 @@ public sealed partial class SpotBugGame : MiniGame
                 if (!_demoRead)
                 {
                     _demoRead = true;
-                    _demoWait = 3.2;
+                    _demoWait = _round.Phase == SpotPhase.Over ? 5 : 3.2;
                     break;
                 }
                 _demoRead = false;
