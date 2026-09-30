@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Chocolatey package for Desk Arcade, stamped for a release by packaging/chocolatey/Update-ChocolateyPackage.ps1
+  (the version here and in tools/chocolateyinstall.ps1 is the release last stamped into it). After each release,
+  .github/workflows/packages.yml packs it and pushes it to the community repository: see docs/RELEASING.md.
+  The package downloads the release's Setup .exe; nothing is embedded, so it needs no VERIFICATION.txt.
+-->
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>deskarcade</id>
+    <version>1.8.5</version>
+    <packageSourceUrl>https://github.com/BokhodirUrinboev/DeskArcade/tree/main/packaging/chocolatey</packageSourceUrl>
+    <owners>BokhodirUrinboev</owners>
+    <title>Desk Arcade</title>
+    <authors>Bokhodir Urinboev</authors>
+    <projectUrl>https://github.com/BokhodirUrinboev/DeskArcade</projectUrl>
+    <iconUrl>https://cdn.jsdelivr.net/gh/BokhodirUrinboev/DeskArcade@main/assets/DeskArcade.png</iconUrl>
+    <copyright>Copyright (c) 2026 Bokhodir Urinboev</copyright>
+    <licenseUrl>https://github.com/BokhodirUrinboev/DeskArcade/blob/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/BokhodirUrinboev/DeskArcade</projectSourceUrl>
+    <docsUrl>https://github.com/BokhodirUrinboev/DeskArcade#readme</docsUrl>
+    <bugTrackerUrl>https://github.com/BokhodirUrinboev/DeskArcade/issues</bugTrackerUrl>
+    <tags>deskarcade game games arcade minigames overlay desktop desktop-pet lan multiplayer foss</tags>
+    <summary>Mini-games that play on top of your desktop in a transparent overlay.</summary>
+    <description><![CDATA[Desk Arcade plays small games on top of your windows while a build, a deploy or a coding agent is working, and you
+still see everything underneath.
+
+## Features
+
+- **Clicks pass through.** Only the game objects take the mouse; clicks anywhere else go to your windows, and the
+  overlay never takes the keyboard.
+- **Window tops are platforms.** Balls, bugs, pets and towers sit on the top edges of your windows and ride along
+  when you drag one.
+- **Play while it builds.** `arcade dotnet test` runs a command as usual, shows it on the scoreboard and chimes when
+  it passes or fails. Claude Code hooks show whether Claude is working, done or waiting for you.
+- **Over fifty games**: hoops, archery, mini golf, pinball, pool, darts, chess, checkers, Sea Battle, Durak,
+  solitaire, falling blocks, a typing race and more, with a computer rival in every one, and a co-worker over the
+  local network.
+- **At work**: the overlay steps aside for presentations, breaks for your eyes and back, meeting warnings, focus
+  blocks, timers and notes.
+- Desktop pets, themes, achievements and a daily challenge; English, Uzbek and Russian.
+- No account, no telemetry: settings, scores and stats stay on your PC.
+
+## Notes
+
+- This package runs the official per-user installer (`DeskArcade-Setup-<version>-standalone.exe`, .NET runtime
+  bundled; the native ARM64 installer on Windows on ARM) silently. It installs for the user who runs choco, into
+  `%LOCALAPPDATA%\Programs\Desk Arcade`, and adds the `arcade` command to that user's PATH.
+- Settings and high scores in `%APPDATA%\DeskArcade` are kept on upgrade and on uninstall.
+- **Ctrl+Alt+G** shows or hides the overlay after it starts.
+]]></description>
+    <releaseNotes>https://github.com/BokhodirUrinboev/DeskArcade/releases/tag/v1.8.5</releaseNotes>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

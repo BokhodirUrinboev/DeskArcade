@@ -1,0 +1,37 @@
+# Maintainer: Bokhodir Urinboev <bokhodir dot urinboev at gmail dot com>
+#
+# Desk Arcade for Arch Linux, from the release's .deb: the self-contained build in /opt/deskarcade, the
+# deskarcade launcher, the desktop entry and the icon. packaging/aur/Update-AurPackage.ps1 stamps pkgver and
+# the digests for each release, and .github/workflows/packages.yml pushes this file and .SRCINFO to
+# https://aur.archlinux.org/packages/deskarcade-bin (see docs/RELEASING.md). The source of this package is
+# https://github.com/BokhodirUrinboev/DeskArcade/tree/main/packaging/aur; send changes there.
+pkgname=deskarcade-bin
+pkgver=1.8.5
+pkgrel=1
+pkgdesc='Mini-games that play on top of your desktop in a transparent overlay'
+arch=('x86_64' 'aarch64')
+url='https://github.com/BokhodirUrinboev/DeskArcade'
+license=('MIT')
+# The .deb's Depends, by their Arch names. The .NET runtime is bundled; InvariantGlobalization means no ICU.
+# ttf-font: Avalonia will not start without at least one font, which Debian's fontconfig brings along and Arch's
+# does not (a bare Arch container crashes with "Default font family name can't be null or empty").
+depends=('fontconfig' 'gcc-libs' 'glibc' 'libice' 'libpulse' 'libsm' 'libx11' 'libxcursor' 'libxext'
+         'libxfixes' 'libxi' 'libxrandr' 'openssl' 'procps-ng' 'ttf-font')
+optdepends=('libglvnd: drawing through OpenGL instead of the CPU'
+            'libxss: idle time for the breaks on an Xorg session'
+            'gnome-shell-extension-appindicator: the tray icon on GNOME (the scoreboard menu works without it)')
+provides=('deskarcade')
+conflicts=('deskarcade')
+# The self-contained .NET build is shipped as built: stripping it gains nothing and risks the apphost.
+options=('!strip' '!debug')
+source_x86_64=("https://github.com/BokhodirUrinboev/DeskArcade/releases/download/v${pkgver}/deskarcade_${pkgver}_amd64.deb")
+source_aarch64=("https://github.com/BokhodirUrinboev/DeskArcade/releases/download/v${pkgver}/deskarcade_${pkgver}_arm64.deb")
+sha256sums_x86_64=('3cf6ef58270a94390fa6b949893e14d698481c49a1707e12ebd37d0bbd13ed4f')
+sha256sums_aarch64=('3b82638783cfa0af79a64cd38c03deecbd8bee887d9963cc48730f51d70fe806')
+
+package() {
+  # makepkg has already unpacked the .deb (an ar archive) into control.tar.*, data.tar.* and debian-binary.
+  bsdtar -xpf data.tar.* -C "$pkgdir"
+  # Arch keeps licences in their own folder; the .deb's copyright file is the MIT licence.
+  install -Dm644 "$pkgdir/usr/share/doc/deskarcade/copyright" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
