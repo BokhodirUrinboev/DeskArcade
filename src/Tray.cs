@@ -169,14 +169,7 @@ public sealed class Tray : IDisposable
             language.Add(Radio(code == "auto" ? L.T(name) : name, () => _w.SetLanguage(code), () => _w.Settings.Language == code));
         menu.Add(new NativeMenuItem(L.T("Language")) { Menu = language });
 
-        var claude = new NativeMenu();
-        claude.Add(Check(L.T("Alerts when Claude finishes"), () => Toggle(s => s.ClaudeNotify = !s.ClaudeNotify), () => _w.Settings.ClaudeNotify));
-        claude.Add(Check(L.T("Show the overlay when Claude starts working"), () => Toggle(s => s.ClaudeAutoShow = !s.ClaudeAutoShow), () => _w.Settings.ClaudeAutoShow));
-        claude.Add(Check(L.T("Hide the overlay when Claude finishes or needs you"), () => Toggle(s => s.ClaudeAutoHide = !s.ClaudeAutoHide), () => _w.Settings.ClaudeAutoHide));
-        claude.Add(Check(L.T("Pause the game when Claude finishes or needs you"), () => Toggle(s => s.ClaudePause = !s.ClaudePause), () => _w.Settings.ClaudePause));
-        claude.Add(new NativeMenuItemSeparator());
-        claude.Add(Item(L.T("Copy Claude Code hook config"), () => _w.CopyHookConfig()));
-        menu.Add(new NativeMenuItem("Claude Code") { Menu = claude });
+        menu.Add(OfficeMenu.ToNative(DevMenu.Build(_w), _refreshers));
 
         menu.Add(Item(L.T("Shortcuts…"), () => _w.OpenShortcuts()));
         menu.Add(Check(L.T("Start when I sign in"), () =>

@@ -152,6 +152,9 @@ public sealed class Settings
     /// </summary>
     public List<string> Repos { get; set; } = new();
 
+    /// <summary>What Claude is doing: the copied hook config adds PreToolUse and PostToolUse, and the scoreboard shows each step.</summary>
+    public bool AgentSteps { get; set; }
+
     // daily challenge (see Daily)
     public string? DailyDate { get; set; }
     public long DailyBase { get; set; }

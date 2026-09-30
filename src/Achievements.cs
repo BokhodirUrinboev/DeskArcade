@@ -26,6 +26,9 @@ public static class Achievements
         new("work-timers", "work", "Tea's ready", "Let 10 timers ring", "work.timers", 10),
 
         // 1.8.6 · coding agents and CI
+        new("agents-three", "general", "Three at once", "Have three coding agent sessions working at the same time", "agents.together", 3),
+        new("ci-green", "general", "Green build", "See CI pass 10 times", "ci.passed", 10),
+        new("lanes-five", "general", "Five lanes", "Light five status lanes at once", "lanes.lit", 5),
 
         // 1.8.6 · the programmer's day
 

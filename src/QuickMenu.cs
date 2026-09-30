@@ -135,14 +135,7 @@ public static class QuickMenu
         }
         yield return language;
 
-        var claude = Sub("Claude Code");
-        claude.Items.Add(Check(L.T("Alerts when Claude finishes"), w.Settings.ClaudeNotify, () => Toggle(w, s => s.ClaudeNotify = !s.ClaudeNotify)));
-        claude.Items.Add(Check(L.T("Show the overlay when Claude starts working"), w.Settings.ClaudeAutoShow, () => Toggle(w, s => s.ClaudeAutoShow = !s.ClaudeAutoShow)));
-        claude.Items.Add(Check(L.T("Hide the overlay when Claude finishes or needs you"), w.Settings.ClaudeAutoHide, () => Toggle(w, s => s.ClaudeAutoHide = !s.ClaudeAutoHide)));
-        claude.Items.Add(Check(L.T("Pause the game when Claude finishes or needs you"), w.Settings.ClaudePause, () => Toggle(w, s => s.ClaudePause = !s.ClaudePause)));
-        claude.Items.Add(new Separator());
-        claude.Items.Add(Item(L.T("Copy Claude Code hook config"), w.CopyHookConfig));
-        yield return claude;
+        yield return OfficeMenu.ToMenuItem(DevMenu.Build(w));
 
         var board = Sub(L.T("Office leaderboard"));
         board.Items.Add(Item(L.T("Show the leaderboard…"), w.OpenLeaderboard));

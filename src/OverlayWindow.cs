@@ -60,8 +60,6 @@ public sealed class OverlayWindow : Window, IGameHost
     double _lastTick, _idle;
     Vec2 _eventPointer;
     UpdateInfo? _update;
-    DateTime? _claudeSince;
-    double _playedWhileClaude; // seconds of play since Claude started working, for the summary
     DateTime? _taskSince;       // a command run with --while is running
     string _taskLabel = "";
     double _playedWhileTask;
@@ -89,7 +87,9 @@ public sealed class OverlayWindow : Window, IGameHost
     public ChatHub Chat { get; private set; } = null!;
     /// <summary>At work: breaks, meetings, focus, timers, notes, invites, downloads, presenting.</summary>
     public OfficeDesk Office { get; private set; } = null!;
-    Border? _bubble;             // a chat message that came in with the chat closed
+    /// <summary>Coding agents and CI: agent sessions, status lanes, repo folders (see Dev/).</summary>
+    public Dev.DevDesk Coding { get; private set; } = null!;
+    Border? _bubble;            // a chat message that came in with the chat closed
     IDisposable? _bubbleTimer;
     Rect _bubbleRect;
     OfficeBoard _board = null!;
@@ -336,6 +336,7 @@ public sealed class OverlayWindow : Window, IGameHost
         PetMail = new PetMailer(this);
         Chat = new ChatHub(this);
         Office = new OfficeDesk(this);
+        Coding = new Dev.DevDesk(this);
 
         PlaceWindow();
         UpdateArena();
@@ -362,6 +363,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _statsTimer.Start();
         if (Settings.ShareLeaderboard) StartBoard();
         Office.Start();
+        Coding.Start();
         if (Settings.CheckForUpdates && (Settings.LastUpdateCheck is not DateTime lastCheck || DateTime.UtcNow - lastCheck > TimeSpan.FromHours(20)))
             DispatcherTimer.RunOnce(() => CheckForUpdates(manual: false), TimeSpan.FromSeconds(25));
 
@@ -474,6 +476,7 @@ public sealed class OverlayWindow : Window, IGameHost
     void CheckHudHover()
     {
         if (!IsVisible || !_hud.IsExpanded || _hud.IsInteracting) return;
+        if (_snapshot != null) return; // a --snapshot run keeps the board as "--signal expand" left it, wherever the mouse is
         if (!_platform.TryGetCursor(out var px)) return;
         if (!_hud.Area.Inflate(6).Contains(this.PointToClient(px))) _hud.PointerLeft();
     }
@@ -625,7 +628,7 @@ public sealed class OverlayWindow : Window, IGameHost
             if (playing)
             {
                 Stats.AddTime(Current.Id, dt); // only time spent actually playing
-                if (_claudeSince != null) _playedWhileClaude += dt;
+                Coding.AddPlayed(dt); // each agent session and lane keeps its own "you played"
                 if (_taskSince != null) _playedWhileTask += dt;
                 CountTowardBreak(now, dt);
             }
@@ -954,7 +957,7 @@ public sealed class OverlayWindow : Window, IGameHost
         {
             Engine.Art.ColorBlind = Settings.ColorBlind;
             Current?.Layout(); // redraw pieces in the new colours
-            _hud.SetClaude(_hud.Status, _claudeSince);
+            _hud.RecolourDev();
             if (_hud.Task != TaskStatus.None) _hud.SetTask(_hud.Task, _taskLabel, _taskSince);
         }
         RefreshPlatforms();
@@ -1004,26 +1007,11 @@ public sealed class OverlayWindow : Window, IGameHost
         HudChanged();
     }
 
-    public async void CopyHookConfig()
-    {
-        string exe = Program.LaunchPath.Replace('\\', '/');
-        string Cmd(string signal) => $"\\\"{exe}\\\" --signal {signal}";
-        string json = $$"""
-            {
-              "hooks": {
-                "UserPromptSubmit": [ { "hooks": [ { "type": "command", "command": "{{Cmd("working")}}" } ] } ],
-                "Stop": [ { "hooks": [ { "type": "command", "command": "{{Cmd("done")}}" } ] } ],
-                "Notification": [ { "hooks": [ { "type": "command", "command": "{{Cmd("attention")}}" } ] } ]
-              }
-            }
-            """;
-        try
-        {
-            if (Clipboard != null) await Clipboard.SetTextAsync(json);
-            Notice(L.T("Hook config copied"), L.T("merge it into ~/.claude/settings.json"), Color.FromRgb(255, 209, 102));
-        }
-        catch { /* clipboard busy */ }
-    }
+    /// <summary>Copies the Claude Code hook config (see <see cref="Dev.AgentConfigs"/>; the other agents' are in the Coding agents &amp; CI menu).</summary>
+    public void CopyHookConfig() => Coding.CopyConfig(Dev.AgentConfigs.Claude);
+
+    /// <summary>Builds the tray menu again, for menus whose items change (the repo folders).</summary>
+    public void RebuildTray() => _tray?.Rebuild();
 
     public void Notice(string title, string sub, Color color)
     {
@@ -1039,16 +1027,8 @@ public sealed class OverlayWindow : Window, IGameHost
     {
         switch (msg)
         {
-            case "working" or "start":
-                ClaudeWorking();
-                break;
-            case "done" or "stop":
-                ClaudeAlert(ClaudeStatus.Done, "done", L.T("Claude is done"), Color.FromRgb(61, 220, 132));
-                break;
-            case "attention" or "notify":
-                ClaudeAlert(ClaudeStatus.Attention, "attention", L.T("Claude needs you"), Color.FromRgb(255, 107, 107));
-                break;
-            case "idle": _hud.SetClaude(ClaudeStatus.Unknown); break;
+            // coding agents (working, done, attention, idle, agent:…), status lanes (status:…), repo folders
+            case var d when Coding.Signal(d): break;
             case "show": SetOverlayVisible(true); break;
             case "hide": SetOverlayVisible(false); break;
             case "toggle": ToggleOverlay(); break;
@@ -1543,58 +1523,15 @@ public sealed class OverlayWindow : Window, IGameHost
         Wake();
     }
 
+    /// <summary>Unfreezes a game paused for an agent (its next turn began) or by a command starting.</summary>
+    public void ResumeGame() => Resume();
+
     void Resume()
     {
         if (!_paused) return;
         _paused = false;
         Fx.Popup(new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.3), L.T("Resumed"), Color.FromRgb(61, 220, 132), 30, 1.0);
         Wake();
-    }
-
-    void ClaudeWorking()
-    {
-        if (_hud.Status != ClaudeStatus.Working)
-        {
-            _claudeSince = DateTime.UtcNow;
-            _playedWhileClaude = 0;
-        }
-        Resume();
-        _hud.SetClaude(ClaudeStatus.Working, _claudeSince);
-        if (Settings.ClaudeAutoShow && !Shown) SetOverlayVisible(true);
-    }
-
-    void ClaudeAlert(ClaudeStatus status, string sound, string title, Color color)
-    {
-        TimeSpan? waited = _claudeSince is DateTime since ? DateTime.UtcNow - since : null;
-        bool backToWork = status == ClaudeStatus.Done && Settings.BackToWork && _playedWhileClaude >= 5;
-        if (backToWork) title = L.T("Claude is done · back to work");
-        _claudeSince = null;
-        _hud.SetClaude(status, null, waited);
-        if (status == ClaudeStatus.Done && Shown && Current != null) Stats.Add("claude.done");
-        if (Settings.ClaudeNotify)
-        {
-            Sound.Play(sound, 0.9);
-            string sub = backToWork ? L.T("the game will still be here later") : status == ClaudeStatus.Done ? L.T("your turn!") : L.T("check the terminal");
-            if (waited is TimeSpan w && w.TotalSeconds >= 5)
-                sub = _playedWhileClaude >= 5
-                    ? L.F("{0} · Claude worked {1}, you played {2}", sub, Hud.FormatWait(w), Hud.FormatWait(TimeSpan.FromSeconds(_playedWhileClaude)))
-                    : L.F("{0} · waited {1}", sub, Hud.FormatWait(w));
-            Notice(title, sub, color);
-        }
-        if (Settings.ClaudePause && Shown && !_paused && Current != null)
-        {
-            _paused = true;
-            CancelCapture();
-            Fx.Popup(new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.42), L.T("PAUSED"), Colors.White, 34, 3.0, L.T("click the game to resume"));
-        }
-        if (Settings.ClaudeAutoHide && Shown)
-        {
-            // leave the notice on screen for a moment, then get out of the way (hiding also pauses the game)
-            DispatcherTimer.RunOnce(() =>
-            {
-                if (_hud.Status == status) SetOverlayVisible(false);
-            }, TimeSpan.FromSeconds(Settings.ClaudeNotify ? 2.5 : 0.2));
-        }
     }
 
     /// <summary>"DeskArcade --while &lt;command&gt;" started the command.</summary>
@@ -1616,6 +1553,7 @@ public sealed class OverlayWindow : Window, IGameHost
         bool passed = exitCode == 0;
         _taskSince = null;
         _hud.SetTask(passed ? TaskStatus.Passed : TaskStatus.Failed, _taskLabel, null, took, exitCode);
+        Waits.Add(new Dev.WaitEntry(Dev.WaitKind.Command, _taskLabel, since, took.TotalSeconds, passed, _playedWhileTask));
         if (Shown && Current != null && _playedWhileTask >= 5) Stats.Add("task.done");
 
         Sound.Play(passed ? "done" : "attention", 0.9);
@@ -1840,6 +1778,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _board.Stop();
         _boardTimer.Stop();
         Office.Dispose();
+        Coding.Dispose();
         SaveSettings();
         Waits.Save();
         Rivals.Save();
