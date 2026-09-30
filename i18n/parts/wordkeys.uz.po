@@ -1,0 +1,608 @@
+# Desk Arcade: Uzbek (uz), 1.8.6 additions (Word Guess, Shortcut Trainer, Bit Flip).
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Word Guess"
+msgstr "So'zni top"
+
+msgid "Shortcut Trainer"
+msgstr "Tezkor tugmalar mashqi"
+
+msgid "Bit Flip"
+msgstr "Bitlarni almashtir"
+
+msgid "Wordsmith"
+msgstr "So'z ustasi"
+
+msgid "Solve 25 words in Word Guess"
+msgstr "«So'zni top»da 25 ta so'zni toping"
+
+msgid "Lucky guess"
+msgstr "Omadli taxmin"
+
+msgid "Solve a word in two guesses"
+msgstr "So'zni ikki urinishda toping"
+
+msgid "Every morning"
+msgstr "Har tong"
+
+msgid "Solve the daily word 7 days in a row"
+msgstr "Kun so'zini 7 kun ketma-ket toping"
+
+msgid "Bit twiddler"
+msgstr "Bit ustasi"
+
+msgid "Clear 100 numbers in Bit Flip"
+msgstr "«Bitlarni almashtir»da 100 ta sonni yig'ing"
+
+msgid "Sixteen bits"
+msgstr "O'n olti bit"
+
+msgid "Reach 16 bits in Bit Flip"
+msgstr "«Bitlarni almashtir»da 16 bitgacha yeting"
+
+msgid "Hex appeal"
+msgstr "O'n oltilik jozibasi"
+
+msgid "Clear 50 numbers written in hex"
+msgstr "O'n oltilik tizimda yozilgan 50 ta sonni yig'ing"
+
+msgid "Keyboard warrior"
+msgstr "Klaviatura jangchisi"
+
+msgid "Press 100 shortcuts right at the first try"
+msgstr "100 ta tezkor tugmani birinchi urinishda to'g'ri bosing"
+
+msgid "No mouse needed"
+msgstr "Sichqoncha kerak emas"
+
+msgid "Get all ten shortcuts of a drill right at the first try"
+msgstr "Mashqdagi o'nta tezkor tugmaning hammasini birinchi urinishda to'g'ri bosing"
+
+msgid "Polyglot"
+msgstr "Poliglot"
+
+msgid "Finish a drill in every set of Shortcut Trainer"
+msgstr "«Tezkor tugmalar mashqi»ning har bir to'plamida mashqni tugating"
+
+#, c-sharp-format
+msgid "Clear {0} numbers in Bit Flip"
+msgstr "«Bitlarni almashtir»da {0} ta sonni yig'ing"
+
+#, c-sharp-format
+msgid "Press {0} shortcuts right in Shortcut Trainer"
+msgstr "«Tezkor tugmalar mashqi»da {0} ta tezkor tugmani to'g'ri bosing"
+
+#, c-sharp-format
+msgid "Solve {0} words in Word Guess"
+msgstr "«So'zni top»da {0} ta so'zni toping"
+
+msgid "type a five-letter word and press Enter — green is the right place, yellow is elsewhere in the word"
+msgstr "besh harfli so'z yozib Enter bosing — yashil: harf o'z joyida, sariq: so'zda bor, lekin boshqa joyda"
+
+msgid "click Start, then press the shortcut asked for — a miss shows the keys, and they come back until you know them"
+msgstr "«Boshlash»ni bosing, so'ng so'ralgan tezkor tugmani bosing — adashsangiz tugmalar ko'rsatiladi va ularni yodlaguningizcha qaytib keladi"
+
+msgid "click the bits to make the lowest number before it lands — the place values are under the bits"
+msgstr "eng pastdagi son tushguncha uni yig'ish uchun bitlarni bosing — xona qiymatlari bitlar ostida yozilgan"
+
+#, c-sharp-format
+msgid "Solved · streak {0} · come back tomorrow"
+msgstr "Topildi · seriya {0} · ertaga qayting"
+
+msgid "Solved · come back tomorrow"
+msgstr "Topildi · ertaga qayting"
+
+msgid "Solved · click New word"
+msgstr "Topildi · «Yangi so'z»ni bosing"
+
+msgid "The word got away · come back tomorrow"
+msgstr "So'z qochib qoldi · ertaga qayting"
+
+msgid "The word got away · click New word"
+msgstr "So'z qochib qoldi · «Yangi so'z»ni bosing"
+
+msgid "Click the board to type, or click the letters"
+msgstr "Yozish uchun taxtani bosing yoki harflarni bosing"
+
+#, c-sharp-format
+msgid "Guess {0}/{1} · type a five-letter word, Enter checks it"
+msgstr "Urinish {0}/{1} · besh harfli so'z yozing, Enter tekshiradi"
+
+#, c-sharp-format
+msgid "Switch the keyboard to {0}"
+msgstr "Klaviaturani almashtiring: {0}"
+
+msgid "Not enough letters"
+msgstr "Harflar yetarli emas"
+
+msgid "Not in the word list"
+msgstr "So'zlar ro'yxatida yo'q"
+
+msgid "GENIUS!"
+msgstr "DAHO!"
+
+msgid "MAGNIFICENT!"
+msgstr "AJOYIB!"
+
+msgid "IMPRESSIVE!"
+msgstr "QOYIL!"
+
+msgid "SPLENDID!"
+msgstr "ZO'R!"
+
+msgid "GREAT!"
+msgstr "YAXSHI!"
+
+msgid "PHEW!"
+msgstr "UH!"
+
+msgid "the word was"
+msgstr "so'z shu edi"
+
+#, c-sharp-format
+msgid "Daily #{0}"
+msgstr "Kun so'zi №{0}"
+
+msgid "Practice"
+msgstr "Mashq"
+
+msgid "New word"
+msgstr "Yangi so'z"
+
+msgid "Enter"
+msgstr "Enter"
+
+#, c-sharp-format
+msgid "Daily word done · streak {0} · ☰ → Share"
+msgstr "Kun so'zi o'ynaldi · seriya {0} · ☰ → Ulashish"
+
+msgid "Daily word done · ☰ → Share"
+msgstr "Kun so'zi o'ynaldi · ☰ → Ulashish"
+
+msgid "The daily word · the same for everyone today"
+msgstr "Kun so'zi · bugun hamma uchun bir xil"
+
+msgid "Race on the LAN · the same word when you both play one language"
+msgstr "Tarmoqda poyga · ikkalangiz bir tilda o'ynasangiz, so'z bir xil"
+
+msgid "Click New word for another"
+msgstr "Yana o'ynash uchun «Yangi so'z»ni bosing"
+
+msgid "A practice word · as many as you like"
+msgstr "Mashq uchun so'z · xohlagancha"
+
+msgid "Shell"
+msgstr "Terminal"
+
+msgid "Desktop"
+msgstr "Dasturlar"
+
+#, c-sharp-format
+msgid "Click Start: ten shortcuts from {0}"
+msgstr "«Boshlash»ni bosing: {0} to'plamidan o'nta tezkor tugma"
+
+#, c-sharp-format
+msgid "Drill done · {0}/{1} at the first try · {2} points"
+msgstr "Mashq tugadi · birinchi urinishda {0}/{1} · {2} ochko"
+
+msgid "Paused · click the board to go on"
+msgstr "Pauza · davom etish uchun taxtani bosing"
+
+msgid "Not that one · press the keys shown to go on"
+msgstr "Bu emas · davom etish uchun ko'rsatilgan tugmalarni bosing"
+
+#, c-sharp-format
+msgid "Shortcut {0}/{1} · press the keys"
+msgstr "Tezkor tugma {0}/{1} · tugmalarni bosing"
+
+#, c-sharp-format
+msgid "Shortcut Trainer · {0} · {1}/{2} at the first try · {3} points"
+msgstr "Tezkor tugmalar mashqi · {0} · birinchi urinishda {1}/{2} · {3} ochko"
+
+msgid "DRILL DONE"
+msgstr "MASHQ TUGADI"
+
+#, c-sharp-format
+msgid "{0} of {1} at the first try · {2} points"
+msgstr "birinchi urinishda {1} tadan {0} · {2} ochko"
+
+msgid "Ten shortcuts, as fast as you can"
+msgstr "O'nta tezkor tugma — iloji boricha tez"
+
+msgid "the ones you miss come back more often"
+msgstr "adashganlaringiz tez-tez qaytib keladi"
+
+#, c-sharp-format
+msgid "{0} of {1} at the first try"
+msgstr "birinchi urinishda {1} tadan {0}"
+
+msgid "type it"
+msgstr "yozing"
+
+msgid "press the keys"
+msgstr "tugmalarni bosing"
+
+#, c-sharp-format
+msgid "Right · +{0}"
+msgstr "To'g'ri · +{0}"
+
+msgid "Next time"
+msgstr "Keyingi safar"
+
+msgid "Not that one · press the keys shown"
+msgstr "Bu emas · ko'rsatilgan tugmalarni bosing"
+
+msgid "Click the board to type"
+msgstr "Yozish uchun taxtani bosing"
+
+#, c-sharp-format
+msgid "{0} shortcuts in this set · keys for {1}"
+msgstr "Bu to'plamda {0} ta tezkor tugma · {1} uchun tugmalar"
+
+msgid "Click New drill for another ten"
+msgstr "Yana o'ntasi uchun «Yangi mashq»ni bosing"
+
+#, c-sharp-format
+msgid "Score {0}"
+msgstr "Hisob {0}"
+
+msgid "New drill"
+msgstr "Yangi mashq"
+
+msgid "Show all commands"
+msgstr "Barcha buyruqlarni ko'rsatish"
+
+msgid "Open a file by name"
+msgstr "Faylni nomi bo'yicha ochish"
+
+msgid "Go to definition"
+msgstr "Ta'rifga o'tish"
+
+msgid "Peek at the definition"
+msgstr "Ta'rifni shu yerda ko'rish"
+
+msgid "Show references"
+msgstr "Havolalarni ko'rsatish"
+
+msgid "Rename symbol"
+msgstr "Simvolni qayta nomlash"
+
+msgid "Format the document"
+msgstr "Hujjatni formatlash"
+
+msgid "Comment the line out"
+msgstr "Qatorni izohga aylantirish"
+
+msgid "Show the terminal"
+msgstr "Terminalni ko'rsatish"
+
+msgid "Show or hide the sidebar"
+msgstr "Yon panelni ko'rsatish yoki yashirish"
+
+msgid "Search all files"
+msgstr "Barcha fayllardan qidirish"
+
+msgid "Go to line"
+msgstr "Qatorga o'tish"
+
+msgid "Go to a symbol in the file"
+msgstr "Fayldagi simvolga o'tish"
+
+msgid "Move the line down"
+msgstr "Qatorni pastga surish"
+
+msgid "Copy the line down"
+msgstr "Qatorni pastga nusxalash"
+
+msgid "Delete the line"
+msgstr "Qatorni o'chirish"
+
+msgid "Add a cursor below"
+msgstr "Pastga kursor qo'shish"
+
+msgid "Select the next match"
+msgstr "Keyingi moslikni belgilash"
+
+msgid "Quick fix"
+msgstr "Tezkor tuzatish"
+
+msgid "Split the editor"
+msgstr "Muharrirni ikkiga bo'lish"
+
+msgid "Go back"
+msgstr "Orqaga qaytish"
+
+msgid "Open the settings"
+msgstr "Sozlamalarni ochish"
+
+msgid "Show the Explorer"
+msgstr "Fayllar panelini ko'rsatish"
+
+msgid "Zen mode"
+msgstr "Zen rejimi"
+
+msgid "Comment out a block"
+msgstr "Blokni izohga aylantirish"
+
+msgid "Find an action"
+msgstr "Amalni topish"
+
+msgid "Go to a class"
+msgstr "Klassga o'tish"
+
+msgid "Go to a file"
+msgstr "Faylga o'tish"
+
+msgid "Go to the declaration"
+msgstr "E'longa o'tish"
+
+msgid "Find usages"
+msgstr "Foydalanilgan joylarni topish"
+
+msgid "Rename"
+msgstr "Qayta nomlash"
+
+msgid "Reformat the code"
+msgstr "Kodni qayta formatlash"
+
+msgid "Optimize imports"
+msgstr "Importlarni tartiblash"
+
+msgid "Show the quick fixes"
+msgstr "Tezkor tuzatishlarni ko'rsatish"
+
+msgid "Recent files"
+msgstr "So'nggi fayllar"
+
+msgid "Duplicate the line"
+msgstr "Qatorni takrorlash"
+
+msgid "Extract a variable"
+msgstr "O'zgaruvchiga ajratish"
+
+msgid "Extract a method"
+msgstr "Metodga ajratish"
+
+msgid "Run"
+msgstr "Ishga tushirish"
+
+msgid "Debug"
+msgstr "Debug rejimida ishga tushirish"
+
+msgid "Toggle a breakpoint"
+msgstr "To'xtash nuqtasini qo'yish yoki olish"
+
+msgid "Step over"
+msgstr "Keyingi qadam (ichiga kirmasdan)"
+
+msgid "Surround with"
+msgstr "Konstruksiya bilan o'rash"
+
+msgid "Generate code"
+msgstr "Kod yaratish"
+
+msgid "File structure"
+msgstr "Fayl tuzilmasi"
+
+msgid "Complete the statement"
+msgstr "Ifodani yakunlash"
+
+msgid "Save and quit"
+msgstr "Saqlash va chiqish"
+
+msgid "Quit without saving"
+msgstr "Saqlamasdan chiqish"
+
+msgid "Redo"
+msgstr "Qayta bajarish"
+
+msgid "Go to the first line"
+msgstr "Birinchi qatorga o'tish"
+
+msgid "Go to the last line"
+msgstr "Oxirgi qatorga o'tish"
+
+msgid "Copy the line"
+msgstr "Qatorni nusxalash"
+
+msgid "Paste after the cursor"
+msgstr "Kursordan keyin qo'yish"
+
+msgid "Change the word under the cursor"
+msgstr "Kursor ostidagi so'zni o'zgartirish"
+
+msgid "Delete to the end of the line"
+msgstr "Qator oxirigacha o'chirish"
+
+msgid "Search forward for foo"
+msgstr "foo ni oldinga qarab qidirish"
+
+msgid "Next match"
+msgstr "Keyingi moslik"
+
+msgid "Jump to the end of the line"
+msgstr "Qator oxiriga sakrash"
+
+msgid "Jump to the start of the line"
+msgstr "Qator boshiga sakrash"
+
+msgid "Insert at the end of the line"
+msgstr "Qator oxiriga yozish"
+
+msgid "Open a new line below"
+msgstr "Pastda yangi qator ochish"
+
+msgid "Replace every foo with bar"
+msgstr "Barcha foo ni bar ga almashtirish"
+
+msgid "Visual block mode"
+msgstr "Vizual blok rejimi"
+
+msgid "Indent the line"
+msgstr "Qatorni o'ngga surish"
+
+msgid "Next word"
+msgstr "Keyingi so'z"
+
+msgid "Half a page down"
+msgstr "Yarim sahifa pastga"
+
+msgid "Search the history"
+msgstr "Tarixdan qidirish"
+
+msgid "Go to the start of the line"
+msgstr "Qator boshiga o'tish"
+
+msgid "Go to the end of the line"
+msgstr "Qator oxiriga o'tish"
+
+msgid "Delete the word before the cursor"
+msgstr "Kursordan oldingi so'zni o'chirish"
+
+msgid "Clear the screen"
+msgstr "Ekranni tozalash"
+
+msgid "Cut to the end of the line"
+msgstr "Qator oxirigacha kesib olish"
+
+msgid "Cut to the start of the line"
+msgstr "Qator boshigacha kesib olish"
+
+msgid "Stop the running command"
+msgstr "Ishlayotgan buyruqni to'xtatish"
+
+msgid "Send end of input"
+msgstr "Kiritish tugaganini yuborish"
+
+msgid "Suspend the running command"
+msgstr "Ishlayotgan buyruqni to'xtatib turish"
+
+msgid "Paste what was cut"
+msgstr "Kesilganni qo'yish"
+
+msgid "Back one word"
+msgstr "Bir so'z orqaga"
+
+msgid "Run the last command again"
+msgstr "Oxirgi buyruqni qayta ishga tushirish"
+
+msgid "The last command's last argument"
+msgstr "Oxirgi buyruqning oxirgi argumenti"
+
+msgid "Back to the previous folder"
+msgstr "Oldingi papkaga qaytish"
+
+msgid "The last command's exit code"
+msgstr "Oxirgi buyruqning chiqish kodi"
+
+msgid "Copy"
+msgstr "Nusxalash"
+
+msgid "Paste"
+msgstr "Qo'yish"
+
+msgid "Cut"
+msgstr "Kesib olish"
+
+msgid "Select all"
+msgstr "Hammasini belgilash"
+
+msgid "Find"
+msgstr "Topish"
+
+msgid "Print"
+msgstr "Chop etish"
+
+msgid "New tab"
+msgstr "Yangi varaq"
+
+msgid "Reopen the tab just closed"
+msgstr "Hozirgina yopilgan varaqni qayta ochish"
+
+msgid "Next tab"
+msgstr "Keyingi varaq"
+
+msgid "Reload the page"
+msgstr "Sahifani yangilash"
+
+msgid "Go to the address bar"
+msgstr "Manzil qatoriga o'tish"
+
+msgid "Paste as plain text"
+msgstr "Oddiy matn sifatida qo'yish"
+
+msgid "Zoom in"
+msgstr "Kattalashtirish"
+
+msgid "Reset the zoom"
+msgstr "Masshtabni tiklash"
+
+msgid "Open a private window"
+msgstr "Yashirin oyna ochish"
+
+msgid "Bold"
+msgstr "Qalin"
+
+msgid "Go to the top of the document"
+msgstr "Hujjat boshiga o'tish"
+
+msgid "Click Start: flip the bits to make each number before it lands"
+msgstr "«Boshlash»ni bosing: har bir son tushguncha bitlarni almashtirib uni yig'ing"
+
+#, c-sharp-format
+msgid "Game over · level {0} · {1} cleared · click New game"
+msgstr "O'yin tugadi · {0}-daraja · {1} ta yig'ildi · «Yangi o'yin»ni bosing"
+
+#, c-sharp-format
+msgid "Level {0} · {1} bits · make the lowest number"
+msgstr "{0}-daraja · {1} bit · eng pastdagi sonni yig'ing"
+
+#, c-sharp-format
+msgid "Bit Flip · best {0} points · up to {1} bits"
+msgstr "Bitlarni almashtir · rekord {0} ochko · {1} bitgacha"
+
+#, c-sharp-format
+msgid "level {0} · {1} cleared · {2} points"
+msgstr "{0}-daraja · {1} ta yig'ildi · {2} ochko"
+
+#, c-sharp-format
+msgid "{0} bits now"
+msgstr "endi {0} bit"
+
+msgid "hex joins in"
+msgstr "o'n oltilik sonlar qo'shildi"
+
+msgid "faster"
+msgstr "tezroq"
+
+msgid "landed"
+msgstr "tushdi"
+
+#, c-sharp-format
+msgid "Level {0} · {1} bits"
+msgstr "{0}-daraja · {1} bit"
+
+msgid "hex too"
+msgstr "o'n oltilik ham"
+
+msgid "Make each number with the bits"
+msgstr "Har bir sonni bitlardan yig'ing"
+
+msgid "click a bit to flip it · the lowest number goes first"
+msgstr "bitni almashtirish uchun uni bosing · avval eng pastdagi son"
+
+#, c-sharp-format
+msgid "level {0} · {1} cleared"
+msgstr "{0}-daraja · {1} ta yig'ildi"
+
+msgid "Clear bits"
+msgstr "Bitlarni tozalash"
+
+msgid "Start"
+msgstr "Boshlash"

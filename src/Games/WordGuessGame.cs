@@ -15,8 +15,8 @@ namespace DeskArcade.Games;
 /// keys) or click the drawn keyboard; each letter turns green, yellow or gray (see <see cref="WordGuessRound"/>). The
 /// daily word is the same for everyone that day in each language and builds a streak across the languages; practice
 /// words come one after another. A practice word is a round: against the computer rival, or a co-worker over the LAN (the
-/// same word when both play the same language), the fewer guesses win. Chips pick the mode and the language (English,
-/// Russian, Uzbek); the grip moves the board.
+/// same word when both play the same language), the fewer guesses win. Chips pick the mode and the language (each click goes
+/// on to the next: English, Russian, Uzbek); the grip moves the board.
 /// </summary>
 public sealed class WordGuessGame : MiniGame, IKeySink
 {
@@ -58,12 +58,10 @@ public sealed class WordGuessGame : MiniGame, IKeySink
     readonly TranslateTransform[] _rowShake = new TranslateTransform[WordGuessRound.Tries];
     readonly List<KeyView> _keys = new();
     readonly Canvas _keyLayer = new() { IsHitTestVisible = false };
-    readonly (Border Box, TextBlock Text)[] _langChips = new (Border, TextBlock)[WordList.Codes.Length];
-    readonly Rect[] _langRects = new Rect[WordList.Codes.Length];
-    readonly (Border Box, TextBlock Text) _modeChip = Chip(), _newChip = Chip();
+    readonly (Border Box, TextBlock Text) _modeChip = Chip(), _langChip = Chip(), _newChip = Chip();
     readonly TextBlock _status = new() { FontFamily = Fx.Font, FontSize = 12.5, FontWeight = FontWeight.SemiBold, Width = W - 2 * Pad, TextAlignment = TextAlignment.Center, IsHitTestVisible = false };
     readonly DragHandle _handle;
-    Rect _modeRect, _newRect;
+    Rect _modeRect, _langRect, _newRect;
 
     WordList _list = null!;
     WordGuessRound _round = null!;
@@ -352,8 +350,16 @@ public sealed class WordGuessGame : MiniGame, IKeySink
             Host.Stats.Min("words.best", n);
             if (n <= 2) Host.Stats.Add("words.two");
             if (Shown == Mode.Daily) WonDaily();
-            string[] praise = { "GENIUS!", "MAGNIFICENT!", "IMPRESSIVE!", "SPLENDID!", "GREAT!", "PHEW!" };
-            Host.Fx.Popup(top, L.T(praise[n - 1]), Themes.Themed(Themes.ClassicGold), 36, 2.4, L.F("{0} of {1} guesses", n, WordGuessRound.Tries));
+            string praise = n switch
+            {
+                1 => L.T("GENIUS!"),
+                2 => L.T("MAGNIFICENT!"),
+                3 => L.T("IMPRESSIVE!"),
+                4 => L.T("SPLENDID!"),
+                5 => L.T("GREAT!"),
+                _ => L.T("PHEW!"),
+            };
+            Host.Fx.Popup(top, praise, Themes.Themed(Themes.ClassicGold), 36, 2.4, L.F("{0} of {1} guesses", n, WordGuessRound.Tries));
             Host.Fx.Burst(top, Themes.Current.Confetti, 40, 520, 700, 7, 1.1);
             Host.Sound.Play("best", 0.75);
             Hop(row);
@@ -499,12 +505,12 @@ public sealed class WordGuessGame : MiniGame, IKeySink
             if (LanOn) BeginRound();
             return false;
         }
-        for (int k = 0; k < _langRects.Length; k++)
+        if (_langRect.Contains(q))
         {
-            if (!_langRects[k].Contains(q)) continue;
-            if (k == _lang || Revealing || LanOn && _racing) return false;
-            _lang = k;
-            Set(LangKey, k + 1);
+            // one chip for the language: each click goes on to the next
+            if (Revealing || LanOn && _racing) return false;
+            _lang = (_lang + 1) % WordList.Codes.Length;
+            Set(LangKey, _lang + 1);
             Host.SaveSettings();
             _list = WordList.For(Code);
             Host.Sound.Play("key", 0.3, 1.1);
@@ -615,12 +621,7 @@ public sealed class WordGuessGame : MiniGame, IKeySink
     void BuildView()
     {
         _board.Children.Add(_back);
-        foreach (var c in new[] { _modeChip, _newChip }) _board.Children.Add(c.Box);
-        for (int k = 0; k < _langChips.Length; k++)
-        {
-            _langChips[k] = Chip();
-            _board.Children.Add(_langChips[k].Box);
-        }
+        foreach (var c in new[] { _modeChip, _langChip, _newChip }) _board.Children.Add(c.Box);
         _board.Children.Add(Art.At(_status, Pad, StatusY));
         for (int r = 0; r < WordGuessRound.Tries; r++)
         {
@@ -712,16 +713,13 @@ public sealed class WordGuessGame : MiniGame, IKeySink
         _back.Background = Art.Brush(Color.FromArgb(240, panel.R, panel.G, panel.B));
         _back.BorderBrush = Art.Brush(Art.Blend(t.Accent, t.Ink, 0.45));
 
-        // the chips: mode, then the languages; New word on the right while practising
+        // the chips: mode, then the language (a click goes on to the next); New word on the right while practising
         double x = Pad;
         PaintChip(_modeChip, Shown == Mode.Daily ? L.F("Daily #{0}", WordList.DailyNumber(Today)) : L.T("Practice"), on: true, enabled: !LanOn);
         _modeRect = PlaceChip(_modeChip, ref x);
         x += 6;
-        for (int k = 0; k < _langChips.Length; k++)
-        {
-            PaintChip(_langChips[k], WordList.Codes[k].ToUpperInvariant(), on: k == _lang, enabled: !(LanOn && _racing));
-            _langRects[k] = PlaceChip(_langChips[k], ref x);
-        }
+        PaintChip(_langChip, Code.ToUpperInvariant() + " ▸", on: false, enabled: !(LanOn && _racing));
+        _langRect = PlaceChip(_langChip, ref x);
         _newChip.Box.IsVisible = Shown == Mode.Practice;
         PaintChip(_newChip, L.T("New word"), on: Finished, enabled: true);
         _newChip.Box.Measure(Size.Infinity);
@@ -782,7 +780,7 @@ public sealed class WordGuessGame : MiniGame, IKeySink
     {
         if (Shown == Mode.Daily)
             return Finished
-                ? Streak > 0 ? L.F("Daily word done · streak {0} · ☰ → Share a result", Streak) : L.T("Daily word done · ☰ → Share a result")
+                ? Streak > 0 ? L.F("Daily word done · streak {0} · ☰ → Share", Streak) : L.T("Daily word done · ☰ → Share")
                 : L.T("The daily word · the same for everyone today");
         if (LanOn) return L.T("Race on the LAN · the same word when you both play one language");
         return Finished ? L.T("Click New word for another") : L.T("A practice word · as many as you like");
