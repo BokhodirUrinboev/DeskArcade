@@ -1,0 +1,180 @@
+[
+  {
+    "id": "sql-11", "lang": "sql", "level": "medium", "kind": "types",
+    "code": [
+      "-- the share of orders that came back, from 0 to 1",
+      "SELECT",
+      "    SUM(CASE WHEN returned THEN 1 ELSE 0 END) / COUNT(*) AS return_rate",
+      "FROM orders",
+      "WHERE placed_at >= '2026-01-01';"
+    ],
+    "bug": [3],
+    "fix": { "3": "    AVG(CASE WHEN returned THEN 1.0 ELSE 0.0 END) AS return_rate" },
+    "why": {
+      "en": "In PostgreSQL and SQL Server both sides are integers, so / divides as integers and the rate is 0 unless every order came back. Average 1.0 and 0.0 instead.",
+      "ru": "В PostgreSQL и SQL Server обе стороны целые, поэтому / делит нацело, и доля равна 0, если вернули не все заказы. Усредняйте 1.0 и 0.0.",
+      "uz": "PostgreSQL va SQL Server da ikkala tomon ham butun son, shuning uchun / butun sonli bo'ladi va hamma buyurtma qaytarilmagan bo'lsa, ulush 0 chiqadi. Buning o'rniga 1.0 va 0.0 ning o'rtachasini oling."
+    }
+  },
+  {
+    "id": "sql-12", "lang": "sql", "level": "easy", "kind": "off-by-one",
+    "code": [
+      "-- page 3 of the list, 20 posts a page (pages start at 1)",
+      "SELECT id, title",
+      "FROM posts",
+      "ORDER BY created_at DESC, id DESC",
+      "LIMIT 20 OFFSET 60;"
+    ],
+    "bug": [5],
+    "fix": { "5": "LIMIT 20 OFFSET 40;" },
+    "why": {
+      "en": "Page 3 starts after two pages, 40 rows; OFFSET 60 skips three and shows page 4. The offset is (page - 1) × 20.",
+      "ru": "Третья страница начинается после двух страниц, то есть 40 строк; OFFSET 60 пропускает три и показывает четвёртую. Смещение равно (page - 1) × 20.",
+      "uz": "3-sahifa ikki sahifadan, ya'ni 40 qatordan keyin boshlanadi; OFFSET 60 uchtasini tashlab, 4-sahifani ko'rsatadi. Siljish (page - 1) × 20 ga teng."
+    }
+  },
+  {
+    "id": "sql-13", "lang": "sql", "level": "hard", "kind": "logic",
+    "code": [
+      "-- infinite scroll: the next 20 posts after the last one shown",
+      "SELECT id, title, created_at",
+      "FROM posts",
+      "WHERE created_at < :last_created_at",
+      "ORDER BY created_at DESC",
+      "LIMIT 20;"
+    ],
+    "bug": [4],
+    "fix": {
+      "4": "WHERE (created_at, id) < (:last_created_at, :last_id)",
+      "5": "ORDER BY created_at DESC, id DESC"
+    },
+    "why": {
+      "en": "Posts that share the last post's created_at are all skipped, because < drops the whole tie. Page by (created_at, id), which is unique, in both the WHERE and the ORDER BY.",
+      "ru": "Посты с тем же created_at, что и у последнего показанного, пропускаются все, потому что < отбрасывает всю группу. Листайте по уникальной паре (created_at, id) и в WHERE, и в ORDER BY.",
+      "uz": "Oxirgi ko'rsatilgan post bilan bir xil created_at ga ega postlarning hammasi tashlab ketiladi, chunki < butun guruhni chiqarib tashlaydi. WHERE da ham, ORDER BY da ham noyob (created_at, id) jufti bo'yicha varaqlang."
+    }
+  },
+  {
+    "id": "sql-14", "lang": "sql", "level": "hard", "kind": "race",
+    "code": [
+      "BEGIN;",
+      "SELECT stock FROM products WHERE id = 7;",
+      "-- the app checks that stock > 0, then:",
+      "UPDATE products SET stock = stock - 1 WHERE id = 7;",
+      "COMMIT;"
+    ],
+    "bug": [2],
+    "fix": { "2": "SELECT stock FROM products WHERE id = 7 FOR UPDATE;" },
+    "why": {
+      "en": "Two buyers can both read stock 1 before either updates, and both sell the last item. FOR UPDATE locks the row until COMMIT, so the second one waits and then sees 0.",
+      "ru": "Два покупателя могут прочитать остаток 1 до того, как кто-то обновит строку, и оба купят последний товар. FOR UPDATE блокирует строку до COMMIT, так что второй подождёт и увидит 0.",
+      "uz": "Ikki xaridor, hech biri yangilamasdan turib, qoldiq 1 ni o'qib olishi va ikkalasi ham oxirgi tovarni sotib olishi mumkin. FOR UPDATE qatorni COMMIT gacha qulflaydi, shuning uchun ikkinchisi kutadi va keyin 0 ni ko'radi."
+    }
+  },
+  {
+    "id": "sql-15", "lang": "sql", "level": "easy", "kind": "join",
+    "code": [
+      "-- this month's orders with the customer's name",
+      "SELECT o.id, c.name",
+      "FROM orders o",
+      "JOIN customers c ON c.id = o.id",
+      "WHERE o.placed_at >= '2026-09-01';"
+    ],
+    "bug": [4],
+    "fix": { "4": "JOIN customers c ON c.id = o.customer_id" },
+    "why": {
+      "en": "The join matches the order's own id with the customer id, pairing each order with whichever customer happens to share its number. Join on o.customer_id.",
+      "ru": "Соединение сравнивает собственный id заказа с id клиента, и каждый заказ получает того клиента, у которого случайно такой же номер. Соединяйте по o.customer_id.",
+      "uz": "Birlashtirish buyurtmaning o'z id sini mijoz id si bilan solishtiradi, shuning uchun har bir buyurtma tasodifan raqami bir xil bo'lgan mijozga bog'lanib qoladi. o.customer_id bo'yicha birlashtiring."
+    }
+  },
+  {
+    "id": "sql-16", "lang": "sql", "level": "easy", "kind": "grouping",
+    "code": [
+      "-- how many different customers ordered this month",
+      "SELECT COUNT(customer_id) AS customers",
+      "FROM orders",
+      "WHERE placed_at >= '2026-09-01';"
+    ],
+    "bug": [2],
+    "fix": { "2": "SELECT COUNT(DISTINCT customer_id) AS customers" },
+    "why": {
+      "en": "COUNT(customer_id) counts orders, so a customer who ordered five times counts five times. COUNT(DISTINCT customer_id) counts each customer once.",
+      "ru": "COUNT(customer_id) считает заказы, и клиент, заказавший пять раз, посчитается пять раз. COUNT(DISTINCT customer_id) считает каждого клиента один раз.",
+      "uz": "COUNT(customer_id) buyurtmalarni sanaydi, shuning uchun besh marta buyurtma bergan mijoz besh marta sanaladi. COUNT(DISTINCT customer_id) har bir mijozni bir marta sanaydi."
+    }
+  },
+  {
+    "id": "sql-17", "lang": "sql", "level": "medium", "kind": "nulls",
+    "code": [
+      "-- full names for the badge printer; many people have no middle name",
+      "SELECT id,",
+      "       first_name || ' ' || middle_name || ' ' || last_name AS full_name",
+      "FROM people",
+      "ORDER BY last_name;"
+    ],
+    "bug": [3],
+    "fix": { "3": "       CONCAT_WS(' ', first_name, middle_name, last_name) AS full_name" },
+    "why": {
+      "en": "|| with a NULL gives NULL, so everyone without a middle name ends up with no name at all. CONCAT_WS skips NULLs and puts one space between the rest.",
+      "ru": "|| с NULL даёт NULL, поэтому у всех, у кого нет второго имени, полное имя пропадает целиком. CONCAT_WS пропускает NULL и ставит по одному пробелу между остальными частями.",
+      "uz": "|| NULL bilan NULL beradi, shuning uchun ikkinchi ismi yo'q har bir kishining to'liq ismi butunlay yo'qoladi. CONCAT_WS NULL larni o'tkazib yuboradi va qolganlari orasiga bittadan bo'sh joy qo'yadi."
+    }
+  },
+  {
+    "id": "sql-18", "lang": "sql", "level": "medium", "kind": "nulls",
+    "code": [
+      "-- balance of account 42: deposits minus withdrawals",
+      "SELECT",
+      "    (SELECT COALESCE(SUM(amount), 0)",
+      "     FROM deposits WHERE account_id = 42)",
+      "  - (SELECT SUM(amount)",
+      "     FROM withdrawals WHERE account_id = 42) AS balance;"
+    ],
+    "bug": [5],
+    "fix": { "5": "  - (SELECT COALESCE(SUM(amount), 0)" },
+    "why": {
+      "en": "SUM over no rows is NULL, not 0, so an account that has never withdrawn anything gets a NULL balance. Wrap it in COALESCE, as the deposits already are.",
+      "ru": "SUM по пустому набору строк даёт NULL, а не 0, поэтому у счёта без единого снятия баланс получается NULL. Оберните сумму в COALESCE, как уже сделано для пополнений.",
+      "uz": "Bo'sh qatorlar ustidan SUM 0 emas, NULL beradi, shuning uchun hech qachon pul yechilmagan hisobning balansi NULL bo'lib chiqadi. Kirimlardagidek, uni COALESCE bilan o'rang."
+    }
+  },
+  {
+    "id": "sql-19", "lang": "sql", "level": "easy", "kind": "logic",
+    "code": [
+      "SELECT name,",
+      "       CASE",
+      "           WHEN score >= 50 THEN 'pass'",
+      "           WHEN score >= 90 THEN 'distinction'",
+      "           ELSE 'fail'",
+      "       END AS result",
+      "FROM exam_results;"
+    ],
+    "bug": [3, 4],
+    "fix": {
+      "3": "           WHEN score >= 90 THEN 'distinction'",
+      "4": "           WHEN score >= 50 THEN 'pass'"
+    },
+    "why": {
+      "en": "CASE stops at the first match, and every score of 90 or more is also 50 or more, so nobody gets a distinction. Test the higher bar first.",
+      "ru": "CASE останавливается на первом совпадении, а любой балл от 90 заодно не меньше 50, поэтому отличия не получает никто. Проверяйте более высокую планку первой.",
+      "uz": "CASE birinchi moslikda to'xtaydi, 90 va undan yuqori har qanday ball esa 50 dan ham kam emas, shuning uchun hech kim imtiyozli baho olmaydi. Avval yuqoriroq chegarani tekshiring."
+    }
+  },
+  {
+    "id": "sql-20", "lang": "sql", "level": "medium", "kind": "logic",
+    "code": [
+      "-- every payment of the month, for the ledger total",
+      "SELECT amount FROM card_payments WHERE month = '2026-09'",
+      "UNION",
+      "SELECT amount FROM bank_payments WHERE month = '2026-09';"
+    ],
+    "bug": [3],
+    "fix": { "3": "UNION ALL" },
+    "why": {
+      "en": "UNION removes duplicate rows, so two separate payments of the same amount count once and the total comes out short. UNION ALL keeps them all.",
+      "ru": "UNION удаляет повторяющиеся строки, и два разных платежа на одну и ту же сумму считаются один раз, так что итог выходит меньше. UNION ALL оставляет все.",
+      "uz": "UNION takroriy qatorlarni olib tashlaydi, shuning uchun bir xil summadagi ikkita alohida to'lov bir marta sanaladi va jami kam chiqadi. UNION ALL hammasini saqlaydi."
+    }
+  }
+]

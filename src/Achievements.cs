@@ -36,6 +36,9 @@ public static class Achievements
         // 1.8.6 · word and key games
 
         // 1.8.6 · Spot the Bug
+        new("spotbug-100", "spotbug", "Bug hunter", "Find 100 bugs in Spot the Bug", "spotbug.found", 100),
+        new("spotbug-clean", "spotbug", "Clean review", "Find all ten bugs of a round, each at the first click", "spotbug.perfect", 1),
+        new("spotbug-streak", "spotbug", "Daily reviewer", "Find the daily bug 7 days in a row", "spotbug.streak", 7),
 
         // 1.8.6 · arcade
 

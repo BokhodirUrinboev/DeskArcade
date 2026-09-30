@@ -1,0 +1,172 @@
+[
+  {
+    "id": "cs-17", "lang": "csharp", "level": "easy", "kind": "logic",
+    "code": [
+      "public static string DisplayName(User user)",
+      "{",
+      "    if (string.IsNullOrWhiteSpace(user.Name))",
+      "        return user.Name;",
+      "    return user.Email ?? \"anonymous\";",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "    if (!string.IsNullOrWhiteSpace(user.Name))" },
+    "why": {
+      "en": "The test is the wrong way round: it returns the name only when the name is blank, and falls back to the email when there is a real name. It needs a !.",
+      "ru": "Условие перевёрнуто: имя возвращается только тогда, когда оно пустое, а при настоящем имени код берёт email. Не хватает !.",
+      "uz": "Shart teskari: ism faqat bo'sh bo'lganda qaytariladi, haqiqiy ism bo'lsa esa email olinadi. ! yetishmayapti."
+    }
+  },
+  {
+    "id": "cs-18", "lang": "csharp", "level": "medium", "kind": "closure",
+    "code": [
+      "public static List<Func<string>> Greeters(string[] names)",
+      "{",
+      "    var greeters = new List<Func<string>>();",
+      "    for (int i = 0; i < names.Length; i++)",
+      "    {",
+      "        greeters.Add(() => $\"Hi, {names[i]}!\");",
+      "    }",
+      "    return greeters;",
+      "}"
+    ],
+    "bug": [4, 6],
+    "fix": {
+      "4": "    foreach (var name in names)",
+      "6": "        greeters.Add(() => $\"Hi, {name}!\");"
+    },
+    "why": {
+      "en": "Every lambda captures the same loop variable i, which is names.Length by the time they run, so calling any of them throws IndexOutOfRangeException. With foreach, each lambda gets a name of its own.",
+      "ru": "Все лямбды захватывают одну и ту же переменную цикла i, которая к моменту вызова равна names.Length, поэтому любая из них бросает IndexOutOfRangeException. В foreach у каждой лямбды будет своё name.",
+      "uz": "Barcha lambdalar bitta sikl o'zgaruvchisi i ni ushlab oladi, ular chaqirilgunicha u names.Length ga teng bo'lib qoladi, shuning uchun istalgani IndexOutOfRangeException tashlaydi. foreach da har bir lambdaning o'z name i bo'ladi."
+    }
+  },
+  {
+    "id": "cs-19", "lang": "csharp", "level": "medium", "kind": "async",
+    "code": [
+      "public class Uploader",
+      "{",
+      "    public async void UploadAsync(Stream data)",
+      "    {",
+      "        await SendAsync(data);",
+      "        Console.WriteLine(\"Upload finished\");",
+      "    }",
+      "",
+      "    private Task SendAsync(Stream data) => Task.Delay(100);",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "    public async Task UploadAsync(Stream data)" },
+    "why": {
+      "en": "async void can't be awaited, so callers can't tell when the upload is done, and an exception in it crashes the process instead of reaching them. Return Task.",
+      "ru": "async void нельзя дождаться: вызывающий код не узнает, когда загрузка закончилась, а исключение внутри уронит процесс, вместо того чтобы дойти до него. Возвращайте Task.",
+      "uz": "async void ni kutib bo'lmaydi: chaqiruvchi kod yuklash qachon tugaganini bilmaydi, ichidagi istisno esa unga yetib bormasdan butun jarayonni yiqitadi. Task qaytaring."
+    }
+  },
+  {
+    "id": "cs-20", "lang": "csharp", "level": "medium", "kind": "race",
+    "code": [
+      "// one instance, called from many request threads at once",
+      "public class HitCounter",
+      "{",
+      "    private int _hits;",
+      "",
+      "    public void Record() => _hits++;",
+      "",
+      "    public int Hits => _hits;",
+      "}"
+    ],
+    "bug": [6],
+    "fix": { "6": "    public void Record() => Interlocked.Increment(ref _hits);" },
+    "why": {
+      "en": "_hits++ is a read, an add and a write; two threads can read the same value, and one hit is lost. Use Interlocked.Increment.",
+      "ru": "_hits++ — это чтение, сложение и запись; два потока могут прочитать одно и то же значение, и одно обращение потеряется. Используйте Interlocked.Increment.",
+      "uz": "_hits++ bu o'qish, qo'shish va yozishdan iborat; ikki oqim bir xil qiymatni o'qib olishi mumkin va bitta hisob yo'qoladi. Interlocked.Increment dan foydalaning."
+    }
+  },
+  {
+    "id": "cs-21", "lang": "csharp", "level": "medium", "kind": "dates",
+    "code": [
+      "public static int AgeOn(DateTime birthday, DateTime today)",
+      "{",
+      "    int age = today.Year - birthday.Year;",
+      "    if (today.Month < birthday.Month) age--;",
+      "    return age;",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "    if (today < birthday.AddYears(age)) age--;" },
+    "why": {
+      "en": "It compares only the months: someone born on 15 October counts a year older on 1 October, before their birthday. Compare the whole date.",
+      "ru": "Сравниваются только месяцы: родившийся 15 октября уже 1 октября считается на год старше, хотя день рождения ещё не наступил. Сравнивайте дату целиком.",
+      "uz": "Faqat oylar solishtiriladi: 15-oktabrda tug'ilgan odam tug'ilgan kuni kelmasdan, 1-oktabrdayoq bir yosh katta hisoblanadi. Sanani to'liq solishtiring."
+    }
+  },
+  {
+    "id": "cs-22", "lang": "csharp", "level": "hard", "kind": "equality",
+    "code": [
+      "public static int CountChanged(",
+      "    Dictionary<string, object> before, Dictionary<string, object> after)",
+      "{",
+      "    int changed = 0;",
+      "    foreach (var (key, value) in after)",
+      "    {",
+      "        if (!before.TryGetValue(key, out var old) || old != value)",
+      "            changed++;",
+      "    }",
+      "    return changed;",
+      "}"
+    ],
+    "bug": [7],
+    "fix": { "7": "        if (!before.TryGetValue(key, out var old) || !Equals(old, value))" },
+    "why": {
+      "en": "old and value are typed object, so != compares references: two boxed 5s are different objects, and every number counts as changed. Use Equals(old, value).",
+      "ru": "old и value имеют тип object, поэтому != сравнивает ссылки: две упакованные пятёрки — разные объекты, и каждое число считается изменённым. Используйте Equals(old, value).",
+      "uz": "old va value object turida, shuning uchun != havolalarni solishtiradi: ikkita o'ralgan (boxed) 5 turli obyektlar va har bir son o'zgargan deb sanaladi. Equals(old, value) dan foydalaning."
+    }
+  },
+  {
+    "id": "cs-23", "lang": "csharp", "level": "medium", "kind": "precision",
+    "code": [
+      "public static bool IsPaidInFull(double[] payments, double invoice)",
+      "{",
+      "    double paid = 0;",
+      "    foreach (var p in payments) paid += p;",
+      "    return paid == invoice;",
+      "}"
+    ],
+    "bug": [5],
+    "fix": { "5": "    return Math.Abs(paid - invoice) < 0.005;" },
+    "why": {
+      "en": "A double can't hold 0.1 or 0.2 exactly, so payments of 0.10 and 0.20 add up to 0.30000000000000004 and never equal an invoice of 0.30. Compare to within half a cent, or keep money in decimal.",
+      "ru": "double не может точно хранить 0.1 и 0.2, поэтому платежи 0.10 и 0.20 в сумме дают 0.30000000000000004 и никогда не равны счёту на 0.30. Сравнивайте с точностью до полцента или храните деньги в decimal.",
+      "uz": "double 0.1 va 0.2 ni aniq saqlay olmaydi, shuning uchun 0.10 va 0.20 lik to'lovlar yig'indisi 0.30000000000000004 bo'ladi va 0.30 lik hisobga hech qachon teng chiqmaydi. Yarim sent aniqlikda solishtiring yoki pulni decimal da saqlang."
+    }
+  },
+  {
+    "id": "cs-24", "lang": "csharp", "level": "medium", "kind": "leak",
+    "code": [
+      "public class PriceWidget : IDisposable",
+      "{",
+      "    private readonly PriceFeed _feed;",
+      "",
+      "    public PriceWidget(PriceFeed feed)",
+      "    {",
+      "        _feed = feed;",
+      "        _feed.Changed += OnChanged;",
+      "    }",
+      "",
+      "    private void OnChanged(decimal price) => Console.WriteLine(price);",
+      "",
+      "    public void Dispose() => _feed.Changed += OnChanged;",
+      "}"
+    ],
+    "bug": [13],
+    "fix": { "13": "    public void Dispose() => _feed.Changed -= OnChanged;" },
+    "why": {
+      "en": "Dispose subscribes a second time instead of unsubscribing, so the feed keeps every widget alive and keeps calling it. It should be -=.",
+      "ru": "Dispose подписывается ещё раз вместо того, чтобы отписаться, поэтому поток цен держит каждый виджет в памяти и продолжает его вызывать. Нужно -=.",
+      "uz": "Dispose obunani bekor qilish o'rniga yana bir marta obuna bo'ladi, shuning uchun narxlar oqimi har bir vidjetni xotirada ushlab turadi va uni chaqirishda davom etadi. -= bo'lishi kerak."
+    }
+  }
+]

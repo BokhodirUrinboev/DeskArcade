@@ -1,0 +1,177 @@
+[
+  {
+    "id": "py-21", "lang": "python", "level": "medium", "kind": "mutable-default",
+    "code": [
+      "from dataclasses import dataclass, field",
+      "",
+      "@dataclass",
+      "class Team:",
+      "    name: str",
+      "    members: list = []"
+    ],
+    "bug": [6],
+    "fix": { "6": "    members: list = field(default_factory=list)" },
+    "why": {
+      "en": "A list default would be shared by every Team, so dataclasses refuse it and raise ValueError as soon as the class is defined. Use field(default_factory=list).",
+      "ru": "Список по умолчанию был бы общим для всех Team, поэтому dataclasses его запрещают и бросают ValueError сразу при определении класса. Используйте field(default_factory=list).",
+      "uz": "Standart ro'yxat barcha Team lar uchun umumiy bo'lib qolardi, shuning uchun dataclasses bunga yo'l qo'ymaydi va klass e'lon qilinishi bilanoq ValueError tashlaydi. field(default_factory=list) dan foydalaning."
+    }
+  },
+  {
+    "id": "py-22", "lang": "python", "level": "hard", "kind": "race",
+    "code": [
+      "import threading",
+      "",
+      "counter = 0",
+      "lock = threading.Lock()",
+      "",
+      "def worker():",
+      "    global counter",
+      "    for _ in range(100_000):",
+      "        counter += 1"
+    ],
+    "bug": [9],
+    "fix": { "9": "        with lock:\n            counter += 1" },
+    "why": {
+      "en": "counter += 1 is a read, an add and a write, and threads can switch in between, GIL or not, so increments are lost. Hold the lock that is already there.",
+      "ru": "counter += 1 — это чтение, сложение и запись, и потоки могут переключиться между ними даже при GIL, поэтому приращения теряются. Возьмите блокировку, которая уже объявлена.",
+      "uz": "counter += 1 bu o'qish, qo'shish va yozish, oqimlar esa GIL bo'lsa ham ular orasida almashishi mumkin, shuning uchun qo'shishlar yo'qoladi. Allaqachon e'lon qilingan qulfni ishlating."
+    }
+  },
+  {
+    "id": "py-23", "lang": "python", "level": "medium", "kind": "missing-await",
+    "code": [
+      "async def refresh_all(clients):",
+      "    # client.refresh() is a coroutine",
+      "    for client in clients:",
+      "        client.refresh()",
+      "    log(\"all refreshed\")"
+    ],
+    "bug": [4],
+    "fix": { "4": "        await client.refresh()" },
+    "why": {
+      "en": "Calling a coroutine function only creates a coroutine; without await it never runs (Python warns it was \"never awaited\"), so nothing is refreshed. Await it.",
+      "ru": "Вызов корутинной функции только создаёт корутину; без await она не выполняется (Python предупреждает «never awaited»), и ничего не обновляется. Нужен await.",
+      "uz": "Korutina funksiyasini chaqirish faqat korutina yaratadi; await siz u hech qachon bajarilmaydi (Python «never awaited» deb ogohlantiradi), shuning uchun hech narsa yangilanmaydi. await qiling."
+    }
+  },
+  {
+    "id": "py-24", "lang": "python", "level": "medium", "kind": "async",
+    "code": [
+      "import asyncio",
+      "",
+      "async def load_all(ids):",
+      "    tasks = [load(i) for i in ids]",
+      "    return await asyncio.gather(tasks)"
+    ],
+    "bug": [5],
+    "fix": { "5": "    return await asyncio.gather(*tasks)" },
+    "why": {
+      "en": "gather takes the awaitables as separate arguments; handed a single list, it raises TypeError, because a list isn't awaitable. Unpack it with *.",
+      "ru": "gather принимает ожидаемые объекты отдельными аргументами; получив один список, он бросает TypeError, потому что список нельзя ожидать. Распакуйте его через *.",
+      "uz": "gather kutiladigan obyektlarni alohida argumentlar sifatida qabul qiladi; bitta ro'yxat berilsa, TypeError tashlaydi, chunki ro'yxatni kutib bo'lmaydi. Uni * bilan yoying."
+    }
+  },
+  {
+    "id": "py-25", "lang": "python", "level": "medium", "kind": "dates",
+    "code": [
+      "from datetime import datetime, timezone",
+      "",
+      "def is_expired(token):",
+      "    # token[\"expires\"] is an aware datetime in UTC",
+      "    return token[\"expires\"] < datetime.now()"
+    ],
+    "bug": [5],
+    "fix": { "5": "    return token[\"expires\"] < datetime.now(timezone.utc)" },
+    "why": {
+      "en": "datetime.now() without a zone is naive, and Python refuses to compare naive and aware times: TypeError. Ask for datetime.now(timezone.utc).",
+      "ru": "datetime.now() без часового пояса «наивный», а Python не сравнивает наивное время с осведомлённым: TypeError. Запросите datetime.now(timezone.utc).",
+      "uz": "Mintaqasiz datetime.now() «sodda» (naive) vaqt beradi, Python esa sodda vaqtni mintaqali vaqt bilan solishtirmaydi: TypeError. datetime.now(timezone.utc) ni so'rang."
+    }
+  },
+  {
+    "id": "py-26", "lang": "python", "level": "easy", "kind": "null",
+    "code": [
+      "def top_three(scores):",
+      "    \"\"\"The three highest scores, best first.\"\"\"",
+      "    ranked = scores.sort(reverse=True)",
+      "    return ranked[:3]"
+    ],
+    "bug": [3],
+    "fix": { "3": "    ranked = sorted(scores, reverse=True)" },
+    "why": {
+      "en": "list.sort sorts in place and returns None, so ranked is None and ranked[:3] raises TypeError. sorted returns a new list.",
+      "ru": "list.sort сортирует на месте и возвращает None, поэтому ranked равен None, и ranked[:3] бросает TypeError. sorted возвращает новый список.",
+      "uz": "list.sort joyida saralaydi va None qaytaradi, shuning uchun ranked None bo'ladi va ranked[:3] TypeError tashlaydi. sorted esa yangi ro'yxat qaytaradi."
+    }
+  },
+  {
+    "id": "py-27", "lang": "python", "level": "easy", "kind": "logic",
+    "code": [
+      "def is_weekend(day):",
+      "    \"\"\"day runs from 1 (Monday) to 7 (Sunday).\"\"\"",
+      "    if day < 1 or day > 7:",
+      "        raise ValueError(day)",
+      "    return day == 6 or 7"
+    ],
+    "bug": [5],
+    "fix": { "5": "    return day in (6, 7)" },
+    "why": {
+      "en": "This reads (day == 6) or 7, and 7 is truthy, so every day comes out as the weekend. Write day in (6, 7).",
+      "ru": "Это читается как (day == 6) or 7, а 7 истинно, поэтому выходным оказывается любой день. Пишите day in (6, 7).",
+      "uz": "Bu (day == 6) or 7 deb o'qiladi, 7 esa rost qiymat, shuning uchun har qanday kun dam olish kuni bo'lib chiqadi. day in (6, 7) deb yozing."
+    }
+  },
+  {
+    "id": "py-28", "lang": "python", "level": "hard", "kind": "overflow",
+    "code": [
+      "import numpy as np",
+      "",
+      "def to_bytes(sizes_kb):",
+      "    kb = np.array(sizes_kb, dtype=np.int32)",
+      "    return kb * 1024"
+    ],
+    "bug": [4],
+    "fix": { "4": "    kb = np.array(sizes_kb, dtype=np.int64)" },
+    "why": {
+      "en": "NumPy's int32 wraps round silently: a 3 GB file (3,000,000 KB) times 1024 passes 2^31 and comes out negative. Use int64.",
+      "ru": "int32 в NumPy молча переполняется: файл на 3 ГБ (3 000 000 КБ), умноженный на 1024, превышает 2^31 и становится отрицательным. Используйте int64.",
+      "uz": "NumPy dagi int32 indamay to'lib ketadi: 3 GB lik fayl (3 000 000 KB) 1024 ga ko'paytirilganda 2^31 dan oshib, manfiy bo'lib chiqadi. int64 dan foydalaning."
+    }
+  },
+  {
+    "id": "py-29", "lang": "python", "level": "easy", "kind": "scope",
+    "code": [
+      "hits = 0",
+      "",
+      "def record_hit():",
+      "    hits += 1",
+      "    return hits"
+    ],
+    "bug": [4],
+    "fix": { "4": "    global hits\n    hits += 1" },
+    "why": {
+      "en": "Assigning to hits inside the function makes it a local name, so += reads a local that has no value yet: UnboundLocalError. Declare it global.",
+      "ru": "Присваивание hits внутри функции делает имя локальным, и += читает локальную переменную, у которой ещё нет значения: UnboundLocalError. Объявите её global.",
+      "uz": "Funksiya ichida hits ga qiymat berish uni lokal nomga aylantiradi, shuning uchun += hali qiymati yo'q lokal o'zgaruvchini o'qiydi: UnboundLocalError. Uni global deb e'lon qiling."
+    }
+  },
+  {
+    "id": "py-30", "lang": "python", "level": "hard", "kind": "aliasing",
+    "code": [
+      "def cleared(board):",
+      "    \"\"\"An empty copy of board; board itself is left as it is.\"\"\"",
+      "    fresh = board.copy()",
+      "    for row in fresh:",
+      "        row[:] = [None] * len(row)",
+      "    return fresh"
+    ],
+    "bug": [3],
+    "fix": { "3": "    fresh = [row.copy() for row in board]" },
+    "why": {
+      "en": "board.copy() copies only the outer list; the rows inside are the very same lists, so clearing them clears the original board too. Copy each row.",
+      "ru": "board.copy() копирует только внешний список; строки внутри — те же самые списки, поэтому их очистка очищает и исходную доску. Копируйте каждую строку.",
+      "uz": "board.copy() faqat tashqi ro'yxatni nusxalaydi; ichidagi qatorlar o'sha ro'yxatlarning aynan o'zi, shuning uchun ularni tozalash asl taxtani ham tozalaydi. Har bir qatorni nusxalang."
+    }
+  }
+]

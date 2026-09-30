@@ -1,0 +1,182 @@
+[
+  {
+    "id": "ts-11", "lang": "typescript", "level": "easy", "kind": "types",
+    "code": [
+      "function sum(values: number[]): number {",
+      "  let total = 0;",
+      "  for (const value in values) {",
+      "    total += value;",
+      "  }",
+      "  return total;",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "  for (const value of values) {" },
+    "why": {
+      "en": "for...in walks the keys, which are the indexes as strings, so total turns into a string like \"0012\". for...of walks the values.",
+      "ru": "for...in перебирает ключи, то есть индексы в виде строк, и total превращается в строку вроде \"0012\". for...of перебирает значения.",
+      "uz": "for...in kalitlarni, ya'ni satr ko'rinishidagi indekslarni aylanadi, shuning uchun total \"0012\" kabi satrga aylanib qoladi. for...of esa qiymatlarni aylanadi."
+    }
+  },
+  {
+    "id": "ts-12", "lang": "typescript", "level": "easy", "kind": "types",
+    "code": [
+      "function totalLabel(price: number, shipping: number): string {",
+      "  const total = price.toFixed(2) + shipping;",
+      "  return `Total: $${total}`;",
+      "}"
+    ],
+    "bug": [2],
+    "fix": { "2": "  const total = (price + shipping).toFixed(2);" },
+    "why": {
+      "en": "toFixed returns a string, so + joins text instead of adding: 10 and 4.99 give \"10.004.99\". Add the numbers first, then format.",
+      "ru": "toFixed возвращает строку, поэтому + склеивает текст вместо сложения: 10 и 4.99 дают \"10.004.99\". Сначала сложите числа, потом форматируйте.",
+      "uz": "toFixed satr qaytaradi, shuning uchun + qo'shish o'rniga matnlarni yopishtiradi: 10 va 4.99 \"10.004.99\" ni beradi. Avval sonlarni qo'shing, keyin formatlang."
+    }
+  },
+  {
+    "id": "ts-13", "lang": "typescript", "level": "medium", "kind": "closure",
+    "code": [
+      "function countdown(): void {",
+      "  for (var i = 3; i > 0; i--) {",
+      "    setTimeout(() => console.log(i), (4 - i) * 1000);",
+      "  }",
+      "}"
+    ],
+    "bug": [2],
+    "fix": { "2": "  for (let i = 3; i > 0; i--) {" },
+    "why": {
+      "en": "var gives the whole function one i, and by the time the timers fire the loop has left it at 0, so it prints 0 three times. let makes a fresh i for each pass.",
+      "ru": "С var на всю функцию одна переменная i, и к моменту срабатывания таймеров цикл оставил в ней 0, поэтому трижды печатается 0. let создаёт новую i на каждой итерации.",
+      "uz": "var butun funksiya uchun bitta i beradi, taymerlar ishga tushganda sikl uni 0 da qoldirgan bo'ladi, shuning uchun uch marta 0 chiqadi. let har bir aylanishda yangi i yaratadi."
+    }
+  },
+  {
+    "id": "ts-14", "lang": "typescript", "level": "medium", "kind": "leak",
+    "code": [
+      "function useWindowWidth(): number {",
+      "  const [width, setWidth] = useState(window.innerWidth);",
+      "  useEffect(() => {",
+      "    const onResize = () => setWidth(window.innerWidth);",
+      "    window.addEventListener(\"resize\", onResize);",
+      "    return () => window.removeEventListener(\"resize\", () => onResize());",
+      "  }, []);",
+      "  return width;",
+      "}"
+    ],
+    "bug": [6],
+    "fix": { "6": "    return () => window.removeEventListener(\"resize\", onResize);" },
+    "why": {
+      "en": "removeEventListener must get the very function that was added; a new arrow function matches nothing, so every mount leaves a listener behind. Pass onResize itself.",
+      "ru": "removeEventListener должен получить ту самую функцию, что была добавлена; новая стрелочная функция ни с чем не совпадает, и после каждого монтирования остаётся лишний обработчик. Передайте сам onResize.",
+      "uz": "removeEventListener ga qo'shilgan funksiyaning aynan o'zi berilishi kerak; yangi strelkali funksiya hech narsaga mos kelmaydi, shuning uchun har bir montajdan keyin bitta ishlovchi qolib ketadi. onResize ning o'zini bering."
+    }
+  },
+  {
+    "id": "ts-15", "lang": "typescript", "level": "hard", "kind": "off-by-one",
+    "code": [
+      "let latest = 0;",
+      "",
+      "async function search(query: string): Promise<void> {",
+      "  const id = latest++;",
+      "  const results = await api.search(query);",
+      "  if (id !== latest) return; // a newer search has started",
+      "  render(results);",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "  const id = ++latest;" },
+    "why": {
+      "en": "latest++ hands back the old value, so id is always one behind latest and even the newest search is thrown away. ++latest gives the new number.",
+      "ru": "latest++ возвращает старое значение, поэтому id всегда на единицу меньше latest, и отбрасывается даже самый свежий поиск. ++latest даёт новый номер.",
+      "uz": "latest++ eski qiymatni qaytaradi, shuning uchun id doim latest dan bittaga kam bo'ladi va hatto eng yangi qidiruv ham tashlab yuboriladi. ++latest yangi raqamni beradi."
+    }
+  },
+  {
+    "id": "ts-16", "lang": "typescript", "level": "medium", "kind": "aliasing",
+    "code": [
+      "function makeGrid(rows: number): string[][] {",
+      "  const grid: string[][] = new Array(rows).fill([]);",
+      "  grid[0].push(\"start\");",
+      "  return grid;",
+      "}"
+    ],
+    "bug": [2],
+    "fix": { "2": "  const grid: string[][] = Array.from({ length: rows }, () => []);" },
+    "why": {
+      "en": "fill([]) puts the same array in every row, so pushing into grid[0] shows up in all of them. Array.from makes a new array for each row.",
+      "ru": "fill([]) кладёт в каждую строку один и тот же массив, поэтому push в grid[0] появляется во всех строках. Array.from создаёт отдельный массив для каждой.",
+      "uz": "fill([]) har bir qatorga bitta massivning o'zini qo'yadi, shuning uchun grid[0] ga push qilingan narsa hamma qatorlarda paydo bo'ladi. Array.from har bir qator uchun alohida massiv yaratadi."
+    }
+  },
+  {
+    "id": "ts-17", "lang": "typescript", "level": "medium", "kind": "aliasing",
+    "code": [
+      "function withTag(post: Post, tag: string): Post {",
+      "  const copy = { ...post };",
+      "  copy.tags.push(tag);",
+      "  return copy;",
+      "}"
+    ],
+    "bug": [2, 3],
+    "fix": { "3": "  copy.tags = [...post.tags, tag];" },
+    "why": {
+      "en": "The spread copies only the top level: copy.tags is still post's own array, so push changes the original post too. Give the copy a new array.",
+      "ru": "Spread копирует только верхний уровень: copy.tags — это всё тот же массив из post, поэтому push меняет и исходный пост. Дайте копии новый массив.",
+      "uz": "Spread faqat yuqori darajani nusxalaydi: copy.tags hamon post ning o'z massivi, shuning uchun push asl postni ham o'zgartiradi. Nusxaga yangi massiv bering."
+    }
+  },
+  {
+    "id": "ts-18", "lang": "typescript", "level": "medium", "kind": "missing-await",
+    "code": [
+      "async function sendAll(emails: Email[]): Promise<void> {",
+      "  const jobs = emails.map(async (email) => {",
+      "    await mailer.send(email);",
+      "    log(`sent to ${email.to}`);",
+      "  });",
+      "  Promise.all(jobs);",
+      "  log(\"all sent\");",
+      "}"
+    ],
+    "bug": [6],
+    "fix": { "6": "  await Promise.all(jobs);" },
+    "why": {
+      "en": "Promise.all isn't awaited, so \"all sent\" is logged at once, sendAll resolves before the mail goes out, and a failed send becomes an unhandled rejection. Await it.",
+      "ru": "Promise.all не ожидается, поэтому «all sent» пишется сразу, sendAll завершается раньше, чем уйдут письма, а ошибка отправки превращается в необработанный rejection. Нужен await.",
+      "uz": "Promise.all kutilmaydi, shuning uchun «all sent» darhol yoziladi, sendAll xatlar ketmasdan tugaydi, yuborishdagi xato esa ushlanmagan rejection ga aylanadi. await kerak."
+    }
+  },
+  {
+    "id": "ts-19", "lang": "typescript", "level": "hard", "kind": "state",
+    "code": [
+      "const digits = /\\d+/g;",
+      "",
+      "function hasNumber(text: string): boolean {",
+      "  return digits.test(text);",
+      "}"
+    ],
+    "bug": [1],
+    "fix": { "1": "const digits = /\\d+/;" },
+    "why": {
+      "en": "A regex with the g flag remembers lastIndex between calls to test, so asking twice about \"a1\" gives true, then false. Drop the g flag.",
+      "ru": "Регулярное выражение с флагом g запоминает lastIndex между вызовами test, поэтому два вопроса подряд про \"a1\" дают true, а затем false. Уберите флаг g.",
+      "uz": "g bayrog'li regex test chaqiruvlari orasida lastIndex ni eslab qoladi, shuning uchun \"a1\" haqida ikki marta so'ralsa, avval true, keyin false chiqadi. g bayrog'ini olib tashlang."
+    }
+  },
+  {
+    "id": "ts-20", "lang": "typescript", "level": "hard", "kind": "dates",
+    "code": [
+      "function dayOfWeek(isoDate: string): number {",
+      "  // isoDate looks like \"2026-10-03\", a day in the user's own calendar",
+      "  return new Date(isoDate).getDay();",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "  return new Date(isoDate + \"T00:00\").getDay();" },
+    "why": {
+      "en": "A date-only string such as \"2026-10-03\" is parsed as midnight UTC, so west of Greenwich getDay reports the day before. Adding a time (\"T00:00\") makes it local midnight.",
+      "ru": "Строка только с датой, например \"2026-10-03\", разбирается как полночь по UTC, и к западу от Гринвича getDay возвращает предыдущий день. Если добавить время (\"T00:00\"), получится местная полночь.",
+      "uz": "\"2026-10-03\" kabi faqat sanadan iborat satr UTC bo'yicha yarim tun deb o'qiladi, shuning uchun Grinvichdan g'arbda getDay bir kun oldingi kunni beradi. Vaqt qo'shilsa (\"T00:00\"), mahalliy yarim tun hosil bo'ladi."
+    }
+  }
+]

@@ -1,0 +1,155 @@
+[
+  {
+    "id": "sql-21", "lang": "sql", "level": "easy", "kind": "logic",
+    "code": [
+      "-- cheap books and music, under 20",
+      "SELECT id, name",
+      "FROM products",
+      "WHERE category = 'books' OR category = 'music'",
+      "  AND price < 20;"
+    ],
+    "bug": [4],
+    "fix": { "4": "WHERE (category = 'books' OR category = 'music')" },
+    "why": {
+      "en": "AND binds tighter than OR, so this reads \"books, or cheap music\": every book passes, whatever it costs. Put the ORs in brackets.",
+      "ru": "AND связывает сильнее, чем OR, поэтому условие читается как «книги или дешёвая музыка»: любая книга проходит, сколько бы ни стоила. Возьмите OR в скобки.",
+      "uz": "AND OR dan kuchliroq bog'lanadi, shuning uchun shart «kitoblar yoki arzon musiqa» deb o'qiladi: har qanday kitob narxidan qat'i nazar o'tadi. OR larni qavsga oling."
+    }
+  },
+  {
+    "id": "sql-22", "lang": "sql", "level": "medium", "kind": "nulls",
+    "code": [
+      "-- average rating per shop; unrated products count as 0",
+      "SELECT shop_id, AVG(rating) AS avg_rating",
+      "FROM products",
+      "GROUP BY shop_id;"
+    ],
+    "bug": [2],
+    "fix": { "2": "SELECT shop_id, AVG(COALESCE(rating, 0)) AS avg_rating" },
+    "why": {
+      "en": "AVG skips NULLs, so unrated products simply drop out instead of counting as 0, and the average comes out too high. Turn NULL into 0 first.",
+      "ru": "AVG пропускает NULL, поэтому товары без оценки просто выпадают, а не считаются нулём, и среднее получается завышенным. Сначала превратите NULL в 0.",
+      "uz": "AVG NULL larni o'tkazib yuboradi, shuning uchun baholanmagan tovarlar 0 deb hisoblanmay, shunchaki tushib qoladi va o'rtacha yuqori chiqadi. Avval NULL ni 0 ga aylantiring."
+    }
+  },
+  {
+    "id": "sql-23", "lang": "sql", "level": "hard", "kind": "scope",
+    "code": [
+      "-- customers(id, name, active), orders(id, customer_id, total)",
+      "-- delete the orders of inactive customers",
+      "DELETE FROM orders",
+      "WHERE customer_id IN (",
+      "    SELECT customer_id FROM customers WHERE active = false",
+      ");"
+    ],
+    "bug": [5],
+    "fix": { "5": "    SELECT id FROM customers WHERE active = false" },
+    "why": {
+      "en": "customers has no customer_id column, so the subquery quietly uses orders.customer_id from outside, and if any customer is inactive, every order is deleted. Select customers.id.",
+      "ru": "В customers нет столбца customer_id, поэтому подзапрос молча берёт orders.customer_id снаружи, и если есть хоть один неактивный клиент, удаляются все заказы. Выбирайте customers.id.",
+      "uz": "customers da customer_id ustuni yo'q, shuning uchun ichki so'rov indamay tashqaridagi orders.customer_id ni oladi va birorta nofaol mijoz bo'lsa, barcha buyurtmalar o'chib ketadi. customers.id ni tanlang."
+    }
+  },
+  {
+    "id": "sql-24", "lang": "sql", "level": "medium", "kind": "zero",
+    "code": [
+      "-- click-through rate of each campaign, in percent",
+      "SELECT campaign,",
+      "       clicks * 100.0 / impressions AS ctr",
+      "FROM ad_stats;"
+    ],
+    "bug": [3],
+    "fix": { "3": "       clicks * 100.0 / NULLIF(impressions, 0) AS ctr" },
+    "why": {
+      "en": "A campaign with no impressions yet divides by zero, and the whole query fails. NULLIF(impressions, 0) makes that row's rate NULL instead.",
+      "ru": "Кампания, у которой ещё нет показов, делит на ноль, и весь запрос падает. NULLIF(impressions, 0) превращает долю в такой строке в NULL.",
+      "uz": "Hali ko'rsatilmagan kampaniya nolga bo'linadi va butun so'rov yiqiladi. NULLIF(impressions, 0) bunday qatordagi ulushni NULL ga aylantiradi."
+    }
+  },
+  {
+    "id": "sql-25", "lang": "sql", "level": "medium", "kind": "atomicity",
+    "code": [
+      "-- transfer 100 from account 1 to account 2",
+      "-- (the connection is in auto-commit mode)",
+      "UPDATE accounts SET balance = balance - 100 WHERE id = 1;",
+      "UPDATE accounts SET balance = balance + 100 WHERE id = 2;"
+    ],
+    "bug": [3, 4],
+    "fix": {
+      "3": "BEGIN;\nUPDATE accounts SET balance = balance - 100 WHERE id = 1;",
+      "4": "UPDATE accounts SET balance = balance + 100 WHERE id = 2;\nCOMMIT;"
+    },
+    "why": {
+      "en": "In auto-commit mode each UPDATE stands alone: if anything fails between them, the money has left account 1 and never reaches account 2. Wrap both in one transaction.",
+      "ru": "В режиме автофиксации каждый UPDATE сам по себе: если между ними что-то сломается, деньги уйдут со счёта 1 и не придут на счёт 2. Оберните оба в одну транзакцию.",
+      "uz": "Avto-commit rejimida har bir UPDATE alohida: agar ular orasida biror narsa buzilsa, pul 1-hisobdan chiqib ketadi-yu, 2-hisobga yetib bormaydi. Ikkalasini bitta tranzaksiyaga o'rang."
+    }
+  },
+  {
+    "id": "sql-26", "lang": "sql", "level": "medium", "kind": "logic",
+    "code": [
+      "-- revenue per month, in calendar order",
+      "SELECT TO_CHAR(placed_at, 'Mon YYYY') AS month, SUM(total) AS revenue",
+      "FROM orders",
+      "GROUP BY 1",
+      "ORDER BY 1;"
+    ],
+    "bug": [5],
+    "fix": { "5": "ORDER BY MIN(placed_at);" },
+    "why": {
+      "en": "ORDER BY 1 sorts the month labels as text, so \"Apr 2026\" comes before \"Jan 2026\". Sort by a real date from each group, such as MIN(placed_at).",
+      "ru": "ORDER BY 1 сортирует названия месяцев как текст, поэтому \"Apr 2026\" идёт раньше \"Jan 2026\". Сортируйте по настоящей дате из каждой группы, например MIN(placed_at).",
+      "uz": "ORDER BY 1 oy nomlarini matn sifatida saralaydi, shuning uchun \"Apr 2026\" \"Jan 2026\" dan oldin keladi. Har bir guruhdagi haqiqiy sana, masalan MIN(placed_at) bo'yicha saralang."
+    }
+  },
+  {
+    "id": "sql-27", "lang": "sql", "level": "medium", "kind": "grouping",
+    "code": [
+      "-- each customer's orders numbered 1, 2, 3… from their first",
+      "SELECT customer_id, id,",
+      "       ROW_NUMBER() OVER (ORDER BY placed_at) AS n",
+      "FROM orders;"
+    ],
+    "bug": [3],
+    "fix": { "3": "       ROW_NUMBER() OVER (PARTITION BY customer_id\n                          ORDER BY placed_at) AS n" },
+    "why": {
+      "en": "Without PARTITION BY the numbering runs across everyone's orders, so a customer's first order might be number 5208. Partition by customer_id.",
+      "ru": "Без PARTITION BY нумерация идёт сквозь заказы всех клиентов, и первый заказ клиента может получить номер 5208. Разбейте нумерацию по customer_id.",
+      "uz": "PARTITION BY bo'lmasa, raqamlash hamma mijozlarning buyurtmalari bo'ylab ketadi, shuning uchun mijozning birinchi buyurtmasi 5208-raqamni olishi mumkin. Raqamlashni customer_id bo'yicha bo'ling."
+    }
+  },
+  {
+    "id": "sql-28", "lang": "sql", "level": "hard", "kind": "types",
+    "code": [
+      "-- :tags is one string from the app, such as 'sql,postgres'",
+      "SELECT id, title",
+      "FROM posts",
+      "WHERE tag IN (:tags);"
+    ],
+    "bug": [4],
+    "fix": { "4": "WHERE tag = ANY(string_to_array(:tags, ','));" },
+    "why": {
+      "en": "The parameter is one value, so IN (:tags) looks for a tag literally called 'sql,postgres' and finds nothing. Split it into an array and use = ANY (PostgreSQL).",
+      "ru": "Параметр — это одно значение, поэтому IN (:tags) ищет тег, буквально называющийся 'sql,postgres', и ничего не находит. Разбейте строку в массив и используйте = ANY (PostgreSQL).",
+      "uz": "Parametr bitta qiymat, shuning uchun IN (:tags) aynan 'sql,postgres' deb nomlangan tegni qidiradi va hech narsa topmaydi. Satrni massivga ajrating va = ANY dan foydalaning (PostgreSQL)."
+    }
+  },
+  {
+    "id": "sql-29", "lang": "sql", "level": "medium", "kind": "join",
+    "code": [
+      "-- customers who ordered something this month",
+      "SELECT c.id, c.name",
+      "FROM customers c",
+      "WHERE EXISTS (",
+      "    SELECT 1 FROM orders o WHERE o.placed_at >= '2026-09-01'",
+      ");"
+    ],
+    "bug": [5],
+    "fix": { "5": "    SELECT 1 FROM orders o\n    WHERE o.customer_id = c.id AND o.placed_at >= '2026-09-01'" },
+    "why": {
+      "en": "The subquery never mentions c, so it is true for everyone as soon as anybody has ordered this month. Tie it to the customer with o.customer_id = c.id.",
+      "ru": "Подзапрос никак не связан с c, поэтому он истинен для всех, как только хоть кто-то сделал заказ в этом месяце. Свяжите его с клиентом через o.customer_id = c.id.",
+      "uz": "Ichki so'rov c ga umuman bog'lanmagan, shuning uchun bu oyda kimdir buyurtma berishi bilanoq u hamma uchun rost bo'ladi. Uni o.customer_id = c.id orqali mijozga bog'lang."
+    }
+  }
+]

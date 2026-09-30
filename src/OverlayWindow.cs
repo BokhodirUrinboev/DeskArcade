@@ -293,6 +293,7 @@ public sealed class OverlayWindow : Window, IGameHost
         // 1.8.6 · word and key games (Word Guess, Shortcut Trainer, Bit Flip)
 
         // 1.8.6 · Spot the Bug
+        _games.Add(new SpotBugGame(this));
 
         // 1.8.6 · arcade (Load Balancer, Pipeline)
 
@@ -768,6 +769,7 @@ public sealed class OverlayWindow : Window, IGameHost
         // 1.8.6 · word and key games
 
         // 1.8.6 · Spot the Bug
+        "spotbug" => L.T("click the line with the bug before the fuse burns down — the fix and the reason come after each one"),
 
         // 1.8.6 · arcade
 
