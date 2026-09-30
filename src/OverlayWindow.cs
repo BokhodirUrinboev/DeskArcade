@@ -385,6 +385,7 @@ public sealed class OverlayWindow : Window, IGameHost
             }, TimeSpan.FromSeconds(8));
 
         if (_snapshot is { } shot) DispatcherTimer.RunOnce(() => SaveSnapshot(shot), TimeSpan.FromSeconds(_snapshotDelay));
+        StartRecording(Program.Args); // --record: frames for the README's GIFs
 
         if (_demo)
         {
@@ -495,6 +496,7 @@ public sealed class OverlayWindow : Window, IGameHost
             Vec2 br = this.PointToClient(w.Bounds.BottomRight);
             _windowRects.Add((w.Id, new Rect(tl.ToPoint(), br.ToPoint())));
         }
+        if (_standIns != null) { _windowRects.Clear(); _windowRects.AddRange(_standIns); } // --record-windows
         if (Platforms.Refresh(_windowRects, Arena)) Wake();
     }
 
@@ -665,20 +667,155 @@ public sealed class OverlayWindow : Window, IGameHost
     {
         try
         {
-            var size = new PixelSize(Math.Max(1, (int)Bounds.Width), Math.Max(1, (int)Bounds.Height));
-            using var bitmap = new Avalonia.Media.Imaging.RenderTargetBitmap(size, new Vector(96, 96));
-            var backdrop = _root.Background;
-            _root.Background = new SolidColorBrush(Color.FromRgb(40, 78, 120));
-            UpdateLayout(); // what was added since the last frame has no size until laid out
-            bitmap.Render(_root);
-            _root.Background = backdrop;
-            bitmap.Save(path);
+            DrawOverlay(path, windows: false);
         }
         catch (Exception e)
         {
             Console.Error.WriteLine($"snapshot failed: {e.Message}");
         }
         Quit();
+    }
+
+    /// <summary>Draws the overlay over a plain desktop blue into a PNG; with <paramref name="windows"/>, the platform windows too.</summary>
+    void DrawOverlay(string path, bool windows)
+    {
+        var size = new PixelSize(Math.Max(1, (int)Bounds.Width), Math.Max(1, (int)Bounds.Height));
+        using var bitmap = new Avalonia.Media.Imaging.RenderTargetBitmap(size, new Vector(96, 96));
+        var backdrop = _root.Background;
+        var panels = windows ? WindowPanels() : null;
+        _root.Background = new SolidColorBrush(Color.FromRgb(40, 78, 120));
+        if (panels != null) _root.Children.Insert(0, panels);
+        try
+        {
+            UpdateLayout(); // what was added since the last frame has no size until laid out
+            bitmap.Render(_root);
+        }
+        finally
+        {
+            if (panels != null) _root.Children.Remove(panels);
+            _root.Background = backdrop;
+        }
+        bitmap.Save(path);
+    }
+
+    List<(IntPtr, Rect)>? _standIns; // --record-windows: the windows a recording plays on, in place of the real ones
+
+    /// <summary>
+    /// --record &lt;folder&gt;: like --snapshot, but numbered PNG frames (frame_00001.png...) for a few seconds, then quits;
+    /// the moving pictures for the README and the web page, which tools/record-gifs.ps1 turns into GIFs. Tuned by
+    /// --record-seconds (6), --record-fps (15) and --record-delay (3: seconds of play before the first frame). The windows
+    /// whose tops are platforms are drawn as plain panels, so a ball resting on one doesn't float in the blue, and
+    /// frames.txt (ffmpeg's concat format) holds how long each frame was on screen, in case frames came late.
+    /// --record-windows "x,y,w,h;..." (fractions of the screen, topmost first) replaces the real windows with stand-ins,
+    /// so every recording has the same window tops whatever is open on the PC.
+    /// </summary>
+    void StartRecording(string[] args)
+    {
+        int ri = Array.IndexOf(args, "--record");
+        if (ri < 0 || ri + 1 >= args.Length) return;
+        string dir = Path.GetFullPath(args[ri + 1]);
+        double Option(string name, double fallback, double min, double max)
+        {
+            int i = Array.IndexOf(args, name);
+            return i >= 0 && i + 1 < args.Length && double.TryParse(args[i + 1], System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out double v) ? Math.Clamp(v, min, max) : fallback;
+        }
+        double seconds = Option("--record-seconds", 6, 0.5, 60), fps = Option("--record-fps", 15, 1, 50), delay = Option("--record-delay", 3, 0, 600);
+        Directory.CreateDirectory(dir);
+        int wi = Array.IndexOf(args, "--record-windows");
+        if (wi >= 0 && wi + 1 < args.Length)
+        {
+            _standIns = new();
+            foreach (string box in args[wi + 1].Split(';', StringSplitOptions.RemoveEmptyEntries))
+            {
+                var f = box.Split(',').Select(s => double.TryParse(s, System.Globalization.NumberStyles.Float,
+                    System.Globalization.CultureInfo.InvariantCulture, out double v) ? v : double.NaN).ToArray();
+                if (f.Length == 4 && !f.Any(double.IsNaN))
+                    _standIns.Add((new IntPtr(-1 - _standIns.Count), new Rect(Arena.X + f[0] * Arena.Width, Arena.Y + f[1] * Arena.Height,
+                        f[2] * Arena.Width, f[3] * Arena.Height)));
+            }
+        }
+
+        var frames = new List<(string Name, double At)>();
+        var clock = new Stopwatch();
+        double due = 0;
+        // A timer restarts its interval after each tick, and a PNG takes ~40 ms to write, so frames go by the clock instead.
+        var timer = new DispatcherTimer(DispatcherPriority.Normal) { Interval = TimeSpan.FromMilliseconds(4) };
+        timer.Tick += (_, _) =>
+        {
+            double at = clock.Elapsed.TotalSeconds;
+            if (at < seconds)
+            {
+                if (at < due) return;
+                due = Math.Max(due + 1 / fps, at); // running late: the next frame as soon as this one is written
+                string name = $"frame_{frames.Count + 1:D5}.png";
+                try
+                {
+                    DrawOverlay(Path.Combine(dir, name), windows: true);
+                    frames.Add((name, at));
+                    return;
+                }
+                catch (Exception e)
+                {
+                    Console.Error.WriteLine($"record failed: {e.Message}");
+                }
+            }
+            timer.Stop();
+            // ffconcat: each frame for as long as it was up; the last one is listed twice, as the format wants
+            var list = new System.Text.StringBuilder("ffconcat version 1.0\n");
+            for (int i = 0; i < frames.Count; i++)
+            {
+                double shown = (i + 1 < frames.Count ? frames[i + 1].At : at) - frames[i].At;
+                list.Append($"file '{frames[i].Name}'\n").Append(System.FormattableString.Invariant($"duration {shown:0.####}\n"));
+            }
+            if (frames.Count > 0) list.Append($"file '{frames[^1].Name}'\n");
+            File.WriteAllText(Path.Combine(dir, "frames.txt"), list.ToString());
+            Quit();
+        };
+        DispatcherTimer.RunOnce(() =>
+        {
+            clock.Start();
+            timer.Start();
+        }, TimeSpan.FromSeconds(delay));
+    }
+
+    /// <summary>
+    /// The windows whose tops are platforms, in their stacking order (for --record): dark editor windows with a title bar
+    /// and a few lines of make-believe code, the same for every frame.
+    /// </summary>
+    Canvas WindowPanels()
+    {
+        var canvas = new Canvas { IsHitTestVisible = false };
+        var platforms = Platforms.Items.Select(p => p.Hwnd).ToHashSet();
+        IBrush Solid(byte r, byte g, byte b, byte a = 255) => new SolidColorBrush(Color.FromArgb(a, r, g, b));
+        IBrush[] ink = { Solid(137, 180, 250, 150), Solid(166, 227, 161, 140), Solid(205, 214, 244, 90), Solid(249, 226, 175, 130) };
+        for (int i = _windowRects.Count - 1; i >= 0; i--) // bottom-most first, so the ones above cover it
+        {
+            var (id, r) = _windowRects[i];
+            var box = r.Intersect(Arena);
+            if (!platforms.Contains(id) || box.Width < 40 || box.Height < 20) continue;
+            var body = new Canvas { Width = box.Width, Height = box.Height, ClipToBounds = true };
+            body.Children.Add(new Border { Width = box.Width, Height = 28, Background = Solid(49, 50, 68) });
+            var rng = new Random(i * 7919 + 17); // the same lines in every frame
+            for (double y = 44; y < box.Height - 14; y += 21)
+            {
+                double x = 18 + 22 * rng.Next(0, 4), width = Math.Min(box.Width - x - 18, 40 + rng.Next(0, 26) * 12);
+                if (rng.Next(0, 7) == 0 || width < 20) continue; // a blank line now and then
+                var line = new Border { Width = width, Height = 7, CornerRadius = new CornerRadius(3.5), Background = ink[rng.Next(0, ink.Length)] };
+                Canvas.SetLeft(line, x);
+                Canvas.SetTop(line, y);
+                body.Children.Add(line);
+            }
+            var panel = new Border
+            {
+                Width = box.Width, Height = box.Height, CornerRadius = new CornerRadius(8), BorderThickness = new Thickness(1),
+                Background = Solid(30, 30, 46), BorderBrush = Solid(88, 91, 112), ClipToBounds = true, Child = body,
+            };
+            Canvas.SetLeft(panel, box.X);
+            Canvas.SetTop(panel, box.Y);
+            canvas.Children.Add(panel);
+        }
+        return canvas;
     }
 
     public void CaptureKeyboard(IKeySink sink, Rect near, string title)
