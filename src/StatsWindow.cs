@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Shapes;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -10,21 +11,39 @@ using DeskArcade.Engine;
 
 namespace DeskArcade;
 
-/// <summary>Time played, best scores and achievements. A normal window, opened from the tray menu.</summary>
+/// <summary>
+/// Time played, best scores and achievements, and a second page with the wait report. A normal window, opened from the
+/// tray menu (or At work → My day → The wait report…).
+/// </summary>
 public sealed class StatsWindow : Window
 {
     static StatsWindow? _open;
 
-    public static void ShowFor(OverlayWindow overlay)
+    readonly ScrollViewer _scroll = new();
+    readonly Control _gamesPage, _waitsPage;
+    readonly ToggleButton _gamesTab, _waitsTab;
+
+    /// <param name="waits">Open on the wait report rather than the games.</param>
+    public static void ShowFor(OverlayWindow overlay, bool waits = false)
     {
         if (_open != null)
         {
+            _open.ShowPage(waits);
             _open.Activate();
             return;
         }
         _open = new StatsWindow(overlay);
+        _open.ShowPage(waits);
         _open.Closed += (_, _) => _open = null;
         _open.Show();
+    }
+
+    void ShowPage(bool waits)
+    {
+        _scroll.Content = waits ? _waitsPage : _gamesPage;
+        _scroll.Offset = default;
+        _gamesTab.IsChecked = !waits;
+        _waitsTab.IsChecked = waits;
     }
 
     StatsWindow(OverlayWindow overlay)
@@ -84,7 +103,69 @@ public sealed class StatsWindow : Window
             foreach (var a in list) panel.Children.Add(AchievementRow(a, stats));
         }
 
-        Content = new ScrollViewer { Content = panel };
+        _gamesPage = panel;
+        _waitsPage = WaitsPage(overlay);
+        _gamesTab = Tab(L.T("Games & achievements"), () => ShowPage(false));
+        _waitsTab = Tab(L.T("Wait report"), () => ShowPage(true));
+        var tabs = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6, Margin = new Thickness(22, 12, 22, 0), Children = { _gamesTab, _waitsTab } };
+        var root = new DockPanel();
+        DockPanel.SetDock(tabs, Dock.Top);
+        root.Children.Add(tabs);
+        root.Children.Add(_scroll);
+        Content = root;
+    }
+
+    static ToggleButton Tab(string text, Action click)
+    {
+        var tab = new ToggleButton { Content = text, Padding = new Thickness(12, 4) };
+        tab.Click += (_, _) => click();
+        return tab;
+    }
+
+    /// <summary>
+    /// The wait report of the last seven days: how long builds, tests, CI, coding agents and downloads kept you
+    /// waiting, the time played meanwhile, the slowest commands and the ones getting slower, with a copy button.
+    /// </summary>
+    static Control WaitsPage(OverlayWindow overlay)
+    {
+        var report = Dev.WaitReport.Build(overlay.Waits.Entries, DateTime.UtcNow);
+        var panel = new StackPanel { Margin = new Thickness(22, 18), Spacing = 4 };
+        panel.Children.Add(Text(L.F("Wait report · {0}", report.Week(TimeZoneInfo.Local)), 22, FontWeight.Bold, "#FFFFFF"));
+        panel.Children.Add(Text(L.T("The last seven days; the trends compare them with the four weeks before."), 13, FontWeight.Normal, "#AAB3C0"));
+        if (report.Empty)
+        {
+            panel.Children.Add(Text(L.T("Nothing waited on"), 14, FontWeight.SemiBold, "#FFD166"));
+            panel.Children.Add(Text(L.T("Run builds and tests with arcade, follow CI and coding agents, or wait for downloads, and the waits show here."), 13, FontWeight.Normal, "#AAB3C0"));
+        }
+        else
+        {
+            panel.Children.Add(Text(L.F("Waited {0} in all", OfficeDesk.Duration(report.All.Seconds)), 16, FontWeight.SemiBold, "#FFD166"));
+            foreach (string line in report.SumLines()) panel.Children.Add(Text(line, 13, FontWeight.Normal, "#E6EAF0"));
+            panel.Children.Add(Text(report.PlayedLine(), 13, FontWeight.Normal, "#E6EAF0"));
+            if (report.Slowest.Count > 0)
+            {
+                panel.Children.Add(Section(L.T("Slowest")));
+                foreach (var c in report.Slowest) panel.Children.Add(Text(Dev.WaitReport.SlowLine(c), 13, FontWeight.Normal, "#E6EAF0"));
+            }
+            panel.Children.Add(Section(L.T("Getting slower")));
+            if (report.Slower.Count == 0) panel.Children.Add(Text(L.T("Nothing is getting slower."), 13, FontWeight.Normal, "#AAB3C0"));
+            foreach (var t in report.Slower) panel.Children.Add(Text(Dev.WaitReport.TrendLine(t), 13, FontWeight.Normal, "#FF6B6B"));
+        }
+        var copy = new Button { Content = L.T("Copy the report"), Margin = new Thickness(0, 14, 0, 0), IsEnabled = !report.Empty, HorizontalAlignment = HorizontalAlignment.Left };
+        copy.Click += async (_, _) =>
+        {
+            try
+            {
+                if (overlay.Clipboard is { } clipboard) await clipboard.SetTextAsync(report.Text(TimeZoneInfo.Local));
+                copy.Content = L.T("Copied ✓");
+            }
+            catch (Exception)
+            {
+                // the clipboard is busy
+            }
+        };
+        panel.Children.Add(copy);
+        return panel;
     }
 
     /// <summary>Each pet adopted so far: its stage, its age and its play, what the next stage needs, and the favourite nap spot.</summary>

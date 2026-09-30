@@ -1,0 +1,362 @@
+# Desk Arcade: Russian (ru), 1.8.6 additions (party).
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Quiz Night"
+msgstr "Викторина"
+
+msgid "Pick today's ten or a practice round"
+msgstr "Выберите десять вопросов дня или тренировку"
+
+#, c-sharp-format
+msgid "Question {0} of {1}"
+msgstr "Вопрос {0} из {1}"
+
+msgid "Locked in · waiting for the others"
+msgstr "Ответ принят · ждём остальных"
+
+msgid "Pick an answer!"
+msgstr "Выберите ответ!"
+
+#, c-sharp-format
+msgid "Right! +{0}"
+msgstr "Верно! +{0}"
+
+msgid "Time's up"
+msgstr "Время вышло"
+
+msgid "Not this time"
+msgstr "Не в этот раз"
+
+msgid "Leaderboard"
+msgstr "Таблица лидеров"
+
+msgid "You won the quiz!"
+msgstr "Вы выиграли викторину!"
+
+#, c-sharp-format
+msgid "You finished {0}"
+msgstr "Ваше место: {0}"
+
+msgid "first"
+msgstr "первое"
+
+msgid "second"
+msgstr "второе"
+
+msgid "third"
+msgstr "третье"
+
+#, c-sharp-format
+msgid "{0}th"
+msgstr "{0}-е"
+
+msgid "Today's ten"
+msgstr "Десять вопросов дня"
+
+msgid "lightning fast!"
+msgstr "молниеносно!"
+
+msgid "wrong"
+msgstr "неверно"
+
+#, c-sharp-format
+msgid "Quiz Night · {0} points · {1} of {2} right"
+msgstr "Викторина · {0} очков · верно {1} из {2}"
+
+#, c-sharp-format
+msgid "{0} of {1} right"
+msgstr "верно {0} из {1}"
+
+#, c-sharp-format
+msgid "Quiz Night daily · {0}/{1} in {2} s"
+msgstr "Викторина дня · {0}/{1} за {2} с"
+
+msgid "Final scores"
+msgstr "Итоговый счёт"
+
+msgid "Read the question…"
+msgstr "Прочитайте вопрос…"
+
+#, c-sharp-format
+msgid "{0} of {1} answered"
+msgstr "ответили {0} из {1}"
+
+#, c-sharp-format
+msgid "You: {0} · {1}"
+msgstr "Вы: {0} · {1}"
+
+#, c-sharp-format
+msgid "{0} of {1} right · {2} s"
+msgstr "верно {0} из {1} · {2} с"
+
+msgid "Practice round"
+msgstr "Тренировка"
+
+msgid "Other quizzes…"
+msgstr "Другие викторины…"
+
+msgid "Play again"
+msgstr "Сыграть ещё"
+
+msgid "Another quiz"
+msgstr "Другая викторина"
+
+msgid "The host can start another quiz"
+msgstr "Ведущий может начать новую викторину"
+
+msgid "Four answers, one right · the faster you click it, the more it scores"
+msgstr "Четыре ответа, один верный · чем быстрее нажмёте, тем больше очков"
+
+#, c-sharp-format
+msgid "Room {0}"
+msgstr "Комната {0}"
+
+#, c-sharp-format
+msgid "Pack: {0} · {1} questions"
+msgstr "Набор: {0} · {1} вопросов"
+
+msgid "Start the quiz"
+msgstr "Начать викторину"
+
+#, c-sharp-format
+msgid "Today's ten: {0}/{1} in {2} s · a new ten tomorrow"
+msgstr "Десять вопросов дня: {0}/{1} за {2} с · завтра новые"
+
+#, c-sharp-format
+msgid "vs the CPU · {0}"
+msgstr "против компьютера · {0}"
+
+#, c-sharp-format
+msgid "The file is too big: at most {0} KB"
+msgstr "Файл слишком большой: не больше {0} КБ"
+
+#, c-sharp-format
+msgid "Can't read the file: {0}"
+msgstr "Не удалось прочитать файл: {0}"
+
+#, c-sharp-format
+msgid "Line {0}: a question needs four answers; this one has {1}"
+msgstr "Строка {0}: у вопроса должно быть четыре ответа, а здесь {1}"
+
+#, c-sharp-format
+msgid "Line {0}: mark exactly one answer as right, with +"
+msgstr "Строка {0}: отметьте ровно один верный ответ знаком +"
+
+#, c-sharp-format
+msgid "Line {0}: two of the answers are the same"
+msgstr "Строка {0}: два ответа совпадают"
+
+#, c-sharp-format
+msgid "Line {0}: the title goes before the first question"
+msgstr "Строка {0}: название пишется перед первым вопросом"
+
+#, c-sharp-format
+msgid "Line {0}: the question is empty"
+msgstr "Строка {0}: вопрос пустой"
+
+#, c-sharp-format
+msgid "Line {0}: the question is too long ({1} characters, at most {2})"
+msgstr "Строка {0}: вопрос слишком длинный ({1} символов, не больше {2})"
+
+#, c-sharp-format
+msgid "Line {0}: a pack has at most {1} questions"
+msgstr "Строка {0}: в наборе не больше {1} вопросов"
+
+#, c-sharp-format
+msgid "Line {0}: an answer before any question (start a question with Q:)"
+msgstr "Строка {0}: ответ раньше вопроса (начинайте вопрос с Q:)"
+
+#, c-sharp-format
+msgid "Line {0}: a fifth answer: a question has four"
+msgstr "Строка {0}: пятый ответ, а у вопроса их четыре"
+
+#, c-sharp-format
+msgid "Line {0}: the answer is empty"
+msgstr "Строка {0}: ответ пустой"
+
+#, c-sharp-format
+msgid "Line {0}: the answer is too long ({1} characters, at most {2})"
+msgstr "Строка {0}: ответ слишком длинный ({1} символов, не больше {2})"
+
+#, c-sharp-format
+msgid "Line {0}: start a question with Q: and each answer with + (right) or - (wrong)"
+msgstr "Строка {0}: начинайте вопрос с Q:, а каждый ответ с + (верный) или - (неверный)"
+
+msgid "The file has no questions: start each one with Q:"
+msgstr "В файле нет вопросов: начинайте каждый с Q:"
+
+#, c-sharp-format
+msgid "{0} (your pack)"
+msgstr "{0} (ваш набор)"
+
+msgid "That pack has mistakes, so it isn't used:"
+msgstr "В этом наборе есть ошибки, поэтому он не используется:"
+
+#, c-sharp-format
+msgid "Your pack: {0} questions. The host sends them to everyone, one at a time."
+msgstr "Ваш набор: {0} вопросов. Ведущий отправляет их всем по одному."
+
+msgid "A pack of your own is a text file: \"Q:\" before each question, then its four answers, \"+\" before the right one and \"-\" before the others."
+msgstr "Свой набор — это текстовый файл: «Q:» перед каждым вопросом, затем четыре ответа, «+» перед верным и «-» перед остальными."
+
+#, c-sharp-format
+msgid "{0} questions"
+msgstr "{0} вопросов"
+
+msgid "Open a pack file…"
+msgstr "Открыть файл набора…"
+
+msgid "Pick a quiz pack"
+msgstr "Выберите набор вопросов"
+
+msgid "Quiz pack"
+msgstr "Набор вопросов"
+
+msgid "Open the quiz folder"
+msgstr "Открыть папку викторин"
+
+msgid "Look again"
+msgstr "Проверить снова"
+
+msgid "Questions from"
+msgstr "Вопросы из"
+
+#, c-sharp-format
+msgid "{0} to {1} players on the same network. Everyone needs Desk Arcade {2} or newer."
+msgstr "От {0} до {1} игроков в одной сети. У всех должен быть Desk Arcade {2} или новее."
+
+msgid "click an answer — the faster you're right, the more it scores"
+msgstr "нажмите на ответ — чем быстрее верный ответ, тем больше очков"
+
+msgid "Know-it-all"
+msgstr "Всезнайка"
+
+msgid "Answer 100 quiz questions right"
+msgstr "Ответьте верно на 100 вопросов викторины"
+
+msgid "Full marks"
+msgstr "Высший балл"
+
+msgid "Answer every question of a quiz right"
+msgstr "Ответьте верно на все вопросы одной викторины"
+
+msgid "Quick on the buzzer"
+msgstr "Быстрая реакция"
+
+msgid "Answer right within two seconds 20 times"
+msgstr "Ответьте верно за две секунды 20 раз"
+
+#, c-sharp-format
+msgid "Answer {0} questions right in Quiz Night"
+msgstr "Ответьте верно на {0} вопросов в Викторине"
+
+msgid "Draw & Guess"
+msgstr "Рисуй и угадывай"
+
+msgid "Draw the word for the others to guess · type your guesses"
+msgstr "Нарисуйте слово, чтобы другие угадали · вводите свои догадки"
+
+#, c-sharp-format
+msgid "With {0} computers"
+msgstr "С {0} компьютерами"
+
+msgid "You won · click New game"
+msgstr "Вы победили · нажмите «Новая игра»"
+
+#, c-sharp-format
+msgid "{0} won · click New game"
+msgstr "{0} победил · нажмите «Новая игра»"
+
+msgid "Pick a word to draw"
+msgstr "Выберите слово, которое нарисуете"
+
+#, c-sharp-format
+msgid "{0} is picking a word"
+msgstr "{0} выбирает слово"
+
+#, c-sharp-format
+msgid "Draw: {0}"
+msgstr "Нарисуйте: {0}"
+
+#, c-sharp-format
+msgid "The word was: {0}"
+msgstr "Это было слово: {0}"
+
+msgid "You got it! · the others are still guessing"
+msgstr "Угадали! · остальные ещё гадают"
+
+#, c-sharp-format
+msgid "{0} is drawing · type your guess"
+msgstr "{0} рисует · вводите догадку"
+
+msgid "YOU GOT IT!"
+msgstr "УГАДАЛИ!"
+
+msgid "close!"
+msgstr "почти!"
+
+#, c-sharp-format
+msgid "Draw & Guess · place {0} of {1} with {2} points ✏️"
+msgstr "Рисуй и угадывай · {0}-е место из {1} с {2} очками ✏️"
+
+msgid "Your guess"
+msgstr "Ваша догадка"
+
+#, c-sharp-format
+msgid "{0} is picking a word…"
+msgstr "{0} выбирает слово…"
+
+msgid "The word was"
+msgstr "Это было слово"
+
+#, c-sharp-format
+msgid "Turn {0} of {1}"
+msgstr "Ход {0} из {1}"
+
+msgid "Players"
+msgstr "Игроки"
+
+msgid "Guesses"
+msgstr "Догадки"
+
+#, c-sharp-format
+msgid "{0} guessed it!"
+msgstr "{0} угадал!"
+
+#, c-sharp-format
+msgid "{0}: {1} · close!"
+msgstr "{0}: {1} · почти!"
+
+msgid "Click here and type your guess · Enter sends it"
+msgstr "Нажмите сюда и введите догадку · Enter отправляет"
+
+msgid "Clear"
+msgstr "Очистить"
+
+msgid "draw the word on the board, or type your guesses — the sooner you get it, the more it scores"
+msgstr "рисуйте слово на доске или вводите догадки — чем раньше угадаете, тем больше очков"
+
+msgid "Guess 25 words in Draw & Guess"
+msgstr "Угадайте 25 слов в игре «Рисуй и угадывай»"
+
+msgid "Clear as day"
+msgstr "Яснее ясного"
+
+msgid "Have your drawings guessed 25 times"
+msgstr "Пусть ваши рисунки угадают 25 раз"
+
+msgid "Quick eye"
+msgstr "Зоркий глаз"
+
+msgid "Be the first to guess 10 times"
+msgstr "Угадайте первым 10 раз"
+
+#, c-sharp-format
+msgid "Guess {0} words in Draw & Guess"
+msgstr "Угадайте {0} слова в игре «Рисуй и угадывай»"

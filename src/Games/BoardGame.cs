@@ -558,6 +558,7 @@ public abstract class BoardGame : MiniGame
     void GameOver(int result)
     {
         _over = true;
+        if (LanOn) Host.RecordResult(Id, Rival, result == 2 ? 0 : result == Me ? 1 : -1);
         var b = BoardRect;
         var at = new Vec2(b.Center.X, b.Top + b.Height * 0.3);
         if (result == 2)

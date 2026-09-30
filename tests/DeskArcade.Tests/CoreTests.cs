@@ -108,6 +108,12 @@ public class StatsTests
     }
 }
 
+/// <summary>The language is one setting for the whole app: a test that switches it runs alone, so the English labels
+/// other tests check aren't read in Russian halfway.</summary>
+[CollectionDefinition(nameof(LanguageSwitch), DisableParallelization = true)]
+public class LanguageSwitch;
+
+[Collection(nameof(LanguageSwitch))]
 public class LocTests
 {
     [Fact]
@@ -151,8 +157,8 @@ public class TranslationCoverageTests
         {
             if (Path.GetFileName(file).StartsWith("Strings", StringComparison.Ordinal)) continue;
             string text = File.ReadAllText(file);
-            foreach (Match m in Call.Matches(text)) yield return m.Groups[1].Value;
-            foreach (Match m in Title.Matches(text)) yield return m.Groups[1].Value;
+            foreach (Match m in Call.Matches(text)) yield return Literal(m.Groups[1].Value);
+            foreach (Match m in Title.Matches(text)) yield return Literal(m.Groups[1].Value);
         }
         foreach (var a in Achievements.All)
         {
@@ -161,7 +167,11 @@ public class TranslationCoverageTests
         }
         foreach (var c in Daily.Pool) yield return c.Text;
         foreach (var s in DeskArcade.Games.BingoCard.Desk) yield return s.Text; // shown through L.F(square.Text, amount)
+        foreach (var d in DeskArcade.Games.ShortcutDrills.All) yield return d.Action; // shown through L.T(drill.Action)
     }
+
+    /// <summary>A C# string literal's text as the program sees it: \" and \\ undone.</summary>
+    static string Literal(string source) => Regex.Replace(source, @"\\(.)", m => m.Groups[1].Value);
 
     // strings made only of numbers, placeholders and symbols ("+{0}") need no translation
     static bool NeedsTranslation(string key) => Regex.IsMatch(Regex.Replace(key, @"\{\d+\}", ""), @"\p{L}");
@@ -175,16 +185,82 @@ public class TranslationCoverageTests
         Assert.Empty(keys.Where(k => !Strings.Russian.ContainsKey(k)).Select(k => "ru: " + k));
     }
 
+    /// <summary>The .po files of each language: i18n/&lt;code&gt;.po and i18n/parts/*.&lt;code&gt;.po.</summary>
+    static IEnumerable<(string Code, List<string> Files)> PoFiles()
+    {
+        string dir = Path.Combine(RepoRoot(), "i18n");
+        foreach (string main in Directory.GetFiles(dir, "*.po"))
+        {
+            string code = Path.GetFileNameWithoutExtension(main);
+            var files = new List<string> { main };
+            string parts = Path.Combine(dir, "parts");
+            if (Directory.Exists(parts)) files.AddRange(Directory.GetFiles(parts, "*." + code + ".po"));
+            yield return (code, files);
+        }
+    }
+
     [Fact]
     public void NoTranslationKeyIsDefinedTwice()
     {
-        // the tables are indexer initializers, where a second ["key"] silently wins over the first
-        foreach (var name in new[] { "Strings.Uzbek.cs", "Strings.Russian.cs" })
+        // a second msgid would silently lose to the first, in the same file or across a language's files
+        foreach (var (code, files) in PoFiles())
         {
-            var keys = Regex.Matches(File.ReadAllText(Path.Combine(RepoRoot(), "src", name)), @"^\s*\[""((?:[^""\\]|\\.)*)""\]\s*=", RegexOptions.Multiline)
-                .Select(m => m.Groups[1].Value);
-            Assert.Empty(keys.GroupBy(k => k).Where(g => g.Count() > 1).Select(g => $"{name}: {g.Key}"));
+            var ids = files.SelectMany(f => PoFile.Parse(File.ReadAllText(f)).Ids).ToList();
+            Assert.Empty(ids.GroupBy(k => k).Where(g => g.Count() > 1).Select(g => $"{code}: {g.Key}"));
         }
+    }
+
+    [Fact]
+    public void EveryPoFileNamesItsLanguage()
+    {
+        foreach (var (code, files) in PoFiles())
+        {
+            var po = PoFile.Parse(File.ReadAllText(files[0]));
+            Assert.Equal(code, po.Code);
+            Assert.False(string.IsNullOrWhiteSpace(po.LanguageName), $"{code}.po has no X-Language-Name");
+            Assert.Contains(L.Languages, l => l.Code == code);
+        }
+    }
+
+    [Fact]
+    public void PoFilesKeepTheirEscapes()
+    {
+        var po = PoFile.Parse("msgid \"\"\nmsgstr \"\"\n\"Language: pt_BR\\n\"\n\"X-Language-Name: Português\\n\"\n\n" +
+            "#, c-sharp-format\nmsgid \"say \\\"hi\\\" to {0}\"\nmsgstr \"diga \\\"oi\\\" \"\n\"a {0}\"\n\n#, fuzzy\nmsgid \"Exit\"\nmsgstr \"Sair\"\n\nmsgid \"Back\"\nmsgstr \"\"\n");
+        Assert.Equal("pt", po.Code);
+        Assert.Equal("Português", po.LanguageName);
+        Assert.Equal("diga \"oi\" a {0}", po.Entries["say \"hi\" to {0}"]);
+        Assert.False(po.Entries.ContainsKey("Exit")); // fuzzy: not translated yet
+        Assert.False(po.Entries.ContainsKey("Back")); // empty: not translated yet
+        Assert.Equal(new[] { "say \"hi\" to {0}", "Exit", "Back" }, po.Ids);
+    }
+
+    /// <summary>
+    /// i18n/deskarcade.pot is the template a new language starts from (Weblate, Poedit): every English string in use.
+    /// Run the tests with UPDATE_POT=1 to write it again after adding text.
+    /// </summary>
+    [Fact]
+    public void TheTemplateListsEveryUiString()
+    {
+        string path = Path.Combine(RepoRoot(), "i18n", "deskarcade.pot");
+        var keys = UsedKeys().Where(NeedsTranslation).Distinct().OrderBy(k => k, StringComparer.Ordinal).ToList();
+        if (Environment.GetEnvironmentVariable("UPDATE_POT") == "1")
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.Append("# Desk Arcade: the English text, the template for a new language.\n");
+            sb.Append("# Written by the tests (UPDATE_POT=1 dotnet test); do not edit by hand.\n");
+            sb.Append("msgid \"\"\nmsgstr \"\"\n\"Project-Id-Version: Desk Arcade\\n\"\n\"MIME-Version: 1.0\\n\"\n");
+            sb.Append("\"Content-Type: text/plain; charset=UTF-8\\n\"\n\"Content-Transfer-Encoding: 8bit\\n\"\n");
+            foreach (string key in keys)
+            {
+                sb.Append('\n');
+                if (Regex.IsMatch(key, @"\{\d+\}")) sb.Append("#, c-sharp-format\n");
+                sb.Append("msgid ").Append(PoFile.Quote(key)).Append("\nmsgstr \"\"\n");
+            }
+            File.WriteAllText(path, sb.ToString());
+        }
+        var template = PoFile.Parse(File.ReadAllText(path)).Ids.ToHashSet();
+        Assert.Empty(keys.Where(k => !template.Contains(k)).Select(k => "not in deskarcade.pot (UPDATE_POT=1 dotnet test): " + k));
     }
 
     [Fact]

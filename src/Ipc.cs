@@ -14,8 +14,11 @@ public static class Ipc
 {
     static string PipeName => "DeskArcade.Signal.v1" + Program.InstanceSuffix;
 
-    /// <summary>Messages whose text after the prefix keeps its spelling: a --while label, a path, a web address, a note.</summary>
-    static readonly string[] KeepCase = { "task:", "wait-file:", "wait-url:", "timer:", "note:", "chat:" };
+    /// <summary>
+    /// Messages whose text after the prefix keeps its spelling: a --while label, a path, a web address, a note, a coding
+    /// agent's session and folder, a status lane, a repo folder.
+    /// </summary>
+    static readonly string[] KeepCase = { "task:", "wait-file:", "wait-url:", "timer:", "note:", "chat:", "agent:", "status:", "repo-add:", "repo-remove:", "three:", "knock:" };
 
     /// <summary>The message as the overlay handles it: trimmed, and lower-cased unless its text must keep its spelling.</summary>
     public static string Normalize(string line)

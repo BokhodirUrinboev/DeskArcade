@@ -104,6 +104,11 @@ public sealed class MinesweeperGame : MiniGame
     // ------------------------------------------------------------------ races
 
     public override bool SupportsLan => true;
+    /// <summary>A cleared board to share: its time, and the date when it was the daily board everyone had.</summary>
+    public override string? ShareText => !_rules.Won ? null
+        : _daily && !LanOn ? L.F("Minesweeper daily · {0} ({1}): cleared in {2} s 💣", DateTime.Today.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), L.T(SizeNames[_size]), Math.Max(1, Seconds))
+        : L.F("Minesweeper ({0}): cleared in {1} s 💣", L.T(SizeNames[LanOn ? 1 : _size]), Math.Max(1, Seconds));
+
     public override (int Score, bool Active)? Race => (_rules.Over ? RoundScore : Seconds, _racing);
     public override bool RaceLowerIsBetter => true;
     public override int RaceBaseline => new[] { 60, 180, 420 }[LanOn ? 1 : _size];

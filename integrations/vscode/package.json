@@ -1,0 +1,139 @@
+{
+  "name": "desk-arcade",
+  "displayName": "Desk Arcade",
+  "description": "%description%",
+  "version": "1.8.6",
+  "publisher": "ImperiumGames",
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "homepage": "https://github.com/BokhodirUrinboev/DeskArcade#vs-code-extension",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BokhodirUrinboev/DeskArcade.git",
+    "directory": "integrations/vscode"
+  },
+  "bugs": {
+    "url": "https://github.com/BokhodirUrinboev/DeskArcade/issues"
+  },
+  "pricing": "Free",
+  "keywords": [
+    "game",
+    "overlay",
+    "build",
+    "tasks",
+    "waiting"
+  ],
+  "categories": [
+    "Other"
+  ],
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "extensionKind": [
+    "ui",
+    "workspace"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    },
+    "virtualWorkspaces": true
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/src/extension.js",
+  "l10n": "./l10n",
+  "contributes": {
+    "commands": [
+      {
+        "command": "deskArcade.playWhileItBuilds",
+        "title": "%command.playWhileItBuilds%",
+        "category": "Desk Arcade",
+        "icon": "$(play)"
+      },
+      {
+        "command": "deskArcade.toggle",
+        "title": "%command.toggle%",
+        "category": "Desk Arcade"
+      },
+      {
+        "command": "deskArcade.next",
+        "title": "%command.next%",
+        "category": "Desk Arcade"
+      }
+    ],
+    "configuration": {
+      "title": "Desk Arcade",
+      "properties": {
+        "deskArcade.tasks.enabled": {
+          "type": "boolean",
+          "default": true,
+          "order": 0,
+          "description": "%config.tasks.enabled%"
+        },
+        "deskArcade.tasks.which": {
+          "type": "string",
+          "enum": [
+            "all",
+            "buildAndTest"
+          ],
+          "enumDescriptions": [
+            "%config.tasks.which.all%",
+            "%config.tasks.which.buildAndTest%"
+          ],
+          "default": "all",
+          "order": 1,
+          "description": "%config.tasks.which%"
+        },
+        "deskArcade.debug.enabled": {
+          "type": "boolean",
+          "default": true,
+          "order": 2,
+          "description": "%config.debug.enabled%"
+        },
+        "deskArcade.lanePrefix": {
+          "type": "string",
+          "default": "",
+          "order": 3,
+          "markdownDescription": "%config.lanePrefix%"
+        },
+        "deskArcade.statusBar": {
+          "type": "boolean",
+          "default": true,
+          "order": 4,
+          "description": "%config.statusBar%"
+        },
+        "deskArcade.profile": {
+          "type": "string",
+          "default": "",
+          "order": 5,
+          "markdownDescription": "%config.profile%"
+        },
+        "deskArcade.programPath": {
+          "type": "string",
+          "default": "",
+          "scope": "machine",
+          "order": 6,
+          "markdownDescription": "%config.programPath%"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "npm run compile && npm run test:unit",
+    "test:unit": "node --test --test-reporter=spec \"out/test/unit/*.test.js\"",
+    "test:integration": "node ./out/test/integration/runTest.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.0",
+    "@types/vscode": "~1.90.0",
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^4.0.0",
+    "typescript": "^5.9.3"
+  }
+}

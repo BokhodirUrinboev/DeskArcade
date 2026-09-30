@@ -7,8 +7,11 @@ Eight new games came early and shipped in 1.7.1, four more with `--while` and th
 1.8.0 turned every game into a two-player game: a computer rival or a co-worker in each of them, twelve pets,
 animation everywhere, and an overlay that behaves on a real Ubuntu desktop. 1.8.1 added five games from the ideas list, and 1.8.2 gave the pets their turn. 1.8.3 brought typing (Typing Race,
 Word Rain), reactions and chat with a co-worker, and four more games from the ideas list. 1.8.4 builds the rest of the
-ideas list: thirteen games and variants, from Backgammon to a rope bridge for the interns. 1.8.5 turns to the working
+ideas list: thirteen games and variants, from Backgammon to a rope bridge for the interns. 1.8.5 turned to the working
 day around the games: **At work**, for the problems office workers have besides waiting for a build.
+1.8.6 is for the people who wait the most, programmers, and for the office as a whole, in one release: coding agents
+and CI, the programmer's working day, games for a whole team and games made for programmers, and the ways to find
+Desk Arcade and pass it on that were planned for 1.9.0. 1.9.0 is left with the feel pass, real desktops and winget.
 
 Each item says how it will be verified. "Demo" means copies on one PC (`--profile`) playing by themselves
 (`--demo`).
@@ -22,9 +25,10 @@ Each item says how it will be verified. "Demo" means copies on one PC (`--profil
 | 1.8.2 | 2026-09-25 | Pets join the games, pet mail over the LAN, pets grow up and nap on a favourite window, pet volume |
 | 1.8.3 | 2026-09-28 | Typing Race, Word Rain, reactions and chat, Snakes on Windows, co-op Asteroids, Minesweeper and Sudoku |
 | 1.8.4 | 2026-09-28 | The rest of the ideas list: Mancala, Blackjack, Curling, Paper Planes, Ping-Pong Cups, Bingo of Work, Kite, Backgammon, Dominoes, Window Jenga, Rope Bridge; Perevodnoy and Salvo rules |
-| 1.8.5 | next | At work: presenting mode, breaks by time at the computer, meeting warnings, focus blocks, timers and notes, coffee invites, download waits, the end of the day; and a LAN fix |
-| 1.9.0 | late October | Package managers, a feel pass by hand, Flathub |
-| 2.0.0 | mid December | Flathub, a real Mac, a winter event |
+| 1.8.5 | 2026-09-29 | At work: presenting mode, breaks by time at the computer, meeting warnings, focus blocks, timers and notes, coffee invites, download waits, the end of the day; and a LAN fix |
+| 1.8.6 | 2026-09-30 | Programmers and the office: coding agents and CI, the programmer's day, Quiz Night, Draw & Guess, Poker, Hearts, Word Guess, Spot the Bug, Load Balancer, Pipeline, Bit Flip, Shortcut Trainer, FreeCell and Spider, rivalries, sharing, a tour, a web page, Chocolatey and the AUR, gettext translations |
+| 1.9.0 | late October | A feel pass by hand, real Ubuntu desktops, winget, a release dry run |
+| 2.0.0 | mid December | Flathub, a real Mac, a winter event, more languages |
 
 ## 1.7.1: eight new games (shipped 2026-09-22)
 
@@ -241,7 +245,7 @@ Uzbek text, and a `--snapshot` check of its demo. Those with a round are races a
   *Verified: `BridgeTests` (falls, snapping planks, a keeper who saves the round); demo snapshots.*
 - [ ] The Russian and Uzbek text for all of the above, read by native speakers.
 
-## 1.8.5: at work (next)
+## 1.8.5: at work (shipped 2026-09-29)
 
 The games help with one office problem, the dead time while something builds. 1.8.5 takes on the others: getting
 caught with a game on a shared screen, sitting for hours, missed meetings, interruptions, arranging coffee, waiting on
@@ -289,6 +293,129 @@ network, and only when turned on), and costs nothing while idle but a one-second
   folder and the two idle-time D-Bus names. *Verified: `TranslationCoverageTests`.*
 - [ ] The Russian and Uzbek text of At work, read by native speakers.
 
+## 1.8.6: programmers and the office (ready 2026-09-30)
+
+What was planned as four patch releases (1.8.6 to 1.8.9) and the reach items of 1.9.0 and 2.0.0 came together in one:
+coding agents and CI on the scoreboard, the programmer's working day, games for the whole office and games made for
+programmers, sharing, a first-run tour, a web page, two more package managers, and the translations moved to gettext
+files. Nothing leaves the PC: CI is read through the GitHub or GitLab command-line tool you have already signed in to.
+
+### Coding agents and pipelines
+
+- [x] **Several Claude Code sessions at once.** The hooks read the session id and working folder Claude Code passes to
+  every hook, and the scoreboard shows a line per session: "api · working 3:12", "web · needs you", "docs · done". The
+  chime and the done card name the folder; a session that goes quiet turns grey after an hour. A one-session hook config
+  from before keeps working. *Verified: unit tests for the session table (start, done, attention, a session ending,
+  stale sessions, the old config); hook JSON piped in on stdin to a running copy.*
+- [x] **What Claude is doing** (off by default): two more hooks (`PreToolUse`, `PostToolUse`) put the current step under
+  the session's line ("Editing Program.cs", "Running npm test") and count the files touched and the commands run; the
+  done card lists them. *Verified: unit tests for reading each tool's input into a short label, with long paths and
+  commands cut to fit.*
+- [x] **Other coding agents.** `--signal` takes `--agent NAME`, and **tray → Coding agents** copies a ready config for
+  each agent that can run a command when it finishes or needs you: Claude Code, OpenAI Codex CLI (`notify`), Aider
+  (`--notifications-command`), Cursor's hooks, Gemini CLI, and a plain command line for the rest. *Verified: unit tests
+  for the configs, written against each tool's documentation. Not yet run with the real Codex, Aider, Cursor or Gemini.*
+- [x] **Status lanes for any script**: `deskarcade --status NAME running|passed|failed [--note TEXT]` lights a lane on
+  the scoreboard the way `--while` does. A lane with no word for 30 minutes goes grey; with more than three lanes the
+  scoreboard folds them into one chip with a count. *Verified: unit tests for the lanes and the folding; five lanes
+  sent to a running copy.*
+- [x] **CI and pull requests** through `gh` or `glab`. Add a repo folder and the scoreboard follows the latest CI run of
+  its current branch ("CI · running 4:12", a chime on pass or fail), shows reviews waiting for you, and a card comes
+  when your pull request is approved, commented on or merged. Polled every two minutes, only while a repo is added;
+  Desk Arcade stores no token. *Verified: unit tests on recorded `gh` and `glab` JSON; "CI · passed · main" read live
+  from this repository through `gh`. A pull request followed from open to merge, and `glab` against a real GitLab, are
+  still to do.*
+
+### The programmer's day
+
+- [x] **A VS Code extension** (`integrations/vscode`): tasks and debug sessions light a lane on the scoreboard; a
+  status-bar button shows or hides the overlay. It talks to the running overlay over its pipe and needs nothing else.
+  The release workflow packages it and publishes it to the Visual Studio Marketplace and Open VSX once their tokens
+  are set. *Verified: 74 unit tests and 16 integration tests in a real VS Code, on Windows; its pipe code driving a
+  running copy. Ubuntu is still to do.*
+- [x] **The wait report**: each week a card, and a page in the stats window: how long you waited on builds, tests, CI
+  and coding agents, the slowest commands and which are getting slower, with the time played while waiting, and a copy
+  button. *Verified: unit tests for the sums, averages and trends. A week of real use is still to come.*
+- [x] **Standup notes**: a morning card with the last working day in brief: commits in the added repos by your git
+  email, pull requests merged, meetings and focus blocks, and a copy button. *Verified: unit tests with temporary repos
+  and a recorded day (on a Monday it reads Friday); the card with this repository's real commits.*
+- [x] **Git before you go**: the end-of-day card lists the added repos with uncommitted changes, commits not pushed and
+  stashes; on a Friday it comes half an hour earlier. *Verified: unit tests with temporary repos in each state.*
+- [x] **Join buttons on meeting cards** for Teams, Zoom, Google Meet, Webex and Jitsi links. *Verified: unit tests on
+  invitations written by Outlook, Google Calendar, Zoom and Webex; the card with a Teams link on screen.*
+- [x] **Room to focus**: **Today at work** shows the free stretches between meetings, and the morning card offers the
+  longest one as a focus block. *Verified: unit tests on days with overlapping, back-to-back and all-day meetings.*
+- [x] **Focus sounds**: brown noise, pink noise, rain and a café hum, synthesized, during focus blocks or from the menu,
+  with their own volume; they fade out for a meeting. *Verified: unit tests for the generators (no clipping, no click
+  where they loop); played in a running copy. Speakers and headphones by ear are still to do.*
+- [x] **Knock first**: send a co-worker in a focus block a knock with a line of text; they see it at their break and
+  answer **Come over**, **In 10 minutes** or **After lunch**. *Verified: unit tests for the message and the queue.*
+- [x] **Today's three**: the morning card asks for up to three things to get done; they sit under the scoreboard, and
+  the end-of-day card ticks what got done and carries the rest over. *Verified: unit tests for ticking and carrying
+  over.*
+- [x] **Where the day went** (off by default): which program was in front, minute by minute (its name, never a window
+  title), summed on the end-of-day card and saved as CSV, kept for 30 days. *Verified: unit tests for the sums and the
+  CSV. A day on Ubuntu is still to do.*
+
+### Games for the whole office
+
+- [x] **Quiz Night** (`quiz`): one person hosts, everyone answers on their own screen, the fastest right answer scores
+  most. Packs in English, Russian and Uzbek (programming, general knowledge, geography, science, 64 questions each), and
+  your own pack as a text file. *Verified: unit tests for scoring, timing and the pack format; a quiz on screen.*
+- [x] **Draw & Guess** (`draw`): one player draws with the mouse, the others see it stroke by stroke and type guesses;
+  about 300 words in three languages, programming words among them, and the computer draws from 45 pictures of its own.
+  *Verified: 40 unit tests for the strokes, hints and scoring; two copies over loopback.*
+- [x] **Poker** (`poker`): Texas hold'em for chips, never money, 2 to 6 players, computer players at four levels, rising
+  blinds, a hand-strength hint. *Verified: unit tests for hand ranking, side pots and all-ins; computer players
+  finishing 300 games without a chip lost or made.*
+- [x] **Hearts** (`hearts`): passing three cards, hearts broken, shooting the moon. *Verified: unit tests for passing,
+  following suit and the moon; computer games played to the end.*
+- [x] **Word Guess** (`words`): five letters in six tries, typed or clicked on a drawn keyboard; a daily word the same
+  for everyone in English, Russian and Uzbek (o' g' sh ch ng one letter each), practice words raced against the
+  computer or a co-worker. *Verified: unit tests for marking repeated letters, the Uzbek letters, and that every daily
+  word for two years is in its list; demo runs in all three languages.*
+- [x] **Rivalries**: a record against each co-worker in every game played together, on the opponent chip and in the
+  lobby, and a monthly office ladder with a rating across the board games. *Verified: unit tests for the records and
+  the rating.*
+
+### Games for programmers
+
+- [x] **Spot the Bug** (`spotbug`): 150 snippets in C#, TypeScript, Python and SQL, one bug each; click the line, the fix
+  and the reason follow; a daily snippet and LAN races. *Verified: unit tests that every snippet marks its lines; the C#
+  snippets compiled with and without the fix.*
+- [x] **Load Balancer** (`servers`) and **Pipeline** (`pipeline`). *Verified: unit tests for the queues, heat and
+  timeouts, and for the flow; a solver clears every Pipeline level on 60 seeds; demo runs.*
+- [x] **Bit Flip** (`bits`): numbers fall in decimal and later hex, four bits up to sixteen. *Verified: unit tests for the
+  targets and levels (a perfect player climbs all ten); demo run.*
+- [x] **Shortcut Trainer** (`keys`): VS Code, JetBrains, Vim, the shell and the desktop in this desktop's own keys; the
+  typing window passes whole key presses to it, and the keys you miss come back more often. *Verified: unit tests for
+  the key names on Windows, Linux and macOS, every drill's keys, and that no drill uses keys the desktop keeps for
+  itself; demo run. A drill typed by hand is still to do.*
+- [x] **FreeCell and Spider** in Solitaire. *Verified: unit tests for the move rules and FreeCell's multi-card moves.*
+
+### Finding Desk Arcade and passing it on
+
+- [x] **Share a result**: ☰ → Share copies the last result as a line for Teams, Slack or Telegram (the daily challenge,
+  Word Guess's grid, Spot the Bug, the puzzle times) or a picture of the game. *Verified: unit tests for the text.
+  Pasting into Teams, Slack and Telegram is still to do.*
+- [x] **A first-run tour**: three cards on the first start, skippable, and in the menu again later. *Verified:
+  snapshots of each card.*
+- [x] **A web page and moving pictures**: `site/` on GitHub Pages (`pages.yml`) with eight GIFs recorded by
+  `tools/record-gifs.ps1` and a download button that picks the OS. *Verified: Lighthouse 100 on performance,
+  accessibility, best practices and SEO. Turning Pages on and the posts (Show HN, r/programming, AlternativeTo, the
+  awesome lists) are the owner's to do.*
+- [x] **Chocolatey and the AUR** (`packaging/chocolatey`, `packaging/aur`), stamped by the release workflow. *Verified:
+  `choco pack`; the AUR package built with `makepkg` and installed with `pacman -U` in an Arch container. The first
+  pushes need the owner's `CHOCOLATEY_API_KEY` and `AUR_SSH_KEY`.*
+- [x] **Your year at the desk** (from 2026-12-15): a card of the year, saved as a picture. *Verified: unit tests for the
+  year's sums; a snapshot with a made-up year.*
+- [x] **Translations in gettext files** (`i18n/*.po`, a template in `i18n/deskarcade.pot`, `docs/TRANSLATING.md`), ready
+  for Hosted Weblate's free plan for open source. *Verified: `TranslationCoverageTests`. Applying to Weblate is the
+  owner's to do.*
+- [x] **Hacktoberfest**: a dozen `good first issue` drafts in `docs/good-first-issues.md`, each naming the files to
+  touch. *Opening them and the repository topic are the owner's to do.*
+- [ ] The Russian and Uzbek text of 1.8.6, read by native speakers.
+
 ## 1.9.0: package managers and a feel pass (October)
 
 - [ ] **A feel pass by hand** on the 1.8.0 work, on Windows and Ubuntu: the computer rival's pacing and levels in each
@@ -324,6 +451,9 @@ network, and only when turned on), and costs nothing while idle but a one-second
   December.*
 - [ ] **Durak across real PCs,** played by people, with any fixes it needs. *Verified: a full game on three
   PCs.*
+- [ ] **More languages** through Hosted Weblate (the gettext files are ready since 1.8.6): volunteers add Spanish,
+  German, Portuguese, Turkish, Kazakh or whatever they bring; English stays the source. *Verified:
+  `TranslationCoverageTests` for each language that ships.*
 
 ## Not verified yet
 
@@ -346,6 +476,13 @@ network, and only when turned on), and costs nothing while idle but a one-second
 | The breaks' idle time on GNOME and KDE under Wayland (Mutter IdleMonitor, org.freedesktop.ScreenSaver) and on macOS | A Wayland session of each, and a Mac |
 | Meeting warnings from a real Outlook published calendar and a Google secret iCal address | Accounts with meetings in them |
 | Coffee invites and "focusing" between two real PCs; pairing over Tailscale or ZeroTier by address | Two PCs on one network, and on a VPN |
+| The Codex, Aider, Cursor and Gemini configs run with the real tools; `glab` against a real GitLab; a pull request followed from open to merge | Each tool installed, a GitLab account, a pull request |
+| The VS Code extension on Ubuntu; its first publish to the Marketplace and Open VSX | An Ubuntu desktop; the owner's `VSCE_PAT` and `OVSX_PAT` |
+| Focus sounds by ear; the wait report over a real week; where the day went on Ubuntu | Speakers and headphones; a week; an Ubuntu desktop |
+| Quiz Night, Draw & Guess, Poker, Hearts, Word Guess and Spot the Bug rooms and races between real PCs | Two to eight PCs on one network |
+| Shortcut Trainer typed by hand: the typing window hearing Ctrl, Alt, ⌘ and the function keys on Windows, GNOME, KDE and macOS | An unlocked desktop session on each, and a Mac |
+| A shared result pasted into Teams, Slack and Telegram | Those apps |
+| The first Chocolatey and AUR pushes; `choco install deskarcade` in Windows Sandbox | The owner's `CHOCOLATEY_API_KEY` and `AUR_SSH_KEY`; Windows Sandbox |
 
 ## Ideas for more mini games
 
@@ -359,6 +496,11 @@ taskbar as the playing field.
 | **Nonograms** | A daily picture puzzle: numbers on the rows and columns say which cells to fill | Race on the same puzzle |
 | **Carrom** | Flick the striker on a board laid on a window top to pocket the coins | Turns |
 | **Chess puzzles** | A daily mate in two or three from the Chess board | Race on the same puzzle |
+| **Dots and Boxes** | Join dots on a grid on a window top; closing a box earns another turn | Turns |
+| **Go 9×9** | Go on a small board on the board-game table, with a computer that plays out the ends | Turns |
+| **Build Farm** | An idle game that grows only while real builds, tests and agents run: minutes waited become compute to spend on upgrades | Compare farms |
+| **Regex Crossword** | A daily grid whose rows and columns are regular expressions, typed in the typing window | Race on the same grid |
+| **Wallpaper Jigsaw** | Your own wallpaper cut into pieces scattered over the desktop | Race on the same picture |
 
 ## Ideas for the pets
 
@@ -381,3 +523,15 @@ taskbar as the playing field.
 | **Native Wayland** | A layer-shell overlay once Avalonia grows a Wayland backend, for window tops of native Wayland apps too |
 | **Controller support** | A gamepad for the paddle games |
 | **A tiny level editor** | Place bumpers, cups and targets by hand and share the layout as a code |
+| **A JetBrains plugin** | The VS Code extension's lanes for Rider, IntelliJ IDEA and PyCharm |
+| **Answer Claude from the overlay** | A Claude Code permission request as a card with the exact command and Allow / Deny; off by default, and only after a deliberate press-and-hold, since a stray click would approve a shell command |
+| **Settings to go** | Export and import settings, scores, pets and stats as one file, for a new PC |
+
+## Ideas for At work
+
+| Idea | What happens |
+|---|---|
+| **Sit-stand reminders** | For a standing desk: stand after 45 minutes of sitting, sit after 30 of standing |
+| **Random coffee** | Once a week, two co-workers who opted in are paired for a coffee invite |
+| **Container waits** | `--wait-container NAME` chimes when a Docker container turns healthy or exits |
+| **Countdowns** | A countdown on the scoreboard to a release, the weekend or a holiday |

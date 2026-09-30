@@ -1,0 +1,153 @@
+[
+  {
+    "id": "cs-33", "lang": "csharp", "level": "medium", "kind": "copy", "compile": "error",
+    "code": [
+      "public struct Point",
+      "{",
+      "    public int X;",
+      "    public int Y;",
+      "}",
+      "",
+      "public static class Shapes",
+      "{",
+      "    public static void ShiftRight(List<Point> points, int dx)",
+      "    {",
+      "        for (int i = 0; i < points.Count; i++)",
+      "            points[i].X += dx;",
+      "    }",
+      "}"
+    ],
+    "bug": [12],
+    "fix": { "12": "            points[i] = points[i] with { X = points[i].X + dx };" },
+    "why": {
+      "en": "Point is a struct, so points[i] hands back a copy; changing the copy's X would be lost, and the compiler refuses. Store a changed copy back into the list.",
+      "ru": "Point — структура, поэтому points[i] возвращает копию; изменение X в копии потерялось бы, и компилятор это запрещает. Запишите изменённую копию обратно в список.",
+      "uz": "Point struktura, shuning uchun points[i] nusxani qaytaradi; nusxadagi X ni o'zgartirish yo'qolib ketardi, shuning uchun kompilyator bunga yo'l qo'ymaydi. O'zgartirilgan nusxani ro'yxatga qaytarib yozing."
+    }
+  },
+  {
+    "id": "cs-34", "lang": "csharp", "level": "hard", "kind": "race",
+    "code": [
+      "public class Account",
+      "{",
+      "    private readonly object _gate = new();",
+      "    private decimal _balance;",
+      "",
+      "    public void Deposit(decimal amount)",
+      "    {",
+      "        lock (new object())",
+      "        {",
+      "            _balance += amount;",
+      "        }",
+      "    }",
+      "}"
+    ],
+    "bug": [8],
+    "fix": { "8": "        lock (_gate)" },
+    "why": {
+      "en": "Each call locks a brand-new object that no other thread can see, so the lock keeps nobody out and deposits can still be lost. Lock the shared _gate.",
+      "ru": "Каждый вызов блокирует новый объект, которого не видит ни один другой поток, так что блокировка никого не останавливает, и пополнения по-прежнему могут теряться. Блокируйте общий _gate.",
+      "uz": "Har bir chaqiruv boshqa hech bir oqim ko'rmaydigan yangi obyektni qulflaydi, shuning uchun qulf hech kimni to'xtatmaydi va to'lovlar baribir yo'qolishi mumkin. Umumiy _gate ni qulflang."
+    }
+  },
+  {
+    "id": "cs-35", "lang": "csharp", "level": "hard", "kind": "async",
+    "code": [
+      "public static async Task WarmUpAsync(ICache cache, List<string> keys)",
+      "{",
+      "    keys.ForEach(async key => await cache.LoadAsync(key));",
+      "    Console.WriteLine($\"Warmed {keys.Count} keys\");",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "    await Task.WhenAll(keys.Select(key => cache.LoadAsync(key)));" },
+    "why": {
+      "en": "List.ForEach takes an Action, so the async lambda becomes async void: nothing waits for the loads, the method finishes at once and failures are lost. Await Task.WhenAll.",
+      "ru": "List.ForEach принимает Action, поэтому асинхронная лямбда превращается в async void: загрузок никто не ждёт, метод сразу завершается, а ошибки теряются. Используйте await Task.WhenAll.",
+      "uz": "List.ForEach Action qabul qiladi, shuning uchun asinxron lambda async void ga aylanadi: yuklashlarni hech kim kutmaydi, metod darhol tugaydi, xatolar esa yo'qoladi. await Task.WhenAll dan foydalaning."
+    }
+  },
+  {
+    "id": "cs-36", "lang": "csharp", "level": "hard", "kind": "equality",
+    "code": [
+      "public class Sku",
+      "{",
+      "    public string Code { get; }",
+      "",
+      "    public Sku(string code) => Code = code;",
+      "",
+      "    public override bool Equals(object? o) => (o as Sku)?.Code == Code;",
+      "",
+      "    public override int GetHashCode() => base.GetHashCode();",
+      "}"
+    ],
+    "bug": [9],
+    "fix": { "9": "    public override int GetHashCode() => Code.GetHashCode();" },
+    "why": {
+      "en": "Two equal Skus must have the same hash code, but base.GetHashCode differs for every object, so a HashSet or Dictionary looks in the wrong bucket and keeps duplicates. Hash the Code.",
+      "ru": "У двух равных Sku должен быть одинаковый хеш-код, но base.GetHashCode у каждого объекта свой, поэтому HashSet или Dictionary ищет не в той корзине и хранит дубликаты. Хешируйте Code.",
+      "uz": "Ikkita teng Sku ning xesh-kodi bir xil bo'lishi shart, lekin base.GetHashCode har bir obyektda boshqacha, shuning uchun HashSet yoki Dictionary noto'g'ri savatchadan qidiradi va dublikatlarni saqlab qoladi. Code ni xeshlang."
+    }
+  },
+  {
+    "id": "cs-37", "lang": "csharp", "level": "hard", "kind": "overflow",
+    "code": [
+      "public static bool TimedOut(int nowTicks, int startTicks, int timeoutMs)",
+      "{",
+      "    // from Environment.TickCount, which wraps round every 49.7 days",
+      "    return nowTicks > startTicks + timeoutMs;",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "    return nowTicks - startTicks > timeoutMs;" },
+    "why": {
+      "en": "Once the tick count wraps round to negative numbers, comparing raw values goes wrong, and startTicks + timeoutMs can overflow too. Compare the elapsed time, nowTicks - startTicks, which stays right across the wrap.",
+      "ru": "Когда счётчик тиков переходит через максимум в отрицательные числа, сравнение сырых значений ломается, да и startTicks + timeoutMs может переполниться. Сравнивайте прошедшее время, nowTicks - startTicks: оно остаётся верным и после перехода.",
+      "uz": "Tiklar hisoblagichi maksimumdan o'tib manfiy sonlarga aylanganda, xom qiymatlarni solishtirish buziladi, startTicks + timeoutMs ham to'lib ketishi mumkin. O'tgan vaqtni, ya'ni nowTicks - startTicks ni solishtiring: u o'tishdan keyin ham to'g'ri qoladi."
+    }
+  },
+  {
+    "id": "cs-38", "lang": "csharp", "level": "hard", "kind": "exception",
+    "code": [
+      "public static void Import(string path)",
+      "{",
+      "    try",
+      "    {",
+      "        ParseFile(path);",
+      "    }",
+      "    catch (Exception ex)",
+      "    {",
+      "        Console.Error.WriteLine($\"Import failed: {ex.Message}\");",
+      "        throw ex;",
+      "    }",
+      "}",
+      "",
+      "static void ParseFile(string path) => throw new FormatException(path);"
+    ],
+    "bug": [10],
+    "fix": { "10": "        throw;" },
+    "why": {
+      "en": "throw ex rethrows the exception with a fresh stack trace that starts here, so the log no longer shows where in ParseFile it really failed. A bare throw; keeps the original trace.",
+      "ru": "throw ex выбрасывает исключение заново, со стеком, который начинается здесь, и в логе уже не видно, где именно в ParseFile всё сломалось. Просто throw; сохраняет исходный стек.",
+      "uz": "throw ex istisnoni qaytadan, shu yerdan boshlanadigan yangi stek bilan tashlaydi, shuning uchun logda ParseFile ning aynan qayerida xato bo'lgani ko'rinmay qoladi. Oddiy throw; asl stekni saqlaydi."
+    }
+  },
+  {
+    "id": "cs-39", "lang": "csharp", "level": "medium", "kind": "disposed",
+    "code": [
+      "public static Stream OpenConfig(string dir)",
+      "{",
+      "    string path = Path.Combine(dir, \"config.json\");",
+      "    using var stream = File.OpenRead(path);",
+      "    return stream;",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "    var stream = File.OpenRead(path);" },
+    "why": {
+      "en": "using disposes the stream as the method returns, so the caller gets a closed stream and its first read throws ObjectDisposedException. Leave it open: the caller owns it and disposes it.",
+      "ru": "using закрывает поток при выходе из метода, поэтому вызывающий код получает уже закрытый поток, и первое же чтение бросает ObjectDisposedException. Не закрывайте его здесь: поток принадлежит вызывающему коду, он его и освободит.",
+      "uz": "using metoddan chiqishda oqimni yopadi, shuning uchun chaqiruvchi kod yopilgan oqimni oladi va birinchi o'qishdayoq ObjectDisposedException chiqadi. Uni bu yerda yopmang: oqim chaqiruvchi kodga tegishli, uni o'sha yopadi."
+    }
+  }
+]

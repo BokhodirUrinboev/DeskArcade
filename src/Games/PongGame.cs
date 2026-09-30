@@ -192,6 +192,7 @@ public sealed class PongGame : MiniGame, IPetPlayground
     {
         _matchOver = true;
         bool won = _myPoints > _theirPoints;
+        if (LanOn) Host.RecordResult(Id, Rival, won ? 1 : -1);
         var a = Host.Arena;
         var at = new Vec2(a.Center.X, a.Top + a.Height * 0.3);
         if (won)
@@ -369,6 +370,7 @@ public sealed class PongGame : MiniGame, IPetPlayground
 
     void MatchOverFromHost()
     {
+        Host.RecordResult(Id, Rival, _myPoints > _theirPoints ? 1 : _myPoints < _theirPoints ? -1 : 0);
         var a = Host.Arena;
         var at = new Vec2(a.Center.X, a.Top + a.Height * 0.3);
         if (_myPoints > _theirPoints)

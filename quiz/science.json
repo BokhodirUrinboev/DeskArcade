@@ -1,0 +1,1866 @@
+{
+  "id": "science",
+  "title": {
+    "en": "Science",
+    "ru": "Наука",
+    "uz": "Fan"
+  },
+  "questions": [
+    {
+      "en": {
+        "q": "What is the chemical symbol for gold?",
+        "a": [
+          "Au",
+          "Ag",
+          "Gd",
+          "Go"
+        ]
+      },
+      "ru": {
+        "q": "Какой химический символ у золота?",
+        "a": [
+          "Au",
+          "Ag",
+          "Gd",
+          "Go"
+        ]
+      },
+      "uz": {
+        "q": "Oltinning kimyoviy belgisi qanday?",
+        "a": [
+          "Au",
+          "Ag",
+          "Gd",
+          "Go"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the chemical formula of water?",
+        "a": [
+          "H2O",
+          "CO2",
+          "H2O2",
+          "NaCl"
+        ]
+      },
+      "ru": {
+        "q": "Какова химическая формула воды?",
+        "a": [
+          "H2O",
+          "CO2",
+          "H2O2",
+          "NaCl"
+        ]
+      },
+      "uz": {
+        "q": "Suvning kimyoviy formulasi qanday?",
+        "a": [
+          "H2O",
+          "CO2",
+          "H2O2",
+          "NaCl"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which is the lightest chemical element?",
+        "a": [
+          "Hydrogen",
+          "Helium",
+          "Lithium",
+          "Oxygen"
+        ]
+      },
+      "ru": {
+        "q": "Какой химический элемент самый лёгкий?",
+        "a": [
+          "Водород",
+          "Гелий",
+          "Литий",
+          "Кислород"
+        ]
+      },
+      "uz": {
+        "q": "Eng yengil kimyoviy element qaysi?",
+        "a": [
+          "Vodorod",
+          "Geliy",
+          "Litiy",
+          "Kislorod"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which of these metals is liquid at room temperature?",
+        "a": [
+          "Mercury",
+          "Lead",
+          "Tin",
+          "Zinc"
+        ]
+      },
+      "ru": {
+        "q": "Какой из этих металлов жидкий при комнатной температуре?",
+        "a": [
+          "Ртуть",
+          "Свинец",
+          "Олово",
+          "Цинк"
+        ]
+      },
+      "uz": {
+        "q": "Bu metallardan qaysi biri xona haroratida suyuq bo'ladi?",
+        "a": [
+          "Simob",
+          "Qo'rg'oshin",
+          "Qalay",
+          "Rux"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the chemical symbol for sodium?",
+        "a": [
+          "Na",
+          "So",
+          "Sd",
+          "Sn"
+        ]
+      },
+      "ru": {
+        "q": "Какой химический символ у натрия?",
+        "a": [
+          "Na",
+          "So",
+          "Sd",
+          "Sn"
+        ]
+      },
+      "uz": {
+        "q": "Natriyning kimyoviy belgisi qanday?",
+        "a": [
+          "Na",
+          "So",
+          "Sd",
+          "Sn"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which gas makes up most of the Earth's atmosphere?",
+        "a": [
+          "Nitrogen",
+          "Oxygen",
+          "Carbon dioxide",
+          "Argon"
+        ]
+      },
+      "ru": {
+        "q": "Какого газа больше всего в атмосфере Земли?",
+        "a": [
+          "Азот",
+          "Кислород",
+          "Углекислый газ",
+          "Аргон"
+        ]
+      },
+      "uz": {
+        "q": "Yer atmosferasida qaysi gaz eng ko'p?",
+        "a": [
+          "Azot",
+          "Kislorod",
+          "Karbonat angidrid",
+          "Argon"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which chemist published the periodic table of the elements in 1869?",
+        "a": [
+          "Dmitri Mendeleev",
+          "Antoine Lavoisier",
+          "John Dalton",
+          "Ernest Rutherford"
+        ]
+      },
+      "ru": {
+        "q": "Какой химик в 1869 году опубликовал периодическую систему элементов?",
+        "a": [
+          "Дмитрий Менделеев",
+          "Антуан Лавуазье",
+          "Джон Дальтон",
+          "Эрнест Резерфорд"
+        ]
+      },
+      "uz": {
+        "q": "1869-yilda kimyoviy elementlar davriy jadvalini qaysi kimyogar e'lon qilgan?",
+        "a": [
+          "Dmitriy Mendeleyev",
+          "Antuan Lavuaze",
+          "Jon Dalton",
+          "Ernest Rezerford"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the pH of pure water at 25 °C?",
+        "a": [
+          "7",
+          "0",
+          "1",
+          "14"
+        ]
+      },
+      "ru": {
+        "q": "Чему равен pH чистой воды при 25 °C?",
+        "a": [
+          "7",
+          "0",
+          "1",
+          "14"
+        ]
+      },
+      "uz": {
+        "q": "25 °C haroratda toza suvning pH qiymati nechaga teng?",
+        "a": [
+          "7",
+          "0",
+          "1",
+          "14"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is solid carbon dioxide commonly called?",
+        "a": [
+          "Dry ice",
+          "Quicklime",
+          "Rock salt",
+          "Baking soda"
+        ]
+      },
+      "ru": {
+        "q": "Как называют твёрдый углекислый газ?",
+        "a": [
+          "Сухой лёд",
+          "Негашёная известь",
+          "Каменная соль",
+          "Пищевая сода"
+        ]
+      },
+      "uz": {
+        "q": "Qattiq holatdagi karbonat angidrid odatda nima deb ataladi?",
+        "a": [
+          "Quruq muz",
+          "So'ndirilmagan ohak",
+          "Tosh tuz",
+          "Ichimlik sodasi"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who discovered the elements polonium and radium together with her husband?",
+        "a": [
+          "Marie Curie",
+          "Lise Meitner",
+          "Ada Lovelace",
+          "Rosalind Franklin"
+        ]
+      },
+      "ru": {
+        "q": "Кто вместе с мужем открыл химические элементы полоний и радий?",
+        "a": [
+          "Мария Склодовская-Кюри",
+          "Лиза Мейтнер",
+          "Ада Лавлейс",
+          "Розалинд Франклин"
+        ]
+      },
+      "uz": {
+        "q": "Poloniy va radiy elementlarini eri bilan birga kim kashf etgan?",
+        "a": [
+          "Mari Kyuri",
+          "Liza Meytner",
+          "Ada Lavleys",
+          "Rozalind Franklin"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which element is the most abundant in the Earth's crust by mass?",
+        "a": [
+          "Oxygen",
+          "Silicon",
+          "Iron",
+          "Aluminium"
+        ]
+      },
+      "ru": {
+        "q": "Какого химического элемента по массе больше всего в земной коре?",
+        "a": [
+          "Кислород",
+          "Кремний",
+          "Железо",
+          "Алюминий"
+        ]
+      },
+      "uz": {
+        "q": "Yer po'stida massa jihatidan qaysi element eng ko'p?",
+        "a": [
+          "Kislorod",
+          "Kremniy",
+          "Temir",
+          "Alyuminiy"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Roughly what is Avogadro's number?",
+        "a": [
+          "6.02 × 10^23",
+          "3.00 × 10^8",
+          "6.67 × 10^-11",
+          "1.60 × 10^-19"
+        ]
+      },
+      "ru": {
+        "q": "Чему примерно равно число Авогадро?",
+        "a": [
+          "6,02 × 10^23",
+          "3,00 × 10^8",
+          "6,67 × 10^-11",
+          "1,60 × 10^-19"
+        ]
+      },
+      "uz": {
+        "q": "Avogadro soni taxminan nechaga teng?",
+        "a": [
+          "6,02 × 10^23",
+          "3,00 × 10^8",
+          "6,67 × 10^-11",
+          "1,60 × 10^-19"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In which two sciences did Marie Curie win Nobel Prizes?",
+        "a": [
+          "Physics and chemistry",
+          "Chemistry and medicine",
+          "Physics and medicine",
+          "Maths and physics"
+        ]
+      },
+      "ru": {
+        "q": "По каким двум наукам Мария Склодовская-Кюри получила Нобелевские премии?",
+        "a": [
+          "Физика и химия",
+          "Химия и медицина",
+          "Физика и медицина",
+          "Математика и физика"
+        ]
+      },
+      "uz": {
+        "q": "Mari Kyuri qaysi ikki fan bo'yicha Nobel mukofotlarini olgan?",
+        "a": [
+          "Fizika va kimyo",
+          "Kimyo va tibbiyot",
+          "Fizika va tibbiyot",
+          "Matematika va fizika"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the SI unit of force?",
+        "a": [
+          "Newton",
+          "Joule",
+          "Watt",
+          "Pascal"
+        ]
+      },
+      "ru": {
+        "q": "В каких единицах в системе СИ измеряется сила?",
+        "a": [
+          "Ньютон",
+          "Джоуль",
+          "Ватт",
+          "Паскаль"
+        ]
+      },
+      "uz": {
+        "q": "SI tizimida kuch qanday birlikda o'lchanadi?",
+        "a": [
+          "Nyuton",
+          "Joul",
+          "Vatt",
+          "Paskal"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which force resists one surface sliding over another?",
+        "a": [
+          "Friction",
+          "Gravity",
+          "Magnetism",
+          "Buoyancy"
+        ]
+      },
+      "ru": {
+        "q": "Какая сила препятствует скольжению одной поверхности по другой?",
+        "a": [
+          "Сила трения",
+          "Сила тяжести",
+          "Магнитная сила",
+          "Сила Архимеда"
+        ]
+      },
+      "uz": {
+        "q": "Bir sirtning ikkinchisi ustida sirpanishiga qaysi kuch qarshilik qiladi?",
+        "a": [
+          "Ishqalanish kuchi",
+          "Og'irlik kuchi",
+          "Magnit kuchi",
+          "Arximed kuchi"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "At what temperature does pure water boil at sea level?",
+        "a": [
+          "100 °C",
+          "90 °C",
+          "110 °C",
+          "120 °C"
+        ]
+      },
+      "ru": {
+        "q": "При какой температуре кипит чистая вода на уровне моря?",
+        "a": [
+          "100 °C",
+          "90 °C",
+          "110 °C",
+          "120 °C"
+        ]
+      },
+      "uz": {
+        "q": "Dengiz sathida toza suv qanday haroratda qaynaydi?",
+        "a": [
+          "100 °C",
+          "90 °C",
+          "110 °C",
+          "120 °C"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Roughly how fast does light travel in a vacuum?",
+        "a": [
+          "300,000 km/s",
+          "30,000 km/s",
+          "3,000 km/s",
+          "3,000,000 km/s"
+        ]
+      },
+      "ru": {
+        "q": "С какой скоростью примерно распространяется свет в вакууме?",
+        "a": [
+          "300 000 km/s",
+          "30 000 km/s",
+          "3000 km/s",
+          "3 000 000 km/s"
+        ]
+      },
+      "uz": {
+        "q": "Vakuumda yorug'lik taxminan qanday tezlikda tarqaladi?",
+        "a": [
+          "300 000 km/s",
+          "30 000 km/s",
+          "3000 km/s",
+          "3 000 000 km/s"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Roughly how fast does sound travel in air at 20 °C?",
+        "a": [
+          "340 m/s",
+          "34 m/s",
+          "3,400 m/s",
+          "34,000 m/s"
+        ]
+      },
+      "ru": {
+        "q": "С какой скоростью примерно распространяется звук в воздухе при 20 °C?",
+        "a": [
+          "340 m/s",
+          "34 m/s",
+          "3400 m/s",
+          "34 000 m/s"
+        ]
+      },
+      "uz": {
+        "q": "20 °C haroratli havoda tovush taxminan qanday tezlikda tarqaladi?",
+        "a": [
+          "340 m/s",
+          "34 m/s",
+          "3400 m/s",
+          "34 000 m/s"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which colour of visible light has the longest wavelength?",
+        "a": [
+          "Red",
+          "Violet",
+          "Green",
+          "Blue"
+        ]
+      },
+      "ru": {
+        "q": "У какого цвета видимого света самая большая длина волны?",
+        "a": [
+          "Красный",
+          "Фиолетовый",
+          "Зелёный",
+          "Синий"
+        ]
+      },
+      "uz": {
+        "q": "Ko'rinadigan yorug'likning qaysi rangida to'lqin uzunligi eng katta?",
+        "a": [
+          "Qizil",
+          "Binafsha",
+          "Yashil",
+          "Ko'k"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "By Ohm's law, voltage equals current multiplied by what?",
+        "a": [
+          "Resistance",
+          "Power",
+          "Charge",
+          "Time"
+        ]
+      },
+      "ru": {
+        "q": "По закону Ома напряжение равно силе тока, умноженной на…",
+        "a": [
+          "Сопротивление",
+          "Мощность",
+          "Заряд",
+          "Время"
+        ]
+      },
+      "uz": {
+        "q": "Om qonuniga ko'ra, kuchlanish tok kuchining nimaga ko'paytmasiga teng?",
+        "a": [
+          "Qarshilik",
+          "Quvvat",
+          "Zaryad",
+          "Vaqt"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is another name for Newton's first law of motion?",
+        "a": [
+          "Law of inertia",
+          "Law of universal gravitation",
+          "Law of reflection",
+          "Law of refraction"
+        ]
+      },
+      "ru": {
+        "q": "Как ещё называют первый закон Ньютона?",
+        "a": [
+          "Закон инерции",
+          "Закон всемирного тяготения",
+          "Закон отражения",
+          "Закон преломления"
+        ]
+      },
+      "uz": {
+        "q": "Nyutonning birinchi qonuni yana qanday nomlanadi?",
+        "a": [
+          "Inersiya qonuni",
+          "Butun olam tortishish qonuni",
+          "Qaytish qonuni",
+          "Sinish qonuni"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is absolute zero on the Celsius scale?",
+        "a": [
+          "-273.15 °C",
+          "-173.15 °C",
+          "-373.15 °C",
+          "-100 °C"
+        ]
+      },
+      "ru": {
+        "q": "Чему равен абсолютный нуль по шкале Цельсия?",
+        "a": [
+          "-273,15 °C",
+          "-173,15 °C",
+          "-373,15 °C",
+          "-100 °C"
+        ]
+      },
+      "uz": {
+        "q": "Selsiy shkalasida absolyut nol nechaga teng?",
+        "a": [
+          "-273,15 °C",
+          "-173,15 °C",
+          "-373,15 °C",
+          "-100 °C"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which scientist discovered electromagnetic induction in 1831?",
+        "a": [
+          "Michael Faraday",
+          "André-Marie Ampère",
+          "Alessandro Volta",
+          "Georg Ohm"
+        ]
+      },
+      "ru": {
+        "q": "Кто в 1831 году открыл электромагнитную индукцию?",
+        "a": [
+          "Майкл Фарадей",
+          "Андре-Мари Ампер",
+          "Алессандро Вольта",
+          "Георг Ом"
+        ]
+      },
+      "uz": {
+        "q": "1831-yilda elektromagnit induksiya hodisasini qaysi olim kashf etgan?",
+        "a": [
+          "Maykl Faradey",
+          "Andre-Mari Amper",
+          "Alessandro Volta",
+          "Georg Om"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "At what temperature do the Celsius and Fahrenheit scales show the same number?",
+        "a": [
+          "-40°",
+          "0°",
+          "-32°",
+          "100°"
+        ]
+      },
+      "ru": {
+        "q": "При какой температуре шкалы Цельсия и Фаренгейта показывают одно и то же число?",
+        "a": [
+          "-40°",
+          "0°",
+          "-32°",
+          "100°"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi haroratda Selsiy va Farengeyt shkalalari bir xil sonni ko'rsatadi?",
+        "a": [
+          "-40°",
+          "0°",
+          "-32°",
+          "100°"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "How many chambers does the human heart have?",
+        "a": [
+          "4",
+          "2",
+          "3",
+          "6"
+        ]
+      },
+      "ru": {
+        "q": "Сколько камер в сердце человека?",
+        "a": [
+          "4",
+          "2",
+          "3",
+          "6"
+        ]
+      },
+      "uz": {
+        "q": "Odam yuragi necha kameradan iborat?",
+        "a": [
+          "4",
+          "2",
+          "3",
+          "6"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which pigment gives plants their green colour?",
+        "a": [
+          "Chlorophyll",
+          "Haemoglobin",
+          "Melanin",
+          "Carotene"
+        ]
+      },
+      "ru": {
+        "q": "Какой пигмент придаёт растениям зелёный цвет?",
+        "a": [
+          "Хлорофилл",
+          "Гемоглобин",
+          "Меланин",
+          "Каротин"
+        ]
+      },
+      "uz": {
+        "q": "O'simliklarga yashil rang beradigan pigment qaysi?",
+        "a": [
+          "Xlorofill",
+          "Gemoglobin",
+          "Melanin",
+          "Karotin"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which gas do plants take in from the air for photosynthesis?",
+        "a": [
+          "Carbon dioxide",
+          "Oxygen",
+          "Nitrogen",
+          "Helium"
+        ]
+      },
+      "ru": {
+        "q": "Какой газ растения поглощают из воздуха для фотосинтеза?",
+        "a": [
+          "Углекислый газ",
+          "Кислород",
+          "Азот",
+          "Гелий"
+        ]
+      },
+      "uz": {
+        "q": "O'simliklar fotosintez uchun havodan qaysi gazni yutadi?",
+        "a": [
+          "Karbonat angidrid",
+          "Kislorod",
+          "Azot",
+          "Geliy"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "How many legs does an adult insect have?",
+        "a": [
+          "6",
+          "8",
+          "4",
+          "10"
+        ]
+      },
+      "ru": {
+        "q": "Сколько ног у взрослого насекомого?",
+        "a": [
+          "6",
+          "8",
+          "4",
+          "10"
+        ]
+      },
+      "uz": {
+        "q": "Voyaga yetgan hasharotning nechta oyog'i bor?",
+        "a": [
+          "6",
+          "8",
+          "4",
+          "10"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What do whales use to breathe?",
+        "a": [
+          "Lungs",
+          "Gills",
+          "Skin",
+          "Swim bladder"
+        ]
+      },
+      "ru": {
+        "q": "Чем дышат киты?",
+        "a": [
+          "Лёгкими",
+          "Жабрами",
+          "Кожей",
+          "Плавательным пузырём"
+        ]
+      },
+      "uz": {
+        "q": "Kitlar qaysi a'zo yordamida nafas oladi?",
+        "a": [
+          "O'pka",
+          "Jabra",
+          "Teri",
+          "Suzgich pufagi"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "How many bones are there in a typical adult human skeleton?",
+        "a": [
+          "206",
+          "212",
+          "180",
+          "300"
+        ]
+      },
+      "ru": {
+        "q": "Сколько костей обычно в скелете взрослого человека?",
+        "a": [
+          "206",
+          "212",
+          "180",
+          "300"
+        ]
+      },
+      "uz": {
+        "q": "Voyaga yetgan odam skeletida odatda nechta suyak bo'ladi?",
+        "a": [
+          "206",
+          "212",
+          "180",
+          "300"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which cells carry oxygen in human blood?",
+        "a": [
+          "Red blood cells",
+          "White blood cells",
+          "Platelets",
+          "Nerve cells"
+        ]
+      },
+      "ru": {
+        "q": "Какие клетки переносят кислород в крови человека?",
+        "a": [
+          "Эритроциты",
+          "Лейкоциты",
+          "Тромбоциты",
+          "Нейроны"
+        ]
+      },
+      "uz": {
+        "q": "Odam qonida kislorodni qaysi hujayralar tashiydi?",
+        "a": [
+          "Eritrotsitlar",
+          "Leykotsitlar",
+          "Trombotsitlar",
+          "Neyronlar"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which organelle is known as the 'powerhouse' of the cell?",
+        "a": [
+          "Mitochondrion",
+          "Nucleus",
+          "Ribosome",
+          "Golgi apparatus"
+        ]
+      },
+      "ru": {
+        "q": "Какой органоид называют «энергетической станцией» клетки?",
+        "a": [
+          "Митохондрия",
+          "Ядро",
+          "Рибосома",
+          "Аппарат Гольджи"
+        ]
+      },
+      "uz": {
+        "q": "Hujayraning qaysi organoidi uning «energiya stansiyasi» deb ataladi?",
+        "a": [
+          "Mitoxondriya",
+          "Yadro",
+          "Ribosoma",
+          "Golji apparati"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which organ produces the hormone insulin?",
+        "a": [
+          "Pancreas",
+          "Liver",
+          "Kidney",
+          "Stomach"
+        ]
+      },
+      "ru": {
+        "q": "Какой орган вырабатывает гормон инсулин?",
+        "a": [
+          "Поджелудочная железа",
+          "Печень",
+          "Почка",
+          "Желудок"
+        ]
+      },
+      "uz": {
+        "q": "Insulin gormonini qaysi a'zo ishlab chiqaradi?",
+        "a": [
+          "Oshqozon osti bezi",
+          "Jigar",
+          "Buyrak",
+          "Oshqozon"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which vitamin does human skin make when exposed to sunlight?",
+        "a": [
+          "Vitamin D",
+          "Vitamin C",
+          "Vitamin A",
+          "Vitamin B12"
+        ]
+      },
+      "ru": {
+        "q": "Какой витамин образуется в коже человека под действием солнечного света?",
+        "a": [
+          "Витамин D",
+          "Витамин C",
+          "Витамин A",
+          "Витамин B12"
+        ]
+      },
+      "uz": {
+        "q": "Quyosh nuri ta'sirida odam terisida qaysi vitamin hosil bo'ladi?",
+        "a": [
+          "D vitamini",
+          "C vitamini",
+          "A vitamini",
+          "B12 vitamini"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which is the longest bone in the human body?",
+        "a": [
+          "Femur (thigh bone)",
+          "Tibia (shinbone)",
+          "Humerus (upper arm)",
+          "Fibula (calf bone)"
+        ]
+      },
+      "ru": {
+        "q": "Какая кость в теле человека самая длинная?",
+        "a": [
+          "Бедренная кость",
+          "Большеберцовая кость",
+          "Плечевая кость",
+          "Малоберцовая кость"
+        ]
+      },
+      "uz": {
+        "q": "Odam tanasidagi eng uzun suyak qaysi?",
+        "a": [
+          "Son suyagi",
+          "Katta boldir suyagi",
+          "Yelka suyagi",
+          "Kichik boldir suyagi"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "How many pairs of chromosomes are there in a typical human body cell?",
+        "a": [
+          "23",
+          "46",
+          "22",
+          "24"
+        ]
+      },
+      "ru": {
+        "q": "Сколько пар хромосом в соматической клетке человека?",
+        "a": [
+          "23",
+          "46",
+          "22",
+          "24"
+        ]
+      },
+      "uz": {
+        "q": "Odamning somatik hujayrasida necha juft xromosoma bor?",
+        "a": [
+          "23",
+          "46",
+          "22",
+          "24"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Whose 1859 book 'On the Origin of Species' set out evolution by natural selection?",
+        "a": [
+          "Charles Darwin",
+          "Gregor Mendel",
+          "Jean-Baptiste Lamarck",
+          "Louis Pasteur"
+        ]
+      },
+      "ru": {
+        "q": "Кто в 1859 году изложил теорию естественного отбора в книге «Происхождение видов»?",
+        "a": [
+          "Чарльз Дарвин",
+          "Грегор Мендель",
+          "Жан-Батист Ламарк",
+          "Луи Пастер"
+        ]
+      },
+      "uz": {
+        "q": "1859-yilda «Turlarning kelib chiqishi» kitobida tabiiy tanlanish nazariyasini kim bayon qilgan?",
+        "a": [
+          "Charlz Darvin",
+          "Gregor Mendel",
+          "Jan-Batist Lamark",
+          "Lui Paster"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who discovered the basic laws of heredity by breeding pea plants?",
+        "a": [
+          "Gregor Mendel",
+          "Charles Darwin",
+          "Louis Pasteur",
+          "Carl Linnaeus"
+        ]
+      },
+      "ru": {
+        "q": "Кто открыл основные законы наследственности, скрещивая горох?",
+        "a": [
+          "Грегор Мендель",
+          "Чарльз Дарвин",
+          "Луи Пастер",
+          "Карл Линней"
+        ]
+      },
+      "uz": {
+        "q": "No'xat o'simligini chatishtirib, irsiyatning asosiy qonunlarini kim kashf etgan?",
+        "a": [
+          "Gregor Mendel",
+          "Charlz Darvin",
+          "Lui Paster",
+          "Karl Linney"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is Ibn Sina's (Avicenna's) famous medical encyclopaedia called?",
+        "a": [
+          "The Canon of Medicine",
+          "The Book of Optics",
+          "Almagest",
+          "On the Origin of Species"
+        ]
+      },
+      "ru": {
+        "q": "Как называется знаменитая медицинская энциклопедия Авиценны (Ибн Сины)?",
+        "a": [
+          "Канон врачебной науки",
+          "Книга оптики",
+          "Альмагест",
+          "Происхождение видов"
+        ]
+      },
+      "uz": {
+        "q": "Ibn Sinoning mashhur tibbiyot qomusi qanday nomlanadi?",
+        "a": [
+          "Tib qonunlari",
+          "Optika kitobi",
+          "Almagest",
+          "Turlarning kelib chiqishi"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who discovered penicillin in 1928?",
+        "a": [
+          "Alexander Fleming",
+          "Louis Pasteur",
+          "Robert Koch",
+          "Edward Jenner"
+        ]
+      },
+      "ru": {
+        "q": "Кто открыл пенициллин в 1928 году?",
+        "a": [
+          "Александр Флеминг",
+          "Луи Пастер",
+          "Роберт Кох",
+          "Эдвард Дженнер"
+        ]
+      },
+      "uz": {
+        "q": "1928-yilda penitsillinni kim kashf etgan?",
+        "a": [
+          "Aleksandr Fleming",
+          "Lui Paster",
+          "Robert Kox",
+          "Edvard Jenner"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which planet is closest to the Sun?",
+        "a": [
+          "Mercury",
+          "Venus",
+          "Mars",
+          "Earth"
+        ]
+      },
+      "ru": {
+        "q": "Какая планета ближе всех к Солнцу?",
+        "a": [
+          "Меркурий",
+          "Венера",
+          "Марс",
+          "Земля"
+        ]
+      },
+      "uz": {
+        "q": "Quyoshga eng yaqin sayyora qaysi?",
+        "a": [
+          "Merkuriy",
+          "Venera",
+          "Mars",
+          "Yer"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which planet is known as the Red Planet?",
+        "a": [
+          "Mars",
+          "Jupiter",
+          "Venus",
+          "Saturn"
+        ]
+      },
+      "ru": {
+        "q": "Какую планету называют Красной планетой?",
+        "a": [
+          "Марс",
+          "Юпитер",
+          "Венера",
+          "Сатурн"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi sayyora «Qizil sayyora» deb ataladi?",
+        "a": [
+          "Mars",
+          "Yupiter",
+          "Venera",
+          "Saturn"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which is the largest planet in the Solar System?",
+        "a": [
+          "Jupiter",
+          "Saturn",
+          "Neptune",
+          "Earth"
+        ]
+      },
+      "ru": {
+        "q": "Какая планета Солнечной системы самая большая?",
+        "a": [
+          "Юпитер",
+          "Сатурн",
+          "Нептун",
+          "Земля"
+        ]
+      },
+      "uz": {
+        "q": "Quyosh tizimidagi eng katta sayyora qaysi?",
+        "a": [
+          "Yupiter",
+          "Saturn",
+          "Neptun",
+          "Yer"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the name of the galaxy that contains our Solar System?",
+        "a": [
+          "Milky Way",
+          "Andromeda",
+          "Triangulum",
+          "Sombrero"
+        ]
+      },
+      "ru": {
+        "q": "Как называется галактика, в которой находится Солнечная система?",
+        "a": [
+          "Млечный Путь",
+          "Андромеда",
+          "Треугольник",
+          "Сомбреро"
+        ]
+      },
+      "uz": {
+        "q": "Quyosh tizimi joylashgan galaktika qanday nomlanadi?",
+        "a": [
+          "Somon yo'li",
+          "Andromeda",
+          "Uchburchak",
+          "Sombrero"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Roughly how long does sunlight take to reach the Earth?",
+        "a": [
+          "About 8 minutes",
+          "About 8 seconds",
+          "About 8 hours",
+          "About 8 days"
+        ]
+      },
+      "ru": {
+        "q": "За какое время примерно солнечный свет доходит до Земли?",
+        "a": [
+          "Около 8 минут",
+          "Около 8 секунд",
+          "Около 8 часов",
+          "Около 8 суток"
+        ]
+      },
+      "uz": {
+        "q": "Quyosh nuri Yerga taxminan qancha vaqtda yetib keladi?",
+        "a": [
+          "Taxminan 8 daqiqa",
+          "Taxminan 8 soniya",
+          "Taxminan 8 soat",
+          "Taxminan 8 kun"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which planet has the hottest surface in the Solar System?",
+        "a": [
+          "Venus",
+          "Mercury",
+          "Mars",
+          "Earth"
+        ]
+      },
+      "ru": {
+        "q": "У какой планеты Солнечной системы самая горячая поверхность?",
+        "a": [
+          "Венера",
+          "Меркурий",
+          "Марс",
+          "Земля"
+        ]
+      },
+      "uz": {
+        "q": "Quyosh tizimidagi qaysi sayyoraning sirti eng issiq?",
+        "a": [
+          "Venera",
+          "Merkuriy",
+          "Mars",
+          "Yer"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the main cause of the seasons on Earth?",
+        "a": [
+          "Tilt of Earth's axis",
+          "Distance from the Sun",
+          "Solar activity",
+          "Phases of the Moon"
+        ]
+      },
+      "ru": {
+        "q": "Что главным образом вызывает смену времён года на Земле?",
+        "a": [
+          "Наклон земной оси",
+          "Расстояние до Солнца",
+          "Солнечная активность",
+          "Фазы Луны"
+        ]
+      },
+      "uz": {
+        "q": "Yerda yil fasllari almashinuvining asosiy sababi nima?",
+        "a": [
+          "Yer o'qining og'ishi",
+          "Quyoshgacha bo'lgan masofa",
+          "Quyosh faolligi",
+          "Oy fazalari"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which 15th-century ruler and astronomer built a great observatory in Samarkand?",
+        "a": [
+          "Ulugh Beg",
+          "Al-Biruni",
+          "Ibn Sina",
+          "Al-Khwarizmi"
+        ]
+      },
+      "ru": {
+        "q": "Какой правитель и астроном XV века построил знаменитую обсерваторию в Самарканде?",
+        "a": [
+          "Мирзо Улугбек",
+          "Аль-Бируни",
+          "Ибн Сина",
+          "Аль-Хорезми"
+        ]
+      },
+      "uz": {
+        "q": "XV asrda Samarqandda mashhur rasadxona qurdirgan hukmdor va astronom kim?",
+        "a": [
+          "Mirzo Ulug'bek",
+          "Abu Rayhon Beruniy",
+          "Ibn Sino",
+          "Al-Xorazmiy"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What does a light-year measure?",
+        "a": [
+          "Distance",
+          "Time",
+          "Speed",
+          "Brightness"
+        ]
+      },
+      "ru": {
+        "q": "Что измеряют в световых годах?",
+        "a": [
+          "Расстояние",
+          "Время",
+          "Скорость",
+          "Яркость"
+        ]
+      },
+      "uz": {
+        "q": "Yorug'lik yili qaysi kattalikning o'lchov birligi?",
+        "a": [
+          "Masofa",
+          "Vaqt",
+          "Tezlik",
+          "Yorqinlik"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which astronomer discovered Jupiter's four largest moons in 1610?",
+        "a": [
+          "Galileo Galilei",
+          "Johannes Kepler",
+          "Nicolaus Copernicus",
+          "Tycho Brahe"
+        ]
+      },
+      "ru": {
+        "q": "Какой астроном в 1610 году открыл четыре крупнейших спутника Юпитера?",
+        "a": [
+          "Галилео Галилей",
+          "Иоганн Кеплер",
+          "Николай Коперник",
+          "Тихо Браге"
+        ]
+      },
+      "uz": {
+        "q": "1610-yilda Yupiterning to'rtta eng yirik yo'ldoshini qaysi astronom kashf etgan?",
+        "a": [
+          "Galileo Galiley",
+          "Iogann Kepler",
+          "Nikolay Kopernik",
+          "Tixo Brage"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which planet's axis is tilted so far that it seems to orbit the Sun on its side?",
+        "a": [
+          "Uranus",
+          "Neptune",
+          "Saturn",
+          "Mars"
+        ]
+      },
+      "ru": {
+        "q": "Ось какой планеты наклонена так сильно, что она движется вокруг Солнца словно «лёжа на боку»?",
+        "a": [
+          "Уран",
+          "Нептун",
+          "Сатурн",
+          "Марс"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi sayyoraning o'qi shunchalik og'ganki, u Quyosh atrofida go'yo «yonboshlab» aylanadi?",
+        "a": [
+          "Uran",
+          "Neptun",
+          "Saturn",
+          "Mars"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "For what did Albert Einstein receive the 1921 Nobel Prize in Physics?",
+        "a": [
+          "Photoelectric effect",
+          "Theory of relativity",
+          "Brownian motion",
+          "E = mc²"
+        ]
+      },
+      "ru": {
+        "q": "Какая работа принесла Альберту Эйнштейну Нобелевскую премию по физике за 1921 год?",
+        "a": [
+          "Объяснение фотоэффекта",
+          "Теория относительности",
+          "Теория броуновского движения",
+          "Формула E = mc²"
+        ]
+      },
+      "uz": {
+        "q": "Albert Eynshteyn 1921-yil uchun fizika bo'yicha Nobel mukofotini qaysi ishi uchun olgan?",
+        "a": [
+          "Fotoeffekt",
+          "Nisbiylik nazariyasi",
+          "Broun harakati",
+          "E = mc² formulasi"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which scientist is famous for the equation E = mc²?",
+        "a": [
+          "Albert Einstein",
+          "Isaac Newton",
+          "Niels Bohr",
+          "Max Planck"
+        ]
+      },
+      "ru": {
+        "q": "Какой учёный известен формулой E = mc²?",
+        "a": [
+          "Альберт Эйнштейн",
+          "Исаак Ньютон",
+          "Нильс Бор",
+          "Макс Планк"
+        ]
+      },
+      "uz": {
+        "q": "E = mc² formulasi bilan mashhur olim kim?",
+        "a": [
+          "Albert Eynshteyn",
+          "Isaak Nyuton",
+          "Nils Bor",
+          "Maks Plank"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the outermost layer of the solid Earth called?",
+        "a": [
+          "Crust",
+          "Mantle",
+          "Outer core",
+          "Inner core"
+        ]
+      },
+      "ru": {
+        "q": "Как называется самый внешний слой твёрдой Земли?",
+        "a": [
+          "Земная кора",
+          "Мантия",
+          "Внешнее ядро",
+          "Внутреннее ядро"
+        ]
+      },
+      "uz": {
+        "q": "Qattiq Yerning eng tashqi qatlami qanday ataladi?",
+        "a": [
+          "Yer po'sti",
+          "Mantiya",
+          "Tashqi yadro",
+          "Ichki yadro"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is molten rock beneath the Earth's surface called?",
+        "a": [
+          "Magma",
+          "Lava",
+          "Basalt",
+          "Granite"
+        ]
+      },
+      "ru": {
+        "q": "Как называется расплавленная горная порода под поверхностью Земли?",
+        "a": [
+          "Магма",
+          "Лава",
+          "Базальт",
+          "Гранит"
+        ]
+      },
+      "uz": {
+        "q": "Yer yuzasi ostidagi erigan tog' jinsi qanday ataladi?",
+        "a": [
+          "Magma",
+          "Lava",
+          "Bazalt",
+          "Granit"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which of the Earth's layers is the thickest?",
+        "a": [
+          "Mantle",
+          "Crust",
+          "Outer core",
+          "Inner core"
+        ]
+      },
+      "ru": {
+        "q": "Какой из слоёв Земли самый толстый?",
+        "a": [
+          "Мантия",
+          "Земная кора",
+          "Внешнее ядро",
+          "Внутреннее ядро"
+        ]
+      },
+      "uz": {
+        "q": "Yerning qaysi qatlami eng qalin?",
+        "a": [
+          "Mantiya",
+          "Yer po'sti",
+          "Tashqi yadro",
+          "Ichki yadro"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which instrument measures atmospheric pressure?",
+        "a": [
+          "Barometer",
+          "Thermometer",
+          "Hygrometer",
+          "Anemometer"
+        ]
+      },
+      "ru": {
+        "q": "Каким прибором измеряют атмосферное давление?",
+        "a": [
+          "Барометр",
+          "Термометр",
+          "Гигрометр",
+          "Анемометр"
+        ]
+      },
+      "uz": {
+        "q": "Atmosfera bosimi qaysi asbob bilan o'lchanadi?",
+        "a": [
+          "Barometr",
+          "Termometr",
+          "Gigrometr",
+          "Anemometr"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In which layer of the atmosphere does almost all weather happen?",
+        "a": [
+          "Troposphere",
+          "Stratosphere",
+          "Mesosphere",
+          "Thermosphere"
+        ]
+      },
+      "ru": {
+        "q": "В каком слое атмосферы происходят почти все погодные явления?",
+        "a": [
+          "Тропосфера",
+          "Стратосфера",
+          "Мезосфера",
+          "Термосфера"
+        ]
+      },
+      "uz": {
+        "q": "Deyarli barcha ob-havo hodisalari atmosferaning qaysi qatlamida ro'y beradi?",
+        "a": [
+          "Troposfera",
+          "Stratosfera",
+          "Mezosfera",
+          "Termosfera"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Marble forms when heat and pressure change which rock?",
+        "a": [
+          "Limestone",
+          "Granite",
+          "Basalt",
+          "Sandstone"
+        ]
+      },
+      "ru": {
+        "q": "Из какой горной породы под действием тепла и давления образуется мрамор?",
+        "a": [
+          "Известняк",
+          "Гранит",
+          "Базальт",
+          "Песчаник"
+        ]
+      },
+      "uz": {
+        "q": "Marmar qaysi tog' jinsiga issiqlik va bosim ta'sir qilishi natijasida hosil bo'ladi?",
+        "a": [
+          "Ohaktosh",
+          "Granit",
+          "Bazalt",
+          "Qumtosh"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "How many faces does a cube have?",
+        "a": [
+          "6",
+          "4",
+          "8",
+          "12"
+        ]
+      },
+      "ru": {
+        "q": "Сколько граней у куба?",
+        "a": [
+          "6",
+          "4",
+          "8",
+          "12"
+        ]
+      },
+      "uz": {
+        "q": "Kubning nechta yog'i bor?",
+        "a": [
+          "6",
+          "4",
+          "8",
+          "12"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What do the interior angles of a triangle add up to?",
+        "a": [
+          "180°",
+          "90°",
+          "360°",
+          "270°"
+        ]
+      },
+      "ru": {
+        "q": "Чему равна сумма внутренних углов треугольника?",
+        "a": [
+          "180°",
+          "90°",
+          "360°",
+          "270°"
+        ]
+      },
+      "uz": {
+        "q": "Uchburchak ichki burchaklarining yig'indisi nechaga teng?",
+        "a": [
+          "180°",
+          "90°",
+          "360°",
+          "270°"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "How many prime numbers are there between 1 and 20?",
+        "a": [
+          "8",
+          "7",
+          "9",
+          "10"
+        ]
+      },
+      "ru": {
+        "q": "Сколько простых чисел между 1 и 20?",
+        "a": [
+          "8",
+          "7",
+          "9",
+          "10"
+        ]
+      },
+      "uz": {
+        "q": "1 dan 20 gacha nechta tub son bor?",
+        "a": [
+          "8",
+          "7",
+          "9",
+          "10"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is 2 to the power of 10?",
+        "a": [
+          "1024",
+          "1000",
+          "512",
+          "2048"
+        ]
+      },
+      "ru": {
+        "q": "Чему равно 2 в десятой степени?",
+        "a": [
+          "1024",
+          "1000",
+          "512",
+          "2048"
+        ]
+      },
+      "uz": {
+        "q": "2 ning 10-darajasi nechaga teng?",
+        "a": [
+          "1024",
+          "1000",
+          "512",
+          "2048"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which word comes from the name of the mathematician al-Khwarizmi?",
+        "a": [
+          "Algorithm",
+          "Alchemy",
+          "Alcohol",
+          "Almanac"
+        ]
+      },
+      "ru": {
+        "q": "Какое слово произошло от имени математика аль-Хорезми?",
+        "a": [
+          "Алгоритм",
+          "Алхимия",
+          "Алкоголь",
+          "Альманах"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi so'z matematik Al-Xorazmiy nomidan kelib chiqqan?",
+        "a": [
+          "Algoritm",
+          "Alkimyo",
+          "Alkogol",
+          "Almanax"
+        ]
+      }
+    }
+  ]
+}

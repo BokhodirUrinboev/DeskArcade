@@ -1,0 +1,15 @@
+{
+  "description": "Tasks and debug sessions light a lane on Desk Arcade's scoreboard while you play, and a status-bar button shows or hides the game overlay.",
+  "command.playWhileItBuilds": "Play while it builds",
+  "command.toggle": "Show or hide the overlay",
+  "command.next": "Next game",
+  "config.tasks.enabled": "Light a lane on the scoreboard for each task that runs a process: build, test, anything in tasks.json. Background tasks, such as watchers, never do.",
+  "config.tasks.which": "Which tasks light a lane on the scoreboard.",
+  "config.tasks.which.all": "Every task",
+  "config.tasks.which.buildAndTest": "Only tasks in the build and test groups",
+  "config.debug.enabled": "Light a lane on the scoreboard for each debug session.",
+  "config.lanePrefix": "Text put before the name of each lane on the scoreboard, for example `VS Code · `. `${folder}` becomes the workspace folder's name, so `${folder} · ` gives `api · build`.",
+  "config.statusBar": "Show the Desk Arcade button in the status bar.",
+  "config.profile": "The `--profile` name of the Desk Arcade copy to talk to. Leave it empty for the usual one.",
+  "config.programPath": "Where Desk Arcade is, if it is not in the usual place (an AppImage, for example). It is used only to start Desk Arcade from **Show or hide the overlay**, **Next game** and **Play while it builds** when it is not running; tasks and debug sessions never start it."
+}

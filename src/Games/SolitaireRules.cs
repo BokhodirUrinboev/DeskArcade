@@ -17,8 +17,10 @@ namespace DeskArcade.Games;
 /// </list>
 /// Cards are numbered suit × 13 + (rank − 1): ranks 1 (ace) to 13 (king); suits ♠ 0, ♣ 1, ♦ 2, ♥ 3, the last two
 /// red. Every move that changes the layout counts, turning the stock included; <see cref="Undo"/> takes one back.
+/// The other deals of the Solitaire table (<see cref="FreeCellRules"/>, <see cref="SpiderRules"/>) share its piles,
+/// moves and card numbers through <see cref="IPatience"/>.
 /// </summary>
-public sealed class SolitaireRules
+public sealed class SolitaireRules : IPatience
 {
     public const int Piles = 7, Suits = 4, Ranks = 13, DeckSize = Suits * Ranks;
 
@@ -27,15 +29,17 @@ public sealed class SolitaireRules
     public static int Card(int suit, int rank) => suit * Ranks + rank - 1;
     public static bool Red(int card) => Suit(card) >= 2;
 
-    public enum Zone { Stock, Waste, Foundation, Tableau }
+    /// <summary>The kinds of pile. <see cref="Cell"/> is FreeCell's: a free cell holding one card.</summary>
+    public enum Zone { Stock, Waste, Foundation, Tableau, Cell }
 
-    /// <summary>A pile: the stock, the waste, foundation 0–3 (by suit) or tableau pile 0–6.</summary>
+    /// <summary>A pile: the stock, the waste, foundation 0–3 (by suit), tableau pile 0–6, or (FreeCell) free cell 0–3.</summary>
     public readonly record struct Spot(Zone Zone, int Index = 0)
     {
         public static readonly Spot Stock = new(Zone.Stock);
         public static readonly Spot Waste = new(Zone.Waste);
         public static Spot Foundation(int suit) => new(Zone.Foundation, suit);
         public static Spot Tableau(int pile) => new(Zone.Tableau, pile);
+        public static Spot Cell(int cell) => new(Zone.Cell, cell);
     }
 
     /// <summary>A move of the top <paramref name="Count"/> cards of one pile onto another.</summary>
@@ -91,6 +95,11 @@ public sealed class SolitaireRules
     public int OnFoundations => _foundations.Sum(f => f.Count);
     public bool Won => OnFoundations == DeckSize;
     public bool CanUndo => _undo.Count > 0;
+
+    int IPatience.Total => DeckSize;
+    int IPatience.Home => OnFoundations;
+    int IPatience.Hidden(Spot spot) => spot.Zone == Zone.Tableau ? _hidden[spot.Index] : 0;
+    (int Suit, int Rank) IPatience.Face(int card) => (Suit(card), Rank(card));
 
     public IReadOnlyList<int> Cards(Spot spot) => spot.Zone switch
     {

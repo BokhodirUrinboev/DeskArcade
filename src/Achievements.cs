@@ -25,6 +25,63 @@ public static class Achievements
         new("work-notes", "work", "Note to self", "Tick off 10 sticky notes", "work.notes", 10),
         new("work-timers", "work", "Tea's ready", "Let 10 timers ring", "work.timers", 10),
 
+        // 1.8.6 · coding agents and CI
+        new("agents-three", "general", "Three at once", "Have three coding agent sessions working at the same time", "agents.together", 3),
+        new("ci-green", "general", "Green build", "See CI pass 10 times", "ci.passed", 10),
+        new("lanes-five", "general", "Five lanes", "Light five status lanes at once", "lanes.lit", 5),
+
+        // 1.8.6 · the programmer's day
+        new("work-standup", "work", "Ready for standup", "Copy the standup notes 5 times", "work.standup", 5),
+        new("work-three", "work", "Three for three", "Finish all of today's three 5 times", "work.three", 5),
+        new("work-pushed", "work", "Clean desk", "Leave 10 days with every repo committed and pushed", "work.pushed", 10),
+
+        new("work-join", "work", "Straight in", "Join 10 meetings with a Join button", "work.joined", 10),
+        new("work-sounds", "work", "In the zone", "Listen to focus sounds for 10 hours", "work.sounds", 600),
+        new("work-knocks", "work", "Open door", "Answer 5 knocks", "work.knocks", 5),
+
+        // 1.8.6 · party games
+        new("quiz-100", "quiz", "Know-it-all", "Answer 100 quiz questions right", "quiz.right", 100),
+        new("quiz-perfect", "quiz", "Full marks", "Answer every question of a quiz right", "quiz.perfect", 1),
+        new("draw-guessed", "draw", "Mind reader", "Guess 25 words in Draw & Guess", "draw.guessed", 25),
+        new("draw-understood", "draw", "Clear as day", "Have your drawings guessed 25 times", "draw.understood", 25),
+        new("draw-first", "draw", "Quick eye", "Be the first to guess 10 times", "draw.first", 10),
+        new("quiz-quick", "quiz", "Quick on the buzzer", "Answer right within two seconds 20 times", "quiz.quick", 20),
+
+        // 1.8.6 · card games
+        new("poker-win", "poker", "Table captain", "Win a table of Poker", "poker.wins", 1),
+        new("poker-pots", "poker", "Chip leader", "Win 100 pots in Poker", "poker.pots", 100),
+        new("poker-allin", "poker", "All in", "Win 10 all-in showdowns", "poker.allinwins", 10),
+        new("hearts-win", "hearts", "Queen dodger", "Win a game of Hearts", "hearts.wins", 1),
+        new("hearts-moon", "hearts", "Shoot the moon", "Take all 26 points in one hand", "hearts.moon", 1),
+        new("hearts-clean", "hearts", "Clean hands", "Take no points in 25 hands", "hearts.clean", 25),
+
+        // 1.8.6 · word and key games
+        new("words-25", "words", "Wordsmith", "Solve 25 words in Word Guess", "words.won", 25),
+        new("words-two", "words", "Lucky guess", "Solve a word in two guesses", "words.two", 1),
+        new("bits-100", "bits", "Bit twiddler", "Clear 100 numbers in Bit Flip", "bits.cleared", 100),
+        new("bits-16", "bits", "Sixteen bits", "Reach 16 bits in Bit Flip", "bits.level", 9),
+        new("bits-hex", "bits", "Hex appeal", "Clear 50 numbers written in hex", "bits.hex", 50),
+        new("keys-100", "keys", "Keyboard warrior", "Press 100 shortcuts right at the first try", "keys.right", 100),
+        new("keys-perfect", "keys", "No mouse needed", "Get all ten shortcuts of a drill right at the first try", "keys.perfect", 1),
+        new("keys-sets", "keys", "Polyglot", "Finish a drill in every set of Shortcut Trainer", "keys.sets", 5),
+        new("words-streak", "words", "Every morning", "Solve the daily word 7 days in a row", "words.streak", 7),
+
+        // 1.8.6 · Spot the Bug
+        new("spotbug-100", "spotbug", "Bug hunter", "Find 100 bugs in Spot the Bug", "spotbug.found", 100),
+        new("spotbug-clean", "spotbug", "Clean review", "Find all ten bugs of a round, each at the first click", "spotbug.perfect", 1),
+        new("spotbug-streak", "spotbug", "Daily reviewer", "Find the daily bug 7 days in a row", "spotbug.streak", 7),
+
+        // 1.8.6 · arcade
+        new("freecell-win", "solitaire", "Free and clear", "Solve a FreeCell deal", "solitaire.freecell", 1),
+        new("spider-win", "solitaire", "Eight legs", "Solve a game of Spider", "solitaire.spider", 1),
+        new("servers-500", "servers", "Uptime", "Serve 500 requests in Load Balancer", "servers.served", 500),
+        new("servers-wave", "servers", "Black Friday", "Reach wave 8 in Load Balancer", "servers.wave", 8),
+        new("pipeline-deploys", "pipeline", "Continuous delivery", "Deploy 25 Pipeline levels", "pipeline.deploys", 25),
+        new("pipeline-level", "pipeline", "Release train", "Reach level 10 in Pipeline", "pipeline.level", 10),
+        new("pipeline-pieces", "pipeline", "Plumber", "Lay 500 pieces of pipe", "pipeline.pieces", 500),
+        new("servers-clean", "servers", "Five nines", "Clear 5 waves without losing a request", "servers.clean", 5),
+
+
         new("hoops-100", "hoops", "Hundred baskets", "Score 100 baskets", "hoops.baskets", 100),
         new("hoops-swish", "hoops", "Nothing but net", "Score 25 swishes", "hoops.swishes", 25),
         new("hoops-streak", "hoops", "Unstoppable", "Make 10 baskets in a row", "hoops.streak", 10),

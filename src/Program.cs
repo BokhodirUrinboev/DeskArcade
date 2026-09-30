@@ -43,14 +43,16 @@ public static class Program
         if (pi >= 0 && pi + 1 < args.Length)
             Profile = new string(args[pi + 1].Where(c => char.IsAsciiLetterOrDigit(c) || c is '-' or '_').Take(32).ToArray());
 
-        // Hook / CLI mode: forward a message to the running overlay and exit fast (no UI toolkit started).
-        //   DeskArcade --signal working|done|attention|show|hide|toggle|next|summon|expand|stats|quit
+        // Hook / CLI mode: forward a message to the running overlay and exit fast (no UI toolkit started); never fail a
+        // hook or a script just because the game is closed.
+        //   DeskArcade --signal working|done|attention|end|step|did [--agent NAME] [JSON]   (a coding agent's hooks)
+        //   DeskArcade --signal show|hide|toggle|next|summon|expand|stats|quit
         int sig = Array.FindIndex(args, a => a.Equals("--signal", StringComparison.OrdinalIgnoreCase));
-        if (sig >= 0)
-        {
-            Ipc.Send(sig + 1 < args.Length ? args[sig + 1] : "show");
-            return 0; // never fail a hook just because the game is closed
-        }
+        if (sig >= 0) return Dev.DevCli.Signal(args, sig);
+
+        //   DeskArcade --status NAME running|passed|failed|clear [--note TEXT] [--source TOOL]   a status lane
+        int status = Array.FindIndex(args, a => a.Equals("--status", StringComparison.OrdinalIgnoreCase));
+        if (status >= 0) return Dev.DevCli.Status(args, status);
 
         //   DeskArcade --while <command> [arguments...]   runs the command and shows it on the scoreboard
         if (run >= 0) return TaskRunner.Run(command);

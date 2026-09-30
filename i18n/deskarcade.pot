@@ -1,0 +1,8328 @@
+# Desk Arcade: the English text, the template for a new language.
+# Written by the tests (UPDATE_POT=1 dotnet test); do not edit by hand.
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#, c-sharp-format
+msgid "  and {0} more"
+msgstr ""
+
+msgid "(computer players fill empty seats)"
+msgstr ""
+
+msgid "+ rack"
+msgstr ""
+
+msgid "+2 cards"
+msgstr ""
+
+#, c-sharp-format
+msgid "+{0} bonus"
+msgstr ""
+
+#, c-sharp-format
+msgid "+{0} cache hit"
+msgstr ""
+
+#, c-sharp-format
+msgid "+{0} chips"
+msgstr ""
+
+#, c-sharp-format
+msgid "+{0} for spare balls"
+msgstr ""
+
+#, c-sharp-format
+msgid "+{0} for the balls left · a new rack"
+msgstr ""
+
+#, c-sharp-format
+msgid "+{0} more"
+msgstr ""
+
+#, c-sharp-format
+msgid "+{0} points"
+msgstr ""
+
+#, c-sharp-format
+msgid "+{0} time bonus"
+msgstr ""
+
+#, c-sharp-format
+msgid "+{0} · level {1} next"
+msgstr ""
+
+#, c-sharp-format
+msgid "+{0} · spare stones {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "+{0} · the budget grows"
+msgstr ""
+
+msgid "1 click"
+msgstr ""
+
+msgid "1 commit not pushed"
+msgstr ""
+
+msgid "1 review"
+msgstr ""
+
+msgid "1 stash"
+msgstr ""
+
+msgid "1 thing carried over to tomorrow"
+msgstr ""
+
+msgid "1 uncommitted change"
+msgstr ""
+
+msgid "15 moves without a capture or a man moving"
+msgstr ""
+
+msgid "26 points to everyone else"
+msgstr ""
+
+msgid "50 moves without a capture or pawn move"
+msgstr ""
+
+msgid "A DRAW"
+msgstr ""
+
+msgid "A TIE"
+msgstr ""
+
+msgid "A ball"
+msgstr ""
+
+msgid "A ball of yarn"
+msgstr ""
+
+msgid "A bird flew into it"
+msgstr ""
+
+msgid "A chew bone"
+msgstr ""
+
+msgid "A clean review!"
+msgstr ""
+
+msgid "A draw · click New game"
+msgstr ""
+
+#, c-sharp-format
+msgid "A focus block starts at {0}"
+msgstr ""
+
+msgid "A moment — the last messages are still on their way"
+msgstr ""
+
+msgid "A morning card on the first activity of a working day: standup notes, room to focus, today's three"
+msgstr ""
+
+msgid "A new trick · right-click to see it"
+msgstr ""
+
+msgid "A pack of your own is a text file: \"Q:\" before each question, then its four answers, \"+\" before the right one and \"-\" before the others."
+msgstr ""
+
+#, c-sharp-format
+msgid "A parcel from {0}"
+msgstr ""
+
+msgid "A parcel is coming down!"
+msgstr ""
+
+msgid "A parcel! · click it to open"
+msgstr ""
+
+msgid "A practice word · as many as you like"
+msgstr ""
+
+msgid "A treat"
+msgstr ""
+
+msgid "A walk"
+msgstr ""
+
+msgid "ALL PAIRS!"
+msgstr ""
+
+msgid "ALL PENNED!"
+msgstr ""
+
+msgid "Aaah!"
+msgstr ""
+
+msgid "Accessibility"
+msgstr ""
+
+msgid "Achievement unlocked"
+msgstr ""
+
+#, c-sharp-format
+msgid "Achievements: {0} of {1}"
+msgstr ""
+
+msgid "Add a cursor below"
+msgstr ""
+
+msgid "Add a repo folder…"
+msgstr ""
+
+msgid "Add your repos under Coding agents & CI → Add a repo folder…"
+msgstr ""
+
+msgid "Admiral"
+msgstr ""
+
+msgid "After lunch"
+msgstr ""
+
+msgid "After the ball!"
+msgstr ""
+
+#, c-sharp-format
+msgid "After {0} minutes of play"
+msgstr ""
+
+#, c-sharp-format
+msgid "Age {0} d · play {1}"
+msgstr ""
+
+msgid "Air Hockey"
+msgstr ""
+
+msgid "Alerts when an agent finishes"
+msgstr ""
+
+msgid "All"
+msgstr ""
+
+msgid "All grown up"
+msgstr ""
+
+msgid "All in"
+msgstr ""
+
+#, c-sharp-format
+msgid "All in {0}"
+msgstr ""
+
+msgid "All in · the board runs out"
+msgstr ""
+
+msgid "All of today's three done!"
+msgstr ""
+
+#, c-sharp-format
+msgid "All pairs in {0} moves · click a card to deal again"
+msgstr ""
+
+#, c-sharp-format
+msgid "All {0} repos committed and pushed ✓"
+msgstr ""
+
+#, c-sharp-format
+msgid "Already following {0}"
+msgstr ""
+
+msgid "An apple a day"
+msgstr ""
+
+msgid "Angler"
+msgstr ""
+
+msgid "Another quiz"
+msgstr ""
+
+msgid "Answer 100 quiz questions right"
+msgstr ""
+
+msgid "Answer 5 knocks"
+msgstr ""
+
+msgid "Answer every question of a quiz right"
+msgstr ""
+
+msgid "Answer right within two seconds 20 times"
+msgstr ""
+
+#, c-sharp-format
+msgid "Answer {0} questions right in Quiz Night"
+msgstr ""
+
+msgid "Any other tool (a command line)"
+msgstr ""
+
+#, c-sharp-format
+msgid "Apples {0} · steer with the cursor · don't cross your tail"
+msgstr ""
+
+msgid "Archery"
+msgstr ""
+
+#, c-sharp-format
+msgid "Arrow {0}/{1} vs {2} · your shot · wind {3}"
+msgstr ""
+
+#, c-sharp-format
+msgid "As set ({0})"
+msgstr ""
+
+msgid "Asteroids"
+msgstr ""
+
+#, c-sharp-format
+msgid "At the computer today {0} · focus blocks {1} · breaks {2} · water {3}"
+msgstr ""
+
+#, c-sharp-format
+msgid "At the computer today: {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "At the computer: {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "At the end of the day ({0})"
+msgstr ""
+
+msgid "At work"
+msgstr ""
+
+msgid "BINGO"
+msgstr ""
+
+msgid "BINGO!"
+msgstr ""
+
+msgid "BIRDIE!"
+msgstr ""
+
+msgid "BITTEN!"
+msgstr ""
+
+msgid "BLACKJACK!"
+msgstr ""
+
+msgid "BLANK END"
+msgstr ""
+
+msgid "BLOCKED"
+msgstr ""
+
+msgid "BOGEY"
+msgstr ""
+
+msgid "BOOM!"
+msgstr ""
+
+#, c-sharp-format
+msgid "BOUNCE SHOT! +{0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "BREATHING · ROUND {0} OF {1}"
+msgstr ""
+
+msgid "BULL"
+msgstr ""
+
+msgid "BULLSEYE!"
+msgstr ""
+
+msgid "BUST"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "Back one word"
+msgstr ""
+
+msgid "Back to focus"
+msgstr ""
+
+msgid "Back to the previous folder"
+msgstr ""
+
+msgid "Backgammon"
+msgstr ""
+
+msgid "Backgammon master"
+msgstr ""
+
+#, c-sharp-format
+msgid "Ball {0} of 3"
+msgstr ""
+
+#, c-sharp-format
+msgid "Ball {0} of 3 · click the ball to serve"
+msgstr ""
+
+#, c-sharp-format
+msgid "Ball {0} of 3 · ×{1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Balls {0} · cups {1} · flick the ball into a cup"
+msgstr ""
+
+msgid "Be playing when Claude finishes"
+msgstr ""
+
+msgid "Be playing when Claude finishes 10 times"
+msgstr ""
+
+msgid "Be playing when a --while command finishes"
+msgstr ""
+
+msgid "Be playing when a --while command finishes 10 times"
+msgstr ""
+
+msgid "Be the first to guess 10 times"
+msgstr ""
+
+#, c-sharp-format
+msgid "Bear off {0} checkers in Backgammon"
+msgstr ""
+
+msgid "Beat CPU level 5"
+msgstr ""
+
+msgid "Beat a co-worker over the LAN"
+msgstr ""
+
+msgid "Beat each card (click a card on the table first to choose) or take"
+msgstr ""
+
+msgid "Beat each card, lay one of the same rank to pass it on, or take"
+msgstr ""
+
+msgid "Beat the CPU"
+msgstr ""
+
+msgid "Beat the Curling CPU on Hard or Expert"
+msgstr ""
+
+msgid "Beat the Gomoku CPU on Hard or Expert"
+msgstr ""
+
+msgid "Beat the Hard computer at Backgammon"
+msgstr ""
+
+msgid "Beat the Hard computer in a Dominoes match"
+msgstr ""
+
+msgid "Beat the Mancala CPU on Hard or Expert"
+msgstr ""
+
+msgid "Beat the Pong CPU at level 5"
+msgstr ""
+
+msgid "Beat the Reversi CPU on Hard or Expert"
+msgstr ""
+
+msgid "Beat the computer at Hard or Expert in Cannon Castles"
+msgstr ""
+
+msgid "Beat the computer in 10 races"
+msgstr ""
+
+msgid "Beat the computer in a race"
+msgstr ""
+
+msgid "Begging for a treat · click the jar"
+msgstr ""
+
+#, c-sharp-format
+msgid "Best WPM {0}"
+msgstr ""
+
+msgid "Best friends"
+msgstr ""
+
+#, c-sharp-format
+msgid "Best level {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Best rival: {0}, {1}–{2} in {3} games"
+msgstr ""
+
+#, c-sharp-format
+msgid "Best round {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Best streak {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Best {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Best {0} darts"
+msgstr ""
+
+#, c-sharp-format
+msgid "Best {0}s"
+msgstr ""
+
+msgid "Best —"
+msgstr ""
+
+#, c-sharp-format
+msgid "Bet {0}"
+msgstr ""
+
+msgid "Big end"
+msgstr ""
+
+msgid "Big harvest"
+msgstr ""
+
+msgid "Bingo of Work"
+msgstr ""
+
+msgid "Bingo of Work · a new card is ready"
+msgstr ""
+
+msgid "Bingo!"
+msgstr ""
+
+#, c-sharp-format
+msgid "Bingos {0}"
+msgstr ""
+
+msgid "Bit Flip"
+msgstr ""
+
+#, c-sharp-format
+msgid "Bit Flip · best {0} points · up to {1} bits"
+msgstr ""
+
+msgid "Bit twiddler"
+msgstr ""
+
+#, c-sharp-format
+msgid "Bitten! {0} apples · click the snake to play again"
+msgstr ""
+
+msgid "Black Friday"
+msgstr ""
+
+msgid "Blackjack"
+msgstr ""
+
+#, c-sharp-format
+msgid "Blinds {0}/{1}"
+msgstr ""
+
+msgid "Block down!"
+msgstr ""
+
+#, c-sharp-format
+msgid "Blocker {0}"
+msgstr ""
+
+msgid "Blockfall"
+msgstr ""
+
+msgid "Bold"
+msgstr ""
+
+msgid "Bomb squad"
+msgstr ""
+
+msgid "Boom! · click the face for a new board"
+msgstr ""
+
+msgid "Borne off"
+msgstr ""
+
+msgid "Bounce on window tops"
+msgstr ""
+
+msgid "Bowl three strikes in a row"
+msgstr ""
+
+msgid "Bowling"
+msgstr ""
+
+msgid "Break 500 bricks"
+msgstr ""
+
+msgid "Break a code"
+msgstr ""
+
+msgid "Break a code in 4 guesses or fewer"
+msgstr ""
+
+msgid "Break reminder"
+msgstr ""
+
+#, c-sharp-format
+msgid "Break {0} bricks"
+msgstr ""
+
+#, c-sharp-format
+msgid "Break {0} clays"
+msgstr ""
+
+#, c-sharp-format
+msgid "Break {0} codes in Code Breaker"
+msgstr ""
+
+#, c-sharp-format
+msgid "Break · {0}"
+msgstr ""
+
+msgid "Breaks"
+msgstr ""
+
+#, c-sharp-format
+msgid "Breaks: {0} for the eyes, {1} stretches"
+msgstr ""
+
+msgid "Breathe easy"
+msgstr ""
+
+msgid "Breathe for a minute"
+msgstr ""
+
+msgid "Breathe for a minute 10 times"
+msgstr ""
+
+#, c-sharp-format
+msgid "Breathing minutes: {0}"
+msgstr ""
+
+msgid "Brick Breaker"
+msgstr ""
+
+msgid "Bring to cursor"
+msgstr ""
+
+msgid "Bringing the ball back"
+msgstr ""
+
+msgid "Broadside"
+msgstr ""
+
+msgid "Brown noise"
+msgstr ""
+
+msgid "Bubble Pop"
+msgstr ""
+
+msgid "Bubble wrap"
+msgstr ""
+
+msgid "Bug Squash"
+msgstr ""
+
+msgid "Bug hunter"
+msgstr ""
+
+msgid "Bug whacker"
+msgstr ""
+
+msgid "Build a tower 15 blocks high"
+msgstr ""
+
+msgid "Build each suit down from king to ace · click the stock to deal a row · right-drag moves the felt"
+msgstr ""
+
+#, c-sharp-format
+msgid "Builder {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Builds and tests: {0} ({1})"
+msgstr ""
+
+msgid "Bullseye"
+msgstr ""
+
+msgid "Bumper cars"
+msgstr ""
+
+msgid "Bunny"
+msgstr ""
+
+msgid "CI and pull requests"
+msgstr ""
+
+#, c-sharp-format
+msgid "CI and pull requests through {0}, every 2 minutes"
+msgstr ""
+
+#, c-sharp-format
+msgid "CI failed · {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "CI passed · {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "CI runs: {0} ({1})"
+msgstr ""
+
+msgid "CLEAR!"
+msgstr ""
+
+#, c-sharp-format
+msgid "CLEARED in {0} shots"
+msgstr ""
+
+msgid "CLEARED!"
+msgstr ""
+
+msgid "CODE CRACKED!"
+msgstr ""
+
+msgid "COURSE LOST"
+msgstr ""
+
+msgid "CPU"
+msgstr ""
+
+#, c-sharp-format
+msgid "CPU ({0}) is heading for {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "CPU ({0}): {1}"
+msgstr ""
+
+msgid "CPU WINS"
+msgstr ""
+
+msgid "CPU difficulty"
+msgstr ""
+
+msgid "CPU scores"
+msgstr ""
+
+#, c-sharp-format
+msgid "CPU {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "CPU · {0}"
+msgstr ""
+
+msgid "CRASH!"
+msgstr ""
+
+msgid "CRUMPLED!"
+msgstr ""
+
+msgid "Café"
+msgstr ""
+
+msgid "Calendar"
+msgstr ""
+
+msgid "Calendar…"
+msgstr ""
+
+msgid "Call the bank back · send the report · buy milk"
+msgstr ""
+
+msgid "Call the supplier"
+msgstr ""
+
+#, c-sharp-format
+msgid "Call {0}"
+msgstr ""
+
+msgid "Can Knockdown"
+msgstr ""
+
+msgid "Can't host"
+msgstr ""
+
+#, c-sharp-format
+msgid "Can't read the file: {0}"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+#, c-sharp-format
+msgid "Cancel the focus block at {0}"
+msgstr ""
+
+msgid "Cancel the timers"
+msgstr ""
+
+msgid "Cannon Castles"
+msgstr ""
+
+msgid "Capture 10 seeds with one move"
+msgstr ""
+
+#, c-sharp-format
+msgid "Capture {0} pieces in Checkers"
+msgstr ""
+
+#, c-sharp-format
+msgid "Capture {0} pieces in Chess"
+msgstr ""
+
+msgid "Card shark"
+msgstr ""
+
+msgid "Card sharp"
+msgstr ""
+
+msgid "Careful now"
+msgstr ""
+
+msgid "Carp"
+msgstr ""
+
+msgid "Carry your pet 10 times"
+msgstr ""
+
+msgid "Castle breaker"
+msgstr ""
+
+msgid "Cat"
+msgstr ""
+
+msgid "Catch 100 clouds with the kite"
+msgstr ""
+
+msgid "Catch 20 stars"
+msgstr ""
+
+msgid "Catch 50 fish"
+msgstr ""
+
+msgid "Catch a golden trout"
+msgstr ""
+
+#, c-sharp-format
+msgid "Catch {0} clouds with the Kite"
+msgstr ""
+
+#, c-sharp-format
+msgid "Catch {0} fish"
+msgstr ""
+
+msgid "Catching flies"
+msgstr ""
+
+msgid "Catfish"
+msgstr ""
+
+msgid "Champion"
+msgstr ""
+
+msgid "Change the word under the cursor"
+msgstr ""
+
+#, c-sharp-format
+msgid "Changed {0}"
+msgstr ""
+
+msgid "Change…"
+msgstr ""
+
+msgid "Chat"
+msgstr ""
+
+msgid "Chat is on"
+msgstr ""
+
+msgid "Chat with a co-worker…"
+msgstr ""
+
+#, c-sharp-format
+msgid "Chat with {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Chat with {0}…"
+msgstr ""
+
+msgid "Check"
+msgstr ""
+
+msgid "Check for updates"
+msgstr ""
+
+msgid "Check for updates automatically"
+msgstr ""
+
+msgid "Checked out"
+msgstr ""
+
+msgid "Checkers"
+msgstr ""
+
+msgid "Checkmate"
+msgstr ""
+
+msgid "Cheers!"
+msgstr ""
+
+msgid "Chess"
+msgstr ""
+
+msgid "Chief engineer"
+msgstr ""
+
+msgid "Chip leader"
+msgstr ""
+
+#, c-sharp-format
+msgid "Chips {0} · hand {1}/{2}"
+msgstr ""
+
+msgid "Classic rules: a hit shoots again"
+msgstr ""
+
+#, c-sharp-format
+msgid "Claude finished {0} times while you played"
+msgstr ""
+
+msgid "Clay Shooting"
+msgstr ""
+
+msgid "Clay breaker"
+msgstr ""
+
+msgid "Clean desk"
+msgstr ""
+
+msgid "Clean hands"
+msgstr ""
+
+msgid "Clean rack"
+msgstr ""
+
+msgid "Clean review"
+msgstr ""
+
+msgid "Clean sweep"
+msgstr ""
+
+msgid "Clean throw"
+msgstr ""
+
+msgid "Clear"
+msgstr ""
+
+msgid "Clear 10 towers"
+msgstr ""
+
+msgid "Clear 100 numbers in Bit Flip"
+msgstr ""
+
+msgid "Clear 200 lines"
+msgstr ""
+
+msgid "Clear 5 waves without losing a request"
+msgstr ""
+
+msgid "Clear 50 numbers written in hex"
+msgstr ""
+
+msgid "Clear a Beginner board in under 20 seconds"
+msgstr ""
+
+msgid "Clear a Memory board"
+msgstr ""
+
+msgid "Clear a Minesweeper board"
+msgstr ""
+
+msgid "Clear a rack of six in six throws"
+msgstr ""
+
+msgid "Clear an Expert Minesweeper board"
+msgstr ""
+
+msgid "Clear as day"
+msgstr ""
+
+msgid "Clear bits"
+msgstr ""
+
+msgid "Clear four lines with one piece"
+msgstr ""
+
+msgid "Clear level 10 of Interns"
+msgstr ""
+
+msgid "Clear round 5 of Sheep Herding"
+msgstr ""
+
+msgid "Clear skies"
+msgstr ""
+
+msgid "Clear the first level of Interns"
+msgstr ""
+
+msgid "Clear the pool table"
+msgstr ""
+
+msgid "Clear the screen"
+msgstr ""
+
+msgid "Clear the status lanes"
+msgstr ""
+
+#, c-sharp-format
+msgid "Clear {0} lines in Blockfall"
+msgstr ""
+
+#, c-sharp-format
+msgid "Clear {0} numbers in Bit Flip"
+msgstr ""
+
+#, c-sharp-format
+msgid "Cleared in {0} shots · press the cue ball to rack again"
+msgstr ""
+
+#, c-sharp-format
+msgid "Cleared in {0}s · click the face for a new board"
+msgstr ""
+
+msgid "Click Durak on the table to start a game"
+msgstr ""
+
+msgid "Click Last Card on the table to start a game"
+msgstr ""
+
+msgid "Click New drill for another ten"
+msgstr ""
+
+msgid "Click New word for another"
+msgstr ""
+
+msgid "Click Start: flip the bits to make each number before it lands"
+msgstr ""
+
+#, c-sharp-format
+msgid "Click Start: ten shortcuts from {0}"
+msgstr ""
+
+msgid "Click Start: ten snippets, one bug in each"
+msgstr ""
+
+msgid "Click a card to flip it · find all the pairs · right-drag moves the cards"
+msgstr ""
+
+msgid "Click a cell to start · right-click flags a mine"
+msgstr ""
+
+msgid "Click a cell, then a digit on the pad · right-click clears"
+msgstr ""
+
+msgid "Click a game to join it:"
+msgstr ""
+
+msgid "Click a place on top to lay the block"
+msgstr ""
+
+msgid "Click here and type your guess · Enter sends it"
+msgstr ""
+
+msgid "Click here to keep typing"
+msgstr ""
+
+msgid "Click or drag cards to move them · a free cell holds any one card · right-drag moves the felt"
+msgstr ""
+
+msgid "Click the ball to kick it up"
+msgstr ""
+
+msgid "Click the board to type"
+msgstr ""
+
+msgid "Click the board to type, or click the letters"
+msgstr ""
+
+msgid "Click the grid to start · lay pipe from the commit to the deploy"
+msgstr ""
+
+msgid "Click the kite to fly it — the string follows your cursor"
+msgstr ""
+
+msgid "Click the line with the bug before the fuse burns down. Three wrong clicks and the snippet is gone; the fix and the reason come after each one."
+msgstr ""
+
+msgid "Click the line with the bug · one try a day"
+msgstr ""
+
+msgid "Click the load balancer to start · drag requests to the servers"
+msgstr ""
+
+msgid "Click the sheet again to give up the leg"
+msgstr ""
+
+msgid "Click the sleeping snake · it follows your cursor"
+msgstr ""
+
+msgid "Click the stock to turn a card · click or drag cards to move them · right-drag moves the felt"
+msgstr ""
+
+msgid "Click the text for the next race"
+msgstr ""
+
+#, c-sharp-format
+msgid "Click the text to ask {0} for a race"
+msgstr ""
+
+msgid "Click the text to keep typing"
+msgstr ""
+
+#, c-sharp-format
+msgid "Click the text to race · {0}"
+msgstr ""
+
+msgid "Click the text to start"
+msgstr ""
+
+msgid "Click the trap machine to start · shoot the clays"
+msgstr ""
+
+#, c-sharp-format
+msgid "Click the typewriter to start · {0}"
+msgstr ""
+
+msgid "Click the well to start · click turns, right-click drops"
+msgstr ""
+
+msgid "Click to pet · right-click for a trick · drag to carry"
+msgstr ""
+
+msgid "Click to pet · right-click for a trick · throw the ball · click the jar for a treat"
+msgstr ""
+
+msgid "Click to play again"
+msgstr ""
+
+msgid "Click to start"
+msgstr ""
+
+msgid "Click your grid to move your ships · click the enemy grid to start"
+msgstr ""
+
+#, c-sharp-format
+msgid "Click your ship to ask {0} for a game"
+msgstr ""
+
+msgid "Click your ship to launch · it follows the cursor, click rocks to fire"
+msgstr ""
+
+msgid "Clicks go through"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Close the report"
+msgstr ""
+
+msgid "Code Breaker"
+msgstr ""
+
+msgid "Code cracked"
+msgstr ""
+
+msgid "Code cracked · click the board for a new code"
+msgstr ""
+
+msgid "Coding agents & CI"
+msgstr ""
+
+#, c-sharp-format
+msgid "Coding agents: {0} ({1})"
+msgstr ""
+
+msgid "Coffee"
+msgstr ""
+
+msgid "Coffee break"
+msgstr ""
+
+msgid "Coffee club"
+msgstr ""
+
+msgid "Coffee?"
+msgstr ""
+
+msgid "Colour-blind friendly colours"
+msgstr ""
+
+msgid "Combo breaker"
+msgstr ""
+
+msgid "Come by!"
+msgstr ""
+
+msgid "Come over"
+msgstr ""
+
+msgid "Coming over to sit with you"
+msgstr ""
+
+msgid "Command line"
+msgstr ""
+
+msgid "Comment out a block"
+msgstr ""
+
+msgid "Comment the line out"
+msgstr ""
+
+msgid "Complete the statement"
+msgstr ""
+
+msgid "Connect Claude Code and other coding agents under Coding agents & CI, and it tells you when they are done or need you."
+msgstr ""
+
+msgid "Connect Four"
+msgstr ""
+
+msgid "Connect a calendar…"
+msgstr ""
+
+msgid "Connected"
+msgstr ""
+
+msgid "Continuous delivery"
+msgstr ""
+
+msgid "Copied · paste it into Teams, Slack or Telegram"
+msgstr ""
+
+msgid "Copied ✓"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "Copy Claude Code hook config"
+msgstr ""
+
+msgid "Copy a config for another agent"
+msgstr ""
+
+msgid "Copy a picture of the game"
+msgstr ""
+
+msgid "Copy standup notes"
+msgstr ""
+
+msgid "Copy the hook config again"
+msgstr ""
+
+msgid "Copy the line"
+msgstr ""
+
+msgid "Copy the line down"
+msgstr ""
+
+msgid "Copy the notes"
+msgstr ""
+
+msgid "Copy the report"
+msgstr ""
+
+msgid "Copy the result as text"
+msgstr ""
+
+msgid "Copy the standup notes 5 times"
+msgstr ""
+
+msgid "Corner office"
+msgstr ""
+
+msgid "Couldn't copy the picture"
+msgstr ""
+
+msgid "Couldn't download the update"
+msgstr ""
+
+msgid "Couldn't knock"
+msgstr ""
+
+msgid "Couldn't open a folder picker"
+msgstr ""
+
+msgid "Couldn't open a room"
+msgstr ""
+
+#, c-sharp-format
+msgid "Couldn't read it: {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Couldn't save it: {0}"
+msgstr ""
+
+msgid "Couldn't search the network."
+msgstr ""
+
+msgid "Couldn't send the invite"
+msgstr ""
+
+msgid "Course regular"
+msgstr ""
+
+#, c-sharp-format
+msgid "Course {0}/{1} · pieces left {2} · try {3}/{4}"
+msgstr ""
+
+msgid "Cracked!"
+msgstr ""
+
+msgid "Create a room"
+msgstr ""
+
+msgid "Crowned"
+msgstr ""
+
+msgid "Curled up"
+msgstr ""
+
+msgid "Curling"
+msgstr ""
+
+msgid "Cut"
+msgstr ""
+
+msgid "Cut to the end of the line"
+msgstr ""
+
+msgid "Cut to the start of the line"
+msgstr ""
+
+msgid "DEAD HEAT"
+msgstr ""
+
+msgid "DEALER BUSTS!"
+msgstr ""
+
+msgid "DEALER STANDS ON SOFT 17 · BLACKJACK PAYS 3 TO 2"
+msgstr ""
+
+msgid "DEALER WINS"
+msgstr ""
+
+msgid "DEPLOYED"
+msgstr ""
+
+msgid "DEPLOYED!"
+msgstr ""
+
+msgid "DOMINO!"
+msgstr ""
+
+msgid "DOUBLE BOGEY"
+msgstr ""
+
+msgid "DOUBLE JUMP!"
+msgstr ""
+
+msgid "DOUBLE!"
+msgstr ""
+
+msgid "DRAW"
+msgstr ""
+
+msgid "DRILL DONE"
+msgstr ""
+
+msgid "DUNK!"
+msgstr ""
+
+msgid "Dab all nine squares of a Bingo of Work card"
+msgstr ""
+
+#, c-sharp-format
+msgid "Dab {0} squares in Bingo of Work"
+msgstr ""
+
+#, c-sharp-format
+msgid "Daily #{0}"
+msgstr ""
+
+msgid "Daily challenge done!"
+msgstr ""
+
+#, c-sharp-format
+msgid "Daily challenges done: {0}"
+msgstr ""
+
+msgid "Daily player"
+msgstr ""
+
+msgid "Daily puzzle"
+msgstr ""
+
+msgid "Daily puzzler"
+msgstr ""
+
+msgid "Daily reviewer"
+msgstr ""
+
+msgid "Daily snippet"
+msgstr ""
+
+#, c-sharp-format
+msgid "Daily snippet #{0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Daily snippet #{0} · the same for everyone today"
+msgstr ""
+
+msgid "Daily snippet done · come back tomorrow"
+msgstr ""
+
+#, c-sharp-format
+msgid "Daily snippet done · streak {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Daily word done · streak {0} · ☰ → Share"
+msgstr ""
+
+msgid "Daily word done · ☰ → Share"
+msgstr ""
+
+#, c-sharp-format
+msgid "Dart {0} of 3 · {1} this turn"
+msgstr ""
+
+msgid "Darts"
+msgstr ""
+
+msgid "Deal"
+msgstr ""
+
+#, c-sharp-format
+msgid "Deal #{0}"
+msgstr ""
+
+msgid "Deal number"
+msgstr ""
+
+msgid "Dealer"
+msgstr ""
+
+#, c-sharp-format
+msgid "Dealer {0}"
+msgstr ""
+
+msgid "Debug"
+msgstr ""
+
+msgid "Deep space"
+msgstr ""
+
+msgid "Deep work"
+msgstr ""
+
+msgid "Defaults"
+msgstr ""
+
+msgid "Delete the line"
+msgstr ""
+
+msgid "Delete the word before the cursor"
+msgstr ""
+
+msgid "Delete to the end of the line"
+msgstr ""
+
+msgid "Demolition crew"
+msgstr ""
+
+msgid "Deploy 25 Pipeline levels"
+msgstr ""
+
+msgid "Deploy now ▶"
+msgstr ""
+
+#, c-sharp-format
+msgid "Deploy {0} levels in Pipeline"
+msgstr ""
+
+msgid "Desk Arcade"
+msgstr ""
+
+#, c-sharp-format
+msgid "Desk Arcade daily · {0}: {1} ✓"
+msgstr ""
+
+#, c-sharp-format
+msgid "Desk Arcade {0} is available"
+msgstr ""
+
+msgid "Desk Arcade · games on your desktop while it builds"
+msgstr ""
+
+msgid "Desktop"
+msgstr ""
+
+msgid "Desktop Pet"
+msgstr ""
+
+msgid "Destroy 200 rocks in Asteroids"
+msgstr ""
+
+#, c-sharp-format
+msgid "Destroy {0} rocks in Asteroids"
+msgstr ""
+
+msgid "Disc dropper"
+msgstr ""
+
+#, c-sharp-format
+msgid "Discs {0} · jackpots {1}"
+msgstr ""
+
+msgid "Dog"
+msgstr ""
+
+msgid "Domino!"
+msgstr ""
+
+msgid "Dominoes"
+msgstr ""
+
+msgid "Done"
+msgstr ""
+
+msgid "Done: take the note down"
+msgstr ""
+
+msgid "Double"
+msgstr ""
+
+msgid "Double trouble"
+msgstr ""
+
+#, c-sharp-format
+msgid "Down at wave {0} · click the load balancer for another game"
+msgstr ""
+
+msgid "Download finished"
+msgstr ""
+
+#, c-sharp-format
+msgid "Download version {0}…"
+msgstr ""
+
+#, c-sharp-format
+msgid "Downloading version {0}…"
+msgstr ""
+
+msgid "Downloads"
+msgstr ""
+
+#, c-sharp-format
+msgid "Downloads and other waits: {0} ({1})"
+msgstr ""
+
+msgid "Drag a block out slowly, then click the top to lay it"
+msgstr ""
+
+msgid "Drag a ramp or a bumper out of the tray, then click the funnel"
+msgstr ""
+
+msgid "Drag back from the ball and let go to bowl"
+msgstr ""
+
+msgid "Drag back from the rod tip and let go to cast"
+msgstr ""
+
+msgid "Drag planks onto the rope before the interns reach the gap"
+msgstr ""
+
+msgid "Drag the ball, flick it into the hoop"
+msgstr ""
+
+msgid "Dragon"
+msgstr ""
+
+msgid "Drained!"
+msgstr ""
+
+msgid "Draw & Guess"
+msgstr ""
+
+#, c-sharp-format
+msgid "Draw & Guess · place {0} of {1} with {2} points ✏️"
+msgstr ""
+
+msgid "Draw the word for the others to guess · type your guesses"
+msgstr ""
+
+#, c-sharp-format
+msgid "Draw: {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Drill done · {0}/{1} at the first try · {2} points"
+msgstr ""
+
+msgid "Drink 50 glasses of water"
+msgstr ""
+
+msgid "Drink a glass of water"
+msgstr ""
+
+msgid "Drop 100 discs"
+msgstr ""
+
+#, c-sharp-format
+msgid "Drop {0} Plinko discs"
+msgstr ""
+
+msgid "Dropped!"
+msgstr ""
+
+msgid "Duck"
+msgstr ""
+
+msgid "Duck the hearts and the queen of spades · the lowest score wins"
+msgstr ""
+
+msgid "Duelist"
+msgstr ""
+
+msgid "Duplicate the line"
+msgstr ""
+
+msgid "Durak"
+msgstr ""
+
+msgid "Durak with co-workers…"
+msgstr ""
+
+msgid "EAGLE!"
+msgstr ""
+
+msgid "END OF THE DAY"
+msgstr ""
+
+msgid "EVERYONE MADE IT!"
+msgstr ""
+
+msgid "EXIT"
+msgstr ""
+
+msgid "EYE BREAK · 20-20-20"
+msgstr ""
+
+msgid "Eat 10 golden apples"
+msgstr ""
+
+msgid "Eat 100 apples in Snakes on Windows"
+msgstr ""
+
+msgid "Eat 30 apples in one game of Snakes on Windows"
+msgstr ""
+
+#, c-sharp-format
+msgid "Eat {0} apples in Snakes on Windows"
+msgstr ""
+
+#, c-sharp-format
+msgid "Editing {0}"
+msgstr ""
+
+msgid "Eight legs"
+msgstr ""
+
+msgid "Empty-handed"
+msgstr ""
+
+msgid "End of the day"
+msgstr ""
+
+msgid "End the focus block"
+msgstr ""
+
+#, c-sharp-format
+msgid "End {0}/{1} · {2} stones left · drag back from your stone and let go"
+msgstr ""
+
+#, c-sharp-format
+msgid "End {0}/{1} · {2} to throw"
+msgstr ""
+
+msgid "Enemy waters"
+msgstr ""
+
+msgid "Enter"
+msgstr ""
+
+msgid "Equal discs"
+msgstr ""
+
+msgid "Erase"
+msgstr ""
+
+msgid "Escape being the durak 10 times"
+msgstr ""
+
+msgid "Every morning"
+msgstr ""
+
+msgid "Everything is in two menus"
+msgstr ""
+
+msgid "Exit"
+msgstr ""
+
+msgid "Explorer"
+msgstr ""
+
+msgid "Exploring the window tops"
+msgstr ""
+
+msgid "Exterminator"
+msgstr ""
+
+msgid "Extract a method"
+msgstr ""
+
+msgid "Extract a variable"
+msgstr ""
+
+msgid "FLAG DOWN!"
+msgstr ""
+
+msgid "FLIGHT OVER"
+msgstr ""
+
+msgid "FOUR LINES!"
+msgstr ""
+
+msgid "FREE"
+msgstr ""
+
+msgid "FULL HOUSE!"
+msgstr ""
+
+msgid "FULL HOUSE! · a new card is on its way"
+msgstr ""
+
+msgid "Failed"
+msgstr ""
+
+msgid "Fairground champion"
+msgstr ""
+
+msgid "Far sighted"
+msgstr ""
+
+#, c-sharp-format
+msgid "Favourite game: {0}, {1} played"
+msgstr ""
+
+#, c-sharp-format
+msgid "Favourite nap spot: {0}"
+msgstr ""
+
+msgid "Feed your pet 30 treats"
+msgstr ""
+
+msgid "Fetch!"
+msgstr ""
+
+#, c-sharp-format
+msgid "Fewest guesses {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Fewest moves {0}"
+msgstr ""
+
+msgid "File structure"
+msgstr ""
+
+msgid "File…"
+msgstr ""
+
+msgid "Fill every column before dealing"
+msgstr ""
+
+#, c-sharp-format
+msgid "Fill in {0} digits in Sudoku"
+msgstr ""
+
+#, c-sharp-format
+msgid "Filled {0}/81 · the same digit again clears the cell"
+msgstr ""
+
+msgid "Final scores"
+msgstr ""
+
+msgid "Find"
+msgstr ""
+
+msgid "Find 100 bugs in Spot the Bug"
+msgstr ""
+
+msgid "Find 100 pairs"
+msgstr ""
+
+msgid "Find all ten bugs of a round, each at the first click"
+msgstr ""
+
+msgid "Find an action"
+msgstr ""
+
+msgid "Find games"
+msgstr ""
+
+msgid "Find games / join by address…"
+msgstr ""
+
+msgid "Find the daily bug 7 days in a row"
+msgstr ""
+
+msgid "Find usages"
+msgstr ""
+
+#, c-sharp-format
+msgid "Find {0} bugs in Spot the Bug"
+msgstr ""
+
+#, c-sharp-format
+msgid "Find {0} pairs in Memory"
+msgstr ""
+
+msgid "Finish 10 focus blocks"
+msgstr ""
+
+msgid "Finish 10 races with code"
+msgstr ""
+
+msgid "Finish 25 stretch breaks"
+msgstr ""
+
+msgid "Finish 5 games of 501"
+msgstr ""
+
+msgid "Finish 50 holes"
+msgstr ""
+
+msgid "Finish a Blackjack round with 250 chips or more"
+msgstr ""
+
+msgid "Finish a daily challenge"
+msgstr ""
+
+msgid "Finish a drill in every set of Shortcut Trainer"
+msgstr ""
+
+msgid "Finish a focus block"
+msgstr ""
+
+msgid "Finish a race at 40 words per minute"
+msgstr ""
+
+msgid "Finish a race at 80 words per minute"
+msgstr ""
+
+msgid "Finish a race without a mistake"
+msgstr ""
+
+msgid "Finish a round under par"
+msgstr ""
+
+msgid "Finish all of today's three 5 times"
+msgstr ""
+
+msgid "Finish the daily challenge"
+msgstr ""
+
+msgid "Finish the daily challenge 7 days in a row"
+msgstr ""
+
+msgid "Finish the report"
+msgstr ""
+
+#, c-sharp-format
+msgid "Finished · waiting for {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Finished! Waiting for {0}…"
+msgstr ""
+
+msgid "Finishing the update in a terminal"
+msgstr ""
+
+msgid "First to fifty"
+msgstr ""
+
+#, c-sharp-format
+msgid "First to {0} vs {1} · drag your paddle"
+msgstr ""
+
+#, c-sharp-format
+msgid "First to {0} · CPU {1} · drag your blue mallet"
+msgstr ""
+
+#, c-sharp-format
+msgid "First to {0} · CPU {1} · drag your paddle"
+msgstr ""
+
+#, c-sharp-format
+msgid "First to {0} · best of 3 vs {1} · drag your blue mallet"
+msgstr ""
+
+msgid "First win"
+msgstr ""
+
+msgid "Fish thief!"
+msgstr ""
+
+msgid "Fishing"
+msgstr ""
+
+msgid "Five alive"
+msgstr ""
+
+msgid "Five lanes"
+msgstr ""
+
+msgid "Five nines"
+msgstr ""
+
+#, c-sharp-format
+msgid "Flight over · {0} clouds · click the kite to fly again"
+msgstr ""
+
+#, c-sharp-format
+msgid "Flip {0} discs in Reversi"
+msgstr ""
+
+#, c-sharp-format
+msgid "Flush, {0} high"
+msgstr ""
+
+msgid "Fly a game of Asteroids with a co-worker"
+msgstr ""
+
+msgid "Fly a paper plane 120 metres"
+msgstr ""
+
+msgid "Fly a whole minute without a crash"
+msgstr ""
+
+msgid "Flying"
+msgstr ""
+
+msgid "Focus"
+msgstr ""
+
+#, c-sharp-format
+msgid "Focus at {0}"
+msgstr ""
+
+msgid "Focus block done!"
+msgstr ""
+
+#, c-sharp-format
+msgid "Focus blocks: {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Focus blocks: {0} · glasses of water: {1}"
+msgstr ""
+
+msgid "Focus ended"
+msgstr ""
+
+#, c-sharp-format
+msgid "Focus for {0} minutes"
+msgstr ""
+
+msgid "Focus sounds"
+msgstr ""
+
+#, c-sharp-format
+msgid "Focus {0}/{1} · {2}"
+msgstr ""
+
+msgid "Focusing now ✓"
+msgstr ""
+
+#, c-sharp-format
+msgid "Focusing · {0} left"
+msgstr ""
+
+msgid "Fold"
+msgstr ""
+
+msgid "Folder…"
+msgstr ""
+
+#, c-sharp-format
+msgid "Following {0}"
+msgstr ""
+
+msgid "Forget finished sessions"
+msgstr ""
+
+msgid "Format the document"
+msgstr ""
+
+msgid "Found it · read the fix"
+msgstr ""
+
+#, c-sharp-format
+msgid "Found · +{0} · click Next"
+msgstr ""
+
+msgid "Four answers, one right · the faster you click it, the more it scores"
+msgstr ""
+
+msgid "Four at once"
+msgstr ""
+
+msgid "Four in a row"
+msgstr ""
+
+#, c-sharp-format
+msgid "Four of a kind, {0}"
+msgstr ""
+
+msgid "Four suits"
+msgstr ""
+
+msgid "Fox"
+msgstr ""
+
+#, c-sharp-format
+msgid "Frame {0} · ball {1} · pins {2}"
+msgstr ""
+
+msgid "Free and clear"
+msgstr ""
+
+msgid "Free between meetings:"
+msgstr ""
+
+msgid "FreeCell"
+msgstr ""
+
+#, c-sharp-format
+msgid "FreeCell #{0} · won in {1} moves"
+msgstr ""
+
+#, c-sharp-format
+msgid "FreeCell #{0} · {1} of 52 cards home"
+msgstr ""
+
+msgid "Friday"
+msgstr ""
+
+msgid "Frog"
+msgstr ""
+
+msgid "From a terminal"
+msgstr ""
+
+msgid "Full house"
+msgstr ""
+
+#, c-sharp-format
+msgid "Full house, {0} over {1}"
+msgstr ""
+
+msgid "Full marks"
+msgstr ""
+
+msgid "GAME OVER"
+msgstr ""
+
+msgid "GAME SHOT!"
+msgstr ""
+
+msgid "GENIUS!"
+msgstr ""
+
+msgid "GO!"
+msgstr ""
+
+msgid "GOAL!"
+msgstr ""
+
+msgid "GOLDEN!"
+msgstr ""
+
+msgid "GOOD MORNING"
+msgstr ""
+
+msgid "GREAT!"
+msgstr ""
+
+msgid "Game"
+msgstr ""
+
+msgid "Game over · click a grid for a rematch"
+msgstr ""
+
+msgid "Game over · click the ball to play again"
+msgstr ""
+
+msgid "Game over · click the block to play again"
+msgstr ""
+
+msgid "Game over · click the board for a new game"
+msgstr ""
+
+msgid "Game over · click the board for a rematch"
+msgstr ""
+
+msgid "Game over · click the board to ask for a rematch"
+msgstr ""
+
+msgid "Game over · click the ice for a new game"
+msgstr ""
+
+msgid "Game over · click the ice to ask for a rematch"
+msgstr ""
+
+msgid "Game over · click the paddle to play again"
+msgstr ""
+
+#, c-sharp-format
+msgid "Game over · click your cannon to ask {0} for a rematch"
+msgstr ""
+
+msgid "Game over · click your cannon to play again"
+msgstr ""
+
+msgid "Game over · drag back from the ball to bowl again"
+msgstr ""
+
+msgid "Game over · grab the ball to play again"
+msgstr ""
+
+#, c-sharp-format
+msgid "Game over · level {0} · {1} cleared · click New game"
+msgstr ""
+
+msgid "Game over · pull the stone to play again"
+msgstr ""
+
+#, c-sharp-format
+msgid "Game over · wave {0} · click your ship to fly again"
+msgstr ""
+
+#, c-sharp-format
+msgid "Game over · {0} lines · click the well to play again"
+msgstr ""
+
+#, c-sharp-format
+msgid "Game over · {0} words · click the typewriter to play again"
+msgstr ""
+
+#, c-sharp-format
+msgid "Game shot in {0} darts · click the board for a new leg"
+msgstr ""
+
+#, c-sharp-format
+msgid "Game: lunch break, {0} hands"
+msgstr ""
+
+msgid "Game: until one player has every chip"
+msgstr ""
+
+msgid "Games"
+msgstr ""
+
+msgid "Games & achievements"
+msgstr ""
+
+msgid "Gammon"
+msgstr ""
+
+msgid "General"
+msgstr ""
+
+msgid "Generate code"
+msgstr ""
+
+msgid "Get 10 bingos"
+msgstr ""
+
+msgid "Get 100 interns to the exit"
+msgstr ""
+
+msgid "Get 50 interns across the Rope Bridge"
+msgstr ""
+
+msgid "Get a blackjack"
+msgstr ""
+
+msgid "Get a heads-up before 20 meetings"
+msgstr ""
+
+msgid "Get all fifteen interns of a round across"
+msgstr ""
+
+msgid "Get all ten shortcuts of a drill right at the first try"
+msgstr ""
+
+msgid "Get ready…"
+msgstr ""
+
+msgid "Get rid of your cards before someone else in Durak"
+msgstr ""
+
+msgid "Get three in a line on a Bingo of Work card"
+msgstr ""
+
+#, c-sharp-format
+msgid "Get {0} interns across the Rope Bridge"
+msgstr ""
+
+#, c-sharp-format
+msgid "Get {0} interns to the exit"
+msgstr ""
+
+msgid "Getting slower"
+msgstr ""
+
+msgid "Git before you go"
+msgstr ""
+
+msgid "Git before you go: the end-of-day card lists repos with changes not committed, commits not pushed and stashes, half an hour earlier on Fridays"
+msgstr ""
+
+msgid "Give the pet a treat"
+msgstr ""
+
+msgid "Give up"
+msgstr ""
+
+msgid "Gliding…"
+msgstr ""
+
+msgid "Go back"
+msgstr ""
+
+msgid "Go for coffee, lunch or a walk with co-workers 5 times"
+msgstr ""
+
+msgid "Go to a class"
+msgstr ""
+
+msgid "Go to a file"
+msgstr ""
+
+msgid "Go to a symbol in the file"
+msgstr ""
+
+msgid "Go to definition"
+msgstr ""
+
+msgid "Go to line"
+msgstr ""
+
+msgid "Go to the address bar"
+msgstr ""
+
+msgid "Go to the declaration"
+msgstr ""
+
+msgid "Go to the end of the line"
+msgstr ""
+
+msgid "Go to the first line"
+msgstr ""
+
+msgid "Go to the last line"
+msgstr ""
+
+msgid "Go to the start of the line"
+msgstr ""
+
+msgid "Go to the top of the document"
+msgstr ""
+
+msgid "Golden Trout"
+msgstr ""
+
+msgid "Golden catch"
+msgstr ""
+
+msgid "Golden delicious"
+msgstr ""
+
+msgid "Gomoku"
+msgstr ""
+
+msgid "Good dog"
+msgstr ""
+
+msgid "Good morning!"
+msgstr ""
+
+msgid "Grab the paper ball and flick it into the bin"
+msgstr ""
+
+msgid "Green build"
+msgstr ""
+
+msgid "Grooming"
+msgstr ""
+
+msgid "Guess 25 words in Draw & Guess"
+msgstr ""
+
+#, c-sharp-format
+msgid "Guess {0} words in Draw & Guess"
+msgstr ""
+
+#, c-sharp-format
+msgid "Guess {0}/{1} · click Check"
+msgstr ""
+
+#, c-sharp-format
+msgid "Guess {0}/{1} · pick a colour, then click a hole"
+msgstr ""
+
+#, c-sharp-format
+msgid "Guess {0}/{1} · type a five-letter word, Enter checks it"
+msgstr ""
+
+msgid "Guesses"
+msgstr ""
+
+msgid "Gutter"
+msgstr ""
+
+msgid "H-O-R-S-E over · grab the ball for a rematch"
+msgstr ""
+
+msgid "H-O-R-S-E · set a shot from anywhere"
+msgstr ""
+
+#, c-sharp-format
+msgid "H-O-R-S-E · {0} is setting a shot"
+msgstr ""
+
+msgid "HOLE IN ONE!"
+msgstr ""
+
+msgid "Ha ha!"
+msgstr ""
+
+msgid "Half a page down"
+msgstr ""
+
+msgid "Hamster"
+msgstr ""
+
+#, c-sharp-format
+msgid "Hand {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Hand {0} over · the next one is coming"
+msgstr ""
+
+#, c-sharp-format
+msgid "Hand {0}/{1} · Hit, Stand or Double"
+msgstr ""
+
+#, c-sharp-format
+msgid "Hand {0}/{1} · pick a bet and Deal"
+msgstr ""
+
+#, c-sharp-format
+msgid "Handing off {0}"
+msgstr ""
+
+msgid "Hat trick"
+msgstr ""
+
+msgid "Have three coding agent sessions working at the same time"
+msgstr ""
+
+msgid "Have your drawings guessed 25 times"
+msgstr ""
+
+msgid "Have your pet bring the ball back 20 times"
+msgstr ""
+
+msgid "Having a look around"
+msgstr ""
+
+msgid "Head in the clouds"
+msgstr ""
+
+msgid "Head of department"
+msgstr ""
+
+msgid "Heads-up"
+msgstr ""
+
+msgid "Hearts"
+msgstr ""
+
+#, c-sharp-format
+msgid "Hearts · place {0} of 4 with {1} points"
+msgstr ""
+
+#, c-sharp-format
+msgid "Hearts · won with {0} points after {1} hands ♥"
+msgstr ""
+
+#, c-sharp-format
+msgid "Height {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Height {0} · click the block to drop it"
+msgstr ""
+
+msgid "Hex appeal"
+msgstr ""
+
+msgid "Hide overlay"
+msgstr ""
+
+msgid "Hide the overlay during meetings"
+msgstr ""
+
+msgid "Hide the overlay when an agent finishes or needs you"
+msgstr ""
+
+msgid "Hide while presenting or in full screen"
+msgstr ""
+
+#, c-sharp-format
+msgid "High card, {0}"
+msgstr ""
+
+msgid "High flyer"
+msgstr ""
+
+msgid "High roller"
+msgstr ""
+
+msgid "Hint: off"
+msgstr ""
+
+msgid "Hint: on"
+msgstr ""
+
+msgid "Hit"
+msgstr ""
+
+msgid "Hit 10 bullseyes"
+msgstr ""
+
+msgid "Hit 100 clay targets"
+msgstr ""
+
+msgid "Hit 500 bumpers"
+msgstr ""
+
+msgid "Hit a window"
+msgstr ""
+
+msgid "Hit two targets with one shot"
+msgstr ""
+
+#, c-sharp-format
+msgid "Hit {0} bumpers in Pinball"
+msgstr ""
+
+#, c-sharp-format
+msgid "Hit {0} trebles in Darts"
+msgstr ""
+
+msgid "Hit!"
+msgstr ""
+
+msgid "Hold chat and invites while focusing"
+msgstr ""
+
+msgid "Hold on the board to aim, let go to throw · finish on a double"
+msgstr ""
+
+msgid "Hold the mouse on the ice ahead of your stone to sweep"
+msgstr ""
+
+msgid "Hole in one"
+msgstr ""
+
+#, c-sharp-format
+msgid "Hole {0} halved"
+msgstr ""
+
+#, c-sharp-format
+msgid "Hole {0}/{1} vs {2} · your putt"
+msgstr ""
+
+#, c-sharp-format
+msgid "Hole {0}/{1} · par {2} · stroke {3}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Hole {0}/{1} · you're in · {2} is still putting"
+msgstr ""
+
+#, c-sharp-format
+msgid "Hole {0}/{1} · {2} is putting"
+msgstr ""
+
+msgid "Homeward bound"
+msgstr ""
+
+msgid "Hoops"
+msgstr ""
+
+msgid "Host a game"
+msgstr ""
+
+msgid "Hosting"
+msgstr ""
+
+msgid "Hundred baskets"
+msgstr ""
+
+msgid "Hunting the cursor"
+msgstr ""
+
+msgid "Hurry hard!"
+msgstr ""
+
+msgid "Hydrated"
+msgstr ""
+
+msgid "I drank a glass"
+msgstr ""
+
+msgid "I drank a glass of water"
+msgstr ""
+
+msgid "I'm in"
+msgstr ""
+
+msgid "IMPRESSIVE!"
+msgstr ""
+
+msgid "IN THE CUP!"
+msgstr ""
+
+msgid "IP address (optional)"
+msgstr ""
+
+msgid "In 10 minutes"
+msgstr ""
+
+msgid "In a minute"
+msgstr ""
+
+#, c-sharp-format
+msgid "In meetings: {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "In room {0} · waiting for the host to start"
+msgstr ""
+
+msgid "In the cup"
+msgstr ""
+
+msgid "In the stats window…"
+msgstr ""
+
+msgid "In the zone"
+msgstr ""
+
+#, c-sharp-format
+msgid "In {0} hours"
+msgstr ""
+
+#, c-sharp-format
+msgid "In {0} minutes"
+msgstr ""
+
+#, c-sharp-format
+msgid "In {0} until {1}"
+msgstr ""
+
+msgid "In!"
+msgstr ""
+
+msgid "Indent the line"
+msgstr ""
+
+msgid "Insert at the end of the line"
+msgstr ""
+
+#, c-sharp-format
+msgid "Install version {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Installed {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Installed {0} · restarting"
+msgstr ""
+
+msgid "Interns"
+msgstr ""
+
+#, c-sharp-format
+msgid "Interns {0} of {1} · worn planks crack: replace them in time"
+msgstr ""
+
+msgid "Invite co-workers"
+msgstr ""
+
+msgid "Invite sent"
+msgstr ""
+
+msgid "Invites from co-workers"
+msgstr ""
+
+msgid "It doesn't fit an end"
+msgstr ""
+
+msgid "It hit the ground"
+msgstr ""
+
+msgid "It waits for your Desktop Pet"
+msgstr ""
+
+msgid "It's compiling"
+msgstr ""
+
+msgid "JACKPOT!"
+msgstr ""
+
+msgid "Jackpot"
+msgstr ""
+
+msgid "Join"
+msgstr ""
+
+msgid "Join 10 meetings with a Join button"
+msgstr ""
+
+msgid "Join a game"
+msgstr ""
+
+#, c-sharp-format
+msgid "Join {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Joining room {0}…"
+msgstr ""
+
+#, c-sharp-format
+msgid "Juggles {0} · don't let it drop"
+msgstr ""
+
+#, c-sharp-format
+msgid "Juggles {0} · grab the star!"
+msgstr ""
+
+msgid "Jump to the end of the line"
+msgstr ""
+
+msgid "Jump to the start of the line"
+msgstr ""
+
+msgid "Keep a Window Jenga tower up until the time runs out"
+msgstr ""
+
+msgid "Keeping you company"
+msgstr ""
+
+msgid "Keepy-Uppy"
+msgstr ""
+
+msgid "Keepy-uppy pro"
+msgstr ""
+
+msgid "Keyboard warrior"
+msgstr ""
+
+msgid "Kite"
+msgstr ""
+
+msgid "Klondike"
+msgstr ""
+
+msgid "Knock"
+msgstr ""
+
+msgid "Knock down 100 cans"
+msgstr ""
+
+msgid "Knock down 200 blocks"
+msgstr ""
+
+#, c-sharp-format
+msgid "Knock down {0} blocks with the Slingshot"
+msgstr ""
+
+#, c-sharp-format
+msgid "Knock down {0} cans"
+msgstr ""
+
+#, c-sharp-format
+msgid "Knock down {0} castle blocks in Cannon Castles"
+msgstr ""
+
+#, c-sharp-format
+msgid "Knock down {0} pins in Bowling"
+msgstr ""
+
+#, c-sharp-format
+msgid "Knock on {0}"
+msgstr ""
+
+msgid "Knock on…"
+msgstr ""
+
+msgid "Know-it-all"
+msgstr ""
+
+msgid "Knows a second trick · right-click it"
+msgstr ""
+
+msgid "LAN race"
+msgstr ""
+
+msgid "LAST CARD!"
+msgstr ""
+
+msgid "LEAKED"
+msgstr ""
+
+msgid "LEG GIVEN UP"
+msgstr ""
+
+msgid "LEVEL CLEAR!"
+msgstr ""
+
+#, c-sharp-format
+msgid "LEVEL {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "LEVEL {0} CLEARED"
+msgstr ""
+
+#, c-sharp-format
+msgid "LEVEL {0} · flowing"
+msgstr ""
+
+#, c-sharp-format
+msgid "LEVEL {0} · flows in {1}"
+msgstr ""
+
+msgid "LOAD BALANCER"
+msgstr ""
+
+msgid "LOAD BALANCER · click to start"
+msgstr ""
+
+msgid "Land 5 discs in the jackpot slot"
+msgstr ""
+
+msgid "Land 5 marbles in a row at the first release"
+msgstr ""
+
+msgid "Land a marble in the cup in Marble Run"
+msgstr ""
+
+msgid "Land a marble in the cup without placing a piece"
+msgstr ""
+
+msgid "Land on the strip 5 times"
+msgstr ""
+
+#, c-sharp-format
+msgid "Land {0} marbles in the cup in Marble Run"
+msgstr ""
+
+msgid "Landslide"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "Last Card"
+msgstr ""
+
+msgid "Last Card with co-workers…"
+msgstr ""
+
+msgid "Last card!"
+msgstr ""
+
+#, c-sharp-format
+msgid "Last read failed: {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Last round {0}/{1} · click the trap to go again"
+msgstr ""
+
+msgid "Last seed in your store · go again!"
+msgstr ""
+
+msgid "Last week's waits"
+msgstr ""
+
+msgid "Later"
+msgstr ""
+
+msgid "Lay 200 planks on the Rope Bridge"
+msgstr ""
+
+msgid "Lay 500 pieces of pipe"
+msgstr ""
+
+msgid "Lay your last tile and go out"
+msgstr ""
+
+#, c-sharp-format
+msgid "Lay {0} tiles in Dominoes"
+msgstr ""
+
+msgid "Leaderboard"
+msgstr ""
+
+msgid "League night"
+msgstr ""
+
+msgid "Leave"
+msgstr ""
+
+msgid "Leave 10 days with every repo committed and pushed"
+msgstr ""
+
+msgid "Leave the room"
+msgstr ""
+
+msgid "Let 10 timers ring"
+msgstr ""
+
+msgid "Let's play"
+msgstr ""
+
+#, c-sharp-format
+msgid "Level {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Level {0} cleared · click the hatch for the next one"
+msgstr ""
+
+#, c-sharp-format
+msgid "Level {0} · balls {1} · bricks {2}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Level {0} · balls {1} · click the paddle to launch"
+msgstr ""
+
+#, c-sharp-format
+msgid "Level {0} · flowing · keep laying ahead of it"
+msgstr ""
+
+#, c-sharp-format
+msgid "Level {0} · lines {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Level {0} · lives {1} · combo ×{2}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Level {0} · out {1}/{2} · lost {3} · {4}s left"
+msgstr ""
+
+#, c-sharp-format
+msgid "Level {0} · save {1} of {2} · click the hatch to open it"
+msgstr ""
+
+#, c-sharp-format
+msgid "Level {0} · the build flows in {1} s · click a cell to lay the next piece"
+msgstr ""
+
+#, c-sharp-format
+msgid "Level {0} · {1} bits"
+msgstr ""
+
+#, c-sharp-format
+msgid "Level {0} · {1} bits · make the lowest number"
+msgstr ""
+
+msgid "Light five status lanes at once"
+msgstr ""
+
+msgid "Lightning fingers"
+msgstr ""
+
+msgid "Lightning hands"
+msgstr ""
+
+msgid "Limber"
+msgstr ""
+
+msgid "Line manager"
+msgstr ""
+
+msgid "Line snapped!"
+msgstr ""
+
+#, c-sharp-format
+msgid "Line {0}: a fifth answer: a question has four"
+msgstr ""
+
+#, c-sharp-format
+msgid "Line {0}: a pack has at most {1} questions"
+msgstr ""
+
+#, c-sharp-format
+msgid "Line {0}: a question needs four answers; this one has {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Line {0}: an answer before any question (start a question with Q:)"
+msgstr ""
+
+#, c-sharp-format
+msgid "Line {0}: mark exactly one answer as right, with +"
+msgstr ""
+
+#, c-sharp-format
+msgid "Line {0}: start a question with Q: and each answer with + (right) or - (wrong)"
+msgstr ""
+
+#, c-sharp-format
+msgid "Line {0}: the answer is empty"
+msgstr ""
+
+#, c-sharp-format
+msgid "Line {0}: the answer is too long ({1} characters, at most {2})"
+msgstr ""
+
+#, c-sharp-format
+msgid "Line {0}: the question is empty"
+msgstr ""
+
+#, c-sharp-format
+msgid "Line {0}: the question is too long ({1} characters, at most {2})"
+msgstr ""
+
+#, c-sharp-format
+msgid "Line {0}: the title goes before the first question"
+msgstr ""
+
+#, c-sharp-format
+msgid "Line {0}: two of the answers are the same"
+msgstr ""
+
+#, c-sharp-format
+msgid "Lines {0}"
+msgstr ""
+
+msgid "Listen to focus sounds for 10 hours"
+msgstr ""
+
+msgid "Load Balancer"
+msgstr ""
+
+#, c-sharp-format
+msgid "Load Balancer · wave {0}, {1} requests served, {2} points 🖥️"
+msgstr ""
+
+msgid "Locked in · waiting for the others"
+msgstr ""
+
+msgid "Logician"
+msgstr ""
+
+msgid "Long haul"
+msgstr ""
+
+msgid "Look again"
+msgstr ""
+
+msgid "Look away every 20 minutes (20-20-20)"
+msgstr ""
+
+msgid "Look far away"
+msgstr ""
+
+msgid "Look, no ramps"
+msgstr ""
+
+msgid "Looking for a host…"
+msgstr ""
+
+msgid "Looking for games on your network…"
+msgstr ""
+
+#, c-sharp-format
+msgid "Looking for room {0}…"
+msgstr ""
+
+msgid "Loud"
+msgstr ""
+
+msgid "Love it"
+msgstr ""
+
+msgid "Lucky guess"
+msgstr ""
+
+msgid "Lunch"
+msgstr ""
+
+msgid "Lunch?"
+msgstr ""
+
+msgid "MAGNIFICENT!"
+msgstr ""
+
+msgid "MATCH HALVED"
+msgstr ""
+
+msgid "MISS"
+msgstr ""
+
+msgid "MOVING HOOP!"
+msgstr ""
+
+msgid "Make 10 baskets in a row"
+msgstr ""
+
+msgid "Make 10 perfect drops"
+msgstr ""
+
+msgid "Make each number with the bits"
+msgstr ""
+
+#, c-sharp-format
+msgid "Make {0} baskets in Hoops"
+msgstr ""
+
+#, c-sharp-format
+msgid "Make {0} perfect drops in Tower Stack"
+msgstr ""
+
+msgid "Mancala"
+msgstr ""
+
+msgid "Marathon"
+msgstr ""
+
+msgid "Marble Run"
+msgstr ""
+
+msgid "Marble master"
+msgstr ""
+
+msgid "Master builder"
+msgstr ""
+
+msgid "Master sower"
+msgstr ""
+
+msgid "Match over · click your tiles for a new match"
+msgstr ""
+
+msgid "Match over · click your tiles to ask for a rematch"
+msgstr ""
+
+msgid "Match over · grab your mallet for a rematch"
+msgstr ""
+
+msgid "Match over · grab your paddle for a rematch"
+msgstr ""
+
+msgid "Match over · pull the bow for a rematch"
+msgstr ""
+
+#, c-sharp-format
+msgid "Match over · pull the bow to ask {0} for a rematch"
+msgstr ""
+
+#, c-sharp-format
+msgid "Match over · putt to ask {0} for a rematch"
+msgstr ""
+
+msgid "Match over · putt to play again"
+msgstr ""
+
+msgid "Match play"
+msgstr ""
+
+msgid "Match the colour or the number · the first to play their last card wins"
+msgstr ""
+
+msgid "Match the shot from the marked spot, or take a letter"
+msgstr ""
+
+msgid "Matchmaker"
+msgstr ""
+
+msgid "Meet a co-worker's pet over the LAN"
+msgstr ""
+
+msgid "Meeting"
+msgstr ""
+
+msgid "Meetings"
+msgstr ""
+
+msgid "Meetings are off."
+msgstr ""
+
+msgid "Meetings still today:"
+msgstr ""
+
+#, c-sharp-format
+msgid "Meetings: {0}"
+msgstr ""
+
+msgid "Memory"
+msgstr ""
+
+msgid "Mentor"
+msgstr ""
+
+msgid "Menu"
+msgstr ""
+
+#, c-sharp-format
+msgid "Merged: #{0} {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Message {0}…"
+msgstr ""
+
+msgid "Mind reader"
+msgstr ""
+
+#, c-sharp-format
+msgid "Mines left {0} · right-click flags"
+msgstr ""
+
+msgid "Minesweeper"
+msgstr ""
+
+#, c-sharp-format
+msgid "Minesweeper ({0}): cleared in {1} s 💣"
+msgstr ""
+
+#, c-sharp-format
+msgid "Minesweeper daily · {0} ({1}): cleared in {2} s 💣"
+msgstr ""
+
+msgid "Mini Golf"
+msgstr ""
+
+msgid "Miss"
+msgstr ""
+
+msgid "Missed · read the fix, then click Next"
+msgstr ""
+
+msgid "Missed!"
+msgstr ""
+
+msgid "Modifier keys"
+msgstr ""
+
+msgid "Monday"
+msgstr ""
+
+msgid "Monsoon"
+msgstr ""
+
+msgid "Morning card"
+msgstr ""
+
+msgid "Move 10 blocks in one Window Jenga tower"
+msgstr ""
+
+msgid "Move 200 blocks in Window Jenga"
+msgstr ""
+
+msgid "Move the line down"
+msgstr ""
+
+msgid "Move to next monitor"
+msgstr ""
+
+#, c-sharp-format
+msgid "Move {0} blocks in Window Jenga"
+msgstr ""
+
+#, c-sharp-format
+msgid "Moves {0} · pairs left {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Moves {0} · {1}"
+msgstr ""
+
+msgid "My day"
+msgstr ""
+
+msgid "My working day ends at"
+msgstr ""
+
+msgid "NEW BEST ROUND!"
+msgstr ""
+
+msgid "NEW BEST STREAK"
+msgstr ""
+
+msgid "NEW BEST!"
+msgstr ""
+
+msgid "NEXT"
+msgstr ""
+
+msgid "NICE SHOT!"
+msgstr ""
+
+msgid "NO HANDS!"
+msgstr ""
+
+msgid "NOBODY FELL!"
+msgstr ""
+
+msgid "NOT ENOUGH"
+msgstr ""
+
+msgid "NOT THE FOOL!"
+msgstr ""
+
+msgid "NULL handling"
+msgstr ""
+
+msgid "Natural"
+msgstr ""
+
+msgid "Needs gh or glab, signed in"
+msgstr ""
+
+msgid "New"
+msgstr ""
+
+msgid "New card"
+msgstr ""
+
+#, c-sharp-format
+msgid "New comment on {0}"
+msgstr ""
+
+msgid "New deal"
+msgstr ""
+
+msgid "New drill"
+msgstr ""
+
+msgid "New game"
+msgstr ""
+
+msgid "New round"
+msgstr ""
+
+msgid "New round ▸"
+msgstr ""
+
+msgid "New sticky note"
+msgstr ""
+
+msgid "New sticky note…"
+msgstr ""
+
+msgid "New tab"
+msgstr ""
+
+msgid "New word"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "Next game"
+msgstr ""
+
+msgid "Next match"
+msgstr ""
+
+msgid "Next tab"
+msgstr ""
+
+msgid "Next time"
+msgstr ""
+
+msgid "Next word"
+msgstr ""
+
+msgid "Next ▸"
+msgstr ""
+
+#, c-sharp-format
+msgid "Next: {0} at {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Next: {0} at {1} days and {2} play"
+msgstr ""
+
+msgid "Nice!"
+msgstr ""
+
+msgid "Nine by nine"
+msgstr ""
+
+msgid "No agents, lanes or repos yet"
+msgstr ""
+
+#, c-sharp-format
+msgid "No answer from {0}"
+msgstr ""
+
+msgid "No call to join now"
+msgstr ""
+
+msgid "No focus block planned"
+msgstr ""
+
+msgid "No games yet. Ask your co-worker to pick Play over LAN → Host a game."
+msgstr ""
+
+msgid "No hard feelings"
+msgstr ""
+
+msgid "No invite out"
+msgstr ""
+
+msgid "No meetings in it. Is it an .ics calendar?"
+msgstr ""
+
+msgid "No mouse needed"
+msgstr ""
+
+msgid "No moves this time"
+msgstr ""
+
+msgid "No pieces left"
+msgstr ""
+
+msgid "No planks yet · more are coming"
+msgstr ""
+
+#, c-sharp-format
+msgid "No program with id {0}"
+msgstr ""
+
+msgid "No reminder"
+msgstr ""
+
+msgid "No room with that code answered. Check the code, or add the host's IP address."
+msgstr ""
+
+msgid "No rooms yet."
+msgstr ""
+
+msgid "No scores yet today. Go play something!"
+msgstr ""
+
+msgid "No sound device"
+msgstr ""
+
+msgid "No stretch breaks"
+msgstr ""
+
+msgid "No swaps left on this card"
+msgstr ""
+
+msgid "No tray icon on this desktop"
+msgstr ""
+
+msgid "No water reminders"
+msgstr ""
+
+msgid "Nobody fell"
+msgstr ""
+
+msgid "Nobody heard yet: their invites need to be on too"
+msgstr ""
+
+msgid "Nobody left behind"
+msgstr ""
+
+msgid "Nobody to knock on"
+msgstr ""
+
+msgid "Nom nom nom"
+msgstr ""
+
+msgid "Normal"
+msgstr ""
+
+msgid "Not a git repository"
+msgstr ""
+
+msgid "Not a single typo"
+msgstr ""
+
+msgid "Not connected"
+msgstr ""
+
+msgid "Not connected — pair up with Play over LAN first"
+msgstr ""
+
+msgid "Not enough letters"
+msgstr ""
+
+msgid "Not enough pieces to mate"
+msgstr ""
+
+msgid "Not in the word list"
+msgstr ""
+
+msgid "Not me!"
+msgstr ""
+
+msgid "Not now"
+msgstr ""
+
+msgid "Not that one · press the keys shown"
+msgstr ""
+
+msgid "Not that one · press the keys shown to go on"
+msgstr ""
+
+msgid "Not the fool"
+msgstr ""
+
+msgid "Not this time"
+msgstr ""
+
+msgid "Note to self"
+msgstr ""
+
+msgid "Notes on: the pad writes pencil marks"
+msgstr ""
+
+msgid "Notes: off"
+msgstr ""
+
+msgid "Notes: on"
+msgstr ""
+
+msgid "Nothing but net"
+msgstr ""
+
+msgid "Nothing fits · click the boneyard to draw"
+msgstr ""
+
+msgid "Nothing fits · you pass"
+msgstr ""
+
+msgid "Nothing is getting slower."
+msgstr ""
+
+msgid "Nothing playing"
+msgstr ""
+
+msgid "Nothing to swap it for"
+msgstr ""
+
+msgid "Nothing waited on"
+msgstr ""
+
+msgid "Noting where the day goes"
+msgstr ""
+
+msgid "Now"
+msgstr ""
+
+msgid "ON FIRE!"
+msgstr ""
+
+msgid "OUT OF GUESSES"
+msgstr ""
+
+msgid "OVERHEATED · rebooting"
+msgstr ""
+
+msgid "Off"
+msgstr ""
+
+msgid "Off the table"
+msgstr ""
+
+msgid "Off to get a treat"
+msgstr ""
+
+msgid "Off to nap on its favourite window"
+msgstr ""
+
+msgid "Off to open the parcel"
+msgstr ""
+
+msgid "Office ladder: play a board game against a co-worker this month to get a rating"
+msgstr ""
+
+#, c-sharp-format
+msgid "Office ladder: {0} this month, after {1} board games against co-workers"
+msgstr ""
+
+msgid "Office leaderboard"
+msgstr ""
+
+msgid "Office leaderboard · today"
+msgstr ""
+
+msgid "Office regular"
+msgstr ""
+
+msgid "Office rival"
+msgstr ""
+
+msgid "Old and wise"
+msgstr ""
+
+#, c-sharp-format
+msgid "On a break · {0} left"
+msgstr ""
+
+msgid "On fire!"
+msgstr ""
+
+msgid "Onboarding"
+msgstr ""
+
+msgid "One hundred and eighty"
+msgstr ""
+
+msgid "One suit"
+msgstr ""
+
+msgid "Only a minute before"
+msgstr ""
+
+msgid "Only between the two of you, over your local network. Nothing is saved."
+msgstr ""
+
+msgid "Only the game and the scoreboard take the mouse. Everywhere else your clicks and typing go to your windows, as if Desk Arcade were not there."
+msgstr ""
+
+msgid "Only you so far. Co-workers show up here once they share their scores too."
+msgstr ""
+
+msgid "Open a file by name"
+msgstr ""
+
+msgid "Open a new line below"
+msgstr ""
+
+msgid "Open a pack file…"
+msgstr ""
+
+msgid "Open a parcel from a co-worker"
+msgstr ""
+
+msgid "Open a private window"
+msgstr ""
+
+msgid "Open door"
+msgstr ""
+
+msgid "Open the quiz folder"
+msgstr ""
+
+msgid "Open the settings"
+msgstr ""
+
+#, c-sharp-format
+msgid "Open {0} safe cells in Minesweeper"
+msgstr ""
+
+msgid "Optimize imports"
+msgstr ""
+
+msgid "Or host the game yourself:"
+msgstr ""
+
+msgid "Or join by address (ask the host for their IP):"
+msgstr ""
+
+msgid "Or type a room code (and the host's IP if the room doesn't show up):"
+msgstr ""
+
+msgid "Other games…"
+msgstr ""
+
+msgid "Other quizzes…"
+msgstr ""
+
+msgid "Out first"
+msgstr ""
+
+msgid "Out of guesses · click the board for a new code"
+msgstr ""
+
+msgid "Owl"
+msgstr ""
+
+msgid "PAR"
+msgstr ""
+
+msgid "PAUSED"
+msgstr ""
+
+msgid "PERFECT LANDING!"
+msgstr ""
+
+msgid "PERFECT!"
+msgstr ""
+
+msgid "PHEW!"
+msgstr ""
+
+msgid "PIPELINE · click to start"
+msgstr ""
+
+#, c-sharp-format
+msgid "PLACE {0} OF {1}"
+msgstr ""
+
+msgid "POINT!"
+msgstr ""
+
+msgid "POP!"
+msgstr ""
+
+msgid "PUSH"
+msgstr ""
+
+msgid "Pacesetter"
+msgstr ""
+
+#, c-sharp-format
+msgid "Pack: {0} · {1} questions"
+msgstr ""
+
+msgid "Paddle legend"
+msgstr ""
+
+#, c-sharp-format
+msgid "Pair of {0}"
+msgstr ""
+
+msgid "Pair programmer"
+msgstr ""
+
+msgid "Paper Planes"
+msgstr ""
+
+msgid "Paper Toss"
+msgstr ""
+
+msgid "Paper pilot"
+msgstr ""
+
+msgid "Parrot"
+msgstr ""
+
+msgid "Party pooper"
+msgstr ""
+
+msgid "Party!"
+msgstr ""
+
+msgid "Pass"
+msgstr ""
+
+msgid "Pass an attack on 10 times in Perevodnoy"
+msgstr ""
+
+#, c-sharp-format
+msgid "Pass these three {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Pass {0}"
+msgstr ""
+
+msgid "Passed"
+msgstr ""
+
+msgid "Paste"
+msgstr ""
+
+msgid "Paste a link or pick a file first."
+msgstr ""
+
+msgid "Paste after the cursor"
+msgstr ""
+
+msgid "Paste as plain text"
+msgstr ""
+
+msgid "Paste what was cut"
+msgstr ""
+
+msgid "Patience"
+msgstr ""
+
+msgid "Patience of a saint"
+msgstr ""
+
+msgid "Pause the game a minute before"
+msgstr ""
+
+msgid "Pause the game when an agent finishes or needs you"
+msgstr ""
+
+msgid "Paused · click the board to go on"
+msgstr ""
+
+msgid "Paused · click the text to keep typing"
+msgstr ""
+
+msgid "Paused · click the typewriter to go on"
+msgstr ""
+
+msgid "Peek at the definition"
+msgstr ""
+
+msgid "Pen 100 sheep"
+msgstr ""
+
+msgid "Pen the whole flock with 30 seconds to spare"
+msgstr ""
+
+#, c-sharp-format
+msgid "Pen {0} sheep in Sheep Herding"
+msgstr ""
+
+msgid "Penguin"
+msgstr ""
+
+msgid "Perch"
+msgstr ""
+
+msgid "Perfectionist"
+msgstr ""
+
+msgid "Pet"
+msgstr ""
+
+msgid "Pet keeps me company in games"
+msgstr ""
+
+msgid "Pet post"
+msgstr ""
+
+#, c-sharp-format
+msgid "Pet the pet {0} times"
+msgstr ""
+
+msgid "Pet volume"
+msgstr ""
+
+msgid "Pet your desktop pet 50 times"
+msgstr ""
+
+msgid "Pets"
+msgstr ""
+
+#, c-sharp-format
+msgid "Pets {0}"
+msgstr ""
+
+msgid "Pick a calendar file"
+msgstr ""
+
+msgid "Pick a colour for your wild card"
+msgstr ""
+
+msgid "Pick a quiz pack"
+msgstr ""
+
+msgid "Pick a repository folder"
+msgstr ""
+
+msgid "Pick a table to start a game"
+msgstr ""
+
+msgid "Pick a word to draw"
+msgstr ""
+
+msgid "Pick an answer!"
+msgstr ""
+
+msgid "Pick the Downloads folder"
+msgstr ""
+
+#, c-sharp-format
+msgid "Pick three cards to pass {0} ({1}/3)"
+msgstr ""
+
+msgid "Pick today's ten or a practice round"
+msgstr ""
+
+msgid "Picture copied · paste it into a chat"
+msgstr ""
+
+msgid "Pike"
+msgstr ""
+
+msgid "Pinball"
+msgstr ""
+
+msgid "Pinball wizard"
+msgstr ""
+
+msgid "Ping-Pong Cups"
+msgstr ""
+
+msgid "Pink noise"
+msgstr ""
+
+msgid "Pipeline"
+msgstr ""
+
+#, c-sharp-format
+msgid "Pipeline · deployed {0} levels, {1} points 🚰"
+msgstr ""
+
+msgid "Planning"
+msgstr ""
+
+msgid "Play 1 computer"
+msgstr ""
+
+msgid "Play 20 Wild Draw Fours"
+msgstr ""
+
+msgid "Play 6 different games"
+msgstr ""
+
+msgid "Play a round ▸"
+msgstr ""
+
+msgid "Play after 6 PM"
+msgstr ""
+
+msgid "Play again"
+msgstr ""
+
+msgid "Play against 3 computers"
+msgstr ""
+
+msgid "Play at lunchtime (12–2 PM)"
+msgstr ""
+
+msgid "Play before 10 AM"
+msgstr ""
+
+msgid "Play fetch with the pet"
+msgstr ""
+
+msgid "Play for 30 minutes in total"
+msgstr ""
+
+msgid "Play for 5 hours in total"
+msgstr ""
+
+#, c-sharp-format
+msgid "Play for {0} minutes"
+msgstr ""
+
+msgid "Play it during focus blocks"
+msgstr ""
+
+msgid "Play over LAN"
+msgstr ""
+
+msgid "Play over LAN → Chat… to answer"
+msgstr ""
+
+msgid "Play the card you drew, or pass"
+msgstr ""
+
+msgid "Play while it builds"
+msgstr ""
+
+msgid "Play with"
+msgstr ""
+
+msgid "Play with co-workers…"
+msgstr ""
+
+#, c-sharp-format
+msgid "Play {0} cards in Last Card"
+msgstr ""
+
+#, c-sharp-format
+msgid "Play {0} computers"
+msgstr ""
+
+#, c-sharp-format
+msgid "Play {0} hands of Hearts"
+msgstr ""
+
+#, c-sharp-format
+msgid "Play {0} holes of Mini Golf"
+msgstr ""
+
+msgid "Playdate"
+msgstr ""
+
+#, c-sharp-format
+msgid "Played while waiting: {0} ({1} %)"
+msgstr ""
+
+#, c-sharp-format
+msgid "Played: {0}"
+msgstr ""
+
+msgid "Players"
+msgstr ""
+
+msgid "Playing Desk Arcade while it builds"
+msgstr ""
+
+msgid "Playing with its new toy"
+msgstr ""
+
+#, c-sharp-format
+msgid "Playing with {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Playing: {0}"
+msgstr ""
+
+msgid "Plinko"
+msgstr ""
+
+msgid "Plumber"
+msgstr ""
+
+msgid "Poker"
+msgstr ""
+
+#, c-sharp-format
+msgid "Poker · place {0} of {1} after {2} hands"
+msgstr ""
+
+#, c-sharp-format
+msgid "Poker · won a {0}-player lunch-break table with {1} chips"
+msgstr ""
+
+#, c-sharp-format
+msgid "Poker · won a {0}-player table in {1} hands"
+msgstr ""
+
+msgid "Pole position"
+msgstr ""
+
+msgid "Polyglot"
+msgstr ""
+
+msgid "Pong"
+msgstr ""
+
+msgid "Pool"
+msgstr ""
+
+msgid "Pop 300 bubbles"
+msgstr ""
+
+msgid "Pop 50 balloons"
+msgstr ""
+
+msgid "Pop the bubble to start · smaller bubbles score more"
+msgstr ""
+
+#, c-sharp-format
+msgid "Pop {0} balloons in Archery"
+msgstr ""
+
+#, c-sharp-format
+msgid "Pop {0} bubbles"
+msgstr ""
+
+msgid "Pot"
+msgstr ""
+
+msgid "Pot 3 balls with one shot"
+msgstr ""
+
+#, c-sharp-format
+msgid "Pot {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Pot {0} balls in Pool"
+msgstr ""
+
+msgid "Practice"
+msgstr ""
+
+msgid "Practice round"
+msgstr ""
+
+msgid "Press 100 shortcuts right at the first try"
+msgstr ""
+
+#, c-sharp-format
+msgid "Press {0} shortcuts right in Shortcut Trainer"
+msgstr ""
+
+msgid "Print"
+msgstr ""
+
+msgid "Puffing smoke"
+msgstr ""
+
+#, c-sharp-format
+msgid "Pull {0}/{1} · hits {2}"
+msgstr ""
+
+msgid "Put arcade in front of a command (arcade dotnet test) and the scoreboard shows it running, then chimes when it passes or fails."
+msgstr ""
+
+msgid "Python"
+msgstr ""
+
+msgid "Queen dodger"
+msgstr ""
+
+#, c-sharp-format
+msgid "Question {0} of {1}"
+msgstr ""
+
+msgid "Questions from"
+msgstr ""
+
+msgid "Quick eye"
+msgstr ""
+
+msgid "Quick five"
+msgstr ""
+
+msgid "Quick fix"
+msgstr ""
+
+msgid "Quick on the buzzer"
+msgstr ""
+
+msgid "Quick sweep"
+msgstr ""
+
+msgid "Quiet"
+msgstr ""
+
+msgid "Quit without saving"
+msgstr ""
+
+msgid "Quiz Night"
+msgstr ""
+
+#, c-sharp-format
+msgid "Quiz Night daily · {0}/{1} in {2} s"
+msgstr ""
+
+#, c-sharp-format
+msgid "Quiz Night · {0} points · {1} of {2} right"
+msgstr ""
+
+msgid "Quiz pack"
+msgstr ""
+
+msgid "RACK CLEARED!"
+msgstr ""
+
+msgid "ROLL"
+msgstr ""
+
+msgid "ROUND COMPLETE"
+msgstr ""
+
+msgid "ROUND OVER"
+msgstr ""
+
+msgid "Race on the LAN · the same word when you both play one language"
+msgstr ""
+
+msgid "Race the computer in solo rounds"
+msgstr ""
+
+msgid "Race the computer: start a round and it plays one too"
+msgstr ""
+
+#, c-sharp-format
+msgid "Race {0}: start a round and they start too"
+msgstr ""
+
+msgid "Rain"
+msgstr ""
+
+msgid "Raise a pet until it is grown up"
+msgstr ""
+
+msgid "Raise a pet until it is old and wise"
+msgstr ""
+
+#, c-sharp-format
+msgid "Raise to {0}"
+msgstr ""
+
+msgid "Rally master"
+msgstr ""
+
+#, c-sharp-format
+msgid "Ran {0}"
+msgstr ""
+
+msgid "Random board"
+msgstr ""
+
+msgid "Reach 16 bits in Bit Flip"
+msgstr ""
+
+msgid "Reach a ×4 combo"
+msgstr ""
+
+msgid "Reach level 10 in Pipeline"
+msgstr ""
+
+msgid "Reach level 4"
+msgstr ""
+
+msgid "Reach level 8 in Word Rain"
+msgstr ""
+
+msgid "Reach stack 5"
+msgstr ""
+
+msgid "Reach wave 5"
+msgstr ""
+
+msgid "Reach wave 6 in Asteroids"
+msgstr ""
+
+msgid "Reach wave 8 in Load Balancer"
+msgstr ""
+
+msgid "React"
+msgstr ""
+
+msgid "Read the question…"
+msgstr ""
+
+msgid "Read through gh or glab every 2 minutes"
+msgstr ""
+
+#, c-sharp-format
+msgid "Reading {0}"
+msgstr ""
+
+msgid "Reading…"
+msgstr ""
+
+msgid "Ready for standup"
+msgstr ""
+
+msgid "Recent files"
+msgstr ""
+
+msgid "Redo"
+msgstr ""
+
+msgid "Reduce motion"
+msgstr ""
+
+msgid "Reformat the code"
+msgstr ""
+
+msgid "Release train"
+msgstr ""
+
+msgid "Reload the page"
+msgstr ""
+
+msgid "Remind me"
+msgstr ""
+
+msgid "Reminder"
+msgstr ""
+
+msgid "Rename"
+msgstr ""
+
+msgid "Rename symbol"
+msgstr ""
+
+msgid "Reopen the tab just closed"
+msgstr ""
+
+msgid "Replace every foo with bar"
+msgstr ""
+
+#, c-sharp-format
+msgid "Repos: {0}"
+msgstr ""
+
+msgid "Reset high scores"
+msgstr ""
+
+msgid "Reset positions"
+msgstr ""
+
+msgid "Reset stats and achievements"
+msgstr ""
+
+msgid "Reset the zoom"
+msgstr ""
+
+msgid "Restart"
+msgstr ""
+
+msgid "Resumed"
+msgstr ""
+
+msgid "Reverse"
+msgstr ""
+
+msgid "Reversi"
+msgstr ""
+
+msgid "Review the pull request"
+msgstr ""
+
+msgid "Right on time"
+msgstr ""
+
+#, c-sharp-format
+msgid "Right · +{0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Right! +{0}"
+msgstr ""
+
+msgid "Right-click the tray icon, or click ☰ on the scoreboard: games, the pet, At work, themes, and playing with co-workers."
+msgstr ""
+
+msgid "Room setup…"
+msgstr ""
+
+msgid "Room to focus"
+msgstr ""
+
+#, c-sharp-format
+msgid "Room to move {0} cards at once"
+msgstr ""
+
+#, c-sharp-format
+msgid "Room {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Room {0} · {1} at the table"
+msgstr ""
+
+msgid "Rooms on your network:"
+msgstr ""
+
+msgid "Rope Bridge"
+msgstr ""
+
+#, c-sharp-format
+msgid "Round done · {0} vs par · putt to play again"
+msgstr ""
+
+msgid "Round of ten"
+msgstr ""
+
+msgid "Round over"
+msgstr ""
+
+#, c-sharp-format
+msgid "Round over with {0} chips · click New round"
+msgstr ""
+
+msgid "Round over · click the drop strip to play again"
+msgstr ""
+
+msgid "Round over · click your tiles for the next round"
+msgstr ""
+
+msgid "Round over · pull the bow to play again"
+msgstr ""
+
+#, c-sharp-format
+msgid "Round over · waiting for {0} to deal"
+msgstr ""
+
+#, c-sharp-format
+msgid "Round over · {0} cups · click the ball for another round"
+msgstr ""
+
+#, c-sharp-format
+msgid "Round over · {0} of {1} in the cup · click the funnel to play again"
+msgstr ""
+
+#, c-sharp-format
+msgid "Round over · {0} points · click the plane for another round"
+msgstr ""
+
+#, c-sharp-format
+msgid "Round over · {0}/{1} found · {2} points"
+msgstr ""
+
+#, c-sharp-format
+msgid "Round {0} done · click the pen for the next one"
+msgstr ""
+
+#, c-sharp-format
+msgid "Round {0} · penned {1}/{2} · {3}s left"
+msgstr ""
+
+#, c-sharp-format
+msgid "Round {0} · {1} arrows · wind {2}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Round {0} · {1} sheep · click the pen to start"
+msgstr ""
+
+#, c-sharp-format
+msgid "Round {0} · {1} sheep · {2} seconds"
+msgstr ""
+
+msgid "Royal flush"
+msgstr ""
+
+msgid "Run"
+msgstr ""
+
+msgid "Run builds and tests with arcade, follow CI and coding agents, or wait for downloads, and the waits show here."
+msgstr ""
+
+msgid "Run the last command again"
+msgstr ""
+
+#, c-sharp-format
+msgid "Running {0}"
+msgstr ""
+
+msgid "SERVICE DOWN"
+msgstr ""
+
+msgid "SOLVED!"
+msgstr ""
+
+msgid "SPARE!"
+msgstr ""
+
+msgid "SPLASH!"
+msgstr ""
+
+msgid "SPLENDID!"
+msgstr ""
+
+msgid "SQL injection"
+msgstr ""
+
+msgid "STILL STANDING!"
+msgstr ""
+
+#, c-sharp-format
+msgid "STRETCH · {0} OF {1}"
+msgstr ""
+
+msgid "STRIKE!"
+msgstr ""
+
+msgid "SUNK!"
+msgstr ""
+
+msgid "SWISH THREE!"
+msgstr ""
+
+msgid "SWISH!"
+msgstr ""
+
+msgid "Safe crossing"
+msgstr ""
+
+msgid "Safe in its shell"
+msgstr ""
+
+msgid "Salvo rules: one shot for each of your ships afloat"
+msgstr ""
+
+msgid "Saturday"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Save and quit"
+msgstr ""
+
+msgid "Save as CSV…"
+msgstr ""
+
+msgid "Save as a picture"
+msgstr ""
+
+msgid "Save every intern on a level"
+msgstr ""
+
+msgid "Save where the day went"
+msgstr ""
+
+#, c-sharp-format
+msgid "Saved {0} of {1} needed · click the hatch to try again"
+msgstr ""
+
+#, c-sharp-format
+msgid "Saved, but another app already uses one of these ({0}). Try other letters or keys."
+msgstr ""
+
+msgid "Saved. Meetings are read every 15 minutes."
+msgstr ""
+
+#, c-sharp-format
+msgid "Saved: {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Saved: {0}. They take effect the next time Desk Arcade starts."
+msgstr ""
+
+msgid "Say “back to work” when Claude is done"
+msgstr ""
+
+msgid "Score 10 in one run"
+msgstr ""
+
+msgid "Score 10,000 points in one game"
+msgstr ""
+
+msgid "Score 100 baskets"
+msgstr ""
+
+msgid "Score 150 in one game"
+msgstr ""
+
+msgid "Score 180 with three darts"
+msgstr ""
+
+msgid "Score 25 points in one run"
+msgstr ""
+
+msgid "Score 25 swishes"
+msgstr ""
+
+msgid "Score 250 in one kite flight"
+msgstr ""
+
+msgid "Score 3 or more in one end of Curling"
+msgstr ""
+
+msgid "Score 5,000 in one game"
+msgstr ""
+
+msgid "Score 50 goals"
+msgstr ""
+
+msgid "Score 50 points in one round"
+msgstr ""
+
+msgid "Score 60 points in one round"
+msgstr ""
+
+msgid "Score 80 points in one round"
+msgstr ""
+
+#, c-sharp-format
+msgid "Score {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Score {0} goals in Air Hockey"
+msgstr ""
+
+msgid "Scratch +1"
+msgstr ""
+
+msgid "Sea Battle"
+msgstr ""
+
+msgid "Search all files"
+msgstr ""
+
+msgid "Search forward for foo"
+msgstr ""
+
+msgid "Search the history"
+msgstr ""
+
+#, c-sharp-format
+msgid "Searching the web for {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Searching {0}"
+msgstr ""
+
+msgid "See CI pass 10 times"
+msgstr ""
+
+msgid "See the result ▸"
+msgstr ""
+
+msgid "See you there!"
+msgstr ""
+
+msgid "See you tomorrow"
+msgstr ""
+
+msgid "Seed saver"
+msgstr ""
+
+msgid "Select all"
+msgstr ""
+
+msgid "Select the next match"
+msgstr ""
+
+msgid "Send"
+msgstr ""
+
+msgid "Send 10 gifts to a co-worker's pet"
+msgstr ""
+
+msgid "Send 500 cards home"
+msgstr ""
+
+msgid "Send a co-worker a chat message"
+msgstr ""
+
+msgid "Send a co-worker a reaction"
+msgstr ""
+
+msgid "Send a co-worker's pet…"
+msgstr ""
+
+msgid "Send end of input"
+msgstr ""
+
+#, c-sharp-format
+msgid "Send {0} cards home in Solitaire"
+msgstr ""
+
+#, c-sharp-format
+msgid "Send {0}'s pet…"
+msgstr ""
+
+msgid "Sent!"
+msgstr ""
+
+msgid "Series winner"
+msgstr ""
+
+msgid "Serve 500 requests in Load Balancer"
+msgstr ""
+
+#, c-sharp-format
+msgid "Serve {0} requests in Load Balancer"
+msgstr ""
+
+msgid "Server racked"
+msgstr ""
+
+#, c-sharp-format
+msgid "Sessions {0} · lanes {1} · repos {2}"
+msgstr ""
+
+msgid "Seven in a row"
+msgstr ""
+
+msgid "Share"
+msgstr ""
+
+msgid "Share my scores on the local network"
+msgstr ""
+
+msgid "Sharing is off. Turn it on to post your scores and see everyone else's. It sends your user name and today's scores to the other computers on your local network, and nothing else."
+msgstr ""
+
+msgid "Sharpshooter"
+msgstr ""
+
+msgid "Sheep Herding"
+msgstr ""
+
+msgid "Shell"
+msgstr ""
+
+msgid "Ship lost"
+msgstr ""
+
+msgid "Shoot the moon"
+msgstr ""
+
+msgid "Shortcut Trainer"
+msgstr ""
+
+#, c-sharp-format
+msgid "Shortcut Trainer · {0} · {1}/{2} at the first try · {3} points"
+msgstr ""
+
+#, c-sharp-format
+msgid "Shortcut {0}/{1} · press the keys"
+msgstr ""
+
+msgid "Shortcuts"
+msgstr ""
+
+msgid "Shortcuts…"
+msgstr ""
+
+#, c-sharp-format
+msgid "Shots {0} · balls left {1}"
+msgstr ""
+
+msgid "Show all commands"
+msgstr ""
+
+msgid "Show or hide the overlay"
+msgstr ""
+
+msgid "Show or hide the sidebar"
+msgstr ""
+
+msgid "Show overlay"
+msgstr ""
+
+msgid "Show references"
+msgstr ""
+
+msgid "Show the Explorer"
+msgstr ""
+
+msgid "Show the leaderboard…"
+msgstr ""
+
+msgid "Show the morning card"
+msgstr ""
+
+msgid "Show the overlay when an agent starts working"
+msgstr ""
+
+msgid "Show the quick fixes"
+msgstr ""
+
+msgid "Show the terminal"
+msgstr ""
+
+msgid "Show the tour again"
+msgstr ""
+
+msgid "Show what Claude is doing (two more hooks)"
+msgstr ""
+
+msgid "Show-off"
+msgstr ""
+
+msgid "Showing off"
+msgstr ""
+
+msgid "Siege of the next desk"
+msgstr ""
+
+msgid "Sink 50 cups"
+msgstr ""
+
+msgid "Sink a bounce shot"
+msgstr ""
+
+msgid "Sink a hole in one"
+msgstr ""
+
+#, c-sharp-format
+msgid "Sink {0} cups in Ping-Pong Cups"
+msgstr ""
+
+#, c-sharp-format
+msgid "Sink {0} ships in Sea Battle"
+msgstr ""
+
+msgid "Sixteen bits"
+msgstr ""
+
+msgid "Skip"
+msgstr ""
+
+msgid "Skipper"
+msgstr ""
+
+msgid "Skyscraper"
+msgstr ""
+
+msgid "Sleeping · click to wake"
+msgstr ""
+
+msgid "Sleepy"
+msgstr ""
+
+msgid "Slingshot"
+msgstr ""
+
+msgid "Slowest"
+msgstr ""
+
+msgid "Snagged on a window"
+msgstr ""
+
+msgid "Snakes on Windows"
+msgstr ""
+
+msgid "Sniper"
+msgstr ""
+
+#, c-sharp-format
+msgid "Snippet {0}/{1} · click the line with the bug"
+msgstr ""
+
+msgid "Softer late in the evening"
+msgstr ""
+
+msgid "Solitaire"
+msgstr ""
+
+#, c-sharp-format
+msgid "Solitaire · solved in {0} moves · {1}"
+msgstr ""
+
+msgid "Solve 10 games of Solitaire"
+msgstr ""
+
+msgid "Solve 25 words in Word Guess"
+msgstr ""
+
+msgid "Solve 7 daily Sudoku puzzles"
+msgstr ""
+
+msgid "Solve a FreeCell deal"
+msgstr ""
+
+msgid "Solve a Hard Sudoku"
+msgstr ""
+
+msgid "Solve a Sudoku"
+msgstr ""
+
+msgid "Solve a game of Solitaire"
+msgstr ""
+
+msgid "Solve a game of Spider"
+msgstr ""
+
+msgid "Solve a word in two guesses"
+msgstr ""
+
+msgid "Solve the daily word 7 days in a row"
+msgstr ""
+
+#, c-sharp-format
+msgid "Solve {0} words in Word Guess"
+msgstr ""
+
+#, c-sharp-format
+msgid "Solved in {0} moves · New deal plays again"
+msgstr ""
+
+#, c-sharp-format
+msgid "Solved in {0} · New for another puzzle"
+msgstr ""
+
+msgid "Solved · click New word"
+msgstr ""
+
+msgid "Solved · come back tomorrow"
+msgstr ""
+
+#, c-sharp-format
+msgid "Solved · streak {0} · come back tomorrow"
+msgstr ""
+
+msgid "Someone is standing on it"
+msgstr ""
+
+msgid "Sound"
+msgstr ""
+
+#, c-sharp-format
+msgid "Sow {0} seeds in Mancala"
+msgstr ""
+
+msgid "Sowing…"
+msgstr ""
+
+msgid "Space janitor"
+msgstr ""
+
+msgid "Special delivery"
+msgstr ""
+
+msgid "Spider"
+msgstr ""
+
+#, c-sharp-format
+msgid "Spider, {0} · won in {1} moves"
+msgstr ""
+
+msgid "Splash"
+msgstr ""
+
+msgid "Split the editor"
+msgstr ""
+
+msgid "Spot the Bug"
+msgstr ""
+
+#, c-sharp-format
+msgid "Spot the Bug daily #{0} · found it in {1}, {2} s"
+msgstr ""
+
+#, c-sharp-format
+msgid "Spot the Bug daily #{0} · the bug got away"
+msgstr ""
+
+#, c-sharp-format
+msgid "Spot the Bug · {0}/{1} bugs · {2} points"
+msgstr ""
+
+#, c-sharp-format
+msgid "Squares dab themselves as you play · click a game square to play it · right-click swaps one ({0} left)"
+msgstr ""
+
+msgid "Squash 200 bugs"
+msgstr ""
+
+msgid "Squash the sleeping bug to start · spare the ladybugs"
+msgstr ""
+
+#, c-sharp-format
+msgid "Squash {0} bugs"
+msgstr ""
+
+#, c-sharp-format
+msgid "Stack {0} · balls {1} · cans left {2}"
+msgstr ""
+
+msgid "Stacked"
+msgstr ""
+
+msgid "Stalemate"
+msgstr ""
+
+msgid "Stand"
+msgstr ""
+
+msgid "Standup notes copied"
+msgstr ""
+
+#, c-sharp-format
+msgid "Standup notes · {0}"
+msgstr ""
+
+msgid "Star catcher"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Start + 1 computer"
+msgstr ""
+
+#, c-sharp-format
+msgid "Start + {0} computers"
+msgstr ""
+
+#, c-sharp-format
+msgid "Start a {0}-minute focus block"
+msgstr ""
+
+msgid "Start on the marked cell · right-click flags a mine"
+msgstr ""
+
+msgid "Start the day"
+msgstr ""
+
+msgid "Start the game"
+msgstr ""
+
+msgid "Start the next block after the break"
+msgstr ""
+
+msgid "Start the quiz"
+msgstr ""
+
+msgid "Start when I sign in"
+msgstr ""
+
+msgid "Start with computers only"
+msgstr ""
+
+msgid "Start ▸"
+msgstr ""
+
+msgid "Starting now"
+msgstr ""
+
+msgid "Stats & achievements"
+msgstr ""
+
+msgid "Stats & achievements…"
+msgstr ""
+
+msgid "Stats reset"
+msgstr ""
+
+msgid "Steady hands"
+msgstr ""
+
+msgid "Step over"
+msgstr ""
+
+msgid "Sticky note"
+msgstr ""
+
+msgid "Still here?"
+msgstr ""
+
+msgid "Still standing"
+msgstr ""
+
+msgid "Stone cold"
+msgstr ""
+
+msgid "Stop"
+msgstr ""
+
+msgid "Stop following"
+msgstr ""
+
+msgid "Stop sharing my scores"
+msgstr ""
+
+msgid "Stop the running command"
+msgstr ""
+
+msgid "Stop the sound"
+msgstr ""
+
+#, c-sharp-format
+msgid "Stopped following {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Straight flush, {0} high"
+msgstr ""
+
+msgid "Straight in"
+msgstr ""
+
+#, c-sharp-format
+msgid "Straight, {0} high"
+msgstr ""
+
+#, c-sharp-format
+msgid "Streak {0} · ON FIRE ×2"
+msgstr ""
+
+#, c-sharp-format
+msgid "Streak {0} · keep going!"
+msgstr ""
+
+#, c-sharp-format
+msgid "Streak {0} · mind the wind"
+msgstr ""
+
+#, c-sharp-format
+msgid "Stretch after {0} minutes at the computer"
+msgstr ""
+
+msgid "Stretch now"
+msgstr ""
+
+msgid "Stuffing its cheeks"
+msgstr ""
+
+msgid "Sudoku"
+msgstr ""
+
+#, c-sharp-format
+msgid "Sudoku ({0}): solved in {1} 🧩"
+msgstr ""
+
+#, c-sharp-format
+msgid "Sudoku daily · {0} ({1}): solved in {2} 🧩"
+msgstr ""
+
+msgid "Suit complete!"
+msgstr ""
+
+msgid "Sunday"
+msgstr ""
+
+msgid "Sure?"
+msgstr ""
+
+msgid "Surround with"
+msgstr ""
+
+msgid "Suspend the running command"
+msgstr ""
+
+msgid "Sweeper"
+msgstr ""
+
+#, c-sharp-format
+msgid "Swish {0} shots in Hoops"
+msgstr ""
+
+msgid "Swish!"
+msgstr ""
+
+#, c-sharp-format
+msgid "Switch the keyboard to {0}"
+msgstr ""
+
+msgid "THE BUILD IS FLOWING"
+msgstr ""
+
+msgid "THE BUILD LEAKED"
+msgstr ""
+
+msgid "THREE POINTER!"
+msgstr ""
+
+msgid "TIME!"
+msgstr ""
+
+msgid "TRAFFIC SPIKE!"
+msgstr ""
+
+msgid "TRIPLE JUMP!"
+msgstr ""
+
+msgid "TURKEY!"
+msgstr ""
+
+msgid "Table captain"
+msgstr ""
+
+msgid "Table cleared"
+msgstr ""
+
+msgid "Take"
+msgstr ""
+
+msgid "Take 50 eye breaks"
+msgstr ""
+
+msgid "Take a stretch break"
+msgstr ""
+
+msgid "Take all 26 points in one hand"
+msgstr ""
+
+msgid "Take it down"
+msgstr ""
+
+msgid "Take no points in 25 hands"
+msgstr ""
+
+msgid "Taxi"
+msgstr ""
+
+msgid "Tea's ready"
+msgstr ""
+
+msgid "Tell me when downloads finish"
+msgstr ""
+
+msgid "Ten shortcuts, as fast as you can"
+msgstr ""
+
+msgid "Ten snippets, one bug in each"
+msgstr ""
+
+msgid "Ten-finger coder"
+msgstr ""
+
+msgid "Texas hold'em for chips · the best five cards win the pot"
+msgstr ""
+
+msgid "That doesn't look like an address, e.g. 192.168.1.20"
+msgstr ""
+
+msgid "That folder is not there"
+msgstr ""
+
+msgid "That game has already started."
+msgstr ""
+
+msgid "That is not a web address"
+msgstr ""
+
+msgid "That pack has mistakes, so it isn't used:"
+msgstr ""
+
+msgid "That room is full."
+msgstr ""
+
+msgid "That room is playing another game."
+msgstr ""
+
+msgid "That's the day!"
+msgstr ""
+
+#, c-sharp-format
+msgid "The CPU ({0}) is aiming · wind {1}"
+msgstr ""
+
+msgid "The board is full"
+msgstr ""
+
+msgid "The break is over"
+msgstr ""
+
+msgid "The bug got away · read the fix"
+msgstr ""
+
+msgid "The daily word · the same for everyone today"
+msgstr ""
+
+msgid "The file has no questions: start each one with Q:"
+msgstr ""
+
+#, c-sharp-format
+msgid "The file is too big: at most {0} KB"
+msgstr ""
+
+msgid "The host can start another quiz"
+msgstr ""
+
+msgid "The host picks the game"
+msgstr ""
+
+msgid "The last command's exit code"
+msgstr ""
+
+msgid "The last command's last argument"
+msgstr ""
+
+msgid "The last one holding cards is the durak"
+msgstr ""
+
+msgid "The last seven days; the trends compare them with the four weeks before."
+msgstr ""
+
+#, c-sharp-format
+msgid "The longest wait: {0}, {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "The next parcel can go in {0} s"
+msgstr ""
+
+msgid "The parcels on the way have to arrive first"
+msgstr ""
+
+msgid "The room closed · set up a new game"
+msgstr ""
+
+msgid "The room closed."
+msgstr ""
+
+msgid "The same snippet for everyone today, and one try at it. Find the bug in as few clicks and seconds as you can."
+msgstr ""
+
+msgid "The tower fell · click its base for a new one"
+msgstr ""
+
+msgid "The update did not install · press Enter to close this window"
+msgstr ""
+
+msgid "The wait report"
+msgstr ""
+
+msgid "The wait report…"
+msgstr ""
+
+msgid "The word got away · click New word"
+msgstr ""
+
+msgid "The word got away · come back tomorrow"
+msgstr ""
+
+msgid "The word was"
+msgstr ""
+
+#, c-sharp-format
+msgid "The word was: {0}"
+msgstr ""
+
+msgid "Theme"
+msgstr ""
+
+msgid "Theme decorations"
+msgstr ""
+
+msgid "Then you get the day's summary; an hour later, still at the computer, a nudge to go home."
+msgstr ""
+
+msgid "They have gone"
+msgstr ""
+
+msgid "This bug spans two lines: either one counts."
+msgstr ""
+
+msgid "This release has no checksum"
+msgstr ""
+
+msgid "Three at once"
+msgstr ""
+
+msgid "Three for three"
+msgstr ""
+
+msgid "Three in a row"
+msgstr ""
+
+msgid "Three lines"
+msgstr ""
+
+#, c-sharp-format
+msgid "Three of a kind, {0}"
+msgstr ""
+
+msgid "Throw 50 paper planes"
+msgstr ""
+
+msgid "Throw in a card of a rank on the table, or click Done"
+msgstr ""
+
+msgid "Throw this card away?"
+msgstr ""
+
+#, c-sharp-format
+msgid "Throw {0} paper planes"
+msgstr ""
+
+#, c-sharp-format
+msgid "Throw {0} stones in Curling"
+msgstr ""
+
+#, c-sharp-format
+msgid "Throw {0}/{1} · drag back from the plane and let go"
+msgstr ""
+
+msgid "Thumbs up"
+msgstr ""
+
+msgid "Thursday"
+msgstr ""
+
+msgid "Tic-tac-toe"
+msgstr ""
+
+msgid "Tick off 10 sticky notes"
+msgstr ""
+
+msgid "Time for a glass of water"
+msgstr ""
+
+#, c-sharp-format
+msgid "Time played {0} · achievements {1}/{2}"
+msgstr ""
+
+msgid "Time's up"
+msgstr ""
+
+msgid "Time's up and it still stands · click its base for a new one"
+msgstr ""
+
+msgid "Timer"
+msgstr ""
+
+msgid "Timers cancelled"
+msgstr ""
+
+msgid "Tin smasher"
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+msgid "Today at work…"
+msgstr ""
+
+msgid "Today's ten"
+msgstr ""
+
+#, c-sharp-format
+msgid "Today's ten: {0}/{1} in {2} s · a new ten tomorrow"
+msgstr ""
+
+msgid "Today's three"
+msgstr ""
+
+msgid "Today's three…"
+msgstr ""
+
+#, c-sharp-format
+msgid "Today: {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Today: {0} ({1}/{2})"
+msgstr ""
+
+msgid "Toggle a breakpoint"
+msgstr ""
+
+msgid "Too late!"
+msgstr ""
+
+msgid "Too long"
+msgstr ""
+
+msgid "Too short"
+msgstr ""
+
+msgid "Too soon!"
+msgstr ""
+
+msgid "Top dog"
+msgstr ""
+
+msgid "Toss 25 swishes into the bin"
+msgstr ""
+
+#, c-sharp-format
+msgid "Toss {0} paper balls into the bin"
+msgstr ""
+
+msgid "Total recall"
+msgstr ""
+
+msgid "Touch typist"
+msgstr ""
+
+msgid "Touchdown"
+msgstr ""
+
+msgid "Tower Stack"
+msgstr ""
+
+msgid "Tower collapsed"
+msgstr ""
+
+#, c-sharp-format
+msgid "Tower {0} · stones {1} · blocks {2}"
+msgstr ""
+
+msgid "Treat time"
+msgstr ""
+
+msgid "Tuesday"
+msgstr ""
+
+msgid "Turkey"
+msgstr ""
+
+msgid "Turn off"
+msgstr ""
+
+msgid "Turn on invites from co-workers to knock"
+msgstr ""
+
+#, c-sharp-format
+msgid "Turn {0} of {1}"
+msgstr ""
+
+msgid "Turtle"
+msgstr ""
+
+msgid "Two lines"
+msgstr ""
+
+#, c-sharp-format
+msgid "Two pair, {0} and {1}"
+msgstr ""
+
+msgid "Two suits"
+msgstr ""
+
+#, c-sharp-format
+msgid "Two to four players on the same network. Everyone needs Desk Arcade {0} or newer."
+msgstr ""
+
+#, c-sharp-format
+msgid "Type {0} characters in Typing Race"
+msgstr ""
+
+#, c-sharp-format
+msgid "Type! · {0}% accuracy"
+msgstr ""
+
+msgid "Typing Race"
+msgstr ""
+
+#, c-sharp-format
+msgid "UDP port {0} is in use"
+msgstr ""
+
+#, c-sharp-format
+msgid "Umbrella {0}"
+msgstr ""
+
+msgid "Under par"
+msgstr ""
+
+msgid "Undo"
+msgstr ""
+
+msgid "Unlock an achievement"
+msgstr ""
+
+msgid "Unstoppable"
+msgstr ""
+
+msgid "Untouchable"
+msgstr ""
+
+msgid "Up to three things to get done today. They sit under the scoreboard; click one when it's done."
+msgstr ""
+
+#, c-sharp-format
+msgid "Update failed · exit code {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Update {0} downloaded"
+msgstr ""
+
+#, c-sharp-format
+msgid "Update {0}%"
+msgstr ""
+
+msgid "Uptime"
+msgstr ""
+
+msgid "Use this calendar"
+msgstr ""
+
+msgid "Use three different letters, A to Z."
+msgstr ""
+
+#, c-sharp-format
+msgid "Using {0}"
+msgstr ""
+
+msgid "Variant: Perevodnoy (pass it on)"
+msgstr ""
+
+msgid "Variant: Podkidnoy (throw-in)"
+msgstr ""
+
+#, c-sharp-format
+msgid "Visiting {0}'s {1}"
+msgstr ""
+
+msgid "Visual block mode"
+msgstr ""
+
+msgid "Volume"
+msgstr ""
+
+msgid "WATER"
+msgstr ""
+
+msgid "WAVE CLEAR!"
+msgstr ""
+
+msgid "WAVE CLEARED"
+msgstr ""
+
+#, c-sharp-format
+msgid "WAVE {0}"
+msgstr ""
+
+msgid "Wait a moment"
+msgstr ""
+
+msgid "Wait report"
+msgstr ""
+
+#, c-sharp-format
+msgid "Wait report · {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Waited on builds, tests, CI and agents: {0} over {1} waits, and played {2} of it"
+msgstr ""
+
+#, c-sharp-format
+msgid "Waited {0} in all"
+msgstr ""
+
+#, c-sharp-format
+msgid "Waited {0} · played {1} of it"
+msgstr ""
+
+msgid "Waiting for a co-worker to join…"
+msgstr ""
+
+msgid "Waiting for a player to join…"
+msgstr ""
+
+msgid "Waiting for the others to pass"
+msgstr ""
+
+#, c-sharp-format
+msgid "Waiting for {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Waiting for {0} to get ready…"
+msgstr ""
+
+#, c-sharp-format
+msgid "Waiting for {0} · {1}"
+msgstr ""
+
+msgid "Wall breaker"
+msgstr ""
+
+msgid "Wants attention · click to pet"
+msgstr ""
+
+msgid "Wants to play · throw the ball"
+msgstr ""
+
+msgid "Wastebasket pro"
+msgstr ""
+
+msgid "Watch your pet do 25 tricks"
+msgstr ""
+
+msgid "Watching downloads"
+msgstr ""
+
+msgid "Watching the ball"
+msgstr ""
+
+msgid "Watching you"
+msgstr ""
+
+#, c-sharp-format
+msgid "Water every {0} minutes"
+msgstr ""
+
+#, c-sharp-format
+msgid "Water: {0} glasses"
+msgstr ""
+
+msgid "Wave rider"
+msgstr ""
+
+#, c-sharp-format
+msgid "Wave {0} cleared!"
+msgstr ""
+
+#, c-sharp-format
+msgid "Wave {0} · lives {1} · budget {2} · drag requests to a server"
+msgstr ""
+
+#, c-sharp-format
+msgid "Wave {0} · lives {1} · click a rock to fire"
+msgstr ""
+
+#, c-sharp-format
+msgid "Wave {0} · lives {1} · with {2}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Wave {0} · {1}s left · bubbles {2}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Wave {0} · {1}s left · bubbles {2} · combo ×{3}"
+msgstr ""
+
+msgid "Weather report"
+msgstr ""
+
+msgid "Wednesday"
+msgstr ""
+
+msgid "Welcome to Desk Arcade"
+msgstr ""
+
+msgid "Whack 200 bugs"
+msgstr ""
+
+msgid "Whack the sleepy bug to start · spare the ladybugs"
+msgstr ""
+
+#, c-sharp-format
+msgid "Whack {0} bugs"
+msgstr ""
+
+msgid "Whack-a-Bug"
+msgstr ""
+
+msgid "Wheee!"
+msgstr ""
+
+msgid "Wheee! · let go to throw"
+msgstr ""
+
+msgid "Where the day went"
+msgstr ""
+
+msgid "Where the day went: note the program in front once a minute (its name, never a window title), kept 30 days on this PC"
+msgstr ""
+
+msgid "Which line has the bug?"
+msgstr ""
+
+msgid "Wild"
+msgstr ""
+
+msgid "Win 10 all-in showdowns"
+msgstr ""
+
+msgid "Win 10 games of Last Card"
+msgstr ""
+
+msgid "Win 100 hands of Blackjack"
+msgstr ""
+
+msgid "Win 100 pots in Poker"
+msgstr ""
+
+msgid "Win 25 typing races"
+msgstr ""
+
+msgid "Win Cannon Castles without losing a single block"
+msgstr ""
+
+msgid "Win Gomoku with fewer than 15 stones"
+msgstr ""
+
+msgid "Win Reversi with 40 discs or more, or wipe out every disc"
+msgstr ""
+
+msgid "Win a Cannon Castles duel over the LAN"
+msgstr ""
+
+msgid "Win a Mini Golf match over the LAN"
+msgstr ""
+
+msgid "Win a best-of-3 series over the LAN"
+msgstr ""
+
+msgid "Win a game of Backgammon"
+msgstr ""
+
+msgid "Win a game of Checkers"
+msgstr ""
+
+msgid "Win a game of Chess"
+msgstr ""
+
+msgid "Win a game of Connect Four"
+msgstr ""
+
+msgid "Win a game of Curling"
+msgstr ""
+
+msgid "Win a game of Hearts"
+msgstr ""
+
+msgid "Win a game of Last Card"
+msgstr ""
+
+msgid "Win a game of Mancala"
+msgstr ""
+
+msgid "Win a game of Pong"
+msgstr ""
+
+msgid "Win a game of Sea Battle"
+msgstr ""
+
+msgid "Win a game of Sea Battle with salvo rules"
+msgstr ""
+
+msgid "Win a game of Tic-tac-toe"
+msgstr ""
+
+msgid "Win a match of Dominoes"
+msgstr ""
+
+msgid "Win a table of Poker"
+msgstr ""
+
+msgid "Win an Archery match over the LAN"
+msgstr ""
+
+msgid "Win before the other side bears off a single checker"
+msgstr ""
+
+#, c-sharp-format
+msgid "Win {0} hands of Blackjack"
+msgstr ""
+
+#, c-sharp-format
+msgid "Win {0} pots in Poker"
+msgstr ""
+
+#, c-sharp-format
+msgid "Wind {0}"
+msgstr ""
+
+msgid "Window Jenga"
+msgstr ""
+
+msgid "Window tops are platforms: balls, bugs and the pet land on them and ride along when you drag a window."
+msgstr ""
+
+msgid "Wingman"
+msgstr ""
+
+#, c-sharp-format
+msgid "Wins {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Wins {0} · CPU {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "With {0} computers"
+msgstr ""
+
+msgid "Woof!"
+msgstr ""
+
+msgid "Word Guess"
+msgstr ""
+
+msgid "Word Rain"
+msgstr ""
+
+msgid "Wordsmith"
+msgstr ""
+
+msgid "Wrecking ball"
+msgstr ""
+
+msgid "Write them…"
+msgstr ""
+
+#, c-sharp-format
+msgid "Writing {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "YOU  {0} : {1}  CPU"
+msgstr ""
+
+#, c-sharp-format
+msgid "YOU  {0} : {1}  {2}"
+msgstr ""
+
+msgid "YOU GOT IT!"
+msgstr ""
+
+#, c-sharp-format
+msgid "YOU SCORE {0}"
+msgstr ""
+
+msgid "YOU SHOT THE MOON!"
+msgstr ""
+
+msgid "YOU WIN THE MATCH!"
+msgstr ""
+
+msgid "YOU WIN THE RACE!"
+msgstr ""
+
+msgid "YOU WIN THE SERIES!"
+msgstr ""
+
+msgid "YOU WIN THE TABLE!"
+msgstr ""
+
+msgid "YOU WIN!"
+msgstr ""
+
+msgid "YOU'RE THE DURAK!"
+msgstr ""
+
+msgid "You"
+msgstr ""
+
+#, c-sharp-format
+msgid "You finished {0}"
+msgstr ""
+
+msgid "You folded · watching the hand"
+msgstr ""
+
+msgid "You forgot to say last card!"
+msgstr ""
+
+msgid "You gave up"
+msgstr ""
+
+msgid "You got it! · the others are still guessing"
+msgstr ""
+
+msgid "You have no move · pass"
+msgstr ""
+
+#, c-sharp-format
+msgid "You knocked on {0}"
+msgstr ""
+
+msgid "You shot the moon!"
+msgstr ""
+
+msgid "You take the cards · the others may still throw in"
+msgstr ""
+
+msgid "You went out first · click New game"
+msgstr ""
+
+#, c-sharp-format
+msgid "You win hole {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "You win with {0} points · click New game"
+msgstr ""
+
+#, c-sharp-format
+msgid "You win {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "You win {0} with {1}"
+msgstr ""
+
+msgid "You won the quiz!"
+msgstr ""
+
+msgid "You won the table · click New game"
+msgstr ""
+
+msgid "You won · click New game"
+msgstr ""
+
+msgid "You won!"
+msgstr ""
+
+msgid "You won! Click the text for the next race"
+msgstr ""
+
+#, c-sharp-format
+msgid "You won! {0} is still typing…"
+msgstr ""
+
+#, c-sharp-format
+msgid "You {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "You're in room {0} · waiting for the host to start. You can close this window."
+msgstr ""
+
+#, c-sharp-format
+msgid "You're out in place {0} · the others play on"
+msgstr ""
+
+msgid "You're out of cards · watching the others finish"
+msgstr ""
+
+msgid "You're the durak · click New game"
+msgstr ""
+
+msgid "You're up to date"
+msgstr ""
+
+#, c-sharp-format
+msgid "You've played {0} minutes"
+msgstr ""
+
+#, c-sharp-format
+msgid "You: {0} · {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Your attack on {0} · play any card"
+msgstr ""
+
+msgid "Your calendar's .ics link or file. Outlook: Settings → Calendar → Shared calendars → Publish a calendar → ICS. Google Calendar: Settings → your calendar → Secret address in iCal format. It stays on this PC."
+msgstr ""
+
+msgid "Your fleet"
+msgstr ""
+
+msgid "Your guess"
+msgstr ""
+
+msgid "Your keys go to the game here · Esc stops"
+msgstr ""
+
+msgid "Your lead"
+msgstr ""
+
+msgid "Your lead · the two of clubs"
+msgstr ""
+
+msgid "Your move · click a checker, then where it goes"
+msgstr ""
+
+msgid "Your move · click a dotted square · right-drag moves the board"
+msgstr ""
+
+msgid "Your move · click a piece, then where it goes · right-drag moves the board"
+msgstr ""
+
+msgid "Your move · click a square · right-drag moves the board"
+msgstr ""
+
+msgid "Your move · click an intersection · right-drag moves the board"
+msgstr ""
+
+#, c-sharp-format
+msgid "Your pack: {0} questions. The host sends them to everyone, one at a time."
+msgstr ""
+
+#, c-sharp-format
+msgid "Your pet has kept you company for {0} days"
+msgstr ""
+
+msgid "Your record"
+msgstr ""
+
+msgid "Your room code — tell it to your co-workers:"
+msgstr ""
+
+#, c-sharp-format
+msgid "Your salvo · {0} shots left · click the enemy grid"
+msgstr ""
+
+msgid "Your shot · click the enemy grid · a hit shoots again"
+msgstr ""
+
+#, c-sharp-format
+msgid "Your shot · wind {0}"
+msgstr ""
+
+msgid "Your tiles"
+msgstr ""
+
+msgid "Your turn"
+msgstr ""
+
+msgid "Your turn · check or bet"
+msgstr ""
+
+#, c-sharp-format
+msgid "Your turn · click ROLL · pips {0}–{1}"
+msgstr ""
+
+msgid "Your turn · click one of your pits (the bottom row)"
+msgstr ""
+
+msgid "Your turn · follow suit if you can"
+msgstr ""
+
+#, c-sharp-format
+msgid "Your turn · lay a tile that fits an end · first to {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "Your turn · play on the {0} {1}, or draw from the pile"
+msgstr ""
+
+#, c-sharp-format
+msgid "Your turn · {0} to call"
+msgstr ""
+
+msgid "Your year at the desk…"
+msgstr ""
+
+#, c-sharp-format
+msgid "Your {0} at the desk"
+msgstr ""
+
+msgid "Zap 25 words in a row without a miss"
+msgstr ""
+
+msgid "Zap 250 falling words"
+msgstr ""
+
+#, c-sharp-format
+msgid "Zap {0} words in Word Rain"
+msgstr ""
+
+msgid "Zen mode"
+msgstr ""
+
+msgid "Zero bugs"
+msgstr ""
+
+msgid "Zoom in"
+msgstr ""
+
+msgid "Zoomies!"
+msgstr ""
+
+msgid "a Flatpak updates with flatpak update · opening the release page"
+msgstr ""
+
+msgid "a backgammon: triple"
+msgstr ""
+
+msgid "a chime when it is done · play meanwhile"
+msgstr ""
+
+msgid "a command"
+msgstr ""
+
+#, c-sharp-format
+msgid "a find scores {0}, and up to {1} more for speed"
+msgstr ""
+
+msgid "a gammon: double"
+msgstr ""
+
+msgid "a good day's work"
+msgstr ""
+
+msgid "a good moment for a game"
+msgstr ""
+
+msgid "a little and often keeps the headache and the afternoon slump away"
+msgstr ""
+
+msgid "a meeting's link shows here from 15 minutes before"
+msgstr ""
+
+msgid "a new card is on its way"
+msgstr ""
+
+msgid "a task"
+msgstr ""
+
+msgid "a tie: nobody scores"
+msgstr ""
+
+msgid "a walk"
+msgstr ""
+
+#, c-sharp-format
+msgid "a {0}-minute break · the games are yours"
+msgstr ""
+
+msgid "about the API, 5 min"
+msgstr ""
+
+#, c-sharp-format
+msgid "about “{0}”"
+msgstr ""
+
+msgid "achievements start over"
+msgstr ""
+
+msgid "across"
+msgstr ""
+
+msgid "add it to .aider.conf.yml in your home or project folder"
+msgstr ""
+
+msgid "after lunch"
+msgstr ""
+
+#, c-sharp-format
+msgid "after {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "ahead of the CPU at {0} WPM"
+msgstr ""
+
+#, c-sharp-format
+msgid "ahead of {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "also saved as {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "and {0} more after these"
+msgstr ""
+
+#, c-sharp-format
+msgid "asked {0} for a game"
+msgstr ""
+
+#, c-sharp-format
+msgid "asked {0} for a race"
+msgstr ""
+
+#, c-sharp-format
+msgid "asked {0} for a rematch"
+msgstr ""
+
+msgid "async misuse"
+msgstr ""
+
+#, c-sharp-format
+msgid "at {0}"
+msgstr ""
+
+msgid "attacking"
+msgstr ""
+
+msgid "available"
+msgstr ""
+
+#, c-sharp-format
+msgid "available, next meeting in {0} min"
+msgstr ""
+
+#, c-sharp-format
+msgid "back to {0}"
+msgstr ""
+
+msgid "ball lost"
+msgstr ""
+
+msgid "better luck next deal"
+msgstr ""
+
+#, c-sharp-format
+msgid "block {0} of {1} · the games wait for the break"
+msgstr ""
+
+msgid "browser"
+msgstr ""
+
+msgid "budget 0"
+msgstr ""
+
+msgid "building a new one"
+msgstr ""
+
+msgid "builds, tests, CI and coding agents show here once you wait on them"
+msgstr ""
+
+msgid "calm"
+msgstr ""
+
+msgid "captured loop variable"
+msgstr ""
+
+msgid "carried over from last time"
+msgstr ""
+
+msgid "changed a copy"
+msgstr ""
+
+msgid "changed while iterating"
+msgstr ""
+
+msgid "check the terminal"
+msgstr ""
+
+msgid "click ROLL, then a checker and where it goes — bring all fifteen home and bear them off first"
+msgstr ""
+
+msgid "click Start, then press the shortcut asked for — a miss shows the keys, and they come back until you know them"
+msgstr ""
+
+msgid "click a bit to flip it · the lowest number goes first"
+msgstr ""
+
+msgid "click a bubble to split it — clear them all in time"
+msgstr ""
+
+msgid "click a cell to open it, right-click to flag a mine — open every safe cell"
+msgstr ""
+
+msgid "click a cell, then a digit on the pad — every row, column and box holds 1 to 9 once"
+msgstr ""
+
+msgid "click a column to drop a disc — four in a row wins"
+msgstr ""
+
+msgid "click a dotted square — outflank discs to flip them, most discs wins"
+msgstr ""
+
+msgid "click a grid for a rematch"
+msgstr ""
+
+msgid "click a piece, then the square it should move to"
+msgstr ""
+
+msgid "click a square — three in a row wins"
+msgstr ""
+
+msgid "click a tile that fits an end of the line on the taskbar — nothing fits? draw from the boneyard"
+msgstr ""
+
+msgid "click an answer — the faster you're right, the more it scores"
+msgstr ""
+
+msgid "click an intersection — five or more in a row wins (freestyle)"
+msgstr ""
+
+msgid "click for a new round"
+msgstr ""
+
+msgid "click for the next level"
+msgstr ""
+
+msgid "click for the next round"
+msgstr ""
+
+msgid "click one of your pits to sow its seeds — the last seed in your store plays again"
+msgstr ""
+
+msgid "click the ball to kick it — don't let it drop"
+msgstr ""
+
+msgid "click the ball to serve — press by a flipper to flip it, right-click flips both"
+msgstr ""
+
+msgid "click the bits to make the lowest number before it lands — the place values are under the bits"
+msgstr ""
+
+msgid "click the board for a rematch"
+msgstr ""
+
+msgid "click the enemy grid to start, then fire — a hit shoots again"
+msgstr ""
+
+msgid "click the face for a new board"
+msgstr ""
+
+msgid "click the game to resume"
+msgstr ""
+
+msgid "click the grid, then click cells to lay pipe from the commit to the deploy before the build flows"
+msgstr ""
+
+msgid "click the kite — the string follows your cursor; pull to climb, catch the clouds, dodge the birds"
+msgstr ""
+
+msgid "click the line with the bug before the fuse burns down — the fix and the reason come after each one"
+msgstr ""
+
+msgid "click the load balancer to start — drag each request onto a server before it times out"
+msgstr ""
+
+msgid "click the paddle to launch — the mouse steers it"
+msgstr ""
+
+msgid "click the pen to start"
+msgstr ""
+
+msgid "click the pet to pet it — drag to carry and throw it"
+msgstr ""
+
+msgid "click the sleeping snake — it follows your cursor: eat the apples, don't cross your tail"
+msgstr ""
+
+msgid "click the sliding block to drop it — stack as high as you can"
+msgstr ""
+
+msgid "click the stock to turn a card — click or drag cards onto the piles"
+msgstr ""
+
+msgid "click the strip to drop a disc — the gold slot is the jackpot"
+msgstr ""
+
+msgid "click the text and type it — the first car over the line wins"
+msgstr ""
+
+msgid "click the trap machine, then shoot the clays at the top of their arc"
+msgstr ""
+
+msgid "click the typewriter, then type the falling words — don't let them reach the taskbar"
+msgstr ""
+
+msgid "click to drop · right-drag to move"
+msgstr ""
+
+msgid "click to open"
+msgstr ""
+
+msgid "click to reply"
+msgstr ""
+
+msgid "click to start"
+msgstr ""
+
+msgid "click to switch"
+msgstr ""
+
+msgid "click to try again"
+msgstr ""
+
+msgid "click your cannon for a rematch"
+msgstr ""
+
+msgid "click your cannon to play again"
+msgstr ""
+
+msgid "click your ship to launch — it follows the cursor; click a rock to fire at it"
+msgstr ""
+
+msgid "close!"
+msgstr ""
+
+msgid "co-workers show up here when their invites are on"
+msgstr ""
+
+msgid "coffee"
+msgstr ""
+
+msgid "come back tomorrow for a new one"
+msgstr ""
+
+msgid "come over"
+msgstr ""
+
+msgid "commit"
+msgstr ""
+
+#, c-sharp-format
+msgid "cooling down · {0} s"
+msgstr ""
+
+#, c-sharp-format
+msgid "couldn't replace the running file · the new one is {0}"
+msgstr ""
+
+msgid "dates and times"
+msgstr ""
+
+#, c-sharp-format
+msgid "deck {0}"
+msgstr ""
+
+msgid "default evaluated once"
+msgstr ""
+
+msgid "defending"
+msgstr ""
+
+msgid "deferred execution"
+msgstr ""
+
+msgid "deploy"
+msgstr ""
+
+#, c-sharp-format
+msgid "discarded {0}"
+msgstr ""
+
+msgid "disconnected"
+msgstr ""
+
+msgid "division by zero"
+msgstr ""
+
+msgid "done"
+msgstr ""
+
+msgid "download it from the tray menu"
+msgstr ""
+
+msgid "drag a block out of the tower slowly, then lay it on top — don't let the weight lean past what is left"
+msgstr ""
+
+msgid "drag back from the ball and let go — knock all ten pins down"
+msgstr ""
+
+msgid "drag back from the ball to putt it into the cup"
+msgstr ""
+
+msgid "drag back from the bow, release to shoot"
+msgstr ""
+
+msgid "drag back from the cue ball to shoot — pot every ball in as few shots as you can"
+msgstr ""
+
+msgid "drag back from the paper plane and let go — warm air above windows lifts it"
+msgstr ""
+
+msgid "drag back from the rod to cast — click when the bobber goes under, hold to reel"
+msgstr ""
+
+msgid "drag back from the slingshot and let go — knock the tower down"
+msgstr ""
+
+msgid "drag back from your cannon and let go — mind the wind and knock down their flag"
+msgstr ""
+
+msgid "drag back from your stone and let go — hold the mouse ahead of it to sweep"
+msgstr ""
+
+msgid "drag planks onto the rope before the interns reach the gap — and replace the cracked ones"
+msgstr ""
+
+msgid "drag ramps and bumpers out of the tray, then click the funnel — land the marble in the cup"
+msgstr ""
+
+msgid "drag the ball and flick it into the hoop"
+msgstr ""
+
+msgid "drag your mallet and score in the right-hand goal"
+msgstr ""
+
+msgid "drag your paddle up and down — get the ball past the right edge"
+msgstr ""
+
+msgid "draw the word on the board, or type your guesses — the sooner you get it, the more it scores"
+msgstr ""
+
+msgid "e.g. http://localhost:8080/health"
+msgstr ""
+
+msgid "enter your password there · the game restarts when it is done"
+msgstr ""
+
+msgid "equality mix-up"
+msgstr ""
+
+#, c-sharp-format
+msgid "every chip after {0} hands"
+msgstr ""
+
+msgid "exception handling"
+msgstr ""
+
+msgid "faster"
+msgstr ""
+
+msgid "faster, and longer words"
+msgstr ""
+
+msgid "find it to start a streak"
+msgstr ""
+
+msgid "find something at least 6 metres (20 feet) off, out of a window if you can, and rest your eyes on it"
+msgstr ""
+
+msgid "first"
+msgstr ""
+
+msgid "first to play their last card"
+msgstr ""
+
+msgid "flick the paper ball into the bin — mind the fan"
+msgstr ""
+
+msgid "flip two cards at a time — find all the pairs"
+msgstr ""
+
+msgid "floating-point precision"
+msgstr ""
+
+msgid "focus sounds need speakers or headphones"
+msgstr ""
+
+#, c-sharp-format
+msgid "for {0} more minutes · your chat waits for their break"
+msgstr ""
+
+#, c-sharp-format
+msgid "found in {0}, {1} s · streak {2}"
+msgstr ""
+
+#, c-sharp-format
+msgid "from {0}"
+msgstr ""
+
+msgid "full"
+msgstr ""
+
+msgid "game on!"
+msgstr ""
+
+#, c-sharp-format
+msgid "game to {0}"
+msgstr ""
+
+msgid "gave up"
+msgstr ""
+
+#, c-sharp-format
+msgid "gave up after {0} hours"
+msgstr ""
+
+msgid "git didn't answer in time"
+msgstr ""
+
+msgid "git is not installed"
+msgstr ""
+
+msgid "grab the ball for a rematch"
+msgstr ""
+
+msgid "grab the ball, flick it and let go — drop it into the cups; a bounce shot counts double"
+msgstr ""
+
+msgid "grab your mallet for a rematch"
+msgstr ""
+
+msgid "grab your paddle for a rematch"
+msgstr ""
+
+msgid "grouping and aggregates"
+msgstr ""
+
+#, c-sharp-format
+msgid "hand {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "hand {0} of {1}"
+msgstr ""
+
+msgid "have a good one"
+msgstr ""
+
+msgid "hearts broken"
+msgstr ""
+
+msgid "here is the code · click the board for a new code"
+msgstr ""
+
+msgid "hex joins in"
+msgstr ""
+
+msgid "hex too"
+msgstr ""
+
+msgid "hidden state"
+msgstr ""
+
+msgid "hold on the board to aim, let go to throw — finish on a double"
+msgstr ""
+
+#, c-sharp-format
+msgid "holes {0}–{1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "holes {0}–{1} · putt for a rematch"
+msgstr ""
+
+msgid "hot · slow"
+msgstr ""
+
+#, c-sharp-format
+msgid "if it did not install, it is in {0}"
+msgstr ""
+
+msgid "in 10 minutes"
+msgstr ""
+
+msgid "in a focus block"
+msgstr ""
+
+#, c-sharp-format
+msgid "in a focus block, {0} min left"
+msgstr ""
+
+msgid "in a meeting"
+msgstr ""
+
+#, c-sharp-format
+msgid "in a meeting, {0} min left"
+msgstr ""
+
+msgid "in, hold, out, hold: four seconds each, slowly, through the nose"
+msgstr ""
+
+msgid "installing the download unverified"
+msgstr ""
+
+msgid "integer overflow"
+msgstr ""
+
+msgid "it adds two hooks that pass on each step"
+msgstr ""
+
+msgid "it got away"
+msgstr ""
+
+msgid "it may have finished already"
+msgstr ""
+
+#, c-sharp-format
+msgid "it rang at {0}"
+msgstr ""
+
+msgid "it starts when the meeting or the presentation is over"
+msgstr ""
+
+msgid "it stole the bait · reel in"
+msgstr ""
+
+msgid "it waits under the scoreboard"
+msgstr ""
+
+#, c-sharp-format
+msgid "it's {0} · the rest can wait until tomorrow"
+msgstr ""
+
+msgid "its origin is not on GitHub or GitLab"
+msgstr ""
+
+msgid "landed"
+msgstr ""
+
+#, c-sharp-format
+msgid "last try · a wrong click costs {0} points"
+msgstr ""
+
+#, c-sharp-format
+msgid "level {0} · {1} cleared"
+msgstr ""
+
+#, c-sharp-format
+msgid "level {0} · {1} cleared · {2} points"
+msgstr ""
+
+msgid "lightning fast!"
+msgstr ""
+
+msgid "lunch"
+msgstr ""
+
+msgid "match the colour or the number — say “last card” when you're down to one"
+msgstr ""
+
+msgid "merge it into ~/.claude/settings.json"
+msgstr ""
+
+msgid "merge it into ~/.gemini/settings.json"
+msgstr ""
+
+msgid "missing await"
+msgstr ""
+
+msgid "missing key"
+msgstr ""
+
+msgid "move the cursor to herd the flock into the pen — click to bark"
+msgstr ""
+
+msgid "mutable default"
+msgstr ""
+
+msgid "next stack"
+msgstr ""
+
+msgid "next tower"
+msgstr ""
+
+#, c-sharp-format
+msgid "next: {0}, {1} at {2}"
+msgstr ""
+
+msgid "no 25 minutes free between meetings today"
+msgstr ""
+
+msgid "no answer in time"
+msgstr ""
+
+msgid "no budget · clear a wave for more"
+msgstr ""
+
+msgid "no commits by you that day"
+msgstr ""
+
+msgid "no meetings today"
+msgstr ""
+
+#, c-sharp-format
+msgid "no pkexec or terminal to install it · it is in {0}"
+msgstr ""
+
+msgid "no request lost"
+msgstr ""
+
+msgid "no stone in the house"
+msgstr ""
+
+msgid "no such file"
+msgstr ""
+
+msgid "nobody by that name is on the network now"
+msgstr ""
+
+msgid "none left"
+msgstr ""
+
+msgid "not a block lost!"
+msgstr ""
+
+msgid "not a git repository"
+msgstr ""
+
+msgid "not allowed right now"
+msgstr ""
+
+msgid "not atomic"
+msgstr ""
+
+msgid "not delivered"
+msgstr ""
+
+msgid "not now"
+msgstr ""
+
+msgid "nothing in the next two weeks"
+msgstr ""
+
+msgid "null dereference"
+msgstr ""
+
+msgid "of Work"
+msgstr ""
+
+msgid "off-by-one"
+msgstr ""
+
+msgid "on to the next one"
+msgstr ""
+
+msgid "one meeting today"
+msgstr ""
+
+msgid "opening the download page"
+msgstr ""
+
+msgid "opening the download page instead"
+msgstr ""
+
+msgid "or run: deskarcade --signal repo-add:<folder>"
+msgstr ""
+
+msgid "or run: deskarcade --signal show"
+msgstr ""
+
+msgid "other programs"
+msgstr ""
+
+msgid "out"
+msgstr ""
+
+#, c-sharp-format
+msgid "out · place {0}"
+msgstr ""
+
+msgid "parsing"
+msgstr ""
+
+msgid "pass three cards, then follow suit — duck the hearts and the queen of spades"
+msgstr ""
+
+msgid "penalty drop"
+msgstr ""
+
+msgid "pick a bet and deal — get closer to 21 than the dealer without going over"
+msgstr ""
+
+msgid "pick a colour, fill the row and click Check — a black pin is the right colour in the right place"
+msgstr ""
+
+msgid "pick a table — fold, check or call, or raise with the slider; the best five cards win the pot"
+msgstr ""
+
+msgid "pick a tool, then click an intern — get enough of them to the exit"
+msgstr ""
+
+#, c-sharp-format
+msgid "pile {0}"
+msgstr ""
+
+msgid "pipeline"
+msgstr ""
+
+msgid "play the computer, or set up a room for up to four co-workers"
+msgstr ""
+
+msgid "playing"
+msgstr ""
+
+msgid "playing…"
+msgstr ""
+
+msgid "point over the well to steer — click turns, hold drops faster, right-click drops"
+msgstr ""
+
+msgid "points ×2"
+msgstr ""
+
+msgid "pop me"
+msgstr ""
+
+msgid "press the keys"
+msgstr ""
+
+msgid "pull back to start a round"
+msgstr ""
+
+msgid "put it at the top of ~/.codex/config.toml"
+msgstr ""
+
+msgid "queue full"
+msgstr ""
+
+msgid "race condition"
+msgstr ""
+
+msgid "rack a server if you can"
+msgstr ""
+
+msgid "rebooting"
+msgstr ""
+
+#, c-sharp-format
+msgid "rebooting {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "replaced · −{0} s"
+msgstr ""
+
+msgid "resource leak"
+msgstr ""
+
+msgid "result thrown away"
+msgstr ""
+
+msgid "review"
+msgstr ""
+
+#, c-sharp-format
+msgid "review approved +{0}"
+msgstr ""
+
+msgid "right-click a piece to take it back"
+msgstr ""
+
+#, c-sharp-format
+msgid "rings at {0}"
+msgstr ""
+
+msgid "run these from the tool's own hooks or scripts"
+msgstr ""
+
+msgid "save it as ~/.codeium/windsurf/hooks.json, or merge it into the one there"
+msgstr ""
+
+msgid "save it as ~/.codex/hooks.json, then trust it in /hooks"
+msgstr ""
+
+msgid "save it as ~/.copilot/hooks/deskarcade.json"
+msgstr ""
+
+msgid "save it as ~/.cursor/hooks.json, or merge it into the one there"
+msgstr ""
+
+#, c-sharp-format
+msgid "saved in {0} · double-click the .deb to install it"
+msgstr ""
+
+msgid "second"
+msgstr ""
+
+msgid "sending…"
+msgstr ""
+
+#, c-sharp-format
+msgid "sent to {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "series {0}–{1}"
+msgstr ""
+
+msgid "several ways lead there · click each landing on the way"
+msgstr ""
+
+msgid "shadowed variable"
+msgstr ""
+
+msgid "shared reference"
+msgstr ""
+
+msgid "shoot from here"
+msgstr ""
+
+msgid "shoot from the marked spot"
+msgstr ""
+
+msgid "split"
+msgstr ""
+
+msgid "squares dab themselves as you work and play — three in a line is a bingo"
+msgstr ""
+
+msgid "squash the bugs — spare the ladybugs"
+msgstr ""
+
+msgid "start Desk Arcade again to play it"
+msgstr ""
+
+msgid "start another from At work → Focus"
+msgstr ""
+
+msgid "start the next focus block from At work → Focus"
+msgstr ""
+
+msgid "still rising"
+msgstr ""
+
+msgid "stray semicolon"
+msgstr ""
+
+msgid "streak over"
+msgstr ""
+
+#, c-sharp-format
+msgid "streak {0} · keep it going"
+msgstr ""
+
+msgid "terminal"
+msgstr ""
+
+msgid "test"
+msgstr ""
+
+#, c-sharp-format
+msgid "tests pass +{0}"
+msgstr ""
+
+msgid "that card can't beat any of them"
+msgstr ""
+
+msgid "that was a feature!"
+msgstr ""
+
+#, c-sharp-format
+msgid "the CPU goes easier: {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "the CPU goes easier: {0} · click a grid for a rematch"
+msgstr ""
+
+#, c-sharp-format
+msgid "the CPU goes easier: {0} · click the board for a rematch"
+msgstr ""
+
+#, c-sharp-format
+msgid "the CPU moves up to {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "the CPU typed {0} WPM"
+msgstr ""
+
+#, c-sharp-format
+msgid "the build flows in {0} s"
+msgstr ""
+
+#, c-sharp-format
+msgid "the calendar answered {0}"
+msgstr ""
+
+msgid "the calendar is too big"
+msgstr ""
+
+msgid "the code"
+msgstr ""
+
+msgid "the first glass today"
+msgstr ""
+
+msgid "the folder is gone"
+msgstr ""
+
+msgid "the game is paused · click it to resume"
+msgstr ""
+
+msgid "the game restarts when it is done"
+msgstr ""
+
+msgid "the game will still be here later"
+msgstr ""
+
+msgid "the host picks"
+msgstr ""
+
+msgid "the last cards went out together"
+msgstr ""
+
+msgid "the new version starts in a moment"
+msgstr ""
+
+msgid "the ones you miss come back more often"
+msgstr ""
+
+msgid "the program in front, once a minute · never a window title"
+msgstr ""
+
+msgid "the streak starts again with tomorrow's snippet"
+msgstr ""
+
+msgid "the word was"
+msgstr ""
+
+msgid "the ☰ button on the scoreboard has the menu"
+msgstr ""
+
+msgid "their Desk Arcade may be closed, or its invites off"
+msgstr ""
+
+msgid "their answer comes here"
+msgstr ""
+
+msgid "then PolicyKit asks for your password to install it"
+msgstr ""
+
+msgid "they will see it at their break"
+msgstr ""
+
+msgid "they will see it now"
+msgstr ""
+
+msgid "they will see your knock at their break"
+msgstr ""
+
+#, c-sharp-format
+msgid "they will see your knock at their break, in about {0} min"
+msgstr ""
+
+msgid "thinking…"
+msgstr ""
+
+msgid "third"
+msgstr ""
+
+msgid "three strikes in a row"
+msgstr ""
+
+msgid "three things to know"
+msgstr ""
+
+msgid "throw the ball from behind the line"
+msgstr ""
+
+msgid "tick one off to make room"
+msgstr ""
+
+msgid "tick what got done · the rest carries over to tomorrow"
+msgstr ""
+
+msgid "time for a short break · stretch and look away from the screen"
+msgstr ""
+
+msgid "time's up"
+msgstr ""
+
+msgid "timed out"
+msgstr ""
+
+msgid "to the left"
+msgstr ""
+
+msgid "to the right"
+msgstr ""
+
+#, c-sharp-format
+msgid "to {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "today's puzzle in {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "today's puzzle in {0}s"
+msgstr ""
+
+#, c-sharp-format
+msgid "trump {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "try {0} of {1}"
+msgstr ""
+
+msgid "type a five-letter word and press Enter — green is the right place, yellow is elsewhere in the word"
+msgstr ""
+
+msgid "type it"
+msgstr ""
+
+msgid "type mix-up"
+msgstr ""
+
+msgid "under the scoreboard · click one when it's done"
+msgstr ""
+
+msgid "unstable hash"
+msgstr ""
+
+#, c-sharp-format
+msgid "until {0}"
+msgstr ""
+
+msgid "up to three things to get done today"
+msgstr ""
+
+msgid "used after dispose"
+msgstr ""
+
+msgid "used-up iterator"
+msgstr ""
+
+#, c-sharp-format
+msgid "version {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "vs the CPU · {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "vs {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "wave {0} · {1} points"
+msgstr ""
+
+#, c-sharp-format
+msgid "wave {0} · {1} served · {2} points"
+msgstr ""
+
+msgid "well done · leave the rest for tomorrow"
+msgstr ""
+
+msgid "whack the bugs as they peek out — spare the ladybugs"
+msgstr ""
+
+msgid "wider block"
+msgstr ""
+
+#, c-sharp-format
+msgid "wind {0}"
+msgstr ""
+
+#, c-sharp-format
+msgid "with {0}"
+msgstr ""
+
+msgid "wrong"
+msgstr ""
+
+msgid "wrong comparison"
+msgstr ""
+
+msgid "wrong join"
+msgstr ""
+
+msgid "wrong logic"
+msgstr ""
+
+msgid "wrong scope"
+msgstr ""
+
+msgid "you gave up"
+msgstr ""
+
+msgid "you score"
+msgstr ""
+
+#, c-sharp-format
+msgid "you score {0}"
+msgstr ""
+
+msgid "you spooked it"
+msgstr ""
+
+msgid "you take a letter"
+msgstr ""
+
+msgid "you're in · wait for the next hole"
+msgstr ""
+
+msgid "your bet comes back"
+msgstr ""
+
+msgid "your flag is down"
+msgstr ""
+
+msgid "your pet ran off with it · it still counts"
+msgstr ""
+
+msgid "your turn!"
+msgstr ""
+
+msgid "z z"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} (no remote)"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} (you)"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} (you, host)"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} (your pack)"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} SCORES {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} SHOT THE MOON"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} WINS"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} WINS THE MATCH"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} WINS THE RACE"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} WINS THE SERIES"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} WPM"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} and {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} apples · {1} points"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} arrows · wind {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} attacks {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} balls in one shot!"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} bits now"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} blocks down"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} blocks moved"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} can't make it"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} can't move"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} chips"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} chips after ten hands"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} clicks"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} clouds · {1} stars · {2} points"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} commands: {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} commits not pushed"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} config copied"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} crossed the line first"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} cups · {1} points"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} darts"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} darts · new best!"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} days in a row"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} did not answer"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} events · {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} failed"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} failed · exit {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} files: {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} for {1}'s pet"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} forgot to say last card!"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} free"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} free from now, focus now?"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} free from {1}, focus then?"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} gave an error"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} glasses today"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} goes again"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} guessed it!"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} h {1} min"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} had {1} pips"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} has chat turned off. It turns on when they open the chat."
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} has finished"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} has no move · pass"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} has to match your shot"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} has your knock"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} hits!"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} in a minute"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} in a row"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} in a row!"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} in focus blocks"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} in {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} in {1} hands"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} in {1} minutes"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is aiming · wind {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is aiming…"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is all grown up!"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is back"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is defending"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is done"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is done · back to work"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is drawing · type your guess"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is focusing"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is hosting"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is in"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is in a meeting"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is in!"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is knocking"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is not installed"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is not signed in"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is old and wise now!"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is on a break"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is picking a word"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is picking a word…"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is ready"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is shooting · wind {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is starting"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is the durak"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is the durak · click New game"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is thinking…"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} is up"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} knocks on your door"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} knows"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} knows you're coming"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} lanes"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} left"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} left · the computer plays for them"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} levels deployed · {1} points · click the grid for another run"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} m"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} m +{1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} m · half points"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} made it — your turn to match"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} may throw in more"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} meetings today"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} messages while you focused · the last: {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} min"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} minutes"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} minutes before"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} minutes · a notice when it starts"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} minutes · block {1} of {2}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} missed"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} missed — your turn to set"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} moves · {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} moves · {1}s"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} needs you"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} never answered"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} next hand"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} notes is the most"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} now"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} of {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} of {1} across"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} of {1} across · click the planks for another round"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} of {1} answered"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} of {1} at the first try"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} of {1} at the first try · {2} points"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} of {1} bugs found, {2} at the first click · {3} points in {4}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} of {1} clays hit · {2} points"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} of {1} found · {2} points"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} of {1} guesses"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} of {1} penned · click the pen to try again"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} of {1} penned · {2} points"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} of {1} pieces"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} of {1} right"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} of {1} right · {2} s"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} of {1} saved · {2} needed"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} passed"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} passed · {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} passes"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} picks the text"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} players"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} players sharing today · updates every 20 seconds"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points (+{1})"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points after {1} hands"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points in three throws"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points so far · snippet {1} of {2}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points · best {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points · level {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points · reached stack {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points · tower {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points · wave {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points · {1} caught"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points · {1} jackpots"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points · {1} lines"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points · {1} of {2} in the cup"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points · {1} squashed · {2} got away"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points · {1} this hand"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points · {1} whacked"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} points · {1}s to spare"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} questions"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} quiet"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} requests · timeouts {1} s"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} reviews"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} running"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} s"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} scores"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} scores {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} seconds · spare the ladybugs"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} shortcuts in this set · keys for {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} shot the moon!"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} shows or hides the overlay · {1} next game · {2} brings the ball to the cursor"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} shows the overlay again"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} split {1} with {2}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} stashes"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} stroke · par {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} strokes · par {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} strokes · {1} vs par"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} takes"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} takes a letter"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} things carried over to tomorrow"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} to {1} players on the same network. Everyone needs Desk Arcade {2} or newer."
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} tries left · a wrong click costs {1} points"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} uncommitted changes"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} wants to chat"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} was approved"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} was merged"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} went out first · click New game"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} wins hole {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} wins {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} wins {1} with {2}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} wins · click New game"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} with co-workers"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} with co-workers…"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} won the table · click New game"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} won · click New game"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} won · finish the text for your speed"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} words · level {1} · {2} points"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · about {1} % to win against 1 player"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · about {1} % to win against {2} players"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · done"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · done after {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · exit code {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · failed"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · failed {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · needs you"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · no answers yet"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · passed"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · passed {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · paste them in the standup chat"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · quiet since {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · running {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · streak {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · to everyone with invites on"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · took {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · until {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · waited {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · working {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · you played {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · {1} coming"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · {1} kg"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · {1} tiles"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · {1} worked {2}, you played {3}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · {1} · already playing"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0} · {1} · {2}/{3} players"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}% accuracy"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}% accuracy · {1}s"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}'s pet loved it"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}'s putt"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}'s shot"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}'s turn"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}, suited"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}-minute breaks"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}: 1 commit"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}: after lunch"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}: all committed and pushed ✓"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}: come over!"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}: couldn't read it ({1})"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}: git has no user.email to find your commits by"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}: in 10 minutes"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}: won {1}, lost {2}, drawn {3}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}: {1} commits"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}: {1} on average, up {2} % in a month"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}: {1} on average, {2} runs"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}: {1} · close!"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}: {1}, once"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}h {1}m"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}m"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}s"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}s left · caught {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}s left · squashed {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}s left · squashed {1} · combo ×{2}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}s left · whacked {1}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}s · clouds {1} · pull the string to climb"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}s · drag a block out slowly, then lay it on top"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}th"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}–{1} in matches · grab your mallet for a new series"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}–{1} off"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}–{1} vs {2}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}–{1} vs {2} · series {3}–{4}"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}–{1} · grab your mallet for a rematch"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}–{1} · grab your paddle for a rematch"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}–{1} · pull the bow for a rematch"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}–{1} · series {2}–{3} · grab your mallet for the next match"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}–{1} · the CPU gets faster"
+msgstr ""
+
+#, c-sharp-format
+msgid "{0}–{1} · the CPU gets sharper"
+msgstr ""
+
+msgid "½ pot"
+msgstr ""
+
+#, c-sharp-format
+msgid "×{0} multiplier"
+msgstr ""
+
+#, c-sharp-format
+msgid "−{0} chips"
+msgstr ""
+
+#, c-sharp-format
+msgid "✓ Found it · +{0}"
+msgstr ""
+
+msgid "✓ You found today's bug"
+msgstr ""
+
+msgid "✗ Three wrong clicks"
+msgstr ""
+
+msgid "✗ Time's up"
+msgstr ""
+
+msgid "✗ Today's bug got away"
+msgstr ""

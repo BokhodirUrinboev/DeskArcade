@@ -23,6 +23,8 @@ public sealed partial class OfficeDesk
         public required string Target;
         public required string Label;
         public double Since;
+        public DateTime StartUtc;       // for the wait report
+        public double PlayedAtStart;
         public double CheckedAt = -99;
         public FileWait? File;
         public bool Busy;              // a web check is out
@@ -33,6 +35,37 @@ public sealed partial class OfficeDesk
     readonly DownloadWatch _downloads = new();
     readonly DispatcherTimer _downloadTimer = new() { Interval = TimeSpan.FromSeconds(3) };
     bool _downloadsPrimed, _scanning;
+    // when each download in progress was first seen, by the name it will have ("" when not known yet), for the wait report
+    readonly Dictionary<string, (DateTime Start, double Played)> _downloadStarts = new(StringComparer.OrdinalIgnoreCase);
+    readonly Queue<(DateTime Start, double Played)> _unnamedStarts = new();
+
+    /// <summary>A finished wait goes into the wait log as a download: how long it took and how much of it was played.</summary>
+    void RecordWait(string label, DateTime startUtc, double playedAtStart, bool? passed, string source)
+    {
+        double seconds = (DateTime.UtcNow - startUtc).TotalSeconds;
+        double played = Math.Max(0, _w.Stats.TotalSeconds - playedAtStart);
+        _w.Waits.Add(new Dev.WaitEntry(Dev.WaitKind.Download, label, startUtc, seconds, passed, played, source));
+    }
+
+    /// <summary>Notes when downloads start, and logs the ones that finished with how long they took.</summary>
+    void RecordDownloads(List<string> started, List<string> finished)
+    {
+        var now = (DateTime.UtcNow, _w.Stats.TotalSeconds);
+        foreach (string name in started)
+        {
+            if (name.Length == 0)
+            {
+                if (_unnamedStarts.Count < 20) _unnamedStarts.Enqueue(now);
+            }
+            else _downloadStarts.TryAdd(name, now);
+        }
+        foreach (string name in finished)
+        {
+            if (_downloadStarts.Remove(name, out var start) || _unnamedStarts.TryDequeue(out start))
+                RecordWait(name, start.Start, start.Played, null, "download");
+        }
+        if (_downloadStarts.Count > 50) _downloadStarts.Clear(); // cancelled ones never finish
+    }
 
     // ------------------------------------------------------------------ downloads
 
@@ -78,7 +111,8 @@ public sealed partial class OfficeDesk
         try
         {
             var (partials, files) = await Task.Run(() => ListFolder(folder));
-            var (_, finished) = _downloads.Step(partials, files, DateTime.UtcNow);
+            var (started, finished) = _downloads.Step(partials, files, DateTime.UtcNow);
+            RecordDownloads(started, finished);
             if (!_downloadsPrimed)
             {
                 _downloadsPrimed = true; // what was already downloading when the watch began is only noted
@@ -118,6 +152,8 @@ public sealed partial class OfficeDesk
     {
         if (_waits.Count >= MaxWaits) _waits.RemoveAt(0);
         wait.Since = Now;
+        wait.StartUtc = DateTime.UtcNow;
+        wait.PlayedAtStart = _w.Stats.TotalSeconds;
         _waits.Add(wait);
         if (!_fullScreen) ShowForReal(); // asking to wait means "let me play meanwhile"
         Say(L.F("Waiting for {0}", Short(wait.Label, 40)), L.T("a chime when it is done · play meanwhile"), Blue, "score", 0.5);
@@ -179,6 +215,7 @@ public sealed partial class OfficeDesk
                     if (now - wait.Since > UrlGiveUpHours * 3600)
                     {
                         _waits.Remove(wait);
+                        RecordWait(wait.Label, wait.StartUtc, wait.PlayedAtStart, false, wait.Kind);
                         Say(L.F("{0} never answered", wait.Label), L.F("gave up after {0} hours", UrlGiveUpHours), Red, "attention");
                     }
                     else if (!wait.Busy) CheckUrl(wait);
@@ -250,6 +287,7 @@ public sealed partial class OfficeDesk
     {
         wait.Done = true;
         _waits.Remove(wait);
+        RecordWait(wait.Label, wait.StartUtc, wait.PlayedAtStart, wait.Kind == "url" ? true : null, wait.Kind);
         Say(title, L.F("after {0}", Hud.FormatWait(TimeSpan.FromSeconds(Now - wait.Since))), Green, "done", 0.9);
     }
 

@@ -59,6 +59,13 @@ public sealed class Tray : IDisposable
         var daily = Item(_w.DailyLine, () => _w.PlayDaily());
         _refreshers.Add(() => daily.Header = _w.DailyLine);
         menu.Add(daily);
+        var share = new NativeMenu();
+        share.Add(Item(L.T("Copy the result as text"), () => _w.ShareResult()));
+        share.Add(Item(L.T("Copy a picture of the game"), () => _w.SharePicture()));
+        var year = Item(L.T("Your year at the desk…"), () => _w.ShowYear());
+        _refreshers.Add(() => year.IsVisible = YearInReview.InSeason(DateTime.Now));
+        share.Add(year);
+        menu.Add(new NativeMenuItem(L.T("Share")) { Menu = share });
 
         var lan = new NativeMenu();
         var status = new NativeMenuItem(_w.LanStatus) { IsEnabled = false };
@@ -70,6 +77,11 @@ public sealed class Tray : IDisposable
         lan.Add(Item(L.T("Find games / join by address…"), () => _w.OpenLobby()));
         lan.Add(Item(L.T("Durak with co-workers…"), () => _w.OpenDurakRooms()));
         lan.Add(Item(L.T("Last Card with co-workers…"), () => _w.OpenLastCardRooms()));
+        foreach (var room in _w.Games.OfType<Games.IRoomGame>().Where(g => g.Id is not ("durak" or "lastcard")))
+        {
+            string id = room.Id;
+            lan.Add(Item(L.F("{0} with co-workers…", L.T(room.Title)), () => _w.OpenRooms(id)));
+        }
         var emotes = new NativeMenu();
         for (int i = 0; i < Net.LanLink.Emotes.Length; i++)
         {
@@ -164,16 +176,10 @@ public sealed class Tray : IDisposable
             language.Add(Radio(code == "auto" ? L.T(name) : name, () => _w.SetLanguage(code), () => _w.Settings.Language == code));
         menu.Add(new NativeMenuItem(L.T("Language")) { Menu = language });
 
-        var claude = new NativeMenu();
-        claude.Add(Check(L.T("Alerts when Claude finishes"), () => Toggle(s => s.ClaudeNotify = !s.ClaudeNotify), () => _w.Settings.ClaudeNotify));
-        claude.Add(Check(L.T("Show the overlay when Claude starts working"), () => Toggle(s => s.ClaudeAutoShow = !s.ClaudeAutoShow), () => _w.Settings.ClaudeAutoShow));
-        claude.Add(Check(L.T("Hide the overlay when Claude finishes or needs you"), () => Toggle(s => s.ClaudeAutoHide = !s.ClaudeAutoHide), () => _w.Settings.ClaudeAutoHide));
-        claude.Add(Check(L.T("Pause the game when Claude finishes or needs you"), () => Toggle(s => s.ClaudePause = !s.ClaudePause), () => _w.Settings.ClaudePause));
-        claude.Add(new NativeMenuItemSeparator());
-        claude.Add(Item(L.T("Copy Claude Code hook config"), () => _w.CopyHookConfig()));
-        menu.Add(new NativeMenuItem("Claude Code") { Menu = claude });
+        menu.Add(OfficeMenu.ToNative(DevMenu.Build(_w), _refreshers));
 
         menu.Add(Item(L.T("Shortcuts…"), () => _w.OpenShortcuts()));
+        menu.Add(Item(L.T("Show the tour again"), () => _w.ShowTour()));
         menu.Add(Check(L.T("Start when I sign in"), () =>
         {
             _w.AutostartEnabled = !_w.AutostartEnabled;

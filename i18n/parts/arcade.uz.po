@@ -1,0 +1,310 @@
+# Desk Arcade: Uzbek (uz), the 1.8.6 arcade games: Load Balancer, Pipeline, FreeCell and Spider.
+# The English text is the msgid. Keep {0}-style placeholders, "·" separators and "×" as they are, and keep
+# the number last in "Best {0}"-style lines (the compact scoreboard shows only the last word).
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: uz\n"
+"X-Language-Name: O'zbekcha\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. ---- Solitaire: FreeCell and Spider
+msgid "Klondike"
+msgstr "Klondayk"
+
+msgid "FreeCell"
+msgstr "Bo'sh katak"
+
+msgid "Spider"
+msgstr "O'rgimchak"
+
+msgid "One suit"
+msgstr "Bitta mast"
+
+msgid "Two suits"
+msgstr "Ikkita mast"
+
+msgid "Four suits"
+msgstr "To'rtta mast"
+
+#, c-sharp-format
+msgid "Deal #{0}"
+msgstr "Tarqatma #{0}"
+
+msgid "Deal number"
+msgstr "Tarqatma raqami"
+
+msgid "Click or drag cards to move them · a free cell holds any one card · right-drag moves the felt"
+msgstr "Kartalarni bosing yoki suring · bo'sh katakka istalgan bitta karta sig'adi · stolni o'ng tugma bilan suring"
+
+msgid "Build each suit down from king to ace · click the stock to deal a row · right-drag moves the felt"
+msgstr "Har bir mastni qiroldan tuzgacha yig'ing · qator tarqatish uchun to'plamni bosing · stolni o'ng tugma bilan suring"
+
+msgid "Fill every column before dealing"
+msgstr "Tarqatishdan oldin har bir ustunni to'ldiring"
+
+#, c-sharp-format
+msgid "Room to move {0} cards at once"
+msgstr "Bir yurishda ko'chirsa bo'ladigan kartalar: {0}"
+
+msgid "Suit complete!"
+msgstr "Mast yig'ildi!"
+
+#, c-sharp-format
+msgid "FreeCell #{0} · won in {1} moves"
+msgstr "«Bo'sh katak» #{0} · {1} yurishda yechildi"
+
+#, c-sharp-format
+msgid "FreeCell #{0} · {1} of 52 cards home"
+msgstr "«Bo'sh katak» #{0} · 52 tadan {1} ta karta uyda"
+
+#, c-sharp-format
+msgid "Spider, {0} · won in {1} moves"
+msgstr "«O'rgimchak», {0} · {1} yurishda yechildi"
+
+#, c-sharp-format
+msgid "Solitaire · solved in {0} moves · {1}"
+msgstr "Pasyans · {0} yurishda yechildi · {1}"
+
+msgid "Free and clear"
+msgstr "Hammasi joyida"
+
+msgid "Solve a FreeCell deal"
+msgstr "«Bo'sh katak»ni bir marta yeching"
+
+msgid "Eight legs"
+msgstr "Sakkiz oyoq"
+
+msgid "Solve a game of Spider"
+msgstr "«O'rgimchak»ni bir marta yeching"
+
+msgid "Load Balancer"
+msgstr "Yuk taqsimlagich"
+
+msgid "Click the load balancer to start · drag requests to the servers"
+msgstr "Boshlash uchun yuk taqsimlagichni bosing · so'rovlarni serverlarga suring"
+
+#, c-sharp-format
+msgid "Down at wave {0} · click the load balancer for another game"
+msgstr "{0}-to'lqinda xizmat to'xtadi · yangi o'yin uchun yuk taqsimlagichni bosing"
+
+#, c-sharp-format
+msgid "Wave {0} · lives {1} · budget {2} · drag requests to a server"
+msgstr "To'lqin {0} · jon {1} · byudjet {2} · so'rovlarni serverga suring"
+
+#, c-sharp-format
+msgid "Load Balancer · wave {0}, {1} requests served, {2} points 🖥️"
+msgstr "Yuk taqsimlagich · {0}-to'lqin, {1} ta so'rov bajarildi, {2} ochko 🖥️"
+
+msgid "no budget · clear a wave for more"
+msgstr "byudjet yo'q · ko'proq olish uchun to'lqinni o'ting"
+
+#, c-sharp-format
+msgid "cooling down · {0} s"
+msgstr "sovumoqda · {0} s"
+
+msgid "Server racked"
+msgstr "Server o'rnatildi"
+
+msgid "rebooting"
+msgstr "qayta yuklanmoqda"
+
+msgid "full"
+msgstr "band"
+
+msgid "timed out"
+msgstr "vaqt tugadi"
+
+msgid "queue full"
+msgstr "navbat to'la"
+
+msgid "OVERHEATED · rebooting"
+msgstr "QIZIB KETDI · qayta yuklanmoqda"
+
+#, c-sharp-format
+msgid "{0} requests · timeouts {1} s"
+msgstr "{0} ta so'rov · kutish {1} s"
+
+msgid "TRAFFIC SPIKE!"
+msgstr "TRAFIK KESKIN OSHDI!"
+
+msgid "rack a server if you can"
+msgstr "iloji bo'lsa server o'rnating"
+
+msgid "WAVE CLEARED"
+msgstr "TO'LQIN O'TILDI"
+
+#, c-sharp-format
+msgid "+{0} · the budget grows"
+msgstr "+{0} · byudjet oshdi"
+
+msgid "no request lost"
+msgstr "birorta so'rov yo'qolmadi"
+
+#, c-sharp-format
+msgid "+{0} cache hit"
+msgstr "+{0} keshdan"
+
+msgid "SERVICE DOWN"
+msgstr "XIZMAT TO'XTADI"
+
+#, c-sharp-format
+msgid "wave {0} · {1} served · {2} points"
+msgstr "{0}-to'lqin · {1} ta bajarildi · {2} ochko"
+
+#, c-sharp-format
+msgid "rebooting {0}"
+msgstr "qayta yuklanmoqda {0}"
+
+msgid "hot · slow"
+msgstr "qizigan · sekin"
+
+msgid "LOAD BALANCER · click to start"
+msgstr "YUK TAQSIMLAGICH · boshlash uchun bosing"
+
+msgid "LOAD BALANCER"
+msgstr "YUK TAQSIMLAGICH"
+
+msgid "+ rack"
+msgstr "+ server"
+
+msgid "budget 0"
+msgstr "byudjet 0"
+
+msgid "click the load balancer to start — drag each request onto a server before it times out"
+msgstr "yuk taqsimlagichni bosing — har bir so'rovni vaqti tugamasdan serverga suring"
+
+msgid "Uptime"
+msgstr "Uzluksiz ishlash"
+
+msgid "Serve 500 requests in Load Balancer"
+msgstr "Yuk taqsimlagichda 500 ta so'rovni bajaring"
+
+msgid "Black Friday"
+msgstr "Qora juma"
+
+msgid "Reach wave 8 in Load Balancer"
+msgstr "Yuk taqsimlagichda 8-to'lqinga yeting"
+
+msgid "Five nines"
+msgstr "Beshta to'qqiz"
+
+msgid "Clear 5 waves without losing a request"
+msgstr "Birorta so'rovni yo'qotmasdan 5 ta to'lqinni o'ting"
+
+#, c-sharp-format
+msgid "Serve {0} requests in Load Balancer"
+msgstr "Yuk taqsimlagichda {0} ta so'rovni bajaring"
+
+msgid "Pipeline"
+msgstr "Konveyer"
+
+msgid "Click the grid to start · lay pipe from the commit to the deploy"
+msgstr "Boshlash uchun maydonni bosing · kommitdan deploygacha quvur yotqizing"
+
+#, c-sharp-format
+msgid "Level {0} · the build flows in {1} s · click a cell to lay the next piece"
+msgstr "{0}-daraja · yig'ilish {1} s dan keyin oqadi · keyingi quvurni qo'yish uchun katakni bosing"
+
+#, c-sharp-format
+msgid "Level {0} · flowing · keep laying ahead of it"
+msgstr "{0}-daraja · oqmoqda · undan oldinda quvur yotqizishda davom eting"
+
+#, c-sharp-format
+msgid "Pipeline · deployed {0} levels, {1} points 🚰"
+msgstr "Konveyer · {0} ta daraja deploy qilindi, {1} ochko 🚰"
+
+#, c-sharp-format
+msgid "the build flows in {0} s"
+msgstr "yig'ilish {0} s dan keyin oqadi"
+
+#, c-sharp-format
+msgid "replaced · −{0} s"
+msgstr "almashtirildi · −{0} s"
+
+msgid "THE BUILD IS FLOWING"
+msgstr "YIG'ILISH OQMOQDA"
+
+#, c-sharp-format
+msgid "tests pass +{0}"
+msgstr "testlar o'tdi +{0}"
+
+#, c-sharp-format
+msgid "review approved +{0}"
+msgstr "ko'rib chiqish ma'qullandi +{0}"
+
+msgid "DEPLOYED!"
+msgstr "DEPLOY QILINDI!"
+
+#, c-sharp-format
+msgid "+{0} · level {1} next"
+msgstr "+{0} · keyingisi {1}-daraja"
+
+msgid "THE BUILD LEAKED"
+msgstr "YIG'ILISH OQIB KETDI"
+
+#, c-sharp-format
+msgid "{0} levels deployed · {1} points · click the grid for another run"
+msgstr "{0} ta daraja deploy qilindi · {1} ochko · yangi o'yin uchun maydonni bosing"
+
+msgid "NEXT"
+msgstr "KEYINGI"
+
+msgid "Deploy now ▶"
+msgstr "Hozir deploy ▶"
+
+msgid "PIPELINE · click to start"
+msgstr "KONVEYER · boshlash uchun bosing"
+
+#, c-sharp-format
+msgid "LEVEL {0} · flows in {1}"
+msgstr "{0}-DARAJA · {1} dan keyin oqadi"
+
+#, c-sharp-format
+msgid "LEVEL {0} · flowing"
+msgstr "{0}-DARAJA · oqmoqda"
+
+msgid "DEPLOYED"
+msgstr "DEPLOY QILINDI"
+
+msgid "LEAKED"
+msgstr "OQIB KETDI"
+
+msgid "commit"
+msgstr "kommit"
+
+msgid "deploy"
+msgstr "deploy"
+
+msgid "test"
+msgstr "test"
+
+msgid "review"
+msgstr "ko'rik"
+
+msgid "click the grid, then click cells to lay pipe from the commit to the deploy before the build flows"
+msgstr "maydonni, keyin kataklarni bosing — yig'ilish oqmasdan kommitdan deploygacha quvur yotqizing"
+
+msgid "Continuous delivery"
+msgstr "Uzluksiz yetkazib berish"
+
+msgid "Deploy 25 Pipeline levels"
+msgstr "Konveyerda 25 ta darajani deploy qiling"
+
+msgid "Release train"
+msgstr "Relizlar poyezdi"
+
+msgid "Reach level 10 in Pipeline"
+msgstr "Konveyerda 10-darajaga yeting"
+
+msgid "Plumber"
+msgstr "Chilangar"
+
+msgid "Lay 500 pieces of pipe"
+msgstr "500 ta quvur yotqizing"
+
+#, c-sharp-format
+msgid "Deploy {0} levels in Pipeline"
+msgstr "Konveyerda {0} ta darajani deploy qiling"

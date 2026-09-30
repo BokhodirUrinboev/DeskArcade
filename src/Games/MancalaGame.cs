@@ -292,6 +292,7 @@ public sealed class MancalaGame : MiniGame
     {
         int mine = _rules.Score(Me), theirs = _rules.Score(1 - Me);
         var at = new Vec2(_origin.X + BoardW / 2, _origin.Y - 30);
+        if (LanOn) Host.RecordResult(Id, Rival, _rules.Winner == Me ? 1 : _rules.Winner < 0 ? 0 : -1);
         if (_rules.Winner == Me)
         {
             Host.Stats.Add("mancala.wins");

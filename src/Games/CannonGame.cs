@@ -407,6 +407,7 @@ public sealed partial class CannonGame : MiniGame
         _cpuIn = -1;
         bool won = _rules.Winner == 0;
         Host.Stats.Add("cannons.games");
+        if (DuelOn) Host.RecordResult(Id, Host.Lan.PeerName, won ? 1 : -1);
         var a = Host.Arena;
         var at = new Vec2(a.Center.X, a.Top + a.Height * 0.3);
         string sub = DuelOn ? L.T("click your cannon for a rematch") : L.T("click your cannon to play again");

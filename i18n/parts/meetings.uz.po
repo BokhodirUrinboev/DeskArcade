@@ -1,0 +1,225 @@
+# Desk Arcade: Uzbek (uz), in Latin script, 1.8.7 · Join buttons, focus sounds and knocks.
+# The English text is the msgid. Keep {0}-style placeholders, "·" separators and "×" as they are, and keep
+# the number last in "Best {0}"-style lines (the compact scoreboard shows only the last word).
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. ---- Join buttons on meeting cards
+msgid "Starting now"
+msgstr "Hozir boshlanadi"
+
+msgid "In a minute"
+msgstr "Bir daqiqadan keyin"
+
+#, c-sharp-format
+msgid "Join {0}"
+msgstr "Qo'shilish: {0}"
+
+msgid "No call to join now"
+msgstr "Hozir qo'shiladigan qo'ng'iroq yo'q"
+
+msgid "a meeting's link shows here from 15 minutes before"
+msgstr "uchrashuv havolasi boshlanishidan 15 daqiqa oldin shu yerda chiqadi"
+
+msgid "Straight in"
+msgstr "Bir bosishda"
+
+msgid "Join 10 meetings with a Join button"
+msgstr "«Qo'shilish» tugmasi bilan 10 ta uchrashuvga qo'shiling"
+
+#. ---- focus sounds
+msgid "Focus sounds"
+msgstr "Fokus uchun tovushlar"
+
+msgid "Brown noise"
+msgstr "Jigarrang shovqin"
+
+msgid "Pink noise"
+msgstr "Pushti shovqin"
+
+msgid "Rain"
+msgstr "Yomg'ir"
+
+msgid "Café"
+msgstr "Kafe"
+
+#, c-sharp-format
+msgid "Playing: {0}"
+msgstr "Yangramoqda: {0}"
+
+#, c-sharp-format
+msgid "{0} in focus blocks"
+msgstr "{0} · fokus paytida"
+
+msgid "Nothing playing"
+msgstr "Hech narsa yangramayapti"
+
+msgid "Stop the sound"
+msgstr "Tovushni o'chirish"
+
+msgid "Play it during focus blocks"
+msgstr "Fokus paytida yangrasin"
+
+msgid "No sound device"
+msgstr "Ovoz qurilmasi yo'q"
+
+msgid "focus sounds need speakers or headphones"
+msgstr "tovushlar uchun karnay yoki quloqchin kerak"
+
+msgid "it starts when the meeting or the presentation is over"
+msgstr "uchrashuv yoki taqdimot tugagach yangraydi"
+
+msgid "In the zone"
+msgstr "Oqimda"
+
+msgid "Listen to focus sounds for 10 hours"
+msgstr "Fokus tovushlarini 10 soat tinglang"
+
+#. ---- knock first
+msgid "Knock on…"
+msgstr "Eshik taqillatish…"
+
+#, c-sharp-format
+msgid "Knock on {0}"
+msgstr "Taqillatish: {0}"
+
+msgid "Knock"
+msgstr "Taqillatish"
+
+msgid "about the API, 5 min"
+msgstr "API haqida, 5 daqiqa"
+
+msgid "Turn on invites from co-workers to knock"
+msgstr "Taqillatish uchun hamkasblardan takliflarni yoqing"
+
+msgid "Nobody heard yet: their invites need to be on too"
+msgstr "Hali hech kim yo'q: ularda ham takliflar yoqilgan bo'lishi kerak"
+
+msgid "available"
+msgstr "bo'sh"
+
+#, c-sharp-format
+msgid "available, next meeting in {0} min"
+msgstr "bo'sh, keyingi uchrashuvgacha {0} daq"
+
+msgid "in a focus block"
+msgstr "fokusda"
+
+#, c-sharp-format
+msgid "in a focus block, {0} min left"
+msgstr "fokusda, {0} daq qoldi"
+
+msgid "in a meeting"
+msgstr "uchrashuvda"
+
+#, c-sharp-format
+msgid "in a meeting, {0} min left"
+msgstr "uchrashuvda, {0} daq qoldi"
+
+msgid "they will see it now"
+msgstr "hozir ko'radi"
+
+#, c-sharp-format
+msgid "You knocked on {0}"
+msgstr "Taqillatdingiz: {0}"
+
+msgid "Couldn't knock"
+msgstr "Taqillatib bo'lmadi"
+
+msgid "They have gone"
+msgstr "Hamkasb tarmoqdan chiqdi"
+
+msgid "nobody by that name is on the network now"
+msgstr "hozir tarmoqda bunday nomli hech kim yo'q"
+
+msgid "Nobody to knock on"
+msgstr "Taqillatadigan hech kim yo'q"
+
+msgid "co-workers show up here when their invites are on"
+msgstr "hamkasblar takliflari yoqilganda shu yerda ko'rinadi"
+
+#, c-sharp-format
+msgid "{0} has your knock"
+msgstr "{0} taqillatishingizni oldi"
+
+msgid "their answer comes here"
+msgstr "javob shu yerga keladi"
+
+#, c-sharp-format
+msgid "{0} is in a meeting"
+msgstr "{0} uchrashuvda"
+
+msgid "they will see your knock at their break"
+msgstr "taqillatishingizni tanaffusda ko'radi"
+
+#, c-sharp-format
+msgid "they will see your knock at their break, in about {0} min"
+msgstr "taqillatishingizni tanaffusda, taxminan {0} daqiqadan keyin ko'radi"
+
+#, c-sharp-format
+msgid "No answer from {0}"
+msgstr "{0} javob bermadi"
+
+msgid "their Desk Arcade may be closed, or its invites off"
+msgstr "Desk Arcade yopiq yoki takliflar o'chiq bo'lishi mumkin"
+
+#, c-sharp-format
+msgid "about “{0}”"
+msgstr "«{0}» haqida"
+
+#, c-sharp-format
+msgid "{0}: come over!"
+msgstr "{0}: keling!"
+
+#, c-sharp-format
+msgid "{0}: in 10 minutes"
+msgstr "{0}: 10 daqiqadan keyin"
+
+#, c-sharp-format
+msgid "{0}: after lunch"
+msgstr "{0}: tushlikdan keyin"
+
+#, c-sharp-format
+msgid "{0} is knocking"
+msgstr "{0} eshikni taqillatyapti"
+
+#, c-sharp-format
+msgid "{0} knocks on your door"
+msgstr "Eshigingiz {0} marta taqillatildi"
+
+#, c-sharp-format
+msgid "and {0} more after these"
+msgstr "bulardan keyin yana {0} ta"
+
+msgid "Come over"
+msgstr "Keling"
+
+msgid "In 10 minutes"
+msgstr "10 daqiqadan keyin"
+
+msgid "After lunch"
+msgstr "Tushlikdan keyin"
+
+msgid "come over"
+msgstr "keling"
+
+msgid "in 10 minutes"
+msgstr "10 daqiqadan keyin"
+
+msgid "after lunch"
+msgstr "tushlikdan keyin"
+
+#, c-sharp-format
+msgid "{0} knows"
+msgstr "{0} xabardor"
+
+msgid "Open door"
+msgstr "Ochiq eshik"
+
+msgid "Answer 5 knocks"
+msgstr "5 ta taqillatishga javob bering"

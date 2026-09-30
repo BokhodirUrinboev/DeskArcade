@@ -1,0 +1,175 @@
+[
+  {
+    "id": "py-11", "lang": "python", "level": "hard", "kind": "default",
+    "code": [
+      "from datetime import datetime",
+      "",
+      "def log(message, when=datetime.now()):",
+      "    print(f\"[{when:%H:%M:%S}] {message}\")"
+    ],
+    "bug": [3],
+    "fix": { "3": "def log(message, when=None):\n    when = when or datetime.now()" },
+    "why": {
+      "en": "The default is worked out once, when def runs, so every message is stamped with the time the module was loaded. Default to None and read the clock inside.",
+      "ru": "Значение по умолчанию вычисляется один раз, при выполнении def, поэтому каждое сообщение получает время загрузки модуля. Сделайте значением по умолчанию None и берите время внутри.",
+      "uz": "Standart qiymat def bajarilganda bir marta hisoblanadi, shuning uchun har bir xabarga modul yuklangan vaqt yoziladi. Standart qiymatni None qiling va vaqtni ichkarida oling."
+    }
+  },
+  {
+    "id": "py-12", "lang": "python", "level": "medium", "kind": "injection",
+    "code": [
+      "def find_user(conn, name):",
+      "    \"\"\"The user's id, or None when nobody has that name.\"\"\"",
+      "    cur = conn.execute(f\"SELECT id FROM users WHERE name = '{name}'\")",
+      "    row = cur.fetchone()",
+      "    return row[0] if row else None"
+    ],
+    "bug": [3],
+    "fix": { "3": "    cur = conn.execute(\"SELECT id FROM users WHERE name = ?\", (name,))" },
+    "why": {
+      "en": "The name is pasted into the SQL, so a name like ' OR '1'='1 changes the query (and O'Brien simply breaks it). Pass it as a parameter with ?.",
+      "ru": "Имя вставляется прямо в SQL, поэтому имя вроде ' OR '1'='1 меняет запрос (а O'Brien его просто ломает). Передайте его параметром через ?.",
+      "uz": "Ism to'g'ridan-to'g'ri SQL ga qo'shiladi, shuning uchun ' OR '1'='1 kabi ism so'rovni o'zgartiradi (O'Brien esa uni shunchaki buzadi). Uni ? orqali parametr sifatida bering."
+    }
+  },
+  {
+    "id": "py-13", "lang": "python", "level": "medium", "kind": "leak",
+    "code": [
+      "import json",
+      "",
+      "def read_config(path):",
+      "    f = open(path, encoding=\"utf-8\")",
+      "    return json.load(f)"
+    ],
+    "bug": [4, 5],
+    "fix": {
+      "4": "    with open(path, encoding=\"utf-8\") as f:",
+      "5": "        return json.load(f)"
+    },
+    "why": {
+      "en": "The file is never closed: it stays open until the garbage collector gets to it, and a JSON error keeps it open longer still. with closes it however the block ends.",
+      "ru": "Файл не закрывается: он остаётся открытым, пока до него не доберётся сборщик мусора, а при ошибке в JSON — ещё дольше. with закроет его, как бы ни закончился блок.",
+      "uz": "Fayl yopilmaydi: axlat yig'uvchi unga yetib kelguncha ochiq turadi, JSON xatosida esa undan ham uzoqroq. with blok qanday tugashidan qat'i nazar uni yopadi."
+    }
+  },
+  {
+    "id": "py-14", "lang": "python", "level": "medium", "kind": "exception",
+    "code": [
+      "import json",
+      "",
+      "def load_settings(path):",
+      "    try:",
+      "        with open(path, encoding=\"utf-8\") as f:",
+      "            return json.load(f)",
+      "    except:",
+      "        return {}"
+    ],
+    "bug": [7],
+    "fix": { "7": "    except FileNotFoundError:" },
+    "why": {
+      "en": "A bare except swallows everything, a typo in the JSON and even Ctrl+C, so broken settings silently turn into {}. Catch only what you expect: a missing file.",
+      "ru": "Голый except проглатывает всё, и опечатку в JSON, и даже Ctrl+C, поэтому испорченные настройки молча превращаются в {}. Ловите только ожидаемое: отсутствие файла.",
+      "uz": "Yalang'och except hamma narsani yutib yuboradi, JSON dagi xatoni ham, hatto Ctrl+C ni ham, shuning uchun buzilgan sozlamalar indamay {} ga aylanadi. Faqat kutilgan xatoni, ya'ni fayl yo'qligini ushlang."
+    }
+  },
+  {
+    "id": "py-15", "lang": "python", "level": "medium", "kind": "precision",
+    "code": [
+      "def is_paid(invoice_total, payments):",
+      "    \"\"\"True when the payments add up to the invoice, to the cent.\"\"\"",
+      "    paid = sum(payments)",
+      "    return paid == invoice_total"
+    ],
+    "bug": [4],
+    "fix": { "4": "    return abs(paid - invoice_total) < 0.005" },
+    "why": {
+      "en": "Floats can't hold amounts like 0.1 exactly, so 0.10 + 0.20 is 0.30000000000000004 and never equals 0.30. Compare to within half a cent (or use Decimal).",
+      "ru": "float не может точно хранить суммы вроде 0.1, поэтому 0.10 + 0.20 равно 0.30000000000000004 и никогда не совпадёт с 0.30. Сравнивайте с точностью до полцента (или используйте Decimal).",
+      "uz": "float 0.1 kabi summalarni aniq saqlay olmaydi, shuning uchun 0.10 + 0.20 0.30000000000000004 ga teng va hech qachon 0.30 bilan mos kelmaydi. Yarim sent aniqlikda solishtiring (yoki Decimal dan foydalaning)."
+    }
+  },
+  {
+    "id": "py-16", "lang": "python", "level": "hard", "kind": "equality",
+    "code": [
+      "def unchanged(old_stock, new_stock):",
+      "    for item, qty in new_stock.items():",
+      "        if old_stock.get(item) is not qty:",
+      "            return False",
+      "    return True"
+    ],
+    "bug": [3],
+    "fix": { "3": "        if old_stock.get(item) != qty:" },
+    "why": {
+      "en": "is compares identity: CPython happens to reuse small ints, so it works up to 256 and then reports 1000 and 1000 as different. Compare values with !=.",
+      "ru": "is сравнивает идентичность: CPython переиспользует маленькие целые числа, поэтому до 256 всё работает, а 1000 и 1000 уже считаются разными. Сравнивайте значения через !=.",
+      "uz": "is aynanlikni solishtiradi: CPython kichik butun sonlarni qayta ishlatadi, shuning uchun 256 gacha hammasi ishlaydi, 1000 va 1000 esa endi har xil deb topiladi. Qiymatlarni != bilan solishtiring."
+    }
+  },
+  {
+    "id": "py-17", "lang": "python", "level": "hard", "kind": "iterator",
+    "code": [
+      "def stats(numbers):",
+      "    squares = (n * n for n in numbers)",
+      "    total = sum(squares)",
+      "    peak = max(squares)",
+      "    return total, peak"
+    ],
+    "bug": [2],
+    "fix": { "2": "    squares = [n * n for n in numbers]" },
+    "why": {
+      "en": "A generator can be walked only once: sum uses it up, so max gets an empty sequence and raises ValueError. Build a list instead.",
+      "ru": "Генератор можно пройти только один раз: sum его исчерпывает, и max получает пустую последовательность и бросает ValueError. Постройте список.",
+      "uz": "Generatorni faqat bir marta aylanib chiqish mumkin: sum uni tugatadi, max esa bo'sh ketma-ketlik oladi va ValueError tashlaydi. Ro'yxat tuzing."
+    }
+  },
+  {
+    "id": "py-18", "lang": "python", "level": "easy", "kind": "ignored-result",
+    "code": [
+      "def normalize(names):",
+      "    result = []",
+      "    for name in names:",
+      "        name.strip().lower()",
+      "        result.append(name)",
+      "    return result"
+    ],
+    "bug": [4],
+    "fix": { "4": "        name = name.strip().lower()" },
+    "why": {
+      "en": "Strings are immutable: strip and lower return new strings, and this line throws them away, so the names come back untouched. Assign the result.",
+      "ru": "Строки неизменяемы: strip и lower возвращают новые строки, а эта строка кода их выбрасывает, и имена возвращаются нетронутыми. Присвойте результат.",
+      "uz": "Satrlar o'zgarmas: strip va lower yangi satr qaytaradi, bu qator esa ularni tashlab yuboradi, shuning uchun ismlar o'zgarmay qaytadi. Natijani o'zgaruvchiga yozing."
+    }
+  },
+  {
+    "id": "py-19", "lang": "python", "level": "medium", "kind": "mutation",
+    "code": [
+      "def purge_expired(sessions, now):",
+      "    for sid, session in sessions.items():",
+      "        if session[\"expires\"] < now:",
+      "            del sessions[sid]"
+    ],
+    "bug": [2],
+    "fix": { "2": "    for sid, session in list(sessions.items()):" },
+    "why": {
+      "en": "Deleting from a dict while looping over it raises RuntimeError: dictionary changed size during iteration. Loop over a list of its items.",
+      "ru": "Удаление из словаря во время обхода бросает RuntimeError: dictionary changed size during iteration. Обходите список его элементов.",
+      "uz": "Lug'atni aylanib chiqayotganda undan o'chirish RuntimeError: dictionary changed size during iteration xatosini beradi. Uning elementlari ro'yxatini aylaning."
+    }
+  },
+  {
+    "id": "py-20", "lang": "python", "level": "easy", "kind": "off-by-one",
+    "code": [
+      "def last_lines(text, n):",
+      "    \"\"\"The last n lines of text.\"\"\"",
+      "    lines = text.splitlines()",
+      "    return lines[-n - 1:]"
+    ],
+    "bug": [4],
+    "fix": { "4": "    return lines[max(len(lines) - n, 0):]" },
+    "why": {
+      "en": "Starting at -n - 1 takes one line too many: asking for the last 2 gives 3. Starting at len(lines) - n (but not below 0) gives exactly n.",
+      "ru": "Начало с -n - 1 захватывает лишнюю строку: запрос двух последних даёт три. Начало с len(lines) - n (но не меньше 0) даёт ровно n.",
+      "uz": "-n - 1 dan boshlash bitta ortiqcha qator oladi: oxirgi 2 tasi so'ralsa, 3 ta chiqadi. len(lines) - n dan (lekin 0 dan kam bo'lmagan holda) boshlansa, aynan n ta qator chiqadi."
+    }
+  }
+]

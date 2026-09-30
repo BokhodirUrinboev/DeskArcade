@@ -1,5 +1,6 @@
 # Builds Desk Arcade on Windows, Ubuntu and macOS for pull requests and pushes to main, packages and
-# install-checks the Ubuntu .deb, and lints the workflows. Publishing releases is release.yml's job.
+# install-checks the Ubuntu .deb, tests the VS Code extension, and lints the workflows. Publishing releases is
+# release.yml's job.
 name: CI
 
 on:
@@ -106,6 +107,32 @@ jobs:
           else
             bash tests/smoke.sh "$EXE"
           fi
+
+  vscode:
+    # The VS Code extension in integrations/vscode: its unit tests (node --test), then its integration tests in a
+    # real VS Code that @vscode/test-electron downloads, under a virtual display, and the .vsix it packages into.
+    name: VS Code extension
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: integrations/vscode
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: integrations/vscode/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Unit tests
+        run: npm test
+      - name: Install a virtual display
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+      - name: Integration tests
+        run: xvfb-run -a npm run test:integration
+      - name: Package
+        run: npx vsce package --out desk-arcade.vsix
 
   actionlint:
     name: Lint workflows

@@ -22,7 +22,7 @@ namespace DeskArcade;
 /// Full-monitor, transparent, topmost window that never takes focus. Only the hit shapes the games
 /// report (ball, hoop, bow, scoreboard) receive the mouse; the platform layer passes the rest through.
 /// </summary>
-public sealed class OverlayWindow : Window, IGameHost
+public sealed partial class OverlayWindow : Window, IGameHost
 {
     readonly bool _demo;
     readonly string? _startGame;
@@ -60,8 +60,6 @@ public sealed class OverlayWindow : Window, IGameHost
     double _lastTick, _idle;
     Vec2 _eventPointer;
     UpdateInfo? _update;
-    DateTime? _claudeSince;
-    double _playedWhileClaude; // seconds of play since Claude started working, for the summary
     DateTime? _taskSince;       // a command run with --while is running
     string _taskLabel = "";
     double _playedWhileTask;
@@ -75,6 +73,10 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public Settings Settings { get; } = Settings.Load();
     public Stats Stats { get; } = Stats.Load();
+    /// <summary>Every wait of the last months (commands, agents, CI, lanes, downloads), for the wait report.</summary>
+    public Dev.WaitLog Waits { get; } = Dev.WaitLog.Load();
+    /// <summary>The record against each co-worker, and the month's ladder rating.</summary>
+    public Rivalries Rivals { get; } = Rivalries.Load();
     public Sound Sound { get; }
     public Fx Fx { get; } = new();
     public Platforms Platforms { get; } = new();
@@ -85,7 +87,9 @@ public sealed class OverlayWindow : Window, IGameHost
     public ChatHub Chat { get; private set; } = null!;
     /// <summary>At work: breaks, meetings, focus, timers, notes, invites, downloads, presenting.</summary>
     public OfficeDesk Office { get; private set; } = null!;
-    Border? _bubble;             // a chat message that came in with the chat closed
+    /// <summary>Coding agents and CI: agent sessions, status lanes, repo folders (see Dev/).</summary>
+    public Dev.DevDesk Coding { get; private set; } = null!;
+    Border? _bubble;            // a chat message that came in with the chat closed
     IDisposable? _bubbleTimer;
     Rect _bubbleRect;
     OfficeBoard _board = null!;
@@ -197,6 +201,9 @@ public sealed class OverlayWindow : Window, IGameHost
         _statsTimer.Tick += (_, _) =>
         {
             Stats.Save();
+            Waits.Save();
+            Rivals.Save();
+            CheckYearCard();
             if (Themes.Apply(Settings.Theme, DateTime.Today)) OnThemeChanged(); // "seasonal" at the turn of a month
         };
         _root.PointerPressed += OnPointerPressed;
@@ -280,6 +287,34 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new DominoGame(this));
         _games.Add(new JengaGame(this));
         _games.Add(new BridgeGame(this));
+        // 1.8.6 · party games (Quiz Night, Draw & Guess)
+        var quiz = new QuizGame(this);
+        quiz.SetupRequested += () => RoomWindow.ShowFor(this, quiz);
+        _games.Add(quiz);
+        var draw = new DrawGame(this);
+        draw.SetupRequested += () => RoomWindow.ShowFor(this, draw);
+        _games.Add(draw);
+
+        // 1.8.6 · card games (Poker, Hearts)
+        var poker = new PokerGame(this);
+        poker.SetupRequested += () => RoomWindow.ShowFor(this, poker);
+        _games.Add(poker);
+        var hearts = new HeartsGame(this);
+        hearts.SetupRequested += () => RoomWindow.ShowFor(this, hearts);
+        _games.Add(hearts);
+
+        // 1.8.6 · word and key games (Word Guess, Shortcut Trainer, Bit Flip)
+        _games.Add(new WordGuessGame(this));
+        _games.Add(new ShortcutGame(this));
+        _games.Add(new BitFlipGame(this));
+
+        // 1.8.6 · Spot the Bug
+        _games.Add(new SpotBugGame(this));
+
+        // 1.8.6 · arcade (Load Balancer, Pipeline)
+        _games.Add(new LoadBalancerGame(this));
+        _games.Add(new PipelineGame(this));
+
         _games.Add(new PetGame(this));
         StartPetCompany();
 
@@ -320,6 +355,7 @@ public sealed class OverlayWindow : Window, IGameHost
         PetMail = new PetMailer(this);
         Chat = new ChatHub(this);
         Office = new OfficeDesk(this);
+        Coding = new Dev.DevDesk(this);
 
         PlaceWindow();
         UpdateArena();
@@ -346,6 +382,7 @@ public sealed class OverlayWindow : Window, IGameHost
         _statsTimer.Start();
         if (Settings.ShareLeaderboard) StartBoard();
         Office.Start();
+        Coding.Start();
         if (Settings.CheckForUpdates && (Settings.LastUpdateCheck is not DateTime lastCheck || DateTime.UtcNow - lastCheck > TimeSpan.FromHours(20)))
             DispatcherTimer.RunOnce(() => CheckForUpdates(manual: false), TimeSpan.FromSeconds(25));
 
@@ -353,12 +390,14 @@ public sealed class OverlayWindow : Window, IGameHost
         {
             Settings.FirstRun = false;
             SaveSettings();
-            DispatcherTimer.RunOnce(() =>
-            {
-                Fx.Popup(new Vec2(Arena.Left + Arena.Width / 2, Arena.Top + Arena.Height * 0.45), L.T("Welcome to Desk Arcade"),
-                    Color.FromRgb(255, 209, 102), 34, 6, L.F("click the scoreboard to pick a game · {0} show/hide · {1} next game", Shortcuts.Label(HotkeyAction.ToggleOverlay), Shortcuts.Label(HotkeyAction.NextGame)));
-                Wake();
-            }, TimeSpan.FromSeconds(2.2));
+            if (!_demo && !Snapshotting) // a demo or a snapshot shows the game, not the welcome and the tour
+                DispatcherTimer.RunOnce(() =>
+                {
+                    Fx.Popup(new Vec2(Arena.Left + Arena.Width / 2, Arena.Top + Arena.Height * 0.2), L.T("Welcome to Desk Arcade"),
+                        Color.FromRgb(255, 209, 102), 34, 3, L.T("three things to know"));
+                    ShowTour();
+                    Wake();
+                }, TimeSpan.FromSeconds(2.2));
         }
 
         if (OperatingSystem.IsLinux())
@@ -369,6 +408,7 @@ public sealed class OverlayWindow : Window, IGameHost
             }, TimeSpan.FromSeconds(8));
 
         if (_snapshot is { } shot) DispatcherTimer.RunOnce(() => SaveSnapshot(shot), TimeSpan.FromSeconds(_snapshotDelay));
+        StartRecording(Program.Args); // --record: frames for the README's GIFs
 
         if (_demo)
         {
@@ -430,6 +470,7 @@ public sealed class OverlayWindow : Window, IGameHost
         PlaceWindow();
         UpdateArena();
         PlaceHud();
+        _infoCard?.Place(Arena);
         Current?.Layout();
         Office?.Layout();
         RefreshPlatforms();
@@ -458,6 +499,7 @@ public sealed class OverlayWindow : Window, IGameHost
     void CheckHudHover()
     {
         if (!IsVisible || !_hud.IsExpanded || _hud.IsInteracting) return;
+        if (_snapshot != null) return; // a --snapshot run keeps the board as "--signal expand" left it, wherever the mouse is
         if (!_platform.TryGetCursor(out var px)) return;
         if (!_hud.Area.Inflate(6).Contains(this.PointToClient(px))) _hud.PointerLeft();
     }
@@ -479,6 +521,7 @@ public sealed class OverlayWindow : Window, IGameHost
             Vec2 br = this.PointToClient(w.Bounds.BottomRight);
             _windowRects.Add((w.Id, new Rect(tl.ToPoint(), br.ToPoint())));
         }
+        if (_standIns != null) { _windowRects.Clear(); _windowRects.AddRange(_standIns); } // --record-windows
         if (Platforms.Refresh(_windowRects, Arena)) Wake();
     }
 
@@ -563,6 +606,7 @@ public sealed class OverlayWindow : Window, IGameHost
             if (_hud != null && !_peeking) _hitShapes.Add(HitShape.Box(_hud.Area));
             if (_bubble != null) _hitShapes.Add(HitShape.Box(_bubbleRect));
             Office?.CollectHitShapes(_hitShapes);
+            CollectCardShapes(_hitShapes);
         }
         bool capture = _captured || HudBusy || Office?.IsInteracting == true;
         if (capture == _pushedCapture && _hitShapes.SequenceEqual(_pushedHitShapes)) return;
@@ -609,7 +653,7 @@ public sealed class OverlayWindow : Window, IGameHost
             if (playing)
             {
                 Stats.AddTime(Current.Id, dt); // only time spent actually playing
-                if (_claudeSince != null) _playedWhileClaude += dt;
+                Coding.AddPlayed(dt); // each agent session and lane keeps its own "you played"
                 if (_taskSince != null) _playedWhileTask += dt;
                 CountTowardBreak(now, dt);
             }
@@ -633,7 +677,18 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public void HudChanged()
     {
-        if (Current != null) _hud.Show(Current.Hud, Current.Opponent ?? _race.Opponent);
+        if (Current == null) return;
+        var opponent = Current.Opponent ?? _race.Opponent;
+        if (opponent is { IsCpu: false, Teammate: false }) opponent = opponent with { Record = RecordLine(Current.Id, opponent.Name) };
+        _hud.Show(Current.Hud, opponent);
+    }
+
+    /// <summary>"7–5" (wins–losses, "7–5–1" with draws) against a co-worker in a game, or null before the first game.</summary>
+    public string? RecordLine(string gameId, string opponent)
+    {
+        var (won, drawn, lost) = Rivals.Against(opponent, gameId);
+        if (won + drawn + lost == 0) return null;
+        return drawn > 0 ? $"{won}–{lost}–{drawn}" : $"{won}–{lost}";
     }
 
     /// <summary>Seconds since the overlay started, for pacing things that live outside the games.</summary>
@@ -649,20 +704,155 @@ public sealed class OverlayWindow : Window, IGameHost
     {
         try
         {
-            var size = new PixelSize(Math.Max(1, (int)Bounds.Width), Math.Max(1, (int)Bounds.Height));
-            using var bitmap = new Avalonia.Media.Imaging.RenderTargetBitmap(size, new Vector(96, 96));
-            var backdrop = _root.Background;
-            _root.Background = new SolidColorBrush(Color.FromRgb(40, 78, 120));
-            UpdateLayout(); // what was added since the last frame has no size until laid out
-            bitmap.Render(_root);
-            _root.Background = backdrop;
-            bitmap.Save(path);
+            DrawOverlay(path, windows: false);
         }
         catch (Exception e)
         {
             Console.Error.WriteLine($"snapshot failed: {e.Message}");
         }
         Quit();
+    }
+
+    /// <summary>Draws the overlay over a plain desktop blue into a PNG; with <paramref name="windows"/>, the platform windows too.</summary>
+    void DrawOverlay(string path, bool windows)
+    {
+        var size = new PixelSize(Math.Max(1, (int)Bounds.Width), Math.Max(1, (int)Bounds.Height));
+        using var bitmap = new Avalonia.Media.Imaging.RenderTargetBitmap(size, new Vector(96, 96));
+        var backdrop = _root.Background;
+        var panels = windows ? WindowPanels() : null;
+        _root.Background = new SolidColorBrush(Color.FromRgb(40, 78, 120));
+        if (panels != null) _root.Children.Insert(0, panels);
+        try
+        {
+            UpdateLayout(); // what was added since the last frame has no size until laid out
+            bitmap.Render(_root);
+        }
+        finally
+        {
+            if (panels != null) _root.Children.Remove(panels);
+            _root.Background = backdrop;
+        }
+        bitmap.Save(path);
+    }
+
+    List<(IntPtr, Rect)>? _standIns; // --record-windows: the windows a recording plays on, in place of the real ones
+
+    /// <summary>
+    /// --record &lt;folder&gt;: like --snapshot, but numbered PNG frames (frame_00001.png...) for a few seconds, then quits;
+    /// the moving pictures for the README and the web page, which tools/record-gifs.ps1 turns into GIFs. Tuned by
+    /// --record-seconds (6), --record-fps (15) and --record-delay (3: seconds of play before the first frame). The windows
+    /// whose tops are platforms are drawn as plain panels, so a ball resting on one doesn't float in the blue, and
+    /// frames.txt (ffmpeg's concat format) holds how long each frame was on screen, in case frames came late.
+    /// --record-windows "x,y,w,h;..." (fractions of the screen, topmost first) replaces the real windows with stand-ins,
+    /// so every recording has the same window tops whatever is open on the PC.
+    /// </summary>
+    void StartRecording(string[] args)
+    {
+        int ri = Array.IndexOf(args, "--record");
+        if (ri < 0 || ri + 1 >= args.Length) return;
+        string dir = Path.GetFullPath(args[ri + 1]);
+        double Option(string name, double fallback, double min, double max)
+        {
+            int i = Array.IndexOf(args, name);
+            return i >= 0 && i + 1 < args.Length && double.TryParse(args[i + 1], System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out double v) ? Math.Clamp(v, min, max) : fallback;
+        }
+        double seconds = Option("--record-seconds", 6, 0.5, 60), fps = Option("--record-fps", 15, 1, 50), delay = Option("--record-delay", 3, 0, 600);
+        Directory.CreateDirectory(dir);
+        int wi = Array.IndexOf(args, "--record-windows");
+        if (wi >= 0 && wi + 1 < args.Length)
+        {
+            _standIns = new();
+            foreach (string box in args[wi + 1].Split(';', StringSplitOptions.RemoveEmptyEntries))
+            {
+                var f = box.Split(',').Select(s => double.TryParse(s, System.Globalization.NumberStyles.Float,
+                    System.Globalization.CultureInfo.InvariantCulture, out double v) ? v : double.NaN).ToArray();
+                if (f.Length == 4 && !f.Any(double.IsNaN))
+                    _standIns.Add((new IntPtr(-1 - _standIns.Count), new Rect(Arena.X + f[0] * Arena.Width, Arena.Y + f[1] * Arena.Height,
+                        f[2] * Arena.Width, f[3] * Arena.Height)));
+            }
+        }
+
+        var frames = new List<(string Name, double At)>();
+        var clock = new Stopwatch();
+        double due = 0;
+        // A timer restarts its interval after each tick, and a PNG takes ~40 ms to write, so frames go by the clock instead.
+        var timer = new DispatcherTimer(DispatcherPriority.Normal) { Interval = TimeSpan.FromMilliseconds(4) };
+        timer.Tick += (_, _) =>
+        {
+            double at = clock.Elapsed.TotalSeconds;
+            if (at < seconds)
+            {
+                if (at < due) return;
+                due = Math.Max(due + 1 / fps, at); // running late: the next frame as soon as this one is written
+                string name = $"frame_{frames.Count + 1:D5}.png";
+                try
+                {
+                    DrawOverlay(Path.Combine(dir, name), windows: true);
+                    frames.Add((name, at));
+                    return;
+                }
+                catch (Exception e)
+                {
+                    Console.Error.WriteLine($"record failed: {e.Message}");
+                }
+            }
+            timer.Stop();
+            // ffconcat: each frame for as long as it was up; the last one is listed twice, as the format wants
+            var list = new System.Text.StringBuilder("ffconcat version 1.0\n");
+            for (int i = 0; i < frames.Count; i++)
+            {
+                double shown = (i + 1 < frames.Count ? frames[i + 1].At : at) - frames[i].At;
+                list.Append($"file '{frames[i].Name}'\n").Append(System.FormattableString.Invariant($"duration {shown:0.####}\n"));
+            }
+            if (frames.Count > 0) list.Append($"file '{frames[^1].Name}'\n");
+            File.WriteAllText(Path.Combine(dir, "frames.txt"), list.ToString());
+            Quit();
+        };
+        DispatcherTimer.RunOnce(() =>
+        {
+            clock.Start();
+            timer.Start();
+        }, TimeSpan.FromSeconds(delay));
+    }
+
+    /// <summary>
+    /// The windows whose tops are platforms, in their stacking order (for --record): dark editor windows with a title bar
+    /// and a few lines of make-believe code, the same for every frame.
+    /// </summary>
+    Canvas WindowPanels()
+    {
+        var canvas = new Canvas { IsHitTestVisible = false };
+        var platforms = Platforms.Items.Select(p => p.Hwnd).ToHashSet();
+        IBrush Solid(byte r, byte g, byte b, byte a = 255) => new SolidColorBrush(Color.FromArgb(a, r, g, b));
+        IBrush[] ink = { Solid(137, 180, 250, 150), Solid(166, 227, 161, 140), Solid(205, 214, 244, 90), Solid(249, 226, 175, 130) };
+        for (int i = _windowRects.Count - 1; i >= 0; i--) // bottom-most first, so the ones above cover it
+        {
+            var (id, r) = _windowRects[i];
+            var box = r.Intersect(Arena);
+            if (!platforms.Contains(id) || box.Width < 40 || box.Height < 20) continue;
+            var body = new Canvas { Width = box.Width, Height = box.Height, ClipToBounds = true };
+            body.Children.Add(new Border { Width = box.Width, Height = 28, Background = Solid(49, 50, 68) });
+            var rng = new Random(i * 7919 + 17); // the same lines in every frame
+            for (double y = 44; y < box.Height - 14; y += 21)
+            {
+                double x = 18 + 22 * rng.Next(0, 4), width = Math.Min(box.Width - x - 18, 40 + rng.Next(0, 26) * 12);
+                if (rng.Next(0, 7) == 0 || width < 20) continue; // a blank line now and then
+                var line = new Border { Width = width, Height = 7, CornerRadius = new CornerRadius(3.5), Background = ink[rng.Next(0, ink.Length)] };
+                Canvas.SetLeft(line, x);
+                Canvas.SetTop(line, y);
+                body.Children.Add(line);
+            }
+            var panel = new Border
+            {
+                Width = box.Width, Height = box.Height, CornerRadius = new CornerRadius(8), BorderThickness = new Thickness(1),
+                Background = Solid(30, 30, 46), BorderBrush = Solid(88, 91, 112), ClipToBounds = true, Child = body,
+            };
+            Canvas.SetLeft(panel, box.X);
+            Canvas.SetTop(panel, box.Y);
+            canvas.Children.Add(panel);
+        }
+        return canvas;
     }
 
     public void CaptureKeyboard(IKeySink sink, Rect near, string title)
@@ -745,6 +935,26 @@ public sealed class OverlayWindow : Window, IGameHost
         "dominoes" => L.T("click a tile that fits an end of the line on the taskbar — nothing fits? draw from the boneyard"),
         "jenga" => L.T("drag a block out of the tower slowly, then lay it on top — don't let the weight lean past what is left"),
         "bridge" => L.T("drag planks onto the rope before the interns reach the gap — and replace the cracked ones"),
+        // 1.8.6 · party games
+        "draw" => L.T("draw the word on the board, or type your guesses — the sooner you get it, the more it scores"),
+        "quiz" => L.T("click an answer — the faster you're right, the more it scores"),
+
+        // 1.8.6 · card games
+        "poker" => L.T("pick a table — fold, check or call, or raise with the slider; the best five cards win the pot"),
+        "hearts" => L.T("pass three cards, then follow suit — duck the hearts and the queen of spades"),
+
+        // 1.8.6 · word and key games
+        "bits" => L.T("click the bits to make the lowest number before it lands — the place values are under the bits"),
+        "keys" => L.T("click Start, then press the shortcut asked for — a miss shows the keys, and they come back until you know them"),
+        "words" => L.T("type a five-letter word and press Enter — green is the right place, yellow is elsewhere in the word"),
+
+        // 1.8.6 · Spot the Bug
+        "spotbug" => L.T("click the line with the bug before the fuse burns down — the fix and the reason come after each one"),
+
+        // 1.8.6 · arcade
+        "pipeline" => L.T("click the grid, then click cells to lay pipe from the commit to the deploy before the build flows"),
+        "servers" => L.T("click the load balancer to start — drag each request onto a server before it times out"),
+
         _ => "",
     };
 
@@ -928,7 +1138,7 @@ public sealed class OverlayWindow : Window, IGameHost
         {
             Engine.Art.ColorBlind = Settings.ColorBlind;
             Current?.Layout(); // redraw pieces in the new colours
-            _hud.SetClaude(_hud.Status, _claudeSince);
+            _hud.RecolourDev();
             if (_hud.Task != TaskStatus.None) _hud.SetTask(_hud.Task, _taskLabel, _taskSince);
         }
         RefreshPlatforms();
@@ -978,26 +1188,11 @@ public sealed class OverlayWindow : Window, IGameHost
         HudChanged();
     }
 
-    public async void CopyHookConfig()
-    {
-        string exe = Program.LaunchPath.Replace('\\', '/');
-        string Cmd(string signal) => $"\\\"{exe}\\\" --signal {signal}";
-        string json = $$"""
-            {
-              "hooks": {
-                "UserPromptSubmit": [ { "hooks": [ { "type": "command", "command": "{{Cmd("working")}}" } ] } ],
-                "Stop": [ { "hooks": [ { "type": "command", "command": "{{Cmd("done")}}" } ] } ],
-                "Notification": [ { "hooks": [ { "type": "command", "command": "{{Cmd("attention")}}" } ] } ]
-              }
-            }
-            """;
-        try
-        {
-            if (Clipboard != null) await Clipboard.SetTextAsync(json);
-            Notice(L.T("Hook config copied"), L.T("merge it into ~/.claude/settings.json"), Color.FromRgb(255, 209, 102));
-        }
-        catch { /* clipboard busy */ }
-    }
+    /// <summary>Copies the Claude Code hook config (see <see cref="Dev.AgentConfigs"/>; the other agents' are in the Coding agents &amp; CI menu).</summary>
+    public void CopyHookConfig() => Coding.CopyConfig(Dev.AgentConfigs.Claude);
+
+    /// <summary>Builds the tray menu again, for menus whose items change (the repo folders).</summary>
+    public void RebuildTray() => _tray?.Rebuild();
 
     public void Notice(string title, string sub, Color color)
     {
@@ -1013,16 +1208,8 @@ public sealed class OverlayWindow : Window, IGameHost
     {
         switch (msg)
         {
-            case "working" or "start":
-                ClaudeWorking();
-                break;
-            case "done" or "stop":
-                ClaudeAlert(ClaudeStatus.Done, "done", L.T("Claude is done"), Color.FromRgb(61, 220, 132));
-                break;
-            case "attention" or "notify":
-                ClaudeAlert(ClaudeStatus.Attention, "attention", L.T("Claude needs you"), Color.FromRgb(255, 107, 107));
-                break;
-            case "idle": _hud.SetClaude(ClaudeStatus.Unknown); break;
+            // coding agents (working, done, attention, idle, agent:…), status lanes (status:…), repo folders
+            case var d when Coding.Signal(d): break;
             case "show": SetOverlayVisible(true); break;
             case "hide": SetOverlayVisible(false); break;
             case "toggle": ToggleOverlay(); break;
@@ -1035,6 +1222,10 @@ public sealed class OverlayWindow : Window, IGameHost
             case "lan-leave": LeaveLan(); break;
             case "lan-find": OpenLobby(); break;
             case "shortcuts": OpenShortcuts(); break;
+            case "tour": ShowTour(); break;
+            case "year": ShowYear(); break;
+            case "share": ShareResult(); break;
+            case "share-picture": SharePicture(); break;
             case "quit": Quit(); break;
             case "durak-rooms": OpenDurakRooms(); break;
             case "lastcard-rooms": OpenLastCardRooms(); break;
@@ -1071,7 +1262,7 @@ public sealed class OverlayWindow : Window, IGameHost
             case "solo": game.StartSolo(Math.Clamp(n, 1, 3)); break;
             case "host": game.HostRoom(arg.Length > 0 ? Net.RoomLink.CleanCode(arg) : null); break;
             case "join": game.JoinRoom(arg, null); break;
-            case "start": game.StartRoom(Math.Clamp(n, 2, Net.RoomLink.MaxSeats)); break;
+            case "start": game.StartRoom(Math.Clamp(n, game.MinPlayers, game.MaxPlayers)); break;
             case "leave": game.LeaveRoom(); break;
             default: return;
         }
@@ -1102,6 +1293,19 @@ public sealed class OverlayWindow : Window, IGameHost
     public void OpenLastCardRooms()
     {
         if (_games.OfType<LastCardGame>().FirstOrDefault() is { } game) RoomWindow.ShowFor(this, game);
+    }
+
+    /// <summary>The setup window of the room game with this id ("poker", "quiz"...).</summary>
+    public void OpenRooms(string id)
+    {
+        if (_games.OfType<IRoomGame>().FirstOrDefault(g => g.Id == id) is { } game) RoomWindow.ShowFor(this, game);
+    }
+
+    public void RecordResult(string gameId, string opponent, int outcome)
+    {
+        if (_demo || string.IsNullOrWhiteSpace(opponent)) return; // a demo's "co-worker" is another demo
+        Rivals.Record(gameId, opponent, outcome);
+        HudChanged(); // the record on the chip
     }
 
     public void OpenShortcuts() => ShortcutsWindow.ShowFor(this);
@@ -1505,58 +1709,15 @@ public sealed class OverlayWindow : Window, IGameHost
         Wake();
     }
 
+    /// <summary>Unfreezes a game paused for an agent (its next turn began) or by a command starting.</summary>
+    public void ResumeGame() => Resume();
+
     void Resume()
     {
         if (!_paused) return;
         _paused = false;
         Fx.Popup(new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.3), L.T("Resumed"), Color.FromRgb(61, 220, 132), 30, 1.0);
         Wake();
-    }
-
-    void ClaudeWorking()
-    {
-        if (_hud.Status != ClaudeStatus.Working)
-        {
-            _claudeSince = DateTime.UtcNow;
-            _playedWhileClaude = 0;
-        }
-        Resume();
-        _hud.SetClaude(ClaudeStatus.Working, _claudeSince);
-        if (Settings.ClaudeAutoShow && !Shown) SetOverlayVisible(true);
-    }
-
-    void ClaudeAlert(ClaudeStatus status, string sound, string title, Color color)
-    {
-        TimeSpan? waited = _claudeSince is DateTime since ? DateTime.UtcNow - since : null;
-        bool backToWork = status == ClaudeStatus.Done && Settings.BackToWork && _playedWhileClaude >= 5;
-        if (backToWork) title = L.T("Claude is done · back to work");
-        _claudeSince = null;
-        _hud.SetClaude(status, null, waited);
-        if (status == ClaudeStatus.Done && Shown && Current != null) Stats.Add("claude.done");
-        if (Settings.ClaudeNotify)
-        {
-            Sound.Play(sound, 0.9);
-            string sub = backToWork ? L.T("the game will still be here later") : status == ClaudeStatus.Done ? L.T("your turn!") : L.T("check the terminal");
-            if (waited is TimeSpan w && w.TotalSeconds >= 5)
-                sub = _playedWhileClaude >= 5
-                    ? L.F("{0} · Claude worked {1}, you played {2}", sub, Hud.FormatWait(w), Hud.FormatWait(TimeSpan.FromSeconds(_playedWhileClaude)))
-                    : L.F("{0} · waited {1}", sub, Hud.FormatWait(w));
-            Notice(title, sub, color);
-        }
-        if (Settings.ClaudePause && Shown && !_paused && Current != null)
-        {
-            _paused = true;
-            CancelCapture();
-            Fx.Popup(new Vec2(Arena.Center.X, Arena.Top + Arena.Height * 0.42), L.T("PAUSED"), Colors.White, 34, 3.0, L.T("click the game to resume"));
-        }
-        if (Settings.ClaudeAutoHide && Shown)
-        {
-            // leave the notice on screen for a moment, then get out of the way (hiding also pauses the game)
-            DispatcherTimer.RunOnce(() =>
-            {
-                if (_hud.Status == status) SetOverlayVisible(false);
-            }, TimeSpan.FromSeconds(Settings.ClaudeNotify ? 2.5 : 0.2));
-        }
     }
 
     /// <summary>"DeskArcade --while &lt;command&gt;" started the command.</summary>
@@ -1578,6 +1739,7 @@ public sealed class OverlayWindow : Window, IGameHost
         bool passed = exitCode == 0;
         _taskSince = null;
         _hud.SetTask(passed ? TaskStatus.Passed : TaskStatus.Failed, _taskLabel, null, took, exitCode);
+        Waits.Add(new Dev.WaitEntry(Dev.WaitKind.Command, _taskLabel, since, took.TotalSeconds, passed, _playedWhileTask));
         if (Shown && Current != null && _playedWhileTask >= 5) Stats.Add("task.done");
 
         Sound.Play(passed ? "done" : "attention", 0.9);
@@ -1681,7 +1843,7 @@ public sealed class OverlayWindow : Window, IGameHost
 
     /// <summary>Snapshots today's scores on the UI thread; the board shares the snapshot from its own thread.</summary>
     void RefreshBoardEntry() => _boardEntry = new BoardEntry(OfficeBoard.InstanceId, LanLink.MyName, DateTime.Now.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
-        OfficeBoard.Scores(Stats.Today));
+        OfficeBoard.Scores(Stats.Today, Rivals.LadderGamesPlayed(DateTime.UtcNow) > 0 ? Rivals.Rating(DateTime.UtcNow) : null));
 
     public void SetBreakMinutes(int minutes)
     {
@@ -1802,7 +1964,10 @@ public sealed class OverlayWindow : Window, IGameHost
         _board.Stop();
         _boardTimer.Stop();
         Office.Dispose();
+        Coding.Dispose();
         SaveSettings();
+        Waits.Save();
+        Rivals.Save();
         _cts.Cancel();
         _loopOn = false;
         _platformTimer.Stop();

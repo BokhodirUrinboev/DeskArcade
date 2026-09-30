@@ -1,0 +1,179 @@
+[
+  {
+    "id": "ts-21", "lang": "typescript", "level": "medium", "kind": "injection",
+    "code": [
+      "async function findUser(email: string): Promise<User | undefined> {",
+      "  const { rows } = await pool.query(",
+      "    `SELECT id, name FROM users WHERE email = '${email}'`",
+      "  );",
+      "  return rows[0];",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "    \"SELECT id, name FROM users WHERE email = $1\", [email]" },
+    "why": {
+      "en": "The email is pasted into the SQL, so an input like ' OR '1'='1 rewrites the query. Pass it as a parameter ($1) and let the driver quote it.",
+      "ru": "email вставляется прямо в SQL, и ввод вроде ' OR '1'='1 переписывает запрос. Передайте его параметром ($1), и драйвер сам позаботится о кавычках.",
+      "uz": "email to'g'ridan-to'g'ri SQL ga qo'shiladi, shuning uchun ' OR '1'='1 kabi kiritma so'rovni qayta yozib yuboradi. Uni parametr ($1) sifatida bering, qo'shtirnoqlarni drayverning o'zi qo'yadi."
+    }
+  },
+  {
+    "id": "ts-22", "lang": "typescript", "level": "medium", "kind": "types",
+    "code": [
+      "const sessions = new Map<string, Session>();",
+      "",
+      "function activeCount(): number {",
+      "  return Object.keys(sessions).length;",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "  return sessions.size;" },
+    "why": {
+      "en": "A Map keeps its entries apart from its object properties, so Object.keys finds none and the count is always 0. Use sessions.size.",
+      "ru": "Map хранит записи отдельно от свойств объекта, поэтому Object.keys ничего не находит, и счётчик всегда 0. Используйте sessions.size.",
+      "uz": "Map yozuvlarini obyekt xossalaridan alohida saqlaydi, shuning uchun Object.keys hech narsa topmaydi va son doim 0 bo'ladi. sessions.size dan foydalaning."
+    }
+  },
+  {
+    "id": "ts-23", "lang": "typescript", "level": "medium", "kind": "null",
+    "code": [
+      "// true for objects that callers can read keys from",
+      "function isRecord(value: unknown): value is Record<string, unknown> {",
+      "  return typeof value === \"object\";",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "  return typeof value === \"object\" && value !== null;" },
+    "why": {
+      "en": "typeof null is \"object\", so null passes the check and the caller's first key lookup throws a TypeError. Rule out null as well.",
+      "ru": "typeof null равен \"object\", поэтому null проходит проверку, и первое же чтение ключа у вызывающего кода бросает TypeError. Исключите и null.",
+      "uz": "typeof null \"object\" ga teng, shuning uchun null tekshiruvdan o'tadi va chaqiruvchi kodda birinchi kalitni o'qishdayoq TypeError chiqadi. null ni ham chiqarib tashlang."
+    }
+  },
+  {
+    "id": "ts-24", "lang": "typescript", "level": "hard", "kind": "aliasing",
+    "code": [
+      "function median(values: number[]): number {",
+      "  const sorted = values.sort((a, b) => a - b);",
+      "  const mid = Math.floor(sorted.length / 2);",
+      "  return sorted.length % 2",
+      "    ? sorted[mid]",
+      "    : (sorted[mid - 1] + sorted[mid]) / 2;",
+      "}"
+    ],
+    "bug": [2],
+    "fix": { "2": "  const sorted = [...values].sort((a, b) => a - b);" },
+    "why": {
+      "en": "sort works in place and returns the same array, so working out a median reorders the caller's data. Sort a copy.",
+      "ru": "sort сортирует на месте и возвращает тот же массив, поэтому подсчёт медианы переставляет данные вызывающего кода. Сортируйте копию.",
+      "uz": "sort joyida saralaydi va o'sha massivni qaytaradi, shuning uchun medianani hisoblash chaqiruvchi kodning ma'lumotlarini aralashtirib yuboradi. Nusxasini saralang."
+    }
+  },
+  {
+    "id": "ts-25", "lang": "typescript", "level": "hard", "kind": "missing-await",
+    "code": [
+      "async function loadConfig(): Promise<Config> {",
+      "  try {",
+      "    return fetchConfig();",
+      "  } catch {",
+      "    return defaultConfig;",
+      "  }",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "    return await fetchConfig();" },
+    "why": {
+      "en": "Returning the promise without await leaves the try before it settles, so a rejection skips the catch and the default is never used. return await keeps it inside.",
+      "ru": "Если вернуть промис без await, выход из try происходит раньше, чем он завершится, поэтому отказ минует catch, и значение по умолчанию не используется. return await оставляет его внутри.",
+      "uz": "Promise await siz qaytarilsa, u tugashidan oldin try dan chiqiladi, shuning uchun rad etish catch ni chetlab o'tadi va standart qiymat ishlatilmaydi. return await uni ichkarida ushlab turadi."
+    }
+  },
+  {
+    "id": "ts-26", "lang": "typescript", "level": "hard", "kind": "types",
+    "code": [
+      "function saveCart(cart: Map<string, number>): void {",
+      "  localStorage.setItem(\"cart\", JSON.stringify(cart));",
+      "}",
+      "",
+      "function loadCart(): Map<string, number> {",
+      "  return new Map(JSON.parse(localStorage.getItem(\"cart\") ?? \"[]\"));",
+      "}"
+    ],
+    "bug": [2],
+    "fix": { "2": "  localStorage.setItem(\"cart\", JSON.stringify([...cart]));" },
+    "why": {
+      "en": "JSON.stringify turns a Map into \"{}\", so the cart is lost on saving. Store its entries as an array, which is what loadCart reads back.",
+      "ru": "JSON.stringify превращает Map в \"{}\", и корзина теряется при сохранении. Сохраняйте записи массивом: именно его читает loadCart.",
+      "uz": "JSON.stringify Map ni \"{}\" ga aylantiradi, shuning uchun savat saqlanayotganda yo'qoladi. Yozuvlarini massiv sifatida saqlang: loadCart aynan shuni o'qiydi."
+    }
+  },
+  {
+    "id": "ts-27", "lang": "typescript", "level": "easy", "kind": "comparison",
+    "code": [
+      "// true when flag is one of the flags",
+      "function hasFlag(flags: string[], flag: string): boolean {",
+      "  return flags.indexOf(flag) ? true : false;",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "  return flags.indexOf(flag) !== -1;" },
+    "why": {
+      "en": "indexOf gives 0 for the first item, which is falsy, and -1 for a miss, which is truthy, so both answers come out back to front. Compare with -1 (or use includes).",
+      "ru": "indexOf возвращает 0 для первого элемента, а это ложное значение, и -1 для отсутствующего, а это истинное, так что оба ответа выходят наоборот. Сравнивайте с -1 (или используйте includes).",
+      "uz": "indexOf birinchi element uchun 0 qaytaradi, u yolg'on qiymat, topilmagani uchun esa -1, u rost qiymat, shuning uchun ikkala javob ham teskari chiqadi. -1 bilan solishtiring (yoki includes dan foydalaning)."
+    }
+  },
+  {
+    "id": "ts-28", "lang": "typescript", "level": "medium", "kind": "precision",
+    "code": [
+      "function isBalanced(entries: number[]): boolean {",
+      "  // debits are negative, credits positive",
+      "  const sum = entries.reduce((a, b) => a + b, 0);",
+      "  return sum === 0;",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "  return Math.abs(sum) < 0.005;" },
+    "why": {
+      "en": "Floating-point sums such as 0.1 + 0.2 - 0.3 leave a tiny remainder (5.55e-17), so a balanced ledger isn't exactly 0. Compare to within half a cent, or count in whole cents.",
+      "ru": "Сумма чисел с плавающей точкой вроде 0.1 + 0.2 - 0.3 оставляет крошечный остаток (5.55e-17), и сбалансированный счёт не равен ровно 0. Сравнивайте с точностью до полцента или считайте в целых центах.",
+      "uz": "0.1 + 0.2 - 0.3 kabi suzuvchi nuqtali sonlar yig'indisi juda kichik qoldiq (5.55e-17) qoldiradi, shuning uchun muvozanatdagi hisob aynan 0 bo'lmaydi. Yarim sent aniqlikda solishtiring yoki butun sentlarda hisoblang."
+    }
+  },
+  {
+    "id": "ts-29", "lang": "typescript", "level": "easy", "kind": "logic",
+    "code": [
+      "function removeAt<T>(items: T[], index: number): T[] {",
+      "  const copy = [...items];",
+      "  delete copy[index];",
+      "  return copy;",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "  copy.splice(index, 1);" },
+    "why": {
+      "en": "delete empties the slot but keeps the length, leaving a hole that reads as undefined. splice removes the item and closes the gap.",
+      "ru": "delete очищает ячейку, но сохраняет длину, оставляя дыру, которая читается как undefined. splice удаляет элемент и сдвигает остальные.",
+      "uz": "delete katakni bo'shatadi, lekin uzunlikni saqlab qoladi va undefined bo'lib o'qiladigan teshik qoldiradi. splice elementni olib tashlaydi va bo'shliqni yopadi."
+    }
+  },
+  {
+    "id": "ts-30", "lang": "typescript", "level": "medium", "kind": "logic",
+    "code": [
+      "app.get(\"/users/:id\", async (req, res) => {",
+      "  const user = await db.findUser(req.params.id);",
+      "  if (!user) {",
+      "    res.status(404).send(\"Not found\");",
+      "  }",
+      "  res.json(user);",
+      "});"
+    ],
+    "bug": [4],
+    "fix": { "4": "    return res.status(404).send(\"Not found\");" },
+    "why": {
+      "en": "After sending the 404 the handler carries on to res.json, which tries to answer a second time and fails with \"headers already sent\". Return after sending.",
+      "ru": "Отправив 404, обработчик идёт дальше к res.json, который пытается ответить второй раз и падает с ошибкой «headers already sent». После отправки нужен return.",
+      "uz": "404 yuborilgandan keyin ishlovchi res.json ga davom etadi, u ikkinchi marta javob berishga urinadi va «headers already sent» xatosi bilan yiqiladi. Yuborgandan keyin return qiling."
+    }
+  }
+]

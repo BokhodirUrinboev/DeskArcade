@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia.Controls;
 using DeskArcade.Engine;
 using DeskArcade.Platform;
@@ -66,6 +67,11 @@ public static class QuickMenu
         lan.Items.Add(Item(L.T("Find games / join by address…"), w.OpenLobby));
         lan.Items.Add(Item(L.T("Durak with co-workers…"), w.OpenDurakRooms));
         lan.Items.Add(Item(L.T("Last Card with co-workers…"), w.OpenLastCardRooms));
+        foreach (var room in w.Games.OfType<Games.IRoomGame>().Where(g => g.Id is not ("durak" or "lastcard")))
+        {
+            string id = room.Id;
+            lan.Items.Add(Item(L.F("{0} with co-workers…", L.T(room.Title)), () => w.OpenRooms(id)));
+        }
         if (w.PetMail.CanSend)
         {
             var mail = Sub(w.PetMail.MenuHeader);
@@ -94,6 +100,11 @@ public static class QuickMenu
         yield return Item(L.T("Next game") + "   (" + Shortcuts.Label(HotkeyAction.NextGame) + ")", w.NextGame);
         yield return Item(L.T("Bring to cursor") + "   (" + Shortcuts.Label(HotkeyAction.Summon) + ")", w.SummonToCursor);
         yield return Item(w.DailyLine, w.PlayDaily);
+        var share = Sub(L.T("Share"));
+        share.Items.Add(Item(L.T("Copy the result as text"), w.ShareResult));
+        share.Items.Add(Item(L.T("Copy a picture of the game"), w.SharePicture));
+        if (YearInReview.InSeason(DateTime.Now)) share.Items.Add(Item(L.T("Your year at the desk…"), w.ShowYear));
+        yield return share;
 
         var sound = Sub(L.T("Sound"));
         sound.Items.Add(Check(L.T("Sound"), w.Settings.Sound, () => Toggle(w, s => s.Sound = !s.Sound)));
@@ -129,14 +140,7 @@ public static class QuickMenu
         }
         yield return language;
 
-        var claude = Sub("Claude Code");
-        claude.Items.Add(Check(L.T("Alerts when Claude finishes"), w.Settings.ClaudeNotify, () => Toggle(w, s => s.ClaudeNotify = !s.ClaudeNotify)));
-        claude.Items.Add(Check(L.T("Show the overlay when Claude starts working"), w.Settings.ClaudeAutoShow, () => Toggle(w, s => s.ClaudeAutoShow = !s.ClaudeAutoShow)));
-        claude.Items.Add(Check(L.T("Hide the overlay when Claude finishes or needs you"), w.Settings.ClaudeAutoHide, () => Toggle(w, s => s.ClaudeAutoHide = !s.ClaudeAutoHide)));
-        claude.Items.Add(Check(L.T("Pause the game when Claude finishes or needs you"), w.Settings.ClaudePause, () => Toggle(w, s => s.ClaudePause = !s.ClaudePause)));
-        claude.Items.Add(new Separator());
-        claude.Items.Add(Item(L.T("Copy Claude Code hook config"), w.CopyHookConfig));
-        yield return claude;
+        yield return OfficeMenu.ToMenuItem(DevMenu.Build(w));
 
         var board = Sub(L.T("Office leaderboard"));
         board.Items.Add(Item(L.T("Show the leaderboard…"), w.OpenLeaderboard));
@@ -145,6 +149,7 @@ public static class QuickMenu
 
         yield return Item(L.T("Stats & achievements…"), w.OpenStats);
         yield return Item(L.T("Shortcuts…"), w.OpenShortcuts);
+        yield return Item(L.T("Show the tour again"), w.ShowTour);
         yield return Item(L.T("Move to next monitor"), w.MoveToNextMonitor);
         yield return Item(L.T("Reset positions"), w.ResetPositions);
         if (w.AvailableUpdate is { } update)

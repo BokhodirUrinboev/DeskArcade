@@ -27,6 +27,13 @@ public sealed class EndOfDay
 
     public static string FormatTime(TimeOnly t) => t.ToString("HH:mm", CultureInfo.InvariantCulture);
 
+    /// <summary>How much earlier the end of the day comes on a Friday with repos to check, so there is time to push.</summary>
+    public static readonly TimeSpan FridayEarlier = TimeSpan.FromMinutes(30);
+
+    /// <summary>The end of the working day on <paramref name="day"/>: half an hour earlier on a Friday when <paramref name="fridayEarly"/>.</summary>
+    public static TimeOnly? EndOn(DateOnly day, TimeOnly? end, bool fridayEarly) =>
+        end is TimeOnly e && fridayEarly && day.DayOfWeek == DayOfWeek.Friday && e.ToTimeSpan() >= FridayEarlier ? e.Add(-FridayEarlier) : end;
+
     /// <param name="nowLocal">The local time now.</param>
     /// <param name="end">The end of the working day, or null when the reminder is off.</param>
     /// <param name="atComputer">Keyboard or mouse used in the last few minutes.</param>

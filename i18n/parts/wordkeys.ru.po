@@ -1,0 +1,608 @@
+# Desk Arcade: Russian (ru), 1.8.6 additions (Word Guess, Shortcut Trainer, Bit Flip).
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Word Guess"
+msgstr "Угадай слово"
+
+msgid "Shortcut Trainer"
+msgstr "Тренажёр горячих клавиш"
+
+msgid "Bit Flip"
+msgstr "Переключи биты"
+
+msgid "Wordsmith"
+msgstr "Мастер слова"
+
+msgid "Solve 25 words in Word Guess"
+msgstr "Отгадайте 25 слов в игре «Угадай слово»"
+
+msgid "Lucky guess"
+msgstr "Удачная догадка"
+
+msgid "Solve a word in two guesses"
+msgstr "Отгадайте слово за две попытки"
+
+msgid "Every morning"
+msgstr "Каждое утро"
+
+msgid "Solve the daily word 7 days in a row"
+msgstr "Отгадывайте слово дня 7 дней подряд"
+
+msgid "Bit twiddler"
+msgstr "Жонглёр битами"
+
+msgid "Clear 100 numbers in Bit Flip"
+msgstr "Соберите 100 чисел в игре «Переключи биты»"
+
+msgid "Sixteen bits"
+msgstr "Шестнадцать бит"
+
+msgid "Reach 16 bits in Bit Flip"
+msgstr "Дойдите до 16 бит в игре «Переключи биты»"
+
+msgid "Hex appeal"
+msgstr "Шестнадцатеричный шарм"
+
+msgid "Clear 50 numbers written in hex"
+msgstr "Соберите 50 чисел, записанных в шестнадцатеричной системе"
+
+msgid "Keyboard warrior"
+msgstr "Воин клавиатуры"
+
+msgid "Press 100 shortcuts right at the first try"
+msgstr "Нажмите 100 сочетаний клавиш правильно с первой попытки"
+
+msgid "No mouse needed"
+msgstr "Мышь не нужна"
+
+msgid "Get all ten shortcuts of a drill right at the first try"
+msgstr "Нажмите все десять сочетаний тренировки правильно с первой попытки"
+
+msgid "Polyglot"
+msgstr "Полиглот"
+
+msgid "Finish a drill in every set of Shortcut Trainer"
+msgstr "Пройдите тренировку в каждом наборе «Тренажёра горячих клавиш»"
+
+#, c-sharp-format
+msgid "Clear {0} numbers in Bit Flip"
+msgstr "Соберите {0} чисел в игре «Переключи биты»"
+
+#, c-sharp-format
+msgid "Press {0} shortcuts right in Shortcut Trainer"
+msgstr "Нажмите {0} сочетаний клавиш правильно в «Тренажёре горячих клавиш»"
+
+#, c-sharp-format
+msgid "Solve {0} words in Word Guess"
+msgstr "Отгадайте {0} слова в игре «Угадай слово»"
+
+msgid "type a five-letter word and press Enter — green is the right place, yellow is elsewhere in the word"
+msgstr "введите слово из пяти букв и нажмите Enter — зелёный: буква на месте, жёлтый: есть в слове, но в другом месте"
+
+msgid "click Start, then press the shortcut asked for — a miss shows the keys, and they come back until you know them"
+msgstr "нажмите «Старт» и нажимайте нужное сочетание — при ошибке клавиши покажут, и они будут возвращаться, пока вы их не запомните"
+
+msgid "click the bits to make the lowest number before it lands — the place values are under the bits"
+msgstr "нажимайте на биты, чтобы собрать нижнее число, пока оно не упало — веса разрядов подписаны под битами"
+
+#, c-sharp-format
+msgid "Solved · streak {0} · come back tomorrow"
+msgstr "Отгадано · серия {0} · возвращайтесь завтра"
+
+msgid "Solved · come back tomorrow"
+msgstr "Отгадано · возвращайтесь завтра"
+
+msgid "Solved · click New word"
+msgstr "Отгадано · нажмите «Новое слово»"
+
+msgid "The word got away · come back tomorrow"
+msgstr "Слово ускользнуло · возвращайтесь завтра"
+
+msgid "The word got away · click New word"
+msgstr "Слово ускользнуло · нажмите «Новое слово»"
+
+msgid "Click the board to type, or click the letters"
+msgstr "Нажмите на доску, чтобы печатать, или нажимайте на буквы"
+
+#, c-sharp-format
+msgid "Guess {0}/{1} · type a five-letter word, Enter checks it"
+msgstr "Попытка {0}/{1} · введите слово из пяти букв, Enter проверяет"
+
+#, c-sharp-format
+msgid "Switch the keyboard to {0}"
+msgstr "Переключите раскладку: {0}"
+
+msgid "Not enough letters"
+msgstr "Не хватает букв"
+
+msgid "Not in the word list"
+msgstr "Нет в списке слов"
+
+msgid "GENIUS!"
+msgstr "ГЕНИЙ!"
+
+msgid "MAGNIFICENT!"
+msgstr "ВЕЛИКОЛЕПНО!"
+
+msgid "IMPRESSIVE!"
+msgstr "ВПЕЧАТЛЯЕТ!"
+
+msgid "SPLENDID!"
+msgstr "ОТЛИЧНО!"
+
+msgid "GREAT!"
+msgstr "ХОРОШО!"
+
+msgid "PHEW!"
+msgstr "ФУХ!"
+
+msgid "the word was"
+msgstr "это было слово"
+
+#, c-sharp-format
+msgid "Daily #{0}"
+msgstr "Слово дня №{0}"
+
+msgid "Practice"
+msgstr "Тренировка"
+
+msgid "New word"
+msgstr "Новое слово"
+
+msgid "Enter"
+msgstr "Ввод"
+
+#, c-sharp-format
+msgid "Daily word done · streak {0} · ☰ → Share"
+msgstr "Слово дня сыграно · серия {0} · ☰ → Поделиться"
+
+msgid "Daily word done · ☰ → Share"
+msgstr "Слово дня сыграно · ☰ → Поделиться"
+
+msgid "The daily word · the same for everyone today"
+msgstr "Слово дня · сегодня одно для всех"
+
+msgid "Race on the LAN · the same word when you both play one language"
+msgstr "Гонка по сети · слово одно, если вы оба играете на одном языке"
+
+msgid "Click New word for another"
+msgstr "Нажмите «Новое слово», чтобы сыграть ещё"
+
+msgid "A practice word · as many as you like"
+msgstr "Слово для тренировки · сколько угодно"
+
+msgid "Shell"
+msgstr "Терминал"
+
+msgid "Desktop"
+msgstr "Программы"
+
+#, c-sharp-format
+msgid "Click Start: ten shortcuts from {0}"
+msgstr "Нажмите «Старт»: десять сочетаний из набора {0}"
+
+#, c-sharp-format
+msgid "Drill done · {0}/{1} at the first try · {2} points"
+msgstr "Тренировка окончена · {0}/{1} с первой попытки · очков: {2}"
+
+msgid "Paused · click the board to go on"
+msgstr "Пауза · нажмите на доску, чтобы продолжить"
+
+msgid "Not that one · press the keys shown to go on"
+msgstr "Не то · нажмите показанные клавиши, чтобы продолжить"
+
+#, c-sharp-format
+msgid "Shortcut {0}/{1} · press the keys"
+msgstr "Сочетание {0}/{1} · нажмите клавиши"
+
+#, c-sharp-format
+msgid "Shortcut Trainer · {0} · {1}/{2} at the first try · {3} points"
+msgstr "Тренажёр горячих клавиш · {0} · {1}/{2} с первой попытки · очков: {3}"
+
+msgid "DRILL DONE"
+msgstr "ТРЕНИРОВКА ОКОНЧЕНА"
+
+#, c-sharp-format
+msgid "{0} of {1} at the first try · {2} points"
+msgstr "{0} из {1} с первой попытки · очков: {2}"
+
+msgid "Ten shortcuts, as fast as you can"
+msgstr "Десять сочетаний — как можно быстрее"
+
+msgid "the ones you miss come back more often"
+msgstr "те, в которых ошибётесь, будут попадаться чаще"
+
+#, c-sharp-format
+msgid "{0} of {1} at the first try"
+msgstr "{0} из {1} с первой попытки"
+
+msgid "type it"
+msgstr "наберите"
+
+msgid "press the keys"
+msgstr "нажмите клавиши"
+
+#, c-sharp-format
+msgid "Right · +{0}"
+msgstr "Верно · +{0}"
+
+msgid "Next time"
+msgstr "В следующий раз"
+
+msgid "Not that one · press the keys shown"
+msgstr "Не то · нажмите показанные клавиши"
+
+msgid "Click the board to type"
+msgstr "Нажмите на доску, чтобы печатать"
+
+#, c-sharp-format
+msgid "{0} shortcuts in this set · keys for {1}"
+msgstr "Сочетаний в наборе: {0} · клавиши для {1}"
+
+msgid "Click New drill for another ten"
+msgstr "Нажмите «Новая тренировка», чтобы получить ещё десять"
+
+#, c-sharp-format
+msgid "Score {0}"
+msgstr "Счёт {0}"
+
+msgid "New drill"
+msgstr "Новая тренировка"
+
+msgid "Show all commands"
+msgstr "Показать все команды"
+
+msgid "Open a file by name"
+msgstr "Открыть файл по имени"
+
+msgid "Go to definition"
+msgstr "Перейти к определению"
+
+msgid "Peek at the definition"
+msgstr "Показать определение рядом"
+
+msgid "Show references"
+msgstr "Показать ссылки"
+
+msgid "Rename symbol"
+msgstr "Переименовать символ"
+
+msgid "Format the document"
+msgstr "Форматировать документ"
+
+msgid "Comment the line out"
+msgstr "Закомментировать строку"
+
+msgid "Show the terminal"
+msgstr "Показать терминал"
+
+msgid "Show or hide the sidebar"
+msgstr "Показать или скрыть боковую панель"
+
+msgid "Search all files"
+msgstr "Искать во всех файлах"
+
+msgid "Go to line"
+msgstr "Перейти к строке"
+
+msgid "Go to a symbol in the file"
+msgstr "Перейти к символу в файле"
+
+msgid "Move the line down"
+msgstr "Переместить строку вниз"
+
+msgid "Copy the line down"
+msgstr "Копировать строку вниз"
+
+msgid "Delete the line"
+msgstr "Удалить строку"
+
+msgid "Add a cursor below"
+msgstr "Добавить курсор ниже"
+
+msgid "Select the next match"
+msgstr "Выделить следующее совпадение"
+
+msgid "Quick fix"
+msgstr "Быстрое исправление"
+
+msgid "Split the editor"
+msgstr "Разделить редактор"
+
+msgid "Go back"
+msgstr "Вернуться назад"
+
+msgid "Open the settings"
+msgstr "Открыть настройки"
+
+msgid "Show the Explorer"
+msgstr "Показать проводник"
+
+msgid "Zen mode"
+msgstr "Режим Zen"
+
+msgid "Comment out a block"
+msgstr "Закомментировать блок"
+
+msgid "Find an action"
+msgstr "Найти действие"
+
+msgid "Go to a class"
+msgstr "Перейти к классу"
+
+msgid "Go to a file"
+msgstr "Перейти к файлу"
+
+msgid "Go to the declaration"
+msgstr "Перейти к объявлению"
+
+msgid "Find usages"
+msgstr "Найти использования"
+
+msgid "Rename"
+msgstr "Переименовать"
+
+msgid "Reformat the code"
+msgstr "Переформатировать код"
+
+msgid "Optimize imports"
+msgstr "Оптимизировать импорты"
+
+msgid "Show the quick fixes"
+msgstr "Показать быстрые исправления"
+
+msgid "Recent files"
+msgstr "Недавние файлы"
+
+msgid "Duplicate the line"
+msgstr "Дублировать строку"
+
+msgid "Extract a variable"
+msgstr "Извлечь переменную"
+
+msgid "Extract a method"
+msgstr "Извлечь метод"
+
+msgid "Run"
+msgstr "Запустить"
+
+msgid "Debug"
+msgstr "Запустить отладку"
+
+msgid "Toggle a breakpoint"
+msgstr "Поставить или снять точку останова"
+
+msgid "Step over"
+msgstr "Шаг с обходом"
+
+msgid "Surround with"
+msgstr "Окружить конструкцией"
+
+msgid "Generate code"
+msgstr "Сгенерировать код"
+
+msgid "File structure"
+msgstr "Структура файла"
+
+msgid "Complete the statement"
+msgstr "Завершить инструкцию"
+
+msgid "Save and quit"
+msgstr "Сохранить и выйти"
+
+msgid "Quit without saving"
+msgstr "Выйти без сохранения"
+
+msgid "Redo"
+msgstr "Повторить"
+
+msgid "Go to the first line"
+msgstr "Перейти к первой строке"
+
+msgid "Go to the last line"
+msgstr "Перейти к последней строке"
+
+msgid "Copy the line"
+msgstr "Скопировать строку"
+
+msgid "Paste after the cursor"
+msgstr "Вставить после курсора"
+
+msgid "Change the word under the cursor"
+msgstr "Заменить слово под курсором"
+
+msgid "Delete to the end of the line"
+msgstr "Удалить до конца строки"
+
+msgid "Search forward for foo"
+msgstr "Искать foo дальше по тексту"
+
+msgid "Next match"
+msgstr "Следующее совпадение"
+
+msgid "Jump to the end of the line"
+msgstr "Прыгнуть в конец строки"
+
+msgid "Jump to the start of the line"
+msgstr "Прыгнуть в начало строки"
+
+msgid "Insert at the end of the line"
+msgstr "Вставка в конце строки"
+
+msgid "Open a new line below"
+msgstr "Открыть новую строку ниже"
+
+msgid "Replace every foo with bar"
+msgstr "Заменить все foo на bar"
+
+msgid "Visual block mode"
+msgstr "Режим визуального блока"
+
+msgid "Indent the line"
+msgstr "Сдвинуть строку вправо"
+
+msgid "Next word"
+msgstr "Следующее слово"
+
+msgid "Half a page down"
+msgstr "Полстраницы вниз"
+
+msgid "Search the history"
+msgstr "Поиск по истории"
+
+msgid "Go to the start of the line"
+msgstr "Перейти в начало строки"
+
+msgid "Go to the end of the line"
+msgstr "Перейти в конец строки"
+
+msgid "Delete the word before the cursor"
+msgstr "Удалить слово перед курсором"
+
+msgid "Clear the screen"
+msgstr "Очистить экран"
+
+msgid "Cut to the end of the line"
+msgstr "Вырезать до конца строки"
+
+msgid "Cut to the start of the line"
+msgstr "Вырезать до начала строки"
+
+msgid "Stop the running command"
+msgstr "Остановить выполняемую команду"
+
+msgid "Send end of input"
+msgstr "Отправить конец ввода"
+
+msgid "Suspend the running command"
+msgstr "Приостановить выполняемую команду"
+
+msgid "Paste what was cut"
+msgstr "Вставить вырезанное"
+
+msgid "Back one word"
+msgstr "На слово назад"
+
+msgid "Run the last command again"
+msgstr "Повторить последнюю команду"
+
+msgid "The last command's last argument"
+msgstr "Последний аргумент последней команды"
+
+msgid "Back to the previous folder"
+msgstr "Вернуться в предыдущую папку"
+
+msgid "The last command's exit code"
+msgstr "Код возврата последней команды"
+
+msgid "Copy"
+msgstr "Копировать"
+
+msgid "Paste"
+msgstr "Вставить"
+
+msgid "Cut"
+msgstr "Вырезать"
+
+msgid "Select all"
+msgstr "Выделить всё"
+
+msgid "Find"
+msgstr "Найти"
+
+msgid "Print"
+msgstr "Печать"
+
+msgid "New tab"
+msgstr "Новая вкладка"
+
+msgid "Reopen the tab just closed"
+msgstr "Вернуть только что закрытую вкладку"
+
+msgid "Next tab"
+msgstr "Следующая вкладка"
+
+msgid "Reload the page"
+msgstr "Обновить страницу"
+
+msgid "Go to the address bar"
+msgstr "Перейти в адресную строку"
+
+msgid "Paste as plain text"
+msgstr "Вставить как обычный текст"
+
+msgid "Zoom in"
+msgstr "Увеличить масштаб"
+
+msgid "Reset the zoom"
+msgstr "Сбросить масштаб"
+
+msgid "Open a private window"
+msgstr "Открыть окно инкогнито"
+
+msgid "Bold"
+msgstr "Жирный"
+
+msgid "Go to the top of the document"
+msgstr "Перейти в начало документа"
+
+msgid "Click Start: flip the bits to make each number before it lands"
+msgstr "Нажмите «Старт»: переключайте биты и собирайте каждое число, пока оно не упало"
+
+#, c-sharp-format
+msgid "Game over · level {0} · {1} cleared · click New game"
+msgstr "Игра окончена · уровень {0} · собрано {1} · нажмите «Новая игра»"
+
+#, c-sharp-format
+msgid "Level {0} · {1} bits · make the lowest number"
+msgstr "Уровень {0} · бит: {1} · соберите нижнее число"
+
+#, c-sharp-format
+msgid "Bit Flip · best {0} points · up to {1} bits"
+msgstr "Переключи биты · рекорд {0} очков · до {1} бит"
+
+#, c-sharp-format
+msgid "level {0} · {1} cleared · {2} points"
+msgstr "уровень {0} · собрано {1} · очков: {2}"
+
+#, c-sharp-format
+msgid "{0} bits now"
+msgstr "теперь бит: {0}"
+
+msgid "hex joins in"
+msgstr "добавляются шестнадцатеричные"
+
+msgid "faster"
+msgstr "быстрее"
+
+msgid "landed"
+msgstr "упало"
+
+#, c-sharp-format
+msgid "Level {0} · {1} bits"
+msgstr "Уровень {0} · бит: {1}"
+
+msgid "hex too"
+msgstr "и шестнадцатеричные"
+
+msgid "Make each number with the bits"
+msgstr "Соберите каждое число из битов"
+
+msgid "click a bit to flip it · the lowest number goes first"
+msgstr "нажмите на бит, чтобы переключить его · сначала нижнее число"
+
+#, c-sharp-format
+msgid "level {0} · {1} cleared"
+msgstr "уровень {0} · собрано {1}"
+
+msgid "Clear bits"
+msgstr "Сбросить биты"
+
+msgid "Start"
+msgstr "Старт"

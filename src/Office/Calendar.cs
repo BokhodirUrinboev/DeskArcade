@@ -14,6 +14,9 @@ public sealed record Meeting(string Title, DateTime Start, DateTime End)
 {
     /// <summary>One occurrence of one meeting, for remembering which warnings were already given.</summary>
     public string Key => Start.Ticks.ToString(CultureInfo.InvariantCulture) + "|" + Title;
+
+    /// <summary>The Teams, Zoom, Google Meet, Webex or Jitsi link to join it (see <see cref="MeetingLinks"/>), or null.</summary>
+    public string? JoinUrl { get; init; }
 }
 
 /// <summary>
@@ -69,6 +72,7 @@ public sealed class IcsCalendar
         public readonly List<CalTime> Except = new();  // EXDATE
         public CalTime? RecurrenceId;
         public bool Cancelled;
+        public string? JoinUrl;
     }
 
     /// <summary>Real calendars nest three deep (VCALENDAR, VTIMEZONE, STANDARD); anything deeper is skipped.</summary>
@@ -156,6 +160,7 @@ public sealed class IcsCalendar
             Title = CleanTitle(Unescape(ev.Get("SUMMARY")?.Value ?? "")),
             Start = start,
             Cancelled = string.Equals(ev.Get("STATUS")?.Value.Trim(), "CANCELLED", StringComparison.OrdinalIgnoreCase),
+            JoinUrl = MeetingLinks.Find(name => ev.All(name).Select(p => p.Value)),
         };
         if (ev.Get("DTEND") is Prop dtEnd && ParseTime(dtEnd) is CalTime end)
             e.Duration = ToUtc(end) - ToUtc(start);
@@ -328,8 +333,10 @@ public sealed class IcsCalendar
     {
         var result = new List<Meeting>();
         var moved = new HashSet<(string, DateTime)>();
+        var links = new Dictionary<string, string>(); // a moved occurrence without a link keeps the series' link
         foreach (var e in _events)
         {
+            if (e.RecurrenceId == null && e.JoinUrl != null) links.TryAdd(e.Uid, e.JoinUrl);
             try
             {
                 if (e.RecurrenceId is CalTime rid) moved.Add((e.Uid, ToUtc(rid)));
@@ -344,7 +351,7 @@ public sealed class IcsCalendar
         {
             try
             {
-                Occurrences(e, fromUtc, toUtc, moved, result);
+                Occurrences(e, fromUtc, toUtc, moved, result, e.JoinUrl ?? links.GetValueOrDefault(e.Uid));
             }
             catch (Exception)
             {
@@ -356,11 +363,11 @@ public sealed class IcsCalendar
     }
 
     /// <summary>One event's meetings in the window: a moved occurrence as it is, a repeat expanded less its exceptions.</summary>
-    void Occurrences(Event e, DateTime fromUtc, DateTime toUtc, HashSet<(string, DateTime)> moved, List<Meeting> result)
+    void Occurrences(Event e, DateTime fromUtc, DateTime toUtc, HashSet<(string, DateTime)> moved, List<Meeting> result, string? link)
     {
         if (e.RecurrenceId != null)
         {
-            if (!e.Cancelled) Add(result, e, ToUtc(e.Start), fromUtc, toUtc);
+            if (!e.Cancelled) Add(result, e, ToUtc(e.Start), fromUtc, toUtc, link);
             return;
         }
         if (e.Cancelled) return;
@@ -383,15 +390,15 @@ public sealed class IcsCalendar
             var start = ToUtc(time);
             if (!seen.Add(start) || except.Contains(start) || exceptDays.Contains(DateOnly.FromDateTime(time.Wall)) || moved.Contains((e.Uid, start)))
                 continue;
-            Add(result, e, start, fromUtc, toUtc);
+            Add(result, e, start, fromUtc, toUtc, link);
         }
     }
 
-    static void Add(List<Meeting> into, Event e, DateTime start, DateTime fromUtc, DateTime toUtc)
+    static void Add(List<Meeting> into, Event e, DateTime start, DateTime fromUtc, DateTime toUtc, string? link)
     {
         var end = start + e.Duration;
         if (start > toUtc || (end > start ? end <= fromUtc : start < fromUtc)) return;
-        into.Add(new Meeting(e.Title, DateTime.SpecifyKind(start, DateTimeKind.Utc), DateTime.SpecifyKind(end, DateTimeKind.Utc)));
+        into.Add(new Meeting(e.Title, DateTime.SpecifyKind(start, DateTimeKind.Utc), DateTime.SpecifyKind(end, DateTimeKind.Utc)) { JoinUrl = link });
     }
 
     // ------------------------------------------------------------------ time zones

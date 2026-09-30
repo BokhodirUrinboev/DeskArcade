@@ -395,6 +395,7 @@ public sealed class SeaBattleGame : MiniGame
     {
         _phase = Phase.Over;
         _myTurn = false;
+        if (LanOn) Host.RecordResult(Id, Rival, won ? 1 : -1);
         if (won)
         {
             Host.Stats.Add("seabattle.wins");

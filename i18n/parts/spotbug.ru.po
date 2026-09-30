@@ -1,0 +1,315 @@
+# Desk Arcade: Russian (ru), Spot the Bug (1.8.6), waiting to be folded into ru.po.
+# The English text is the msgid. Keep {0}-style placeholders, "·" separators and "×" as they are, and keep
+# the number last in "Best {0}"-style lines (the compact scoreboard shows only the last word).
+# The snippets' explanations are not here: they live with the snippets in spotbug/*.json.
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: ru\n"
+"X-Language-Name: Русский\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. ---- Spot the Bug: title, hint, achievements, daily challenge
+msgid "Spot the Bug"
+msgstr "Найди баг"
+
+msgid "click the line with the bug before the fuse burns down — the fix and the reason come after each one"
+msgstr "нажмите на строку с багом, пока не догорел фитиль, — исправление и объяснение покажутся после каждого фрагмента"
+
+msgid "Bug hunter"
+msgstr "Охотник за багами"
+
+msgid "Find 100 bugs in Spot the Bug"
+msgstr "Найдите 100 багов в «Найди баг»"
+
+msgid "Clean review"
+msgstr "Чистое ревью"
+
+msgid "Find all ten bugs of a round, each at the first click"
+msgstr "Найдите все десять багов раунда, каждый с первого клика"
+
+msgid "Daily reviewer"
+msgstr "Ежедневный ревьюер"
+
+msgid "Find the daily bug 7 days in a row"
+msgstr "Находите баг дня 7 дней подряд"
+
+#, c-sharp-format
+msgid "Find {0} bugs in Spot the Bug"
+msgstr "Найдите {0} багов в «Найди баг»"
+
+#. ---- Spot the Bug: the board
+msgid "Round of ten"
+msgstr "Раунд из десяти"
+
+msgid "Daily snippet"
+msgstr "Фрагмент дня"
+
+msgid "All"
+msgstr "Все"
+
+msgid "Start ▸"
+msgstr "Старт ▸"
+
+msgid "Next ▸"
+msgstr "Дальше ▸"
+
+msgid "See the result ▸"
+msgstr "Итоги ▸"
+
+msgid "New round ▸"
+msgstr "Новый раунд ▸"
+
+msgid "Play a round ▸"
+msgstr "Сыграть раунд ▸"
+
+msgid "Ten snippets, one bug in each"
+msgstr "Десять фрагментов, в каждом по багу"
+
+msgid "Click the line with the bug before the fuse burns down. Three wrong clicks and the snippet is gone; the fix and the reason come after each one."
+msgstr "Нажмите на строку с багом, пока не догорел фитиль. Три неверных клика — и фрагмент потерян; исправление и объяснение покажутся после каждого."
+
+#, c-sharp-format
+msgid "a find scores {0}, and up to {1} more for speed"
+msgstr "находка даёт {0} очков и до {1} сверху за скорость"
+
+#, c-sharp-format
+msgid "Daily snippet #{0}"
+msgstr "Фрагмент дня #{0}"
+
+msgid "The same snippet for everyone today, and one try at it. Find the bug in as few clicks and seconds as you can."
+msgstr "Сегодня у всех один и тот же фрагмент и одна попытка. Найдите баг, потратив как можно меньше кликов и секунд."
+
+#, c-sharp-format
+msgid "streak {0} · keep it going"
+msgstr "серия {0} · не прерывайте её"
+
+msgid "find it to start a streak"
+msgstr "найдите баг, чтобы начать серию"
+
+msgid "Which line has the bug?"
+msgstr "В какой строке баг?"
+
+msgid "This bug spans two lines: either one counts."
+msgstr "Этот баг занимает две строки: засчитывается любая из них."
+
+#, c-sharp-format
+msgid "{0} tries left · a wrong click costs {1} points"
+msgstr "осталось попыток: {0} · за неверный клик минус {1}"
+
+#, c-sharp-format
+msgid "last try · a wrong click costs {0} points"
+msgstr "последняя попытка · за неверный клик минус {0}"
+
+#, c-sharp-format
+msgid "✓ Found it · +{0}"
+msgstr "✓ Найден · +{0}"
+
+msgid "✗ Time's up"
+msgstr "✗ Время вышло"
+
+msgid "✗ Three wrong clicks"
+msgstr "✗ Три неверных клика"
+
+msgid "✓ You found today's bug"
+msgstr "✓ Сегодняшний баг найден"
+
+msgid "✗ Today's bug got away"
+msgstr "✗ Сегодняшний баг ускользнул"
+
+#, c-sharp-format
+msgid "{0} points so far · snippet {1} of {2}"
+msgstr "очков пока: {0} · фрагмент {1} из {2}"
+
+#, c-sharp-format
+msgid "found in {0}, {1} s · streak {2}"
+msgstr "найден ({0}, {1} с) · серия {2}"
+
+msgid "1 click"
+msgstr "1 клик"
+
+#, c-sharp-format
+msgid "{0} clicks"
+msgstr "кликов: {0}"
+
+msgid "the streak starts again with tomorrow's snippet"
+msgstr "серия начнётся заново с завтрашнего фрагмента"
+
+msgid "A clean review!"
+msgstr "Чистое ревью!"
+
+msgid "Round over"
+msgstr "Раунд окончен"
+
+#, c-sharp-format
+msgid "{0} of {1} bugs found, {2} at the first click · {3} points in {4}"
+msgstr "Найдено багов: {0} из {1}, с первого клика: {2} · очков: {3} · время {4}"
+
+#, c-sharp-format
+msgid "{0} of {1} found · {2} points"
+msgstr "найдено {0} из {1} · очков: {2}"
+
+#. ---- Spot the Bug: the scoreboard line and the line to share
+msgid "Click Start: ten snippets, one bug in each"
+msgstr "Нажмите «Старт»: десять фрагментов, в каждом по багу"
+
+#, c-sharp-format
+msgid "Snippet {0}/{1} · click the line with the bug"
+msgstr "Фрагмент {0}/{1} · нажмите на строку с багом"
+
+#, c-sharp-format
+msgid "Found · +{0} · click Next"
+msgstr "Найден · +{0} · нажмите «Дальше»"
+
+msgid "Missed · read the fix, then click Next"
+msgstr "Мимо · посмотрите исправление и нажмите «Дальше»"
+
+#, c-sharp-format
+msgid "Round over · {0}/{1} found · {2} points"
+msgstr "Раунд окончен · найдено {0}/{1} · очков: {2}"
+
+#, c-sharp-format
+msgid "Daily snippet #{0} · the same for everyone today"
+msgstr "Фрагмент дня #{0} · сегодня он у всех один"
+
+msgid "Click the line with the bug · one try a day"
+msgstr "Нажмите на строку с багом · одна попытка в день"
+
+msgid "Found it · read the fix"
+msgstr "Найден · посмотрите исправление"
+
+msgid "The bug got away · read the fix"
+msgstr "Баг ускользнул · посмотрите исправление"
+
+msgid "Daily snippet done · come back tomorrow"
+msgstr "Фрагмент дня пройден · возвращайтесь завтра"
+
+#, c-sharp-format
+msgid "Daily snippet done · streak {0}"
+msgstr "Фрагмент дня пройден · серия {0}"
+
+#, c-sharp-format
+msgid "Spot the Bug daily #{0} · found it in {1}, {2} s"
+msgstr "Найди баг, фрагмент дня #{0} · найден ({1}, {2} с)"
+
+#, c-sharp-format
+msgid "Spot the Bug daily #{0} · the bug got away"
+msgstr "Найди баг, фрагмент дня #{0} · баг ускользнул"
+
+#, c-sharp-format
+msgid "Spot the Bug · {0}/{1} bugs · {2} points"
+msgstr "Найди баг · багов: {0}/{1} · очков: {2}"
+
+#. ---- Spot the Bug: kinds of bug, shown after each snippet
+msgid "off-by-one"
+msgstr "ошибка на единицу"
+
+msgid "missing await"
+msgstr "пропущен await"
+
+msgid "null dereference"
+msgstr "обращение к null"
+
+msgid "SQL injection"
+msgstr "SQL-инъекция"
+
+msgid "race condition"
+msgstr "гонка потоков"
+
+msgid "wrong comparison"
+msgstr "неверное сравнение"
+
+msgid "integer overflow"
+msgstr "переполнение целого"
+
+msgid "resource leak"
+msgstr "утечка ресурса"
+
+msgid "shadowed variable"
+msgstr "затенённая переменная"
+
+msgid "mutable default"
+msgstr "изменяемое значение по умолчанию"
+
+msgid "default evaluated once"
+msgstr "значение по умолчанию вычисляется один раз"
+
+msgid "stray semicolon"
+msgstr "лишняя точка с запятой"
+
+msgid "wrong logic"
+msgstr "неверная логика"
+
+msgid "changed while iterating"
+msgstr "изменение при обходе"
+
+msgid "captured loop variable"
+msgstr "захват переменной цикла"
+
+msgid "async misuse"
+msgstr "ошибка с async"
+
+msgid "floating-point precision"
+msgstr "точность чисел с плавающей точкой"
+
+msgid "type mix-up"
+msgstr "путаница типов"
+
+msgid "NULL handling"
+msgstr "работа с NULL"
+
+msgid "wrong join"
+msgstr "неверный JOIN"
+
+msgid "grouping and aggregates"
+msgstr "группировка и агрегаты"
+
+msgid "dates and times"
+msgstr "даты и время"
+
+msgid "exception handling"
+msgstr "обработка исключений"
+
+msgid "equality mix-up"
+msgstr "путаница с равенством"
+
+msgid "missing key"
+msgstr "нет ключа"
+
+msgid "changed a copy"
+msgstr "изменена копия"
+
+msgid "used after dispose"
+msgstr "использование после Dispose"
+
+msgid "wrong scope"
+msgstr "не та область видимости"
+
+msgid "shared reference"
+msgstr "общая ссылка"
+
+msgid "hidden state"
+msgstr "скрытое состояние"
+
+msgid "parsing"
+msgstr "разбор строки"
+
+msgid "used-up iterator"
+msgstr "исчерпанный итератор"
+
+msgid "result thrown away"
+msgstr "результат выброшен"
+
+msgid "unstable hash"
+msgstr "нестабильный хеш"
+
+msgid "division by zero"
+msgstr "деление на ноль"
+
+msgid "not atomic"
+msgstr "не атомарно"
+
+msgid "deferred execution"
+msgstr "отложенное выполнение"

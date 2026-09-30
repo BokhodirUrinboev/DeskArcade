@@ -116,6 +116,13 @@ public sealed class TypingPad : Window
     void OnKeyDown(object? sender, KeyEventArgs e)
     {
         if (_sink == null) return;
+        if (_sink is IChordSink chords && KeyChord.From(e.Key, e.KeyModifiers) is { } chord && chords.WantsChord(chord))
+        {
+            e.Handled = true;
+            chords.ChordPressed(chord);
+            _overlay.Wake();
+            return;
+        }
         TypingKey? key = e.Key switch
         {
             Key.Back when e.KeyModifiers.HasFlag(KeyModifiers.Control) || e.KeyModifiers.HasFlag(KeyModifiers.Alt) => TypingKey.WordBackspace,

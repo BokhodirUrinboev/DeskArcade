@@ -1,0 +1,362 @@
+# Desk Arcade: Uzbek (uz), 1.8.6 additions (party).
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Quiz Night"
+msgstr "Viktorina"
+
+msgid "Pick today's ten or a practice round"
+msgstr "Kunning o'nta savolini yoki mashq raundini tanlang"
+
+#, c-sharp-format
+msgid "Question {0} of {1}"
+msgstr "{1} tadan {0}-savol"
+
+msgid "Locked in · waiting for the others"
+msgstr "Javob qabul qilindi · boshqalarni kutyapmiz"
+
+msgid "Pick an answer!"
+msgstr "Javobni tanlang!"
+
+#, c-sharp-format
+msgid "Right! +{0}"
+msgstr "To'g'ri! +{0}"
+
+msgid "Time's up"
+msgstr "Vaqt tugadi"
+
+msgid "Not this time"
+msgstr "Bu safar emas"
+
+msgid "Leaderboard"
+msgstr "Yetakchilar"
+
+msgid "You won the quiz!"
+msgstr "Viktorinani yutdingiz!"
+
+#, c-sharp-format
+msgid "You finished {0}"
+msgstr "Sizning o'rningiz: {0}"
+
+msgid "first"
+msgstr "birinchi"
+
+msgid "second"
+msgstr "ikkinchi"
+
+msgid "third"
+msgstr "uchinchi"
+
+#, c-sharp-format
+msgid "{0}th"
+msgstr "{0}-"
+
+msgid "Today's ten"
+msgstr "Kunning o'nta savoli"
+
+msgid "lightning fast!"
+msgstr "chaqmoqdek tez!"
+
+msgid "wrong"
+msgstr "noto'g'ri"
+
+#, c-sharp-format
+msgid "Quiz Night · {0} points · {1} of {2} right"
+msgstr "Viktorina · {0} ochko · {2} tadan {1} tasi to'g'ri"
+
+#, c-sharp-format
+msgid "{0} of {1} right"
+msgstr "{1} tadan {0} tasi to'g'ri"
+
+#, c-sharp-format
+msgid "Quiz Night daily · {0}/{1} in {2} s"
+msgstr "Kunlik viktorina · {2} s da {0}/{1}"
+
+msgid "Final scores"
+msgstr "Yakuniy natijalar"
+
+msgid "Read the question…"
+msgstr "Savolni o'qing…"
+
+#, c-sharp-format
+msgid "{0} of {1} answered"
+msgstr "{1} tadan {0} tasi javob berdi"
+
+#, c-sharp-format
+msgid "You: {0} · {1}"
+msgstr "Siz: {0} · {1}"
+
+#, c-sharp-format
+msgid "{0} of {1} right · {2} s"
+msgstr "{1} tadan {0} tasi to'g'ri · {2} s"
+
+msgid "Practice round"
+msgstr "Mashq raundi"
+
+msgid "Other quizzes…"
+msgstr "Boshqa viktorinalar…"
+
+msgid "Play again"
+msgstr "Yana o'ynash"
+
+msgid "Another quiz"
+msgstr "Boshqa viktorina"
+
+msgid "The host can start another quiz"
+msgstr "Boshlovchi yangi viktorina boshlashi mumkin"
+
+msgid "Four answers, one right · the faster you click it, the more it scores"
+msgstr "To'rtta javob, bittasi to'g'ri · qancha tez bossangiz, shuncha ko'p ochko"
+
+#, c-sharp-format
+msgid "Room {0}"
+msgstr "{0}-xona"
+
+#, c-sharp-format
+msgid "Pack: {0} · {1} questions"
+msgstr "To'plam: {0} · {1} ta savol"
+
+msgid "Start the quiz"
+msgstr "Viktorinani boshlash"
+
+#, c-sharp-format
+msgid "Today's ten: {0}/{1} in {2} s · a new ten tomorrow"
+msgstr "Kunning o'ntasi: {2} s da {0}/{1} · ertaga yangi o'nta"
+
+#, c-sharp-format
+msgid "vs the CPU · {0}"
+msgstr "kompyuterga qarshi · {0}"
+
+#, c-sharp-format
+msgid "The file is too big: at most {0} KB"
+msgstr "Fayl juda katta: ko'pi bilan {0} KB"
+
+#, c-sharp-format
+msgid "Can't read the file: {0}"
+msgstr "Faylni o'qib bo'lmadi: {0}"
+
+#, c-sharp-format
+msgid "Line {0}: a question needs four answers; this one has {1}"
+msgstr "{0}-qator: savolda to'rtta javob bo'lishi kerak, bunda {1} ta"
+
+#, c-sharp-format
+msgid "Line {0}: mark exactly one answer as right, with +"
+msgstr "{0}-qator: aynan bitta to'g'ri javobni + bilan belgilang"
+
+#, c-sharp-format
+msgid "Line {0}: two of the answers are the same"
+msgstr "{0}-qator: ikkita javob bir xil"
+
+#, c-sharp-format
+msgid "Line {0}: the title goes before the first question"
+msgstr "{0}-qator: sarlavha birinchi savoldan oldin yoziladi"
+
+#, c-sharp-format
+msgid "Line {0}: the question is empty"
+msgstr "{0}-qator: savol bo'sh"
+
+#, c-sharp-format
+msgid "Line {0}: the question is too long ({1} characters, at most {2})"
+msgstr "{0}-qator: savol juda uzun ({1} belgi, ko'pi bilan {2})"
+
+#, c-sharp-format
+msgid "Line {0}: a pack has at most {1} questions"
+msgstr "{0}-qator: to'plamda ko'pi bilan {1} ta savol bo'ladi"
+
+#, c-sharp-format
+msgid "Line {0}: an answer before any question (start a question with Q:)"
+msgstr "{0}-qator: savoldan oldin javob (savolni Q: bilan boshlang)"
+
+#, c-sharp-format
+msgid "Line {0}: a fifth answer: a question has four"
+msgstr "{0}-qator: beshinchi javob, savolda esa to'rtta"
+
+#, c-sharp-format
+msgid "Line {0}: the answer is empty"
+msgstr "{0}-qator: javob bo'sh"
+
+#, c-sharp-format
+msgid "Line {0}: the answer is too long ({1} characters, at most {2})"
+msgstr "{0}-qator: javob juda uzun ({1} belgi, ko'pi bilan {2})"
+
+#, c-sharp-format
+msgid "Line {0}: start a question with Q: and each answer with + (right) or - (wrong)"
+msgstr "{0}-qator: savolni Q: bilan, har bir javobni + (to'g'ri) yoki - (noto'g'ri) bilan boshlang"
+
+msgid "The file has no questions: start each one with Q:"
+msgstr "Faylda savol yo'q: har birini Q: bilan boshlang"
+
+#, c-sharp-format
+msgid "{0} (your pack)"
+msgstr "{0} (sizning to'plamingiz)"
+
+msgid "That pack has mistakes, so it isn't used:"
+msgstr "Bu to'plamda xatolar bor, shuning uchun ishlatilmaydi:"
+
+#, c-sharp-format
+msgid "Your pack: {0} questions. The host sends them to everyone, one at a time."
+msgstr "Sizning to'plamingiz: {0} ta savol. Boshlovchi ularni hammaga bittadan yuboradi."
+
+msgid "A pack of your own is a text file: \"Q:\" before each question, then its four answers, \"+\" before the right one and \"-\" before the others."
+msgstr "O'z to'plamingiz — matn fayli: har bir savol oldidan «Q:», keyin to'rtta javob, to'g'risi oldidan «+», qolganlari oldidan «-»."
+
+#, c-sharp-format
+msgid "{0} questions"
+msgstr "{0} ta savol"
+
+msgid "Open a pack file…"
+msgstr "To'plam faylini ochish…"
+
+msgid "Pick a quiz pack"
+msgstr "Savollar to'plamini tanlang"
+
+msgid "Quiz pack"
+msgstr "Savollar to'plami"
+
+msgid "Open the quiz folder"
+msgstr "Viktorina papkasini ochish"
+
+msgid "Look again"
+msgstr "Qaytadan qarash"
+
+msgid "Questions from"
+msgstr "Savollar manbai"
+
+#, c-sharp-format
+msgid "{0} to {1} players on the same network. Everyone needs Desk Arcade {2} or newer."
+msgstr "Bitta tarmoqda {0} dan {1} gacha o'yinchi. Hammada Desk Arcade {2} yoki yangirog'i bo'lishi kerak."
+
+msgid "click an answer — the faster you're right, the more it scores"
+msgstr "javobni bosing — qancha tez to'g'ri topsangiz, shuncha ko'p ochko"
+
+msgid "Know-it-all"
+msgstr "Hammasini biladigan"
+
+msgid "Answer 100 quiz questions right"
+msgstr "Viktorinaning 100 ta savoliga to'g'ri javob bering"
+
+msgid "Full marks"
+msgstr "Eng yuqori baho"
+
+msgid "Answer every question of a quiz right"
+msgstr "Bitta viktorinaning barcha savollariga to'g'ri javob bering"
+
+msgid "Quick on the buzzer"
+msgstr "Tez javob"
+
+msgid "Answer right within two seconds 20 times"
+msgstr "20 marta ikki soniya ichida to'g'ri javob bering"
+
+#, c-sharp-format
+msgid "Answer {0} questions right in Quiz Night"
+msgstr "Viktorinada {0} ta savolga to'g'ri javob bering"
+
+msgid "Draw & Guess"
+msgstr "Chiz va top"
+
+msgid "Draw the word for the others to guess · type your guesses"
+msgstr "Boshqalar topishi uchun so'zni chizing · taxminlaringizni yozing"
+
+#, c-sharp-format
+msgid "With {0} computers"
+msgstr "{0} ta kompyuter bilan"
+
+msgid "You won · click New game"
+msgstr "Siz yutdingiz · «Yangi o'yin»ni bosing"
+
+#, c-sharp-format
+msgid "{0} won · click New game"
+msgstr "{0} yutdi · «Yangi o'yin»ni bosing"
+
+msgid "Pick a word to draw"
+msgstr "Chiziladigan so'zni tanlang"
+
+#, c-sharp-format
+msgid "{0} is picking a word"
+msgstr "{0} so'z tanlamoqda"
+
+#, c-sharp-format
+msgid "Draw: {0}"
+msgstr "Chizing: {0}"
+
+#, c-sharp-format
+msgid "The word was: {0}"
+msgstr "So'z shu edi: {0}"
+
+msgid "You got it! · the others are still guessing"
+msgstr "Topdingiz! · boshqalar hali topmoqda"
+
+#, c-sharp-format
+msgid "{0} is drawing · type your guess"
+msgstr "{0} chizmoqda · taxminingizni yozing"
+
+msgid "YOU GOT IT!"
+msgstr "TOPDINGIZ!"
+
+msgid "close!"
+msgstr "yaqin!"
+
+#, c-sharp-format
+msgid "Draw & Guess · place {0} of {1} with {2} points ✏️"
+msgstr "Chiz va top · {2} ochko bilan {1} tadan {0}-o'rin ✏️"
+
+msgid "Your guess"
+msgstr "Taxminingiz"
+
+#, c-sharp-format
+msgid "{0} is picking a word…"
+msgstr "{0} so'z tanlamoqda…"
+
+msgid "The word was"
+msgstr "So'z shu edi"
+
+#, c-sharp-format
+msgid "Turn {0} of {1}"
+msgstr "{1} tadan {0}-navbat"
+
+msgid "Players"
+msgstr "O'yinchilar"
+
+msgid "Guesses"
+msgstr "Taxminlar"
+
+#, c-sharp-format
+msgid "{0} guessed it!"
+msgstr "{0} topdi!"
+
+#, c-sharp-format
+msgid "{0}: {1} · close!"
+msgstr "{0}: {1} · yaqin!"
+
+msgid "Click here and type your guess · Enter sends it"
+msgstr "Shu yerni bosib taxminingizni yozing · Enter yuboradi"
+
+msgid "Clear"
+msgstr "Tozalash"
+
+msgid "draw the word on the board, or type your guesses — the sooner you get it, the more it scores"
+msgstr "so'zni doskaga chizing yoki taxminlaringizni yozing — qancha tez topsangiz, shuncha ko'p ochko"
+
+msgid "Guess 25 words in Draw & Guess"
+msgstr "«Chiz va top»da 25 ta so'zni toping"
+
+msgid "Clear as day"
+msgstr "Kunday ravshan"
+
+msgid "Have your drawings guessed 25 times"
+msgstr "Chizganlaringizni 25 marta topishsin"
+
+msgid "Quick eye"
+msgstr "O'tkir ko'z"
+
+msgid "Be the first to guess 10 times"
+msgstr "10 marta birinchi bo'lib toping"
+
+#, c-sharp-format
+msgid "Guess {0} words in Draw & Guess"
+msgstr "«Chiz va top»da {0} ta so'zni toping"

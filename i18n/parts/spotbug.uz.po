@@ -1,0 +1,315 @@
+# Desk Arcade: Uzbek (uz), Spot the Bug (1.8.6), waiting to be folded into uz.po.
+# The English text is the msgid. Keep {0}-style placeholders, "·" separators and "×" as they are, and keep
+# the number last in "Best {0}"-style lines (the compact scoreboard shows only the last word).
+# The snippets' explanations are not here: they live with the snippets in spotbug/*.json.
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: uz\n"
+"X-Language-Name: O'zbekcha\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. ---- Spot the Bug: title, hint, achievements, daily challenge
+msgid "Spot the Bug"
+msgstr "Xatoni top"
+
+msgid "click the line with the bug before the fuse burns down — the fix and the reason come after each one"
+msgstr "pilik yonib bo'lmasidan xato bor qatorni bosing — har biridan keyin tuzatish va sababi ko'rsatiladi"
+
+msgid "Bug hunter"
+msgstr "Xato ovchisi"
+
+msgid "Find 100 bugs in Spot the Bug"
+msgstr "«Xatoni top» o'yinida 100 ta xatoni toping"
+
+msgid "Clean review"
+msgstr "Mukammal tekshiruv"
+
+msgid "Find all ten bugs of a round, each at the first click"
+msgstr "Raunddagi o'nta xatoning hammasini, har birini birinchi bosishda toping"
+
+msgid "Daily reviewer"
+msgstr "Har kungi tekshiruvchi"
+
+msgid "Find the daily bug 7 days in a row"
+msgstr "Kun xatosini 7 kun ketma-ket toping"
+
+#, c-sharp-format
+msgid "Find {0} bugs in Spot the Bug"
+msgstr "«Xatoni top» o'yinida {0} ta xatoni toping"
+
+#. ---- Spot the Bug: the board
+msgid "Round of ten"
+msgstr "O'ntalik raund"
+
+msgid "Daily snippet"
+msgstr "Kun kodi"
+
+msgid "All"
+msgstr "Hammasi"
+
+msgid "Start ▸"
+msgstr "Boshlash ▸"
+
+msgid "Next ▸"
+msgstr "Keyingisi ▸"
+
+msgid "See the result ▸"
+msgstr "Natija ▸"
+
+msgid "New round ▸"
+msgstr "Yangi raund ▸"
+
+msgid "Play a round ▸"
+msgstr "Raund o'ynash ▸"
+
+msgid "Ten snippets, one bug in each"
+msgstr "O'nta kod parchasi, har birida bitta xato"
+
+msgid "Click the line with the bug before the fuse burns down. Three wrong clicks and the snippet is gone; the fix and the reason come after each one."
+msgstr "Pilik yonib bo'lmasidan xato bor qatorni bosing. Uch marta xato bossangiz, parcha boy beriladi; har biridan keyin tuzatish va sababi ko'rsatiladi."
+
+#, c-sharp-format
+msgid "a find scores {0}, and up to {1} more for speed"
+msgstr "topilgan xato {0} ochko beradi, tezlik uchun yana {1} tagacha qo'shiladi"
+
+#, c-sharp-format
+msgid "Daily snippet #{0}"
+msgstr "Kun kodi #{0}"
+
+msgid "The same snippet for everyone today, and one try at it. Find the bug in as few clicks and seconds as you can."
+msgstr "Bugun hamma uchun bir xil kod va bitta urinish. Xatoni iloji boricha kamroq bosish va kamroq soniyada toping."
+
+#, c-sharp-format
+msgid "streak {0} · keep it going"
+msgstr "seriya {0} · uzib qo'ymang"
+
+msgid "find it to start a streak"
+msgstr "seriyani boshlash uchun xatoni toping"
+
+msgid "Which line has the bug?"
+msgstr "Xato qaysi qatorda?"
+
+msgid "This bug spans two lines: either one counts."
+msgstr "Bu xato ikki qatorni egallaydi: istalgan biri hisoblanadi."
+
+#, c-sharp-format
+msgid "{0} tries left · a wrong click costs {1} points"
+msgstr "{0} ta urinish qoldi · har bir xato bosish −{1} ochko"
+
+#, c-sharp-format
+msgid "last try · a wrong click costs {0} points"
+msgstr "oxirgi urinish · har bir xato bosish −{0} ochko"
+
+#, c-sharp-format
+msgid "✓ Found it · +{0}"
+msgstr "✓ Topildi · +{0}"
+
+msgid "✗ Time's up"
+msgstr "✗ Vaqt tugadi"
+
+msgid "✗ Three wrong clicks"
+msgstr "✗ Uch marta xato bosildi"
+
+msgid "✓ You found today's bug"
+msgstr "✓ Bugungi xatoni topdingiz"
+
+msgid "✗ Today's bug got away"
+msgstr "✗ Bugungi xato qochib ketdi"
+
+#, c-sharp-format
+msgid "{0} points so far · snippet {1} of {2}"
+msgstr "hozircha {0} ochko · {2} tadan {1}-parcha"
+
+#, c-sharp-format
+msgid "found in {0}, {1} s · streak {2}"
+msgstr "{0}, {1} s da topildi · seriya {2}"
+
+msgid "1 click"
+msgstr "1 ta bosish"
+
+#, c-sharp-format
+msgid "{0} clicks"
+msgstr "{0} ta bosish"
+
+msgid "the streak starts again with tomorrow's snippet"
+msgstr "seriya ertangi koddan qaytadan boshlanadi"
+
+msgid "A clean review!"
+msgstr "Mukammal tekshiruv!"
+
+msgid "Round over"
+msgstr "Raund tugadi"
+
+#, c-sharp-format
+msgid "{0} of {1} bugs found, {2} at the first click · {3} points in {4}"
+msgstr "{1} ta xatodan {0} tasi topildi, {2} tasi birinchi bosishda · {4} da {3} ochko"
+
+#, c-sharp-format
+msgid "{0} of {1} found · {2} points"
+msgstr "{1} tadan {0} tasi topildi · {2} ochko"
+
+#. ---- Spot the Bug: the scoreboard line and the line to share
+msgid "Click Start: ten snippets, one bug in each"
+msgstr "«Boshlash» ni bosing: o'nta kod parchasi, har birida bitta xato"
+
+#, c-sharp-format
+msgid "Snippet {0}/{1} · click the line with the bug"
+msgstr "Parcha {0}/{1} · xato bor qatorni bosing"
+
+#, c-sharp-format
+msgid "Found · +{0} · click Next"
+msgstr "Topildi · +{0} · «Keyingisi» ni bosing"
+
+msgid "Missed · read the fix, then click Next"
+msgstr "Topilmadi · tuzatishni o'qing, keyin «Keyingisi» ni bosing"
+
+#, c-sharp-format
+msgid "Round over · {0}/{1} found · {2} points"
+msgstr "Raund tugadi · {0}/{1} topildi · {2} ochko"
+
+#, c-sharp-format
+msgid "Daily snippet #{0} · the same for everyone today"
+msgstr "Kun kodi #{0} · bugun hamma uchun bir xil"
+
+msgid "Click the line with the bug · one try a day"
+msgstr "Xato bor qatorni bosing · kuniga bitta urinish"
+
+msgid "Found it · read the fix"
+msgstr "Topildi · tuzatishni o'qing"
+
+msgid "The bug got away · read the fix"
+msgstr "Xato qochib ketdi · tuzatishni o'qing"
+
+msgid "Daily snippet done · come back tomorrow"
+msgstr "Kun kodi bajarildi · ertaga qayting"
+
+#, c-sharp-format
+msgid "Daily snippet done · streak {0}"
+msgstr "Kun kodi bajarildi · seriya {0}"
+
+#, c-sharp-format
+msgid "Spot the Bug daily #{0} · found it in {1}, {2} s"
+msgstr "Xatoni top, kun kodi #{0} · {1}, {2} s da topildi"
+
+#, c-sharp-format
+msgid "Spot the Bug daily #{0} · the bug got away"
+msgstr "Xatoni top, kun kodi #{0} · xato qochib ketdi"
+
+#, c-sharp-format
+msgid "Spot the Bug · {0}/{1} bugs · {2} points"
+msgstr "Xatoni top · {0}/{1} xato · {2} ochko"
+
+#. ---- Spot the Bug: kinds of bug, shown after each snippet
+msgid "off-by-one"
+msgstr "birga adashish"
+
+msgid "missing await"
+msgstr "await tushib qolgan"
+
+msgid "null dereference"
+msgstr "null ga murojaat"
+
+msgid "SQL injection"
+msgstr "SQL in'eksiyasi"
+
+msgid "race condition"
+msgstr "oqimlar poygasi"
+
+msgid "wrong comparison"
+msgstr "noto'g'ri solishtirish"
+
+msgid "integer overflow"
+msgstr "butun son to'lib ketishi"
+
+msgid "resource leak"
+msgstr "resurs sizib chiqishi"
+
+msgid "shadowed variable"
+msgstr "to'silgan o'zgaruvchi"
+
+msgid "mutable default"
+msgstr "o'zgaruvchan standart qiymat"
+
+msgid "default evaluated once"
+msgstr "standart qiymat bir marta hisoblanadi"
+
+msgid "stray semicolon"
+msgstr "ortiqcha nuqtali vergul"
+
+msgid "wrong logic"
+msgstr "noto'g'ri mantiq"
+
+msgid "changed while iterating"
+msgstr "aylanish paytida o'zgartirish"
+
+msgid "captured loop variable"
+msgstr "ushlab qolingan sikl o'zgaruvchisi"
+
+msgid "async misuse"
+msgstr "async noto'g'ri ishlatilgan"
+
+msgid "floating-point precision"
+msgstr "suzuvchi nuqta aniqligi"
+
+msgid "type mix-up"
+msgstr "turlar chalkashligi"
+
+msgid "NULL handling"
+msgstr "NULL bilan ishlash"
+
+msgid "wrong join"
+msgstr "noto'g'ri JOIN"
+
+msgid "grouping and aggregates"
+msgstr "guruhlash va agregatlar"
+
+msgid "dates and times"
+msgstr "sana va vaqt"
+
+msgid "exception handling"
+msgstr "istisnolarni ushlash"
+
+msgid "equality mix-up"
+msgstr "tenglikda chalkashlik"
+
+msgid "missing key"
+msgstr "kalit yo'q"
+
+msgid "changed a copy"
+msgstr "nusxa o'zgartirilgan"
+
+msgid "used after dispose"
+msgstr "Dispose dan keyin ishlatish"
+
+msgid "wrong scope"
+msgstr "noto'g'ri ko'rinish sohasi"
+
+msgid "shared reference"
+msgstr "umumiy havola"
+
+msgid "hidden state"
+msgstr "yashirin holat"
+
+msgid "parsing"
+msgstr "satrni tahlil qilish"
+
+msgid "used-up iterator"
+msgstr "tugagan iterator"
+
+msgid "result thrown away"
+msgstr "natija tashlab yuborilgan"
+
+msgid "unstable hash"
+msgstr "beqaror xesh"
+
+msgid "division by zero"
+msgstr "nolga bo'lish"
+
+msgid "not atomic"
+msgstr "atomar emas"
+
+msgid "deferred execution"
+msgstr "kechiktirilgan bajarilish"

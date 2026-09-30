@@ -5,7 +5,13 @@ deploy or Claude Code is working, and still see everything underneath.
 
 **Platforms:** Windows 10/11 (x64, ARM64) · Ubuntu 22.04/24.04 (amd64, arm64) · other Linux via AppImage
 or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE) &nbsp;·&nbsp;
-**Version:** 1.8.5
+**Version:** 1.8.6 &nbsp;·&nbsp; **Web page:** [bokhodirurinboev.github.io/DeskArcade](https://bokhodirurinboev.github.io/DeskArcade/)
+
+<p align="center">
+  <img src="docs/media/hoops.gif" width="32%" alt="Hoops: a ball thrown at a hoop on a window top">
+  <img src="docs/media/chess.gif" width="32%" alt="Chess on a board over the desktop">
+  <img src="docs/media/pet.gif" width="32%" alt="The desktop pet walking along the taskbar">
+</p>
 
 ---
 
@@ -19,7 +25,7 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 - [Language](#language)
 - [Installation](#installation)
 - [Updating](#updating)
-- [Claude Code integration](#claude-code-integration)
+- [Coding agents and CI](#coding-agents-and-ci)
 - [Play while a command runs](#play-while-a-command-runs)
 - [At work](#at-work)
 - [Building from source](#building-from-source)
@@ -54,7 +60,15 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
   apps; breaks for your eyes, back and water by time at the computer; meeting warnings from your calendar; focus blocks
   with the games as the break; timers and sticky notes; coffee invites for co-workers; a chime when a download or a
   program finishes; and a word when the working day is over.
-- **56 games, 170 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
+- **For programmers** (tray or ☰ → **Coding agents & CI**): a line per Claude Code session on the scoreboard, and
+  what it is doing; ready configs for Codex, Aider, Cursor and Gemini; `deskarcade --status` lanes for any script; the
+  CI run of your branch and the reviews waiting for you, read through `gh` or `glab`; a VS Code extension; standup notes,
+  git before you go, and a weekly report of the time spent waiting.
+- **Games for the whole office**: Quiz Night, Draw & Guess, Poker and Hearts in rooms of up to eight co-workers, and a
+  record against each of them. **Games for programmers**: Spot the Bug, Load Balancer, Pipeline, Bit Flip and a
+  Shortcut Trainer. **Word Guess** has a daily word in English, Russian and Uzbek.
+- **Share a result** (☰ → Share): the last result as a line for Teams, Slack or Telegram, or a picture of the game.
+- **66 games, 211 achievements**, a daily challenge, play-time stats, and English, Uzbek and Russian text.
 - **Play with the person at the next desk** over the local network: Air Hockey (best of 3), Pong,
   H-O-R-S-E, Mini Golf, Archery and Cannon Castles duels, a typing race, co-op Asteroids, board games, Sea Battle and score races in twenty-seven games. You see
   what the other player does: their ball, arrow or puck, and a marker wherever they pop, whack or stack. Send them a
@@ -100,7 +114,7 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 | 🎣 **Fishing** | A pond along the taskbar. Drag back from the rod and let go to cast. Wait through the nibbles and click when the bobber goes under. Then hold to reel and let go when the tension bar turns red, or the line snaps. Two minutes a round; perch, carp, pike, catfish and a rare golden trout. |
 | 🃏 **Memory** | 24 cards face down. Flip two at a time to find the 12 pairs; your best is the fewest moves. Drag the grip above the cards (or right-drag) to move them. A deal is a round: race a co-worker or the computer to find the pairs in fewer moves. |
 | 🟢 **Code Breaker** | Crack a hidden code of four colours (repeats allowed) in ten guesses. Pick a colour and click a hole, or click a hole to cycle it (right-click empties it), then **Check**: a black pin is a right colour in the right place, a white pin a right colour in the wrong place. Each colour also has a symbol for colour-blind play. Drag the grip above the board (or right-drag off the holes) to move it. A code is a round: race a co-worker or the computer to crack it in fewer guesses; a code that gets away counts as 11. |
-| 🂡 **Solitaire** | Klondike, draw one. Click the stock to turn a card. Click a card to send it where it fits (home to its foundation first), or drag a card or a face-up run onto the pile you want. **Undo** takes a move back; **New deal** asks once more before it throws the game away. When every card is face up, the rest go home by themselves. Your best is the fewest moves. Drag the grip above the felt (or right-drag) to move the whole layout. A deal is a round: race a co-worker or the computer to send more cards home, counted when the deal is solved or given up with **New deal**. |
+| 🂡 **Solitaire** | Klondike (draw one), **FreeCell** or **Spider**: the chips under the felt pick the game. FreeCell uses Microsoft's numbered deals, and the deal chip opens a number pad to play one a co-worker shared; Spider comes in one, two or four suits. Click the stock to turn a card (in Spider, to deal a row). Click a card to send it where it fits (home to its foundation first), or drag a card or a face-up run onto the pile you want. **Undo** takes a move back; **New deal** asks once more before it throws the game away. When every card is face up, the rest go home by themselves. Your best is the fewest moves. Drag the grip above the felt (or right-drag) to move the whole layout. A deal is a round: race a co-worker or the computer to send more cards home, counted when the deal is solved or given up with **New deal**. |
 | 🟥 **Last Card** | An UNO-style game for 2–4 players. Play a card of the colour on the pile, or the same number or symbol. **Skip**, **Reverse** and **+2** hit the next player; a **Wild** lets you pick the colour, and a **Wild +4** is allowed only when you hold nothing of the colour on the pile. Can't play? Click the pile to draw; a card that fits can go straight down, or **Pass**. Click **Last card!** when you're down to one card (or before, with two), or you draw two as soon as the next player moves. The first to play their last card wins. Every colour also has a shape in the corners (circle, triangle, square, diamond). Against 1–3 computer players, or co-workers in a room. The table has a grip (or right-drag it) and remembers its place. Cards deal from the pile one by one and fly onto the discard when played; a Skip, Reverse or draw card makes a show of itself on the pile, a Wild's colours fan out, and **Last card!** pulses while it applies. The scoreboard chip says whose turn it is (in a room, by name; when it is yours, who is next). |
 | 🧑‍💼 **Interns** | Click the hatch and a line of office interns drops out, onto a window top or just above the taskbar, and walks wherever their feet take them. Get enough of them to the **EXIT** door on the taskbar, past open manholes and drops too high to survive. Pick a tool on the toolbar (right-click an intern to switch tools) and click an intern: an **Umbrella** for a safe fall, a **Blocker** who turns the others round (click them again to let them go), or a **Builder** who lays a staircase. Drag a window and everyone standing on it rides along, so a window can be a bridge. Each level has more interns and manholes and fewer spare tools; your best is the highest level cleared. A level is a round: race a co-worker over the LAN, or the computer, to save more interns. **Ctrl+Alt+B** moves the toolbar to the cursor. |
 | 🧱 **Blockfall** | Falling blocks, played with the mouse: while the pointer is over the well the falling piece follows its column. Click to turn the piece, hold the button to drop it faster, right-click to drop it at once. Full rows clear (four at once scores the most), and every ten rows is a level with faster pieces. The well stands on a window top when one is wide enough and rides along when you drag that window; otherwise it stands on the taskbar. **Ctrl+Alt+B** moves it to the cursor. |
@@ -124,6 +138,16 @@ or Flatpak · macOS 14+ (experimental) &nbsp;·&nbsp; **License:** [MIT](LICENSE
 | 🁫 **Dominoes** | Draw dominoes along the **taskbar**: the line grows both ways from the middle and turns up the side of the screen when it runs out of room, doubles laid crosswise. Your tiles stand in a rack above it: click one that fits an open end (and then the end, when it fits both); with nothing that fits, click the **boneyard** to draw. Going out scores the pips left in the other hand, a blocked line the heavier hand's; first to 50 takes the match. Against the computer at four levels, or a co-worker over the LAN. |
 | 🏗️ **Window Jenga** | A tower of wooden blocks stands on one of your window tops (on the taskbar when none has room) and rides along when you drag the window, swaying as it goes. Press on a block below the top and drag it out **slowly**: a block carrying weight is stiff, and pulling faster than it gives shakes the tower. Then click a place on top to lay it. The tower falls when the weight above a layer, leaning with the sway, no longer sits over that layer's remaining blocks. A round lasts ninety seconds or until it falls; the blocks moved are the score, a race against the computer or a co-worker over the LAN. |
 | 🌉 **Rope Bridge** | Two windows stand on the desktop with a gap between them and a rope across it, and interns walk over from the left one. Drag **planks** from the pile onto the rope (or click the rope to lay one there) before they reach the gap: a place with no plank drops whoever steps on it, and every plank wears through after a few crossings, cracking as it goes, so worn ones want replacing in time. Fifteen interns make a round; those who reach the far window are the score, a race against the computer or a co-worker over the LAN. |
+| ❓ **Quiz Night** | Four answers to every question and one of them right: the faster you click it, the more it scores (1000 falling to 500), with a leaderboard after each question and a podium at the end. Packs of programming, general knowledge, geography and science questions in English, Russian and Uzbek, and your own pack as a text file. Alone, today's ten (the same for everyone) or a practice round against the computer; with co-workers, one hosts a room of up to eight and everyone answers on their own screen. |
+| ✏️ **Draw & Guess** | One player draws a word on a board over the desktop with the mouse (colours, sizes, undo); the others type their guesses in the typing window and see the drawing stroke by stroke. The sooner a right guess, the more it scores, and the drawer scores for each; hints fill in letters as the time runs down, and a guess one letter off shows as close. About 300 words in three languages, programming words among them. Rooms of up to eight co-workers; alone, computer players join in and draw from pictures of their own. |
+| ♠️ **Poker** | Texas hold'em for chips, never money, for 2 to 6 players. Fold, check or call with a click; raise with the slider, ½ pot, pot or all in. The blinds rise every few hands, and a hint on the table names your hand and your chance. Against computer players at four levels, or co-workers in a room; a game goes on until one player has every chip, or for 20 hands over lunch. |
+| ♥️ **Hearts** | The Windows classic for four: pass three cards (left, right, across, then none), follow suit, and duck the hearts and the queen of spades, or take them all and shoot the moon. The game ends at 100 and the lowest score wins. Against three computer players at four levels, or co-workers in a room. |
+| 🟩 **Word Guess** | Five letters, six tries: type a word (click the board and the typing window takes the keys) or click the drawn keyboard, and each letter turns green (right place), yellow (elsewhere in the word) or gray. The **daily word** is the same for everyone in English, Russian or Uzbek (o' g' sh ch ng count as one letter), builds a streak and copies as a grid of squares; **practice** words come one after another and race the computer or a co-worker, fewer guesses winning. |
+| 🐞 **Spot the Bug** | A short piece of code with one bug in it (an off-by-one, a missing `await`, a null, an injection, a race): click the line before the fuse burns down. The fix shows as a diff under the line, with the reason. 150 snippets in C#, TypeScript, Python and SQL; a round is ten, easy to hard, and a **daily snippet** is the same for everyone, one try a day. A round races the computer or a co-worker on the same snippets. |
+| 🖧 **Load Balancer** | Requests drop in from the top of the screen and queue above the taskbar: drag each onto a server before it times out. Two servers stand on window tops and ride along with them, and the budget racks more on the taskbar. Servers heat up with their load and slow down, and an overheated one reboots and throws its requests back. A game is a race against the computer or a co-worker. |
+| 🔧 **Pipeline** | Lay pipe from the **commit** to the **deploy** before the build flows: click a cell to lay the next piece from the queue there. Test and review pieces on the way score extra, and **Deploy now** lets the build rush through once the route is ready. Each level is longer and faster; a run lasts until the first leak and races the computer or a co-worker on the same levels. |
+| 💾 **Bit Flip** | Numbers fall down a well towards a row of bits: click bits to make the lowest number before it lands, with each bit's place value written under it. Four bits at first, then six and eight, hex from level 5, and twelve and sixteen bits at the top; three numbers landing end the game. A game races the computer or a co-worker on the same numbers. |
+| ⌨️ **Shortcut Trainer** | "Go to definition", "Rename symbol", `:wq`: press the keys (or type them, for Vim and the shell) in the typing window, in your desktop's own keys (Ctrl on Windows and Linux, ⌘ on a Mac). Sets for VS Code, JetBrains IDEs, Vim, the shell and everyday desktop keys; a drill is ten, the quicker the more it scores, and a miss shows the keys, which then have to be pressed before going on. The ones you miss come back more often in later drills. |
 | 🐱 **Desktop Pet** | Not a game: a cat (or a dog, duck, bunny, penguin, fox, hamster, turtle, parrot, frog, owl or a small dragon: **tray → Pet**) that walks along your taskbar and window tops, follows the cursor, jumps between windows (the owl and the parrot fly, wings out) and sleeps when left alone. Click to pet it, drag to carry and throw it, **right-click for its trick**. Each animal has its own voices (the cat meows, purrs and chatters at birds; the dog barks, whines and pants; the duck quacks; the bunny squeaks and thumps; the penguin brays; the fox barks "wow-wow" and screams; the hamster squeaks and chitters; the turtle hisses and grunts; the parrot squawks, whistles and says hello; the frog ribbits and croaks; the owl hoots and trills; the dragon rumbles, puffs and roars), its own walk (the bunny and the frog hop, the duck and penguin waddle, the hamster scurries, the turtle crawls, the dragon stomps) and its own trick: the cat stretches, the dog chases its tail, the duck flaps, the bunny does a twisting hop, the penguin belly-slides, the fox pounces, the hamster spins like a wheel, the turtle pops into its shell, the parrot flies a loop and shouts a word, the frog catches a fly with a long tongue, the owl turns its head right round and the dragon breathes a little fire. Left alone it keeps busy the way its animal does: cats groom and stalk the cursor, dogs sniff and wag, hamsters stuff their cheeks, turtles hide and stretch their necks, parrots bob and shriek, frogs puff their throats and catch flies, owls swivel their heads and blink slowly, dragons puff smoke and curl up. Pet it twice and a **ball** appears: throw it and dogs and foxes fetch it back to your cursor, cats sometimes (and may wander off to groom halfway), parrots and owls fly to it, hamsters push it, bunnies and frogs hop after it, and ducks, penguins, turtles and dragons just watch and comment. A **treat jar** stands at the end of the taskbar: click it to toss a treat (a crunch, crumbs, hearts and a burst of energy), and a pet that has gone without for a while comes and begs at the jar. A **thought bubble** shows what is on its mind: a heart, a "z", the ball, a treat or a "!". It is drowsier late at night and sleeps in a nightcap, says good morning with a long stretch, and when your cursor rests for a while it comes to sit on the window nearest you. Over the **LAN** a co-worker's pet visits as a faded ghost with their name above it, and the two say hello when they meet, and a co-worker can **post your pet a gift** (**tray or ☰ → Play over LAN → Send {name}'s pet…**): a parcel with a ribbon floats down on a little parachute to land near the pet, tagged with the sender's name. The pet runs over and opens it (or click it): a treat to eat, the ball to chase, or a ball of yarn or a chew bone that it plays with for a while in its own way (the cat bats and kneads it, the dog wags and shakes it, the hamster runs rings round it, the dragon puffs smoke at it), and the sender hears that their gift was loved. **It grows up:** each kind of pet keeps its own age (days since you first chose it) and play (pets, treats and fetches); after a week and 150 play points it is **grown-up** (young pets are a little smaller), and after four weeks and 800 it is **wise**, a touch bigger and with a **second trick** for right-clicks: the cat sits up and waves, the dog plays dead, the duck dabbles tail-up, the bunny stands up on the lookout, the penguin bows, the fox does its mousing dive, the hamster rolls up into a ball, the turtle sunbathes, the parrot dances, the frog does a big croak, the owl stretches both wings and the dragon blows smoke rings. Growing up is celebrated with a popup, and **Stats & achievements** shows each pet's age and stage. **It has a favourite nap spot:** it remembers which app's windows it napped on (by the app's name, never the window title), and once one is its favourite, a sleepy pet thinks of a pillow and goes back to nap on that app's window when it is open and has room on top (otherwise it naps where it is). **Its own volume:** **tray → Pet volume** (or ☰ → Sound) sets its calls to Off, Quiet, Normal or Loud without touching the games, and its calls get softer late in the evening. With **tray → Pet → Pet keeps me company in games** (off by default) it sits on the taskbar while you play the other games and joins in: in Hoops it bats a ball lying loose on the floor back toward you (once per throw, and a batted ball never scores), in Pong it runs along under the ball, in Whack-a-Bug it scurries away and hides from a bug peeking out beside it, and in Fishing it sits on the pier and may leap up and steal a fish off your line (it still counts, and never the golden trout). Each animal plays its way: the owl and the parrot swoop, the turtle, duck, penguin and dragon only watch the ball, the frog flicks its tongue at the bugs instead of hiding, and only the fish-eaters (and the dragon) steal. It jumps with its ears back at a buzzer or a loud crash and dances at a cheer or a new best, dozes off when nobody plays (and then only lifts its head), and never touches anything over the LAN or in a race with the computer. |
 
 > **Brick Breaker note:** while a ball is in play, a strip along the bottom of the screen takes the
@@ -148,6 +172,8 @@ joins straight into it and follows whenever the host switches.
 | Checkers, Chess, Connect Four, Tic-tac-toe, Reversi, Gomoku | Turns over the network; the guest sees the board from their side and the host's move slide in; the scoreboard chip says whose turn it is (both PCs need 1.8.0 or later) |
 | Sea Battle | Each fleet stays on its own PC; only shots and hits cross the network |
 | Durak, Last Card | The host's table opens a room and your co-worker's copy joins it by itself; the host starts the game from the table, with or without computer players (the room also takes more co-workers, see below) |
+| Quiz Night, Draw & Guess, Poker, Hearts | Rooms for the whole office, up to eight (six at Poker, four at Hearts), with computer players in the empty seats (see below) |
+| Word Guess, Spot the Bug, Bit Flip, Shortcut Trainer, Load Balancer, Pipeline | Race: the same word, snippets, numbers or levels on both screens (Word Guess and Shortcut Trainer when you both pick the same language or set), and the fewer guesses or the higher score wins |
 | Bubble Pop, Whack-a-Bug, Tower Stack, Bowling, Fishing, Pinball, Paper Toss, Blockfall, Marble Run, Keepy-Uppy, Bug Squash, Can Knockdown, Brick Breaker, Clay Shooting, Plinko, Slingshot, Darts, Pool, Memory, Code Breaker, Solitaire, Interns, Sheep Herding, Word Rain, Snakes on Windows, Minesweeper, Sudoku, Blackjack, Paper Planes, Ping-Pong Cups | Race: start a round and theirs starts too (in Pinball a three-ball game, in Paper Toss a run, in Blockfall a game, in Marble Run five courses, in Keepy-Uppy a run of kicks, in Can Knockdown and Brick Breaker a whole game, in Clay Shooting 15 pulls, in Plinko ten discs, in Slingshot one tower, in Darts a leg of 501, in Pool a rack, in Memory and Solitaire a deal, in Code Breaker a code, in Interns a level, in Sheep Herding a round, in Word Rain and Snakes on Windows a game, in Minesweeper and Sudoku the same board or puzzle on both screens, in Blackjack ten hands, in Paper Planes three throws, in Ping-Pong Cups ten balls). You see their live score, a red ring wherever they pop, whack, kick, squash, knock, break, hit, stack, pot, pair, pin, send a card home, save an intern, pen a sheep, zap a word or eat an apple, and who won; in Darts, Pool, Memory and Code Breaker the fewer darts, shots, moves or guesses win, and in Minesweeper and Sudoku the faster time |
 | Typing Race | Both of you type the same text and see each other's car; the host picks the text (a guest's click asks for a race) and the first over the line wins, each timed from their own GO |
 | Asteroids | Co-op: both ships fly in one field of rocks, with five lives and one score between you. The host runs the rocks and the guest's clicks fire from the guest's ship; a guest's click on the parked ship asks the host for a game |
@@ -157,11 +183,11 @@ joins straight into it and follows whenever the host switches.
 | Dominoes | Turns over the network: the host deals from a shuffle both screens share, and every tile laid, drawn or passed is sent, so both lines agree; the rounds take turns at opening, and a guest's click after a match asks for a rematch |
 | Desktop Pet | Your pets visit each other: the co-worker's pet walks your desktop as a faded ghost with their name above it, and the two say hello when they meet. **Play over LAN → Send {name}'s pet…** posts their pet a treat, a ball, a ball of yarn or a chew bone: a parcel floats down on a parachute next to their pet with a "from {you}" tag, and you get a note when their pet opens it. One parcel every 30 seconds; parcels that arrive while another game is on wait (up to three) until the pet is back on screen |
 
-**Rooms** for Durak and Last Card are separate from the two-player link, for up to four people: **tray → Play
-over LAN → Durak with co-workers…** or **Last Card with co-workers…** (or the button on the game's table). Each
-room plays one game, and the list only shows rooms for that game. One player clicks **Create a room** and reads out the
+**Rooms** are separate from the two-player link: for up to four people at Durak, Last Card and Hearts, six at Poker
+and eight at Quiz Night and Draw & Guess. **Tray → Play over LAN → Durak with co-workers…** (and the same for each of
+those games), or the button on the game's table. Each room plays one game, and the list only shows rooms for that game. One player clicks **Create a room** and reads out the
 four-letter code; the others pick the room from the list or type the code (plus the host's IP address if
-the network blocks broadcasts). The host chooses 2, 3 or 4 seats and starts; computer players fill the empty
+the network blocks broadcasts). The host chooses the seats and starts; computer players fill the empty
 seats and take over for anyone who drops out. Several rooms can run on one network. Rooms use UDP port 47822.
 
 **Across buildings, or from home:** broadcasts stay inside one network, but **Find games / join by address…** also
@@ -205,8 +231,17 @@ with your progress; click it to jump to the game. Finish it on consecutive days 
 
 **Stats & achievements** in the tray menu (or `DeskArcade --signal stats`) opens a window with time
 played and best score per game, each pet you have adopted with its age, its life stage and what the next stage needs
-(and the pet's favourite nap spot), today at the computer, and all 170 achievements with their progress. Stats live in
+(and the pet's favourite nap spot), today at the computer, and all 211 achievements with their progress. Stats live in
 `stats.json` next to your settings and can be reset from the tray.
+
+**Rivalries:** every game against a co-worker adds to your record against them in that game ("vs Alice: Chess 7–5,
+Darts 3–4"). The record shows on the opponent chip and in **Find games…**, and the **Office leaderboard** has an **Office
+ladder** row: this month's rating across the board games against co-workers. Records stay on your PC.
+
+**Share a result:** **☰ → Share → Copy the result as text** puts the last result on the clipboard as a line for Teams,
+Slack or Telegram (today's Word Guess as a grid of squares, the daily snippet, a puzzle time, a new best), and **Copy a
+picture of the game** copies the overlay as an image. From the middle of December, **Your year at the desk…** in the same
+menu sums up the year on a card to save as a picture.
 
 **Office leaderboard:** **tray → Office leaderboard** shows today's best hoops streak, baskets, Air Hockey
 and Pong wins, bugs squashed, tallest tower, LAN wins and minutes played for everyone on your network who
@@ -225,7 +260,7 @@ broadcasts your user name and today's scores on UDP port 47821 every 20 seconds,
 | ☰ on the scoreboard | The quick menu: game, pet, at work, CPU difficulty, theme, sound, LAN, stats, hide, exit |
 | Drag the grip above a board or table (or right-drag the board) | Move it; the place is remembered (**tray → Reset positions** forgets it) |
 | Tray icon, left-click | Show or hide |
-| Tray icon menu | Game, pet, at work (breaks, meetings, focus, timers, notes, invites, downloads, the end of the day), CPU difficulty (every game with a computer opponent, and the race toggle), theme, office leaderboard, play over LAN (emotes, reactions, chat and gifts for a co-worker's pet too), volume, pet volume, language, Claude Code options, updates, stats, monitor, reset, exit |
+| Tray icon menu | Game, pet, at work (breaks, meetings, focus, focus sounds, knocks, timers, notes, invites, downloads, my day, the end of the day), coding agents & CI, CPU difficulty (every game with a computer opponent, and the race toggle), theme, office leaderboard, play over LAN (rooms, emotes, reactions, chat and gifts for a co-worker's pet too), share, volume, pet volume, language, updates, stats, the tour, monitor, reset, exit |
 
 On macOS the shortcuts are **Control+Option+G/N/B**. **Tray → Shortcuts…** changes the modifier keys and the
 letters (Windows applies them at once; Linux and macOS from the next start).
@@ -264,12 +299,17 @@ DeskArcade --signal lan-host|lan-join|lan-find|lan-leave
 DeskArcade --signal durak-rooms|durak-solo:2|durak-host:abcd|durak-join:abcd|durak-start:4|durak-leave
 DeskArcade --signal lastcard-rooms|lastcard-solo:2|lastcard-host:abcd|lastcard-join:abcd|lastcard-start:4|lastcard-leave
 DeskArcade --signal breathe|stretch|eyes|water|drank|dayend|focus|focus:50|focus-stop|note|atwork|coffee|lunch|walk
+DeskArcade --signal quiz-host|draw-host:abcd|poker-join:abcd|hearts-start:4|draw-solo:2|quiz-leave
+DeskArcade --signal share|share-picture|tour|year|morning|three|standup-copy|waitreport-open
 ```
 
 ## Language
 
 Desk Arcade speaks **English**, **O'zbekcha** and **Русский**. It follows your system language by
 default; pick one in **tray → Language**. The choice applies immediately, menus included.
+
+The translations are gettext files in [`i18n/`](i18n/), with a template for a new language in
+`i18n/deskarcade.pot`: [docs/TRANSLATING.md](docs/TRANSLATING.md) says how to add one or fix a line.
 
 ## Installation
 
@@ -291,6 +331,13 @@ Or install with [Scoop](https://scoop.sh) (x64 and ARM64, runtime bundled):
 ```powershell
 scoop bucket add deskarcade https://github.com/BokhodirUrinboev/scoop-bucket
 scoop install deskarcade/deskarcade
+```
+
+Or with [Chocolatey](https://chocolatey.org) (x64, runtime bundled), once its first release there is through
+moderation:
+
+```powershell
+choco install deskarcade
 ```
 
 ### Ubuntu (22.04 / 24.04)
@@ -332,6 +379,8 @@ tray menu (game, pet, CPU difficulty, LAN, stats, shortcuts, hide, exit). Instal
 - **AppImage:** `chmod +x DeskArcade-<version>-x86_64.AppImage` and run it. Ubuntu 22.04+ needs
   `libfuse2` (`sudo apt install libfuse2`), or run with `APPIMAGE_EXTRACT_AND_RUN=1`. "Start when I sign in"
   and the Claude Code hook config record the AppImage file itself, so re-run them after moving the file.
+- **Arch Linux:** `deskarcade-bin` in the AUR, built from the release's `.deb` (`yay -S deskarcade-bin`, or
+  `git clone https://aur.archlinux.org/deskarcade-bin.git` and `makepkg -si`), once its first release is there.
 - **Flatpak:** a manifest is in [`packaging/flatpak/`](packaging/flatpak/) for building it yourself. It
   is not on Flathub.
 
@@ -375,24 +424,51 @@ scoreboard, checks the file's SHA-256 against GitHub's digest, and installs it.
 
 Settings, high scores and stats are never touched by an update.
 
-## Claude Code integration
+## Coding agents and CI
 
-Desk Arcade can show whether Claude Code is working, done or waiting for you, chime when it finishes,
-and tell you how long you waited.
+**Tray or ☰ → Coding agents & CI** follows Claude Code and other coding agents, scripts and CI on the scoreboard, and
+chimes when they finish or need you. Nothing leaves the PC.
 
-1. Right-click the tray icon and choose **Copy Claude Code hook config**.
-2. Merge the copied JSON into `~/.claude/settings.json`.
+**Claude Code.** Choose **Copy Claude Code hook config** and merge the copied JSON into `~/.claude/settings.json`.
 
 | Hook | Command | Scoreboard |
 |---|---|---|
-| `UserPromptSubmit` | `--signal working` | Amber, "Claude working · 3:12" counting up |
-| `Stop` | `--signal done` | Green, "Claude done after 3:12" and a chime |
-| `Notification` | `--signal attention` | Red, "Claude needs you" |
+| `UserPromptSubmit` | `--signal working` | Amber, "api · working 3:12" counting up |
+| `Stop` | `--signal done` | Green, "api · done after 3:12" and a chime |
+| `Notification` | `--signal attention` | Red, "api · needs you" |
 
-In **tray → Claude Code** you can also let the overlay appear by itself when Claude starts working, hide it
-when Claude finishes or needs you, or just **pause the game** until you click it. The "done" notice also
-sums up the session: "Claude worked 12:03, you played 4:10". Playing while Claude works earns the
-"Pair programmer" achievement.
+The hooks read the session id and working folder Claude Code passes them, so several sessions side by side get a line
+each, named by their folder (with more than five, the rest fold into one line with a count), and a session quiet for an
+hour turns grey. **Show what Claude is doing** adds two more hooks (`PreToolUse`, `PostToolUse`): the session's line
+shows the current step ("Editing Program.cs", "Running npm test") and the done card counts the files touched and the
+commands run. A hook config from before 1.8.6 keeps working. In the same menu you can let the overlay appear by itself
+when an agent starts working, hide it when it finishes or needs you, or just **pause the game** until you click it.
+The "done" notice also sums up the session: "Claude worked 12:03, you played 4:10". Playing while Claude works earns
+the "Pair programmer" achievement.
+
+**Other agents.** **Copy a config for another agent** has ready configs for OpenAI's Codex CLI (`notify`), Aider
+(`--notifications-command`), Cursor's hooks, Gemini CLI and a plain command line for the rest: each runs
+`deskarcade --signal done --agent NAME` (or `working`, `attention`) at the right moment.
+
+**Status lanes for any script.** `deskarcade --status NAME running|passed|failed [--note TEXT]` lights a lane on the
+scoreboard the way `arcade` does, for work that `arcade` cannot wrap: a git pre-push hook, the last line of a deploy
+script, a watch task. A lane with no word for 30 minutes goes grey.
+
+```bash
+deskarcade --status deploy running --note "staging"
+deskarcade --status deploy passed
+```
+
+**CI and pull requests.** **CI and pull requests → Add a repo folder…** follows the latest CI run of that folder's
+current branch ("CI · running 4:12", a chime on pass or fail), shows the reviews waiting for you, and brings a card when
+your pull request is approved, commented on or merged. It reads through [`gh`](https://cli.github.com) or
+[`glab`](https://gitlab.com/gitlab-org/cli), whichever is installed and signed in, every two minutes and only while a
+repo is added; Desk Arcade stores no token.
+
+**VS Code.** The extension in [`integrations/vscode`](integrations/vscode/) lights a lane for each task (build, test,
+anything in `tasks.json`) and debug session, and puts a button in the status bar that shows or hides the overlay. It
+talks to the running Desk Arcade and needs nothing else. It will be on the Visual Studio Marketplace and Open VSX from
+its first release there; until then build it with `npx @vscode/vsce package` in that folder.
 
 ## Play while a command runs
 
@@ -462,11 +538,25 @@ computer, except coffee invites, which are off until you turn them on.
 - **The end of the day.** Pick when your working day ends; at that time, if you have been at the computer, a card
   sums up the day (time at the computer, focus blocks, meetings, breaks, water, play), and an hour later, still there,
   a gentle "still here?".
-- **Today at work…** shows the day so far and the meetings still ahead today, and holds the settings that need
-  typing: the calendar, the end of the day and the Downloads folder.
+- **Today at work…** shows the day so far, the meetings still ahead today and the free stretches between them, and
+  holds the settings that need typing: the calendar, the end of the day and the Downloads folder.
+- **Join buttons.** The Teams, Zoom, Google Meet, Webex or Jitsi link in a meeting's location or notes becomes a
+  **Join** button on the heads-up and "starting now" cards.
+- **Focus sounds**: brown noise, pink noise, rain or a quiet café hum, synthesized like every other sound, during focus
+  blocks or any time from **Focus → Focus sounds**, with their own volume; they fade out for a meeting.
+- **Knock first.** Rather than walk over to a co-worker in a focus block, **Knock on…** sends a line ("about the API, 5
+  min"); they see it at their break and answer **Come over**, **In 10 minutes** or **After lunch**.
+- **My day** (for the programmer's day, the added repos are those in **Coding agents & CI**): a **morning card** with
+  standup notes (yesterday's commits by your git email, pull requests merged, meetings and focus blocks, with **Copy
+  standup notes**), the longest free stretch offered as a focus block, and **Today's three**, up to three things to get
+  done that sit under the scoreboard; **Git before you go** on the end-of-day card lists repos with uncommitted changes,
+  commits not pushed and stashes (half an hour earlier on a Friday); **The wait report…** sums up each week how long you
+  waited on builds, tests, CI and agents, the slowest commands and which are getting slower; and **Where the day went**
+  (off by default) counts which program was in front, by name, never a window title, summed on the end-of-day card and
+  saved as CSV, kept for 30 days.
 
 With the overlay hidden, a notice or a card peeks out on its own for a moment, without the game or the scoreboard.
-Nine achievements go with all this (from Far sighted to Tea's ready), and Bingo of Work cards can ask for a stretch,
+Achievements go with all this (from Far sighted to Tea's ready), and Bingo of Work cards can ask for a stretch,
 a glass of water, a focus block or a minute of breathing.
 
 From a terminal; each returns at once, and starts Desk Arcade first when it is not running:

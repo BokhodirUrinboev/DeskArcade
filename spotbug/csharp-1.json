@@ -1,0 +1,153 @@
+[
+  {
+    "id": "cs-01", "lang": "csharp", "level": "easy", "kind": "off-by-one",
+    "code": [
+      "public static int CountAbove(int[] values, int limit)",
+      "{",
+      "    int count = 0;",
+      "    for (int i = 0; i <= values.Length; i++)",
+      "    {",
+      "        if (values[i] > limit) count++;",
+      "    }",
+      "    return count;",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "    for (int i = 0; i < values.Length; i++)" },
+    "why": {
+      "en": "The loop runs one step too far: when i equals values.Length, values[i] throws IndexOutOfRangeException. The condition must be i < values.Length.",
+      "ru": "Цикл делает лишний шаг: когда i равно values.Length, обращение values[i] бросает IndexOutOfRangeException. Условие должно быть i < values.Length.",
+      "uz": "Sikl bir qadam ortiq aylanadi: i values.Length ga teng bo'lganda values[i] IndexOutOfRangeException tashlaydi. Shart i < values.Length bo'lishi kerak."
+    }
+  },
+  {
+    "id": "cs-02", "lang": "csharp", "level": "easy", "kind": "null",
+    "code": [
+      "public static string Greeting(User? user)",
+      "{",
+      "    string name = user?.Name ?? \"guest\";",
+      "    string city = user.Address?.City ?? \"somewhere\";",
+      "    return $\"Hello, {name} from {city}!\";",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "    string city = user?.Address?.City ?? \"somewhere\";" },
+    "why": {
+      "en": "Line 3 allows for a null user, but line 4 reads user.Address directly, so a null user throws NullReferenceException. It needs ?. as well.",
+      "ru": "Строка 3 учитывает, что user может быть null, а строка 4 читает user.Address напрямую, и при null будет NullReferenceException. Здесь тоже нужен ?.",
+      "uz": "3-qator user null bo'lishi mumkinligini hisobga oladi, 4-qator esa user.Address ni to'g'ridan-to'g'ri o'qiydi, shuning uchun null bo'lsa NullReferenceException chiqadi. Bu yerda ham ?. kerak."
+    }
+  },
+  {
+    "id": "cs-03", "lang": "csharp", "level": "easy", "kind": "logic",
+    "code": [
+      "public static bool IsWeekend(DateTime day)",
+      "{",
+      "    return day.DayOfWeek == DayOfWeek.Saturday",
+      "        && day.DayOfWeek == DayOfWeek.Sunday;",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "        || day.DayOfWeek == DayOfWeek.Sunday;" },
+    "why": {
+      "en": "A day can't be Saturday and Sunday at once, so with && this is always false. Either day will do: use ||.",
+      "ru": "День не может быть одновременно субботой и воскресеньем, поэтому с && результат всегда false. Подходит любой из двух: нужен ||.",
+      "uz": "Kun bir vaqtning o'zida ham shanba, ham yakshanba bo'la olmaydi, shuning uchun && bilan natija doim false. Ikkalasidan biri yetarli: || kerak."
+    }
+  },
+  {
+    "id": "cs-04", "lang": "csharp", "level": "easy", "kind": "types",
+    "code": [
+      "public static double AverageScore(List<int> scores)",
+      "{",
+      "    if (scores.Count == 0) return 0;",
+      "    int total = scores.Sum();",
+      "    return total / scores.Count;",
+      "}"
+    ],
+    "bug": [5],
+    "fix": { "5": "    return (double)total / scores.Count;" },
+    "why": {
+      "en": "Both operands are int, so the division drops the fraction before the result becomes a double: 1 and 2 average to 1, not 1.5. Cast one side to double first.",
+      "ru": "Оба операнда типа int, поэтому дробная часть теряется ещё до превращения в double: среднее 1 и 2 получается 1, а не 1.5. Сначала приведите одну из сторон к double.",
+      "uz": "Ikkala operand ham int, shuning uchun kasr qismi natija double bo'lishidan oldin tashlab yuboriladi: 1 va 2 ning o'rtachasi 1.5 emas, 1 chiqadi. Avval bir tomonini double ga o'tkazing."
+    }
+  },
+  {
+    "id": "cs-05", "lang": "csharp", "level": "easy", "kind": "semicolon",
+    "code": [
+      "public static List<string> NamesWithEmail(List<User> users)",
+      "{",
+      "    var names = new List<string>();",
+      "    foreach (var user in users)",
+      "    {",
+      "        if (user.Email == null);",
+      "            continue;",
+      "        names.Add(user.Name);",
+      "    }",
+      "    return names;",
+      "}"
+    ],
+    "bug": [6],
+    "fix": { "6": "        if (user.Email == null)" },
+    "why": {
+      "en": "The semicolon ends the if with an empty statement, so continue runs for every user and the list always comes back empty.",
+      "ru": "Точка с запятой завершает if пустым оператором, поэтому continue выполняется для каждого пользователя, и список всегда возвращается пустым.",
+      "uz": "Nuqtali vergul if ni bo'sh buyruq bilan yakunlaydi, shuning uchun continue har bir foydalanuvchi uchun bajariladi va ro'yxat doim bo'sh qaytadi."
+    }
+  },
+  {
+    "id": "cs-06", "lang": "csharp", "level": "easy", "kind": "leak",
+    "code": [
+      "public static int CountLines(string path)",
+      "{",
+      "    var reader = new StreamReader(path);",
+      "    int lines = 0;",
+      "    while (reader.ReadLine() != null) lines++;",
+      "    return lines;",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "    using var reader = new StreamReader(path);" },
+    "why": {
+      "en": "The reader is never disposed, so the file stays open (and locked, on Windows) until the garbage collector gets round to it. Declare it with using.",
+      "ru": "Reader не освобождается, и файл остаётся открытым (а в Windows ещё и заблокированным), пока до него не доберётся сборщик мусора. Объявите его через using.",
+      "uz": "Reader hech qachon yopilmaydi, shuning uchun fayl axlat yig'uvchi unga yetib kelguncha ochiq (Windows'da esa qulflangan) qoladi. Uni using bilan e'lon qiling."
+    }
+  },
+  {
+    "id": "cs-07", "lang": "csharp", "level": "easy", "kind": "missing-await", "compile": "error",
+    "code": [
+      "public async Task<string> LoadTitleAsync(HttpClient http, string url)",
+      "{",
+      "    string html = http.GetStringAsync(url);",
+      "    int start = html.IndexOf(\"<title>\") + 7;",
+      "    int end = html.IndexOf(\"</title>\", start);",
+      "    return html[start..end];",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "    string html = await http.GetStringAsync(url);" },
+    "why": {
+      "en": "GetStringAsync returns a Task<string>, not the string itself, so this doesn't even compile. Await it.",
+      "ru": "GetStringAsync возвращает Task<string>, а не саму строку, поэтому код даже не компилируется. Нужен await.",
+      "uz": "GetStringAsync satrning o'zini emas, Task<string> qaytaradi, shuning uchun kod hatto kompilyatsiya ham bo'lmaydi. await kerak."
+    }
+  },
+  {
+    "id": "cs-08", "lang": "csharp", "level": "easy", "kind": "logic",
+    "code": [
+      "public static int ClampPercent(int value)",
+      "{",
+      "    return Math.Max(100, Math.Min(0, value));",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "    return Math.Min(100, Math.Max(0, value));" },
+    "why": {
+      "en": "Min and Max are swapped: Math.Min(0, value) is never above 0, so Math.Max(100, …) always gives 100. Take the Max with 0 first, then the Min with 100.",
+      "ru": "Min и Max перепутаны: Math.Min(0, value) никогда не больше 0, поэтому Math.Max(100, …) всегда даёт 100. Сначала Max с 0, затем Min со 100.",
+      "uz": "Min va Max almashib qolgan: Math.Min(0, value) hech qachon 0 dan oshmaydi, shuning uchun Math.Max(100, …) doim 100 beradi. Avval 0 bilan Max, keyin 100 bilan Min oling."
+    }
+  }
+]

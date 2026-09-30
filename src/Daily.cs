@@ -65,6 +65,26 @@ public sealed class Daily
         new("dominoes", "dominoes.played", 20, "Lay {0} tiles in Dominoes"),
         new("jenga", "jenga.moved", 12, "Move {0} blocks in Window Jenga"),
         new("bridge", "bridge.saved", 10, "Get {0} interns across the Rope Bridge"),
+        // 1.8.6 · party games
+        new("quiz", "quiz.right", 7, "Answer {0} questions right in Quiz Night"),
+        new("draw", "draw.guessed", 3, "Guess {0} words in Draw & Guess"),
+
+        // 1.8.6 · card games
+        new("poker", "poker.pots", 5, "Win {0} pots in Poker"),
+        new("hearts", "hearts.hands", 4, "Play {0} hands of Hearts"),
+
+        // 1.8.6 · word and key games
+        new("bits", "bits.cleared", 15, "Clear {0} numbers in Bit Flip"),
+        new("keys", "keys.right", 8, "Press {0} shortcuts right in Shortcut Trainer"),
+        new("words", "words.won", 2, "Solve {0} words in Word Guess"),
+
+        // 1.8.6 · Spot the Bug
+        new("spotbug", "spotbug.found", 8, "Find {0} bugs in Spot the Bug"),
+
+        // 1.8.6 · arcade
+        new("servers", "servers.served", 40, "Serve {0} requests in Load Balancer"),
+        new("pipeline", "pipeline.deploys", 3, "Deploy {0} levels in Pipeline"),
+
     };
 
     readonly Settings _settings;

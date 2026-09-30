@@ -1,0 +1,350 @@
+# Desk Arcade: Russian (ru), coding agents and CI (1.8.6).
+# The English text is the msgid. Keep {0}-style placeholders, "·" separators and "×" as they are.
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: ru\n"
+"X-Language-Name: Русский\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. ---- the menu
+msgid "Coding agents & CI"
+msgstr "Агенты для кода и CI"
+
+msgid "No agents, lanes or repos yet"
+msgstr "Пока нет агентов, дорожек и репозиториев"
+
+#, c-sharp-format
+msgid "Sessions {0} · lanes {1} · repos {2}"
+msgstr "Сессии {0} · дорожки {1} · репозитории {2}"
+
+msgid "Alerts when an agent finishes"
+msgstr "Оповещать, когда агент закончит"
+
+msgid "Show the overlay when an agent starts working"
+msgstr "Показывать игру, когда агент начинает работу"
+
+msgid "Hide the overlay when an agent finishes or needs you"
+msgstr "Скрывать игру, когда агент закончил или ждёт вас"
+
+msgid "Pause the game when an agent finishes or needs you"
+msgstr "Ставить игру на паузу, когда агент закончил или ждёт вас"
+
+msgid "Show what Claude is doing (two more hooks)"
+msgstr "Показывать, что делает Claude (ещё два хука)"
+
+msgid "Copy a config for another agent"
+msgstr "Скопировать настройку для другого агента"
+
+msgid "Any other tool (a command line)"
+msgstr "Любой другой инструмент (командная строка)"
+
+msgid "Forget finished sessions"
+msgstr "Забыть завершённые сессии"
+
+msgid "Clear the status lanes"
+msgstr "Очистить дорожки статуса"
+
+msgid "CI and pull requests"
+msgstr "CI и пул-реквесты"
+
+msgid "Add a repo folder…"
+msgstr "Добавить папку репозитория…"
+
+msgid "Stop following"
+msgstr "Перестать отслеживать"
+
+msgid "Read through gh or glab every 2 minutes"
+msgstr "Чтение через gh или glab каждые 2 минуты"
+
+msgid "Needs gh or glab, signed in"
+msgstr "Нужен gh или glab с выполненным входом"
+
+#. ---- copying a config
+#, c-sharp-format
+msgid "{0} config copied"
+msgstr "Настройка для {0} скопирована"
+
+msgid "Command line"
+msgstr "Командная строка"
+
+msgid "merge it into ~/.gemini/settings.json"
+msgstr "добавьте её в ~/.gemini/settings.json"
+
+msgid "put it at the top of ~/.codex/config.toml"
+msgstr "вставьте её в начало ~/.codex/config.toml"
+
+msgid "save it as ~/.codex/hooks.json, then trust it in /hooks"
+msgstr "сохраните как ~/.codex/hooks.json и разрешите в /hooks"
+
+msgid "save it as ~/.cursor/hooks.json, or merge it into the one there"
+msgstr "сохраните как ~/.cursor/hooks.json или добавьте в существующий"
+
+msgid "save it as ~/.copilot/hooks/deskarcade.json"
+msgstr "сохраните как ~/.copilot/hooks/deskarcade.json"
+
+msgid "save it as ~/.codeium/windsurf/hooks.json, or merge it into the one there"
+msgstr "сохраните как ~/.codeium/windsurf/hooks.json или добавьте в существующий"
+
+msgid "add it to .aider.conf.yml in your home or project folder"
+msgstr "добавьте её в .aider.conf.yml в домашней папке или папке проекта"
+
+msgid "run these from the tool's own hooks or scripts"
+msgstr "запускайте их из хуков инструмента или из скриптов"
+
+msgid "Copy the hook config again"
+msgstr "Скопируйте настройку хуков ещё раз"
+
+msgid "it adds two hooks that pass on each step"
+msgstr "в ней два новых хука, которые передают каждый шаг"
+
+#. ---- sessions on the scoreboard
+#, c-sharp-format
+msgid "{0} · working {1}"
+msgstr "{0} · работает {1}"
+
+#, c-sharp-format
+msgid "{0} · needs you"
+msgstr "{0} · ждёт вас"
+
+#, c-sharp-format
+msgid "{0} · done"
+msgstr "{0} · готово"
+
+#, c-sharp-format
+msgid "{0} · done after {1}"
+msgstr "{0} · готово за {1}"
+
+#, c-sharp-format
+msgid "{0} · quiet since {1}"
+msgstr "{0} · молчит с {1}"
+
+#, c-sharp-format
+msgid "+{0} more"
+msgstr "ещё {0}"
+
+#. ---- what the agent is doing (under a session's line)
+#, c-sharp-format
+msgid "Editing {0}"
+msgstr "Правит {0}"
+
+#, c-sharp-format
+msgid "Writing {0}"
+msgstr "Пишет {0}"
+
+#, c-sharp-format
+msgid "Reading {0}"
+msgstr "Читает {0}"
+
+#, c-sharp-format
+msgid "Running {0}"
+msgstr "Выполняет {0}"
+
+#, c-sharp-format
+msgid "Searching {0}"
+msgstr "Ищет {0}"
+
+#, c-sharp-format
+msgid "Searching the web for {0}"
+msgstr "Ищет в интернете {0}"
+
+#, c-sharp-format
+msgid "Handing off {0}"
+msgstr "Передаёт {0}"
+
+msgid "Planning"
+msgstr "Планирует"
+
+#, c-sharp-format
+msgid "Using {0}"
+msgstr "Использует {0}"
+
+msgid "a command"
+msgstr "команду"
+
+msgid "the code"
+msgstr "в коде"
+
+msgid "a task"
+msgstr "задачу"
+
+#. ---- a turn's end
+#, c-sharp-format
+msgid "{0} is done"
+msgstr "{0}: готово"
+
+#, c-sharp-format
+msgid "{0} is done · back to work"
+msgstr "{0}: готово · за работу"
+
+#, c-sharp-format
+msgid "{0} needs you"
+msgstr "{0} ждёт вас"
+
+#, c-sharp-format
+msgid "{0} · {1} worked {2}, you played {3}"
+msgstr "{0} · {1} работал {2}, вы играли {3}"
+
+#, c-sharp-format
+msgid "Changed {0}"
+msgstr "Изменено: {0}"
+
+#, c-sharp-format
+msgid "{0} files: {1}"
+msgstr "Файлы ({0}): {1}"
+
+#, c-sharp-format
+msgid "Ran {0}"
+msgstr "Запущено: {0}"
+
+#, c-sharp-format
+msgid "{0} commands: {1}"
+msgstr "Команды ({0}): {1}"
+
+#. ---- status lanes
+#, c-sharp-format
+msgid "{0} · running {1}"
+msgstr "{0} · идёт {1}"
+
+#, c-sharp-format
+msgid "{0} · passed"
+msgstr "{0} · успешно"
+
+#, c-sharp-format
+msgid "{0} · passed {1}"
+msgstr "{0} · успешно за {1}"
+
+#, c-sharp-format
+msgid "{0} · failed"
+msgstr "{0} · ошибка"
+
+#, c-sharp-format
+msgid "{0} · failed {1}"
+msgstr "{0} · ошибка через {1}"
+
+#, c-sharp-format
+msgid "{0} lanes"
+msgstr "Дорожек: {0}"
+
+#, c-sharp-format
+msgid "{0} running"
+msgstr "{0} идёт"
+
+#, c-sharp-format
+msgid "{0} failed"
+msgstr "{0} с ошибкой"
+
+#, c-sharp-format
+msgid "{0} quiet"
+msgstr "{0} без вестей"
+
+#. ---- CI and pull requests
+msgid "Pick a repository folder"
+msgstr "Выберите папку репозитория"
+
+msgid "Couldn't open a folder picker"
+msgstr "Не удалось открыть выбор папки"
+
+msgid "or run: deskarcade --signal repo-add:<folder>"
+msgstr "или выполните: deskarcade --signal repo-add:<папка>"
+
+msgid "That folder is not there"
+msgstr "Такой папки нет"
+
+msgid "Not a git repository"
+msgstr "Это не репозиторий git"
+
+msgid "not a git repository"
+msgstr "не репозиторий git"
+
+msgid "git is not installed"
+msgstr "git не установлен"
+
+msgid "the folder is gone"
+msgstr "папка исчезла"
+
+msgid "its origin is not on GitHub or GitLab"
+msgstr "его origin не на GitHub и не на GitLab"
+
+#, c-sharp-format
+msgid "{0} is not installed"
+msgstr "{0} не установлен"
+
+#, c-sharp-format
+msgid "{0} is not signed in"
+msgstr "{0}: вход не выполнен"
+
+#, c-sharp-format
+msgid "{0} did not answer"
+msgstr "{0} не ответил"
+
+#, c-sharp-format
+msgid "{0} gave an error"
+msgstr "{0} вернул ошибку"
+
+#, c-sharp-format
+msgid "Already following {0}"
+msgstr "{0} уже отслеживается"
+
+#, c-sharp-format
+msgid "Following {0}"
+msgstr "Отслеживается {0}"
+
+#, c-sharp-format
+msgid "Stopped following {0}"
+msgstr "{0} больше не отслеживается"
+
+#, c-sharp-format
+msgid "CI and pull requests through {0}, every 2 minutes"
+msgstr "CI и пул-реквесты через {0}, каждые 2 минуты"
+
+#, c-sharp-format
+msgid "CI passed · {0}"
+msgstr "CI прошёл · {0}"
+
+#, c-sharp-format
+msgid "CI failed · {0}"
+msgstr "CI с ошибкой · {0}"
+
+msgid "pipeline"
+msgstr "пайплайн"
+
+#, c-sharp-format
+msgid "{0} was approved"
+msgstr "{0} одобрен"
+
+#, c-sharp-format
+msgid "{0} was merged"
+msgstr "{0} влит"
+
+#, c-sharp-format
+msgid "New comment on {0}"
+msgstr "Новый комментарий к {0}"
+
+msgid "1 review"
+msgstr "Ревью: 1"
+
+#, c-sharp-format
+msgid "{0} reviews"
+msgstr "Ревью: {0}"
+
+#. ---- achievements
+msgid "Three at once"
+msgstr "Три сразу"
+
+msgid "Have three coding agent sessions working at the same time"
+msgstr "Пусть три сессии агентов работают одновременно"
+
+msgid "Green build"
+msgstr "Зелёная сборка"
+
+msgid "See CI pass 10 times"
+msgstr "Дождитесь успешного CI 10 раз"
+
+msgid "Five lanes"
+msgstr "Пять дорожек"
+
+msgid "Light five status lanes at once"
+msgstr "Зажгите сразу пять дорожек статуса"

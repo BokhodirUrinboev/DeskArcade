@@ -15,7 +15,8 @@ namespace DeskArcade;
 /// <see cref="CpuRival"/> plays a round of its own at the game's CPU level, marks its scoring on screen, and the level
 /// moves up when the player keeps winning and down when they keep losing. Like a co-worker, the computer finishes its
 /// own round in its own time: a round the player ends in seconds still waits for the computer's score. Games report
-/// their rounds through <see cref="IGameHost.RoundStarted"/> and <see cref="IGameHost.RoundEnded"/>.
+/// their rounds through <see cref="IGameHost.RoundStarted"/> and <see cref="IGameHost.RoundEnded"/>. A race against a
+/// co-worker goes into the rivalry record (<see cref="Rivalries"/>); one against the computer does not.
 /// </summary>
 public sealed class RaceMode
 {
@@ -173,6 +174,7 @@ public sealed class RaceMode
             if (LanOn)
             {
                 if (won) _w.Stats.Add("lan.wins");
+                _w.RecordResult(game.Id, rival, tie ? 0 : won ? 1 : -1);
             }
             else
             {

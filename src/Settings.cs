@@ -61,6 +61,11 @@ public sealed class Settings
     public int BestBubbles { get; set; }
     public int HockeyWins { get; set; }
     public bool FirstRun { get; set; } = true;
+    /// <summary>The year "your year at the desk" was last shown in (see <see cref="YearInReview"/>).</summary>
+    public int? YearCardShown { get; set; }
+    /// <summary>The year <see cref="YearBase"/> was taken in, and the counters' totals then, so the card counts the year's own.</summary>
+    public int? YearBaseYear { get; set; }
+    public Dictionary<string, long>? YearBase { get; set; }
     public bool ReducedMotion { get; set; }
     public bool ColorBlind { get; set; }
     /// <summary>Colours for mallets, paddles and balls: a theme id from <see cref="Engine.Themes"/>, or "seasonal".</summary>
@@ -71,6 +76,8 @@ public sealed class Settings
     /// </summary>
     [JsonPropertyName("BoardLevels")]
     public Dictionary<string, int> Levels { get; set; } = new();
+    /// <summary>Small bits of text a game keeps between starts, by key (today's Word Guess guesses, say).</summary>
+    public Dictionary<string, string> GameNotes { get; set; } = new();
     /// <summary>Race the computer in round-based games when nobody is on the LAN: a computer rival plays a round alongside.</summary>
     public bool CpuRival { get; set; } = true;
     /// <summary>Snow, leaves, petals and the like drifting over the desktop while a game moves (tray → Theme → Theme decorations).</summary>
@@ -143,6 +150,42 @@ public sealed class Settings
     public List<Office.DeskTimer> Timers { get; set; } = new();
     /// <summary>The sticky notes on the desktop.</summary>
     public List<StickyNote> Notes { get; set; } = new();
+    /// <summary>The focus sound (At work → Focus sounds): "brown", "pink", "rain" or "cafe".</summary>
+    public string FocusSound { get; set; } = "brown";
+    /// <summary>Play the focus sound by itself during focus blocks.</summary>
+    public bool FocusSoundInBlocks { get; set; }
+    /// <summary>The focus sound's own volume, 0 to 1: the games' volume and their Sound switch leave it alone.</summary>
+    public double FocusSoundVolume { get; set; } = 0.5;
+
+    // the programmer's day (see OfficeDesk.Morning.cs, OfficeDesk.Evening.cs)
+
+    /// <summary>The morning card on the first activity of each working day: standup notes, room to focus, today's three.</summary>
+    public bool MorningCard { get; set; } = true;
+    /// <summary>The day (yyyy-MM-dd) the morning card was last shown, and the Monday of the week the wait report was last offered in.</summary>
+    public string? MorningShown { get; set; }
+    public string? WaitReportWeek { get; set; }
+    /// <summary>A focus block accepted on the morning card, waiting to start (UTC), and its length in minutes.</summary>
+    public DateTime? FocusAt { get; set; }
+    public int FocusAtMinutes { get; set; }
+    /// <summary>Today's three, under the scoreboard.</summary>
+    public Office.TodaysThree Three { get; set; } = new();
+    /// <summary>The end-of-day card lists repos with work not committed, pushed or stashed, half an hour earlier on Fridays.</summary>
+    public bool GitBeforeYouGo { get; set; } = true;
+    /// <summary>The last day (yyyy-MM-dd) the repos were all committed and pushed at the end of the day.</summary>
+    public string? GitCleanOn { get; set; }
+    /// <summary>Where the day went: the program in front, noted once a minute (off by default).</summary>
+    public bool TrackApps { get; set; }
+
+    // for programmers (see Dev/)
+
+    /// <summary>
+    /// Git repository folders the player added (tray → Coding agents &amp; CI → Add a repo folder…): CI and pull
+    /// requests are followed for them, and the standup notes and "git before you go" read them. Empty is off.
+    /// </summary>
+    public List<string> Repos { get; set; } = new();
+
+    /// <summary>What Claude is doing: the copied hook config adds PreToolUse and PostToolUse, and the scoreboard shows each step.</summary>
+    public bool AgentSteps { get; set; }
 
     // daily challenge (see Daily)
     public string? DailyDate { get; set; }

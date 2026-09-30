@@ -1,0 +1,170 @@
+[
+  {
+    "id": "py-01", "lang": "python", "level": "medium", "kind": "mutable-default",
+    "code": [
+      "def add_item(item, cart=[]):",
+      "    \"\"\"Adds item to cart, or to a new cart when none is given.\"\"\"",
+      "    cart.append(item)",
+      "    return cart"
+    ],
+    "bug": [1],
+    "fix": {
+      "1": "def add_item(item, cart=None):",
+      "3": "    cart = [] if cart is None else cart\n    cart.append(item)"
+    },
+    "why": {
+      "en": "The default list is made once, when def runs, and shared by every call, so items from earlier calls turn up in the \"new\" cart. Default to None and make the list inside.",
+      "ru": "Список по умолчанию создаётся один раз, при выполнении def, и он общий для всех вызовов, поэтому в «новой» корзине оказываются товары из прошлых вызовов. Сделайте значением по умолчанию None и создавайте список внутри.",
+      "uz": "Standart ro'yxat def bajarilganda bir marta yaratiladi va barcha chaqiruvlar uchun umumiy bo'ladi, shuning uchun «yangi» savatda oldingi chaqiruvlardagi narsalar paydo bo'ladi. Standart qiymatni None qiling va ro'yxatni ichkarida yarating."
+    }
+  },
+  {
+    "id": "py-02", "lang": "python", "level": "easy", "kind": "logic",
+    "code": [
+      "def countdown(n):",
+      "    for i in range(n, 0):",
+      "        print(i)",
+      "    print(\"liftoff\")"
+    ],
+    "bug": [2],
+    "fix": { "2": "    for i in range(n, 0, -1):" },
+    "why": {
+      "en": "range counts up unless told otherwise, so range(n, 0) is empty and only \"liftoff\" is printed. Counting down needs a step of -1.",
+      "ru": "range по умолчанию считает вверх, поэтому range(n, 0) пуст, и печатается только «liftoff». Для обратного отсчёта нужен шаг -1.",
+      "uz": "range sukut bo'yicha yuqoriga sanaydi, shuning uchun range(n, 0) bo'sh va faqat «liftoff» chiqadi. Teskari sanash uchun -1 qadam kerak."
+    }
+  },
+  {
+    "id": "py-03", "lang": "python", "level": "easy", "kind": "equality",
+    "code": [
+      "def can_delete(user, post):",
+      "    if user.role is \"admin\":",
+      "        return True",
+      "    return post.author_id == user.id"
+    ],
+    "bug": [2],
+    "fix": { "2": "    if user.role == \"admin\":" },
+    "why": {
+      "en": "is asks whether both names point at the same object, not whether the text matches; a role read from a database is a different string, so admins are refused. Use ==.",
+      "ru": "is проверяет, один ли это объект, а не совпадает ли текст; роль, прочитанная из базы, — другая строка, и администраторам отказывают. Используйте ==.",
+      "uz": "is matn mosligini emas, ikki nom bitta obyektga ishora qiladimi yoki yo'qligini tekshiradi; bazadan o'qilgan rol boshqa satr bo'ladi, shuning uchun adminlarga rad javobi beriladi. == dan foydalaning."
+    }
+  },
+  {
+    "id": "py-04", "lang": "python", "level": "easy", "kind": "types",
+    "code": [
+      "def average(values):",
+      "    if not values:",
+      "        return 0",
+      "    return sum(values) // len(values)"
+    ],
+    "bug": [4],
+    "fix": { "4": "    return sum(values) / len(values)" },
+    "why": {
+      "en": "// is floor division, so the average of 1 and 2 comes out as 1 instead of 1.5. Use /.",
+      "ru": "// — это деление с округлением вниз, поэтому среднее 1 и 2 получается 1, а не 1.5. Используйте /.",
+      "uz": "// pastga yaxlitlovchi bo'lish, shuning uchun 1 va 2 ning o'rtachasi 1.5 emas, 1 chiqadi. / dan foydalaning."
+    }
+  },
+  {
+    "id": "py-05", "lang": "python", "level": "medium", "kind": "mutation",
+    "code": [
+      "def drop_empty(lines):",
+      "    for line in lines:",
+      "        if not line.strip():",
+      "            lines.remove(line)",
+      "    return lines"
+    ],
+    "bug": [2],
+    "fix": { "2": "    for line in lines[:]:" },
+    "why": {
+      "en": "Removing items from the list you are looping over shifts the rest down, so the item after each removed one is skipped, and of two blank lines in a row one stays. Loop over a copy.",
+      "ru": "Если удалять элементы из списка, по которому идёт цикл, остальные сдвигаются, и элемент после каждого удалённого пропускается: из двух пустых строк подряд одна остаётся. Обходите копию.",
+      "uz": "Aylanilayotgan ro'yxatdan element o'chirilsa, qolganlari siljiydi va har bir o'chirilgandan keyingi element o'tkazib yuboriladi: ketma-ket ikkita bo'sh qatordan biri qolib ketadi. Nusxasini aylaning."
+    }
+  },
+  {
+    "id": "py-06", "lang": "python", "level": "easy", "kind": "null",
+    "code": [
+      "def email_domain(user):",
+      "    \"\"\"The part after @, or None when the user has no email.\"\"\"",
+      "    email = user.get(\"email\")",
+      "    return email.split(\"@\")[1]"
+    ],
+    "bug": [4],
+    "fix": { "4": "    return email.split(\"@\")[1] if email else None" },
+    "why": {
+      "en": "user.get returns None when there is no email, and None.split raises AttributeError instead of giving None back. Check for it first.",
+      "ru": "user.get возвращает None, если email нет, и None.split бросает AttributeError, вместо того чтобы вернуть None. Сначала проверьте.",
+      "uz": "Email bo'lmasa user.get None qaytaradi va None.split None qaytarish o'rniga AttributeError tashlaydi. Avval tekshiring."
+    }
+  },
+  {
+    "id": "py-07", "lang": "python", "level": "easy", "kind": "types",
+    "code": [
+      "def progress(done, total):",
+      "    if total == 0:",
+      "        return \"Progress: 0%\"",
+      "    percent = round(done / total * 100)",
+      "    return \"Progress: \" + percent + \"%\""
+    ],
+    "bug": [5],
+    "fix": { "5": "    return f\"Progress: {percent}%\"" },
+    "why": {
+      "en": "percent is an int, and Python won't add an int to a str, so this raises TypeError. Put the number into the text with an f-string (or str()).",
+      "ru": "percent — целое число, а Python не складывает int со str, поэтому здесь TypeError. Подставьте число в текст через f-строку (или str()).",
+      "uz": "percent butun son, Python esa int ni str ga qo'shmaydi, shuning uchun bu yerda TypeError chiqadi. Sonni matnga f-satr (yoki str()) orqali qo'ying."
+    }
+  },
+  {
+    "id": "py-08", "lang": "python", "level": "easy", "kind": "scope",
+    "code": [
+      "class Counter:",
+      "    def __init__(self):",
+      "        self.count = 0",
+      "",
+      "    def increment(self):",
+      "        count += 1"
+    ],
+    "bug": [6],
+    "fix": { "6": "        self.count += 1" },
+    "why": {
+      "en": "Without self, count is a local variable of increment with no value yet, so += raises UnboundLocalError. It should be self.count.",
+      "ru": "Без self count — локальная переменная increment, у которой ещё нет значения, поэтому += бросает UnboundLocalError. Нужно self.count.",
+      "uz": "self siz count increment ning hali qiymati yo'q lokal o'zgaruvchisi bo'ladi, shuning uchun += UnboundLocalError tashlaydi. self.count bo'lishi kerak."
+    }
+  },
+  {
+    "id": "py-09", "lang": "python", "level": "easy", "kind": "missing-key",
+    "code": [
+      "def count_words(text):",
+      "    counts = {}",
+      "    for word in text.split():",
+      "        counts[word] += 1",
+      "    return counts"
+    ],
+    "bug": [4],
+    "fix": { "4": "        counts[word] = counts.get(word, 0) + 1" },
+    "why": {
+      "en": "counts[word] += 1 has to read counts[word] first, and a word seen for the first time isn't in the dict yet, so it raises KeyError. Use counts.get(word, 0) (or a Counter).",
+      "ru": "counts[word] += 1 сначала читает counts[word], а слова, встреченного впервые, в словаре ещё нет, поэтому будет KeyError. Используйте counts.get(word, 0) (или Counter).",
+      "uz": "counts[word] += 1 avval counts[word] ni o'qishi kerak, birinchi marta uchragan so'z esa lug'atda hali yo'q, shuning uchun KeyError chiqadi. counts.get(word, 0) (yoki Counter) dan foydalaning."
+    }
+  },
+  {
+    "id": "py-10", "lang": "python", "level": "hard", "kind": "closure",
+    "code": [
+      "def make_multipliers():",
+      "    # functions that multiply by 1, 2 and 3",
+      "    factors = range(1, 4)",
+      "    return [lambda x: x * f for f in factors]"
+    ],
+    "bug": [4],
+    "fix": { "4": "    return [lambda x, f=f: x * f for f in factors]" },
+    "why": {
+      "en": "Each lambda looks f up when it is called, not when it is made, and by then the loop has left f at 3, so all three multiply by 3. Bind it with a default, f=f.",
+      "ru": "Каждая лямбда ищет f в момент вызова, а не создания, а к тому времени цикл оставил в f тройку, поэтому все три умножают на 3. Привяжите значение аргументом по умолчанию f=f.",
+      "uz": "Har bir lambda f ni yaratilganda emas, chaqirilganda qidiradi, u paytga kelib sikl f ni 3 da qoldirgan bo'ladi, shuning uchun uchalasi ham 3 ga ko'paytiradi. Qiymatni standart argument f=f bilan bog'lang."
+    }
+  }
+]

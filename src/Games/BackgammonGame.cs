@@ -393,6 +393,7 @@ public sealed class BackgammonGame : MiniGame
         int kind = _rules.WinKind;
         string how = kind == 3 ? L.T("a backgammon: triple") : kind == 2 ? L.T("a gammon: double") : L.F("{0}–{1} off", _rules.BorneOff(Me), _rules.BorneOff(1 - Me));
         var at = Screen(new Vec2(BoardW / 2, -30));
+        if (LanOn) Host.RecordResult(Id, Rival, _rules.Winner == Me ? 1 : -1);
         if (_rules.Winner == Me)
         {
             if (!_demo)

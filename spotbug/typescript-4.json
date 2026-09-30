@@ -1,0 +1,150 @@
+[
+  {
+    "id": "ts-31", "lang": "typescript", "level": "hard", "kind": "race",
+    "code": [
+      "let loading = false;",
+      "",
+      "async function refresh(): Promise<void> {",
+      "  if (loading) return;",
+      "  try {",
+      "    const data = await api.fetchFeed();",
+      "    loading = true;",
+      "    render(data);",
+      "  } finally {",
+      "    loading = false;",
+      "  }",
+      "}"
+    ],
+    "bug": [6, 7],
+    "fix": {
+      "6": "    loading = true;",
+      "7": "    const data = await api.fetchFeed();"
+    },
+    "why": {
+      "en": "The flag goes up only after the fetch returns, so every click during the wait passes the check and starts a fetch of its own. Set loading before the await.",
+      "ru": "Флаг поднимается только после ответа, поэтому каждое нажатие во время ожидания проходит проверку и запускает свой запрос. Ставьте loading до await.",
+      "uz": "Bayroq faqat javob kelgandan keyin ko'tariladi, shuning uchun kutish paytidagi har bir bosish tekshiruvdan o'tib, o'z so'rovini boshlaydi. loading ni await dan oldin qo'ying."
+    }
+  },
+  {
+    "id": "ts-32", "lang": "typescript", "level": "medium", "kind": "parsing",
+    "code": [
+      "function priceOf(label: string): number {",
+      "  // label looks like \"$1,299.99\"",
+      "  return parseFloat(label.replace(\"$\", \"\"));",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "  return parseFloat(label.replace(/[$,]/g, \"\"));" },
+    "why": {
+      "en": "parseFloat stops at the first character it can't read, the comma, so \"$1,299.99\" becomes 1. Strip the commas too.",
+      "ru": "parseFloat останавливается на первом непонятном символе, запятой, поэтому \"$1,299.99\" превращается в 1. Уберите и запятые.",
+      "uz": "parseFloat o'qiy olmaydigan birinchi belgida, ya'ni vergulda to'xtaydi, shuning uchun \"$1,299.99\" 1 ga aylanadi. Vergullarni ham olib tashlang."
+    }
+  },
+  {
+    "id": "ts-33", "lang": "typescript", "level": "easy", "kind": "logic",
+    "code": [
+      "function slugify(title: string): string {",
+      "  return title",
+      "    .trim()",
+      "    .toLowerCase()",
+      "    .replace(\" \", \"-\");",
+      "}"
+    ],
+    "bug": [5],
+    "fix": { "5": "    .replace(/\\s+/g, \"-\");" },
+    "why": {
+      "en": "replace with a string swaps only the first match, so \"Hello big world\" becomes \"hello-big world\". Use a regex with the g flag (or replaceAll).",
+      "ru": "replace со строкой заменяет только первое вхождение, поэтому \"Hello big world\" превращается в \"hello-big world\". Используйте регулярное выражение с флагом g (или replaceAll).",
+      "uz": "Satr bilan replace faqat birinchi moslikni almashtiradi, shuning uchun \"Hello big world\" \"hello-big world\" ga aylanadi. g bayrog'li regex dan (yoki replaceAll dan) foydalaning."
+    }
+  },
+  {
+    "id": "ts-34", "lang": "typescript", "level": "medium", "kind": "missing-await",
+    "code": [
+      "// acl.isOwner(doc, user) returns a Promise<boolean>",
+      "async function canEdit(doc: Doc, user: User): Promise<boolean> {",
+      "  if (acl.isOwner(doc, user)) return true;",
+      "  return user.role === \"admin\";",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "  if (await acl.isOwner(doc, user)) return true;" },
+    "why": {
+      "en": "A Promise is always truthy, so without await the owner check passes for everyone and anybody can edit. Await it.",
+      "ru": "Promise всегда истинен, поэтому без await проверка владельца проходит для всех, и редактировать может кто угодно. Нужен await.",
+      "uz": "Promise doim rost qiymat, shuning uchun await bo'lmasa egasini tekshirish hamma uchun o'tadi va istalgan odam tahrirlay oladi. await kerak."
+    }
+  },
+  {
+    "id": "ts-35", "lang": "typescript", "level": "easy", "kind": "logic",
+    "code": [
+      "const DEFAULTS: Options = { retries: 3, timeoutMs: 5000 };",
+      "",
+      "function withDefaults(options: Partial<Options>): Options {",
+      "  return { ...options, ...DEFAULTS };",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "  return { ...DEFAULTS, ...options };" },
+    "why": {
+      "en": "Later spreads win, so the defaults overwrite whatever the caller asked for. Spread DEFAULTS first and options after.",
+      "ru": "Побеждает последний spread, поэтому значения по умолчанию затирают всё, что передал вызывающий код. Сначала DEFAULTS, потом options.",
+      "uz": "Oxirgi spread ustun keladi, shuning uchun standart qiymatlar chaqiruvchi so'ragan hamma narsaning ustidan yozib yuboradi. Avval DEFAULTS, keyin options ni yoying."
+    }
+  },
+  {
+    "id": "ts-36", "lang": "typescript", "level": "easy", "kind": "off-by-one",
+    "code": [
+      "function pageCount(total: number, perPage: number): number {",
+      "  if (perPage <= 0) throw new RangeError(\"perPage must be positive\");",
+      "  return Math.floor(total / perPage);",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "  return Math.ceil(total / perPage);" },
+    "why": {
+      "en": "Math.floor drops the last, partly filled page: 45 items at 20 a page give 2 pages instead of 3. Round up with Math.ceil.",
+      "ru": "Math.floor отбрасывает последнюю неполную страницу: 45 элементов по 20 на странице дают 2 страницы вместо 3. Округляйте вверх через Math.ceil.",
+      "uz": "Math.floor oxirgi, to'liq bo'lmagan sahifani tashlab yuboradi: sahifasiga 20 tadan 45 ta element 3 emas, 2 sahifa beradi. Math.ceil bilan yuqoriga yaxlitlang."
+    }
+  },
+  {
+    "id": "ts-37", "lang": "typescript", "level": "hard", "kind": "closure",
+    "code": [
+      "function useClock(zone: string): string {",
+      "  const [time, setTime] = useState(() => formatNow(zone));",
+      "  useEffect(() => {",
+      "    const id = setInterval(() => setTime(formatNow(zone)), 1000);",
+      "    return () => clearInterval(id);",
+      "  }, []);",
+      "  return time;",
+      "}"
+    ],
+    "bug": [6],
+    "fix": { "6": "  }, [zone]);" },
+    "why": {
+      "en": "With an empty dependency list the effect runs once, and its timer keeps the first zone for ever: switch the zone and the clock never follows. List zone as a dependency.",
+      "ru": "С пустым списком зависимостей эффект выполняется один раз, и таймер навсегда запоминает первую зону: смените зону, и часы за ней не последуют. Добавьте zone в зависимости.",
+      "uz": "Bog'liqliklar ro'yxati bo'sh bo'lsa, effekt bir marta ishlaydi va taymer birinchi zonani abadiy eslab qoladi: zonani almashtirsangiz, soat unga ergashmaydi. zone ni bog'liqliklarga qo'shing."
+    }
+  },
+  {
+    "id": "ts-38", "lang": "typescript", "level": "hard", "kind": "overflow",
+    "code": [
+      "function bucketOf(key: string, buckets: number): number {",
+      "  let h = 0;",
+      "  for (const ch of key) h = h * 31 + ch.charCodeAt(0);",
+      "  return h % buckets;",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "  for (const ch of key) h = (h * 31 + ch.charCodeAt(0)) >>> 0;" },
+    "why": {
+      "en": "h grows without limit: after a dozen characters it passes 2^53 and loses its low digits, and a long key reaches Infinity, making the bucket NaN. Keep it in 32 bits with >>> 0.",
+      "ru": "h растёт без предела: после десятка символов он превышает 2^53 и теряет младшие цифры, а на длинном ключе становится Infinity, и корзина получается NaN. Держите его в 32 битах через >>> 0.",
+      "uz": "h cheksiz o'sadi: o'nga yaqin belgidan keyin u 2^53 dan oshib, kichik raqamlarini yo'qotadi, uzun kalitda esa Infinity ga yetadi va savatcha NaN bo'lib chiqadi. Uni >>> 0 bilan 32 bitda ushlab turing."
+    }
+  }
+]

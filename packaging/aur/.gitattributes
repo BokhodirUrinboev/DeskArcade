@@ -1,0 +1,2 @@
+# makepkg and the AUR read these on Linux: keep LF line endings on every checkout.
+* text eol=lf

@@ -1,0 +1,180 @@
+[
+  {
+    "id": "sql-01", "lang": "sql", "level": "easy", "kind": "nulls",
+    "code": [
+      "-- customers we can't email yet",
+      "SELECT id, name",
+      "FROM customers",
+      "WHERE email = NULL",
+      "ORDER BY name;"
+    ],
+    "bug": [4],
+    "fix": { "4": "WHERE email IS NULL" },
+    "why": {
+      "en": "Comparing with NULL using = gives UNKNOWN, never true, so this returns no rows at all. Test for a missing value with IS NULL.",
+      "ru": "Сравнение с NULL через = даёт UNKNOWN, а не true, поэтому запрос не возвращает ни одной строки. Отсутствующее значение проверяют через IS NULL.",
+      "uz": "NULL bilan = orqali solishtirish true emas, UNKNOWN beradi, shuning uchun so'rov birorta ham qator qaytarmaydi. Yo'q qiymatni IS NULL bilan tekshiring."
+    }
+  },
+  {
+    "id": "sql-02", "lang": "sql", "level": "easy", "kind": "logic",
+    "code": [
+      "-- close account 42",
+      "UPDATE accounts",
+      "SET status = 'closed',",
+      "    closed_at = CURRENT_TIMESTAMP;"
+    ],
+    "bug": [2, 4],
+    "fix": { "4": "    closed_at = CURRENT_TIMESTAMP\nWHERE id = 42;" },
+    "why": {
+      "en": "There is no WHERE, so the UPDATE closes every account in the table, not just number 42. Add WHERE id = 42.",
+      "ru": "Нет WHERE, поэтому UPDATE закрывает все счета в таблице, а не только 42-й. Добавьте WHERE id = 42.",
+      "uz": "WHERE yo'q, shuning uchun UPDATE faqat 42-hisobni emas, jadvaldagi barcha hisoblarni yopadi. WHERE id = 42 ni qo'shing."
+    }
+  },
+  {
+    "id": "sql-03", "lang": "sql", "level": "easy", "kind": "logic",
+    "code": [
+      "-- articles with SQL anywhere in the title",
+      "SELECT id, title",
+      "FROM articles",
+      "WHERE title LIKE 'SQL'",
+      "ORDER BY published_at DESC;"
+    ],
+    "bug": [4],
+    "fix": { "4": "WHERE title LIKE '%SQL%'" },
+    "why": {
+      "en": "Without wildcards LIKE works like =, so only a title that is exactly \"SQL\" matches. Put % on both sides.",
+      "ru": "Без подстановочных знаков LIKE работает как =, и совпадает только заголовок, равный ровно \"SQL\". Поставьте % с обеих сторон.",
+      "uz": "Joker belgilarsiz LIKE = kabi ishlaydi, shuning uchun faqat aynan \"SQL\" dan iborat sarlavha mos keladi. Ikki tomoniga % qo'ying."
+    }
+  },
+  {
+    "id": "sql-04", "lang": "sql", "level": "medium", "kind": "grouping",
+    "code": [
+      "-- how many orders each customer has placed",
+      "SELECT c.id, c.name, COUNT(*) AS orders",
+      "FROM customers c",
+      "LEFT JOIN orders o ON o.customer_id = c.id",
+      "GROUP BY c.id, c.name;"
+    ],
+    "bug": [2],
+    "fix": { "2": "SELECT c.id, c.name, COUNT(o.id) AS orders" },
+    "why": {
+      "en": "A customer with no orders still gets one joined row full of NULLs, and COUNT(*) counts it, so they show 1 order. COUNT(o.id) skips the NULL.",
+      "ru": "У клиента без заказов всё равно есть одна строка соединения, полная NULL, и COUNT(*) её считает, поэтому у него 1 заказ. COUNT(o.id) пропускает NULL.",
+      "uz": "Buyurtmasi yo'q mijozda ham NULL lar bilan to'la bitta birlashgan qator bo'ladi va COUNT(*) uni sanaydi, shuning uchun unda 1 ta buyurtma ko'rinadi. COUNT(o.id) NULL ni o'tkazib yuboradi."
+    }
+  },
+  {
+    "id": "sql-05", "lang": "sql", "level": "hard", "kind": "injection",
+    "code": [
+      "CREATE PROCEDURE find_user @name NVARCHAR(100)",
+      "AS",
+      "BEGIN",
+      "    DECLARE @sql NVARCHAR(400) =",
+      "        'SELECT id, email FROM users WHERE name = ''' + @name + '''';",
+      "    EXEC (@sql);",
+      "END;"
+    ],
+    "bug": [5, 6],
+    "fix": {
+      "5": "        N'SELECT id, email FROM users WHERE name = @name';",
+      "6": "    EXEC sp_executesql @sql, N'@name NVARCHAR(100)', @name;"
+    },
+    "why": {
+      "en": "The name is glued into the SQL text, so a name like x' OR '1'='1 runs as part of the query. Keep @name as a parameter and run the query with sp_executesql.",
+      "ru": "Имя вклеивается в текст SQL, поэтому имя вроде x' OR '1'='1 выполняется как часть запроса. Оставьте @name параметром и выполните запрос через sp_executesql.",
+      "uz": "Ism SQL matniga yopishtiriladi, shuning uchun x' OR '1'='1 kabi ism so'rovning bir qismi sifatida bajariladi. @name ni parametr sifatida qoldiring va so'rovni sp_executesql orqali bajaring."
+    }
+  },
+  {
+    "id": "sql-06", "lang": "sql", "level": "medium", "kind": "dates",
+    "code": [
+      "-- orders placed in September 2026 (placed_at is a timestamp)",
+      "SELECT id, total",
+      "FROM orders",
+      "WHERE placed_at BETWEEN '2026-09-01' AND '2026-09-30';"
+    ],
+    "bug": [4],
+    "fix": { "4": "WHERE placed_at >= '2026-09-01' AND placed_at < '2026-10-01';" },
+    "why": {
+      "en": "'2026-09-30' means midnight at the start of the 30th, so everything ordered later that day is left out. Use a half-open range up to 1 October.",
+      "ru": "'2026-09-30' означает полночь в начале 30-го числа, поэтому всё, что заказали позже в этот день, не попадает. Используйте полуоткрытый интервал до 1 октября.",
+      "uz": "'2026-09-30' 30-sananing boshidagi yarim tunni bildiradi, shuning uchun o'sha kuni keyinroq berilgan buyurtmalar kirmay qoladi. 1-oktabrgacha bo'lgan yarim ochiq oraliqdan foydalaning."
+    }
+  },
+  {
+    "id": "sql-07", "lang": "sql", "level": "hard", "kind": "nulls",
+    "code": [
+      "-- customers who have never been referred",
+      "SELECT c.id, c.name",
+      "FROM customers c",
+      "WHERE c.id NOT IN (SELECT r.referred_id FROM referrals r);"
+    ],
+    "bug": [4],
+    "fix": { "4": "WHERE NOT EXISTS (SELECT 1 FROM referrals r WHERE r.referred_id = c.id);" },
+    "why": {
+      "en": "If any referred_id is NULL, x NOT IN (…, NULL) is never true, and the query returns nobody at all. NOT EXISTS isn't thrown by NULLs.",
+      "ru": "Если хоть один referred_id равен NULL, x NOT IN (…, NULL) никогда не бывает истинным, и запрос не возвращает никого. NOT EXISTS от NULL не ломается.",
+      "uz": "Agar birorta referred_id NULL bo'lsa, x NOT IN (…, NULL) hech qachon rost bo'lmaydi va so'rov hech kimni qaytarmaydi. NOT EXISTS esa NULL dan buzilmaydi."
+    }
+  },
+  {
+    "id": "sql-08", "lang": "sql", "level": "medium", "kind": "join",
+    "code": [
+      "-- every product, with this year's sales (0 when none)",
+      "SELECT p.name, COALESCE(SUM(s.qty), 0) AS sold",
+      "FROM products p",
+      "LEFT JOIN sales s ON s.product_id = p.id",
+      "WHERE s.sold_at >= '2026-01-01'",
+      "GROUP BY p.id, p.name;"
+    ],
+    "bug": [5],
+    "fix": {
+      "4": "LEFT JOIN sales s ON s.product_id = p.id AND s.sold_at >= '2026-01-01'",
+      "5": ""
+    },
+    "why": {
+      "en": "The WHERE filter throws away the NULL rows the LEFT JOIN kept for products with no sales, so those products vanish. Move the date test into the ON clause.",
+      "ru": "Условие в WHERE выбрасывает строки с NULL, которые LEFT JOIN сохранил для товаров без продаж, и эти товары исчезают. Перенесите проверку даты в ON.",
+      "uz": "WHERE dagi shart LEFT JOIN sotuvsiz tovarlar uchun saqlab qolgan NULL qatorlarni tashlab yuboradi va bu tovarlar yo'qolib qoladi. Sana shartini ON ga o'tkazing."
+    }
+  },
+  {
+    "id": "sql-09", "lang": "sql", "level": "easy", "kind": "grouping",
+    "code": [
+      "-- customers who spent more than 1000",
+      "SELECT customer_id, SUM(total) AS spent",
+      "FROM orders",
+      "WHERE SUM(total) > 1000",
+      "GROUP BY customer_id;"
+    ],
+    "bug": [4],
+    "fix": {
+      "4": "",
+      "5": "GROUP BY customer_id\nHAVING SUM(total) > 1000;"
+    },
+    "why": {
+      "en": "WHERE filters rows before they are grouped, so it can't use SUM, and the database rejects the query. Filter the groups with HAVING, after GROUP BY.",
+      "ru": "WHERE фильтрует строки до группировки, поэтому SUM в нём использовать нельзя, и база отвергает запрос. Группы фильтруют через HAVING после GROUP BY.",
+      "uz": "WHERE qatorlarni guruhlashdan oldin saralaydi, shuning uchun unda SUM ni ishlatib bo'lmaydi va baza so'rovni rad etadi. Guruhlarni GROUP BY dan keyin HAVING bilan saralang."
+    }
+  },
+  {
+    "id": "sql-10", "lang": "sql", "level": "easy", "kind": "grouping",
+    "code": [
+      "-- the average salary in each department",
+      "SELECT department, name, AVG(salary)",
+      "FROM employees",
+      "GROUP BY department;"
+    ],
+    "bug": [2],
+    "fix": { "2": "SELECT department, AVG(salary) AS avg_salary" },
+    "why": {
+      "en": "name is neither grouped nor aggregated, so most databases reject the query, and MySQL's loose mode shows one random name per department. Leave name out.",
+      "ru": "name не входит в GROUP BY и не агрегируется, поэтому большинство баз отвергают запрос, а MySQL в нестрогом режиме покажет случайное имя из отдела. Уберите name.",
+      "uz": "name na guruhlanadi, na agregatlanadi, shuning uchun ko'pchilik bazalar so'rovni rad etadi, MySQL ning qat'iy bo'lmagan rejimi esa har bir bo'limdan tasodifiy bitta ismni ko'rsatadi. name ni olib tashlang."
+    }
+  }
+]

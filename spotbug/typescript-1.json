@@ -1,0 +1,181 @@
+[
+  {
+    "id": "ts-01", "lang": "typescript", "level": "easy", "kind": "off-by-one",
+    "code": [
+      "function lastItems<T>(items: T[], n: number): T[] {",
+      "  if (n <= 0) return [];",
+      "  return items.slice(items.length - n - 1);",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "  return items.slice(-n);" },
+    "why": {
+      "en": "slice starts at items.length - n - 1, one place too early, so it returns n + 1 items. slice(-n) takes exactly the last n.",
+      "ru": "slice начинает с items.length - n - 1, на одну позицию раньше, и возвращает n + 1 элементов. slice(-n) берёт ровно последние n.",
+      "uz": "slice items.length - n - 1 dan, ya'ni bir o'rin oldinroqdan boshlaydi va n + 1 ta element qaytaradi. slice(-n) aynan oxirgi n tasini oladi."
+    }
+  },
+  {
+    "id": "ts-02", "lang": "typescript", "level": "easy", "kind": "missing-await",
+    "code": [
+      "async function saveProfile(profile: Profile): Promise<void> {",
+      "  const response = fetch(\"/api/profile\", {",
+      "    method: \"PUT\",",
+      "    body: JSON.stringify(profile),",
+      "  });",
+      "  if (!response.ok) throw new Error(\"Save failed\");",
+      "}"
+    ],
+    "bug": [2],
+    "fix": { "2": "  const response = await fetch(\"/api/profile\", {" },
+    "why": {
+      "en": "Without await, response is a Promise, whose ok is undefined, so every save throws \"Save failed\", even one that worked. Await the fetch.",
+      "ru": "Без await в response лежит Promise, у которого ok равно undefined, поэтому каждое сохранение бросает «Save failed», даже удачное. Нужен await перед fetch.",
+      "uz": "await bo'lmasa, response Promise bo'ladi, uning ok xossasi esa undefined, shuning uchun har bir saqlash, hatto muvaffaqiyatlisi ham, «Save failed» xatosini tashlaydi. fetch oldiga await qo'ying."
+    }
+  },
+  {
+    "id": "ts-03", "lang": "typescript", "level": "easy", "kind": "equality",
+    "code": [
+      "function parseAge(input: string): number | null {",
+      "  const age = Number(input);",
+      "  if (age === NaN) return null;",
+      "  return age;",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "  if (Number.isNaN(age)) return null;" },
+    "why": {
+      "en": "NaN isn't equal to anything, itself included, so age === NaN is always false and \"abc\" comes back as NaN. Test with Number.isNaN.",
+      "ru": "NaN не равен ничему, даже самому себе, поэтому age === NaN всегда false, и для \"abc\" возвращается NaN. Проверяйте через Number.isNaN.",
+      "uz": "NaN hech narsaga, hatto o'ziga ham teng emas, shuning uchun age === NaN doim false va \"abc\" uchun NaN qaytadi. Number.isNaN bilan tekshiring."
+    }
+  },
+  {
+    "id": "ts-04", "lang": "typescript", "level": "easy", "kind": "null",
+    "code": [
+      "interface User {",
+      "  name: string;",
+      "  address?: { city: string };",
+      "}",
+      "",
+      "function cityOf(user: User): string {",
+      "  return user.address.city ?? \"unknown\";",
+      "}"
+    ],
+    "bug": [7],
+    "fix": { "7": "  return user.address?.city ?? \"unknown\";" },
+    "why": {
+      "en": "address is optional, so for a user without one, user.address.city throws a TypeError before ?? gets a chance. Use user.address?.city.",
+      "ru": "address необязателен, и у пользователя без адреса user.address.city бросает TypeError раньше, чем дело дойдёт до ??. Используйте user.address?.city.",
+      "uz": "address majburiy emas, shuning uchun manzili yo'q foydalanuvchida user.address.city ?? ga navbat kelmasdan TypeError tashlaydi. user.address?.city dan foydalaning."
+    }
+  },
+  {
+    "id": "ts-05", "lang": "typescript", "level": "easy", "kind": "logic",
+    "code": [
+      "function hasAdmin(users: User[]): boolean {",
+      "  let found = false;",
+      "  users.forEach((user) => {",
+      "    if (user.role === \"admin\") return true;",
+      "  });",
+      "  return found;",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "    if (user.role === \"admin\") found = true;" },
+    "why": {
+      "en": "return true leaves only the forEach callback, not hasAdmin, and found is never set, so the answer is always false. Set found (or use users.some).",
+      "ru": "return true выходит только из колбэка forEach, а не из hasAdmin, и found так и не меняется, поэтому ответ всегда false. Присвойте found (или используйте users.some).",
+      "uz": "return true hasAdmin dan emas, faqat forEach kolbekidan chiqadi, found esa hech qachon o'zgarmaydi, shuning uchun javob doim false. found ga qiymat bering (yoki users.some dan foydalaning)."
+    }
+  },
+  {
+    "id": "ts-06", "lang": "typescript", "level": "medium", "kind": "types",
+    "code": [
+      "function toNumbers(csv: string): number[] {",
+      "  return csv",
+      "    .split(\",\")",
+      "    .map(parseInt);",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "    .map((part) => parseInt(part, 10));" },
+    "why": {
+      "en": "map passes each item's index as the second argument, and parseInt takes it as the radix: \"1,2,3\" becomes [1, NaN, NaN]. Wrap it so only the text is passed.",
+      "ru": "map передаёт вторым аргументом индекс элемента, а parseInt принимает его за основание системы счисления: \"1,2,3\" превращается в [1, NaN, NaN]. Оберните вызов, чтобы передавался только текст.",
+      "uz": "map ikkinchi argument sifatida element indeksini beradi, parseInt esa uni sanoq sistemasi asosi deb qabul qiladi: \"1,2,3\" [1, NaN, NaN] ga aylanadi. Faqat matn uzatilishi uchun chaqiruvni o'rab oling."
+    }
+  },
+  {
+    "id": "ts-07", "lang": "typescript", "level": "medium", "kind": "comparison",
+    "code": [
+      "function topScores(scores: number[]): number[] {",
+      "  const sorted = [...scores].sort();",
+      "  return sorted.reverse().slice(0, 3);",
+      "}"
+    ],
+    "bug": [2],
+    "fix": { "2": "  const sorted = [...scores].sort((a, b) => a - b);" },
+    "why": {
+      "en": "Without a compare function, sort orders the items as strings, so 9 sorts after 100 and 25. Pass (a, b) => a - b.",
+      "ru": "Без функции сравнения sort упорядочивает элементы как строки, поэтому 9 оказывается после 100 и 25. Передайте (a, b) => a - b.",
+      "uz": "Solishtirish funksiyasisiz sort elementlarni satr sifatida tartiblaydi, shuning uchun 9 100 va 25 dan keyin turib qoladi. (a, b) => a - b ni bering."
+    }
+  },
+  {
+    "id": "ts-08", "lang": "typescript", "level": "medium", "kind": "scope",
+    "code": [
+      "class Logger {",
+      "  prefix = \"[app]\";",
+      "",
+      "  log(message: string): void {",
+      "    console.log(`${this.prefix} ${message}`);",
+      "  }",
+      "}",
+      "",
+      "const logger = new Logger();",
+      "setTimeout(logger.log, 100, \"started\");"
+    ],
+    "bug": [10],
+    "fix": { "10": "setTimeout(() => logger.log(\"started\"), 100);" },
+    "why": {
+      "en": "Passing logger.log hands over the bare function: when the timer calls it, this is no longer logger and this.prefix fails. Call it through an arrow function (or bind it).",
+      "ru": "logger.log передаётся как голая функция: когда таймер её вызовет, this уже не logger, и this.prefix ломается. Вызывайте её через стрелочную функцию (или bind).",
+      "uz": "logger.log yalang'och funksiya sifatida uzatiladi: taymer uni chaqirganda this endi logger emas va this.prefix ishlamaydi. Strelkali funksiya orqali chaqiring (yoki bind qiling)."
+    }
+  },
+  {
+    "id": "ts-09", "lang": "typescript", "level": "easy", "kind": "logic",
+    "code": [
+      "function applyVolume(settings: { volume?: number }): number {",
+      "  // volume runs from 0 (muted) to 1; the default is 0.8",
+      "  const volume = settings.volume || 0.8;",
+      "  return Math.round(volume * 100);",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "  const volume = settings.volume ?? 0.8;" },
+    "why": {
+      "en": "|| replaces every falsy value, 0 included, so a muted player gets 80% volume. ?? falls back only when the setting is missing.",
+      "ru": "|| заменяет любое ложное значение, включая 0, поэтому выключенный звук превращается в 80% громкости. ?? подставляет значение по умолчанию, только когда настройки нет.",
+      "uz": "|| har qanday yolg'on qiymatni, jumladan 0 ni ham almashtiradi, shuning uchun o'chirilgan ovoz 80% balandlikka aylanadi. ?? faqat sozlama yo'q bo'lgandagina standart qiymatni qo'yadi."
+    }
+  },
+  {
+    "id": "ts-10", "lang": "typescript", "level": "easy", "kind": "dates",
+    "code": [
+      "function firstOfMonth(year: number, month: number): Date {",
+      "  // month is 1 to 12, the way people write it",
+      "  return new Date(year, month, 1);",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "  return new Date(year, month - 1, 1);" },
+    "why": {
+      "en": "Months in a JavaScript Date run from 0 to 11, so month 1 lands on February, and 12 rolls over into January of the next year. Pass month - 1.",
+      "ru": "Месяцы в Date в JavaScript считаются от 0 до 11, поэтому месяц 1 попадает на февраль, а 12 переходит в январь следующего года. Передайте month - 1.",
+      "uz": "JavaScript dagi Date da oylar 0 dan 11 gacha sanaladi, shuning uchun 1-oy fevralga tushadi, 12 esa keyingi yilning yanvariga o'tib ketadi. month - 1 ni bering."
+    }
+  }
+]

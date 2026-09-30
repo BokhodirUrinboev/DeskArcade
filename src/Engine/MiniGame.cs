@@ -55,6 +55,12 @@ public interface IGameHost
 
     /// <summary>True while the typing window is open for <paramref name="sink"/> and has the keyboard.</summary>
     bool HasKeyboard(IKeySink sink);
+
+    /// <summary>
+    /// A game against a co-worker ended: +1 won, 0 drawn, −1 lost (see <see cref="Rivalries"/>). A room game reports one
+    /// result per co-worker at the table, a win against everyone it finished ahead of. Never for the computer.
+    /// </summary>
+    void RecordResult(string gameId, string opponent, int outcome);
 }
 
 public sealed record HudInfo(string Score, string Line, string Best);
@@ -63,8 +69,9 @@ public sealed record HudInfo(string Score, string Line, string Best);
 /// The other side of a two-player game, for the scoreboard's chip: who it is, whether it is the computer (and at which
 /// level, 1–4, or 0 when the game has no levels) and whose turn it is (null when the game has no turns). A
 /// <paramref name="Teammate"/> plays on your side (co-op), and the chip says "with" rather than "vs".
+/// <paramref name="Record"/> is the rivalry so far against a co-worker in this game ("7–5"), filled in by the overlay.
 /// </summary>
-public sealed record Opponent(string Name, bool IsCpu, int Level, bool? MyTurn, bool Teammate = false);
+public sealed record Opponent(string Name, bool IsCpu, int Level, bool? MyTurn, bool Teammate = false, string? Record = null);
 
 public abstract class MiniGame
 {
@@ -130,6 +137,13 @@ public abstract class MiniGame
 
     /// <summary>Who this player is up against right now, for the scoreboard; null in a solo game (races supply their own).</summary>
     public virtual Opponent? Opponent => null;
+
+    /// <summary>
+    /// The last result as a short line to paste into Teams, Slack or Telegram (a daily puzzle's grid, a time, a new
+    /// best), for ☰ → Share a result; null when there is nothing worth sharing yet. Plain text and emoji, one to four
+    /// lines, no names but the game's; the overlay adds the "Desk Arcade" signature.
+    /// </summary>
+    public virtual string? ShareText => null;
 
     /// <summary>Tweens for the game's own animations: advance them from <see cref="Update"/> and stay busy while <see cref="Engine.Anims.Busy"/>.</summary>
     protected Anims Anims { get; } = new();
