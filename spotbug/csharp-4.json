@@ -1,0 +1,162 @@
+[
+  {
+    "id": "cs-25", "lang": "csharp", "level": "medium", "kind": "off-by-one",
+    "code": [
+      "public static string Truncate(string text, int max)",
+      "{",
+      "    // the result is at most max characters, \"…\" included",
+      "    if (text.Length < max) return text;",
+      "    return text[..(max - 1)] + \"…\";",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "    if (text.Length <= max) return text;" },
+    "why": {
+      "en": "A text of exactly max characters already fits, but < sends it on to be cut: \"hello\" with max 5 becomes \"hell…\". It should be <=.",
+      "ru": "Текст длиной ровно max символов уже помещается, но из-за < его всё равно обрезают: \"hello\" при max 5 превращается в \"hell…\". Нужно <=.",
+      "uz": "Aynan max belgili matn allaqachon sig'adi, lekin < tufayli u baribir qirqiladi: max 5 bo'lganda \"hello\" \"hell…\" ga aylanadi. <= bo'lishi kerak."
+    }
+  },
+  {
+    "id": "cs-26", "lang": "csharp", "level": "hard", "kind": "comparison",
+    "code": [
+      "public class ByTotal : IComparer<Order>",
+      "{",
+      "    public int Compare(Order? x, Order? y)",
+      "    {",
+      "        return (int)(x!.Total - y!.Total);",
+      "    }",
+      "}"
+    ],
+    "bug": [5],
+    "fix": { "5": "        return x!.Total.CompareTo(y!.Total);" },
+    "why": {
+      "en": "Casting the difference to int throws the fraction away: totals of 10.20 and 10.70 differ by 0.5, which becomes 0, so they sort as equal. Use CompareTo.",
+      "ru": "Приведение разницы к int отбрасывает дробную часть: суммы 10.20 и 10.70 отличаются на 0.5, это превращается в 0, и они сортируются как равные. Используйте CompareTo.",
+      "uz": "Farqni int ga o'tkazish kasr qismini tashlab yuboradi: 10.20 va 10.70 lik summalar 0.5 ga farq qiladi, bu 0 ga aylanadi va ular teng deb saralanadi. CompareTo dan foydalaning."
+    }
+  },
+  {
+    "id": "cs-27", "lang": "csharp", "level": "hard", "kind": "overflow",
+    "code": [
+      "public static int IndexOf(int[] sorted, int target)",
+      "{",
+      "    int lo = 0, hi = sorted.Length - 1;",
+      "    while (lo <= hi)",
+      "    {",
+      "        int mid = (lo + hi) / 2;",
+      "        if (sorted[mid] == target) return mid;",
+      "        if (sorted[mid] < target) lo = mid + 1;",
+      "        else hi = mid - 1;",
+      "    }",
+      "    return -1;",
+      "}"
+    ],
+    "bug": [6],
+    "fix": { "6": "        int mid = lo + (hi - lo) / 2;" },
+    "why": {
+      "en": "On an array of more than about a billion items, lo + hi can pass int.MaxValue and turn negative, and sorted[mid] then throws. lo + (hi - lo) / 2 can't overflow.",
+      "ru": "На массиве больше примерно миллиарда элементов lo + hi может превысить int.MaxValue и стать отрицательным, и тогда sorted[mid] бросит исключение. lo + (hi - lo) / 2 не переполняется.",
+      "uz": "Taxminan bir milliarddan ortiq elementli massivda lo + hi int.MaxValue dan oshib, manfiy bo'lib qolishi mumkin, shunda sorted[mid] istisno tashlaydi. lo + (hi - lo) / 2 esa to'lib ketmaydi."
+    }
+  },
+  {
+    "id": "cs-28", "lang": "csharp", "level": "medium", "kind": "injection",
+    "code": [
+      "public static int FindUserId(DbConnection db, string email)",
+      "{",
+      "    using var cmd = db.CreateCommand();",
+      "    cmd.CommandText = $\"SELECT id FROM users WHERE email = '{email}'\";",
+      "    var p = cmd.CreateParameter();",
+      "    p.ParameterName = \"@email\";",
+      "    p.Value = email;",
+      "    cmd.Parameters.Add(p);",
+      "    return Convert.ToInt32(cmd.ExecuteScalar());",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "    cmd.CommandText = \"SELECT id FROM users WHERE email = @email\";" },
+    "why": {
+      "en": "The parameter is made but never used: the email is pasted into the SQL, so an input like ' OR '1'='1 changes the query. Put @email in the text.",
+      "ru": "Параметр создан, но не используется: email вставляется прямо в SQL, и ввод вроде ' OR '1'='1 меняет запрос. Подставьте @email в текст запроса.",
+      "uz": "Parametr yaratilgan, lekin ishlatilmaydi: email to'g'ridan-to'g'ri SQL ga qo'shiladi va ' OR '1'='1 kabi kiritma so'rovni o'zgartirib yuboradi. So'rov matniga @email ni qo'ying."
+    }
+  },
+  {
+    "id": "cs-29", "lang": "csharp", "level": "medium", "kind": "logic",
+    "code": [
+      "public static int TotalItems(int? inCart, int? saved)",
+      "{",
+      "    return inCart ?? 0 + saved ?? 0;",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "    return (inCart ?? 0) + (saved ?? 0);" },
+    "why": {
+      "en": "?? binds more loosely than +, so this reads inCart ?? ((0 + saved) ?? 0): whenever there is a cart count, the saved items are ignored. Add brackets.",
+      "ru": "?? связывает слабее, чем +, поэтому выражение читается как inCart ?? ((0 + saved) ?? 0): когда в корзине есть количество, отложенные товары не учитываются. Нужны скобки.",
+      "uz": "?? + dan kuchsizroq bog'lanadi, shuning uchun ifoda inCart ?? ((0 + saved) ?? 0) deb o'qiladi: savatdagi son bo'lsa, saqlab qo'yilgan tovarlar hisobga olinmaydi. Qavslar kerak."
+    }
+  },
+  {
+    "id": "cs-30", "lang": "csharp", "level": "medium", "kind": "dates",
+    "code": [
+      "public static bool IsExpired(DateTime expiresAtUtc)",
+      "{",
+      "    // expiresAtUtc comes from the server, in UTC",
+      "    return expiresAtUtc < DateTime.Now;",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "    return expiresAtUtc < DateTime.UtcNow;" },
+    "why": {
+      "en": "It compares a UTC time with local time: in Tashkent (UTC+5) tokens live five hours too long, and west of Greenwich they expire early. Use DateTime.UtcNow.",
+      "ru": "Время в UTC сравнивается с местным: в Ташкенте (UTC+5) токены живут на пять часов дольше, а к западу от Гринвича истекают раньше срока. Используйте DateTime.UtcNow.",
+      "uz": "UTC vaqti mahalliy vaqt bilan solishtiriladi: Toshkentda (UTC+5) tokenlar besh soat ortiq yashaydi, Grinvichdan g'arbda esa muddatidan oldin tugaydi. DateTime.UtcNow dan foydalaning."
+    }
+  },
+  {
+    "id": "cs-31", "lang": "csharp", "level": "hard", "kind": "deferred",
+    "code": [
+      "public static IEnumerable<int> ParseAll(IEnumerable<string> lines)",
+      "{",
+      "    try",
+      "    {",
+      "        return lines.Select(int.Parse);",
+      "    }",
+      "    catch (FormatException)",
+      "    {",
+      "        return Enumerable.Empty<int>();",
+      "    }",
+      "}"
+    ],
+    "bug": [5],
+    "fix": { "5": "        return lines.Select(int.Parse).ToList();" },
+    "why": {
+      "en": "Select is lazy: nothing is parsed until the caller enumerates the result, long after the try has returned, so a FormatException slips past the catch. Run it with ToList inside the try.",
+      "ru": "Select ленив: ничего не разбирается, пока вызывающий код не начнёт перебирать результат, а это происходит уже после выхода из try, поэтому FormatException проходит мимо catch. Выполните запрос через ToList внутри try.",
+      "uz": "Select dangasa: chaqiruvchi kod natijani aylanmaguncha hech narsa tahlil qilinmaydi, bu esa try dan chiqilgandan keyin sodir bo'ladi, shuning uchun FormatException catch dan o'tib ketadi. try ichida ToList bilan bajaring."
+    }
+  },
+  {
+    "id": "cs-32", "lang": "csharp", "level": "medium", "kind": "missing-key",
+    "code": [
+      "public static Dictionary<string, int> Tally(IEnumerable<string> words)",
+      "{",
+      "    var counts = new Dictionary<string, int>();",
+      "    foreach (var word in words)",
+      "    {",
+      "        counts[word]++;",
+      "    }",
+      "    return counts;",
+      "}"
+    ],
+    "bug": [6],
+    "fix": { "6": "        counts[word] = counts.GetValueOrDefault(word) + 1;" },
+    "why": {
+      "en": "counts[word]++ first reads counts[word], and the first time a word appears it isn't there yet, so it throws KeyNotFoundException. Read it with GetValueOrDefault.",
+      "ru": "counts[word]++ сначала читает counts[word], а при первой встрече слова такого ключа ещё нет, и вылетает KeyNotFoundException. Читайте через GetValueOrDefault.",
+      "uz": "counts[word]++ avval counts[word] ni o'qiydi, so'z birinchi marta uchraganda esa bunday kalit hali yo'q, shuning uchun KeyNotFoundException chiqadi. GetValueOrDefault orqali o'qing."
+    }
+  }
+]

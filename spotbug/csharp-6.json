@@ -1,0 +1,117 @@
+[
+  {
+    "id": "cs-40", "lang": "csharp", "level": "hard", "kind": "race",
+    "code": [
+      "public static async Task<List<User>> LoadAllAsync(",
+      "    IUserStore store, int[] ids)",
+      "{",
+      "    var users = new List<User>();",
+      "    await Task.WhenAll(ids.Select(async id =>",
+      "    {",
+      "        var user = await store.FindAsync(id);",
+      "        if (user != null) users.Add(user);",
+      "    }));",
+      "    return users;",
+      "}"
+    ],
+    "bug": [8],
+    "fix": { "8": "        if (user != null) lock (users) users.Add(user);" },
+    "why": {
+      "en": "The lookups finish on several threads at once, and List<T>.Add isn't thread-safe: users go missing or the list gets corrupted. Lock around Add, or collect the results from Task.WhenAll.",
+      "ru": "Поиски завершаются сразу в нескольких потоках, а List<T>.Add не потокобезопасен: пользователи теряются, или список портится. Добавляйте под lock или соберите результаты из Task.WhenAll.",
+      "uz": "Qidiruvlar bir vaqtda bir nechta oqimda tugaydi, List<T>.Add esa oqimlar uchun xavfsiz emas: foydalanuvchilar yo'qoladi yoki ro'yxat buziladi. Add ni lock ichida bajaring yoki natijalarni Task.WhenAll dan yig'ing."
+    }
+  },
+  {
+    "id": "cs-41", "lang": "csharp", "level": "medium", "kind": "async",
+    "code": [
+      "public static async Task<string> DownloadAsync(",
+      "    HttpClient http, string url, CancellationToken ct)",
+      "{",
+      "    using var response = await http.GetAsync(url);",
+      "    response.EnsureSuccessStatusCode();",
+      "    return await response.Content.ReadAsStringAsync(ct);",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "    using var response = await http.GetAsync(url, ct);" },
+    "why": {
+      "en": "The token isn't passed to GetAsync, so cancelling doesn't stop the request: a slow server keeps the caller waiting until the timeout. Pass ct on.",
+      "ru": "Токен не передаётся в GetAsync, поэтому отмена не останавливает запрос: медленный сервер заставит ждать до таймаута. Передайте ct дальше.",
+      "uz": "Token GetAsync ga uzatilmaydi, shuning uchun bekor qilish so'rovni to'xtatmaydi: sekin server chaqiruvchini taymautgacha kuttirib qo'yadi. ct ni uzating."
+    }
+  },
+  {
+    "id": "cs-42", "lang": "csharp", "level": "hard", "kind": "race",
+    "code": [
+      "public class Thermostat",
+      "{",
+      "    public event EventHandler? Alarm;",
+      "",
+      "    public void Report(double celsius)",
+      "    {",
+      "        if (celsius > 30 && Alarm != null) Alarm(this, EventArgs.Empty);",
+      "    }",
+      "}"
+    ],
+    "bug": [7],
+    "fix": { "7": "        if (celsius > 30) Alarm?.Invoke(this, EventArgs.Empty);" },
+    "why": {
+      "en": "The event is read twice: if the last handler unsubscribes on another thread between the check and the call, Alarm is null by then and the call throws. ?.Invoke reads it once.",
+      "ru": "Событие читается дважды: если последний обработчик отпишется в другом потоке между проверкой и вызовом, Alarm окажется null, и вызов бросит исключение. ?.Invoke читает его один раз.",
+      "uz": "Hodisa ikki marta o'qiladi: agar oxirgi ishlovchi tekshiruv bilan chaqiruv orasida boshqa oqimda obunani bekor qilsa, Alarm null bo'lib qoladi va chaqiruv istisno tashlaydi. ?.Invoke uni bir marta o'qiydi."
+    }
+  },
+  {
+    "id": "cs-43", "lang": "csharp", "level": "easy", "kind": "comparison", "compile": "error",
+    "code": [
+      "public static string Describe(List<Order> orders)",
+      "{",
+      "    int count = orders.Count;",
+      "    if (count = 0) return \"no orders\";",
+      "    return $\"{count} orders\";",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "    if (count == 0) return \"no orders\";" },
+    "why": {
+      "en": "= assigns and == compares. In C# the assignment gives an int, not a bool, so this doesn't compile; in C it would quietly set count to 0.",
+      "ru": "= присваивает, а == сравнивает. В C# присваивание даёт int, а не bool, поэтому код не компилируется; в C он молча обнулил бы count.",
+      "uz": "= qiymat beradi, == esa solishtiradi. C# da o'zlashtirish bool emas, int beradi, shuning uchun kod kompilyatsiya bo'lmaydi; C da esa u indamay count ni 0 ga tenglab qo'yardi."
+    }
+  },
+  {
+    "id": "cs-44", "lang": "csharp", "level": "medium", "kind": "missing-await",
+    "code": [
+      "public static async Task<bool> ExistsAsync(IUserStore store, int id)",
+      "{",
+      "    var user = store.FindAsync(id);",
+      "    return user != null;",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "    var user = await store.FindAsync(id);" },
+    "why": {
+      "en": "Without await, user is the Task rather than the user, and a Task is never null, so every id \"exists\". Await the lookup.",
+      "ru": "Без await в user лежит Task, а не пользователь, а Task никогда не бывает null, поэтому «существует» любой id. Нужен await.",
+      "uz": "await bo'lmasa, user da foydalanuvchi emas, Task turadi, Task esa hech qachon null bo'lmaydi, shuning uchun har qanday id «mavjud» bo'lib chiqadi. await kerak."
+    }
+  },
+  {
+    "id": "cs-45", "lang": "csharp", "level": "medium", "kind": "off-by-one",
+    "code": [
+      "public static int SumBetween(int from, int to)",
+      "{",
+      "    // both ends included: SumBetween(3, 5) is 3 + 4 + 5",
+      "    return Enumerable.Range(from, to).Sum();",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "    return Enumerable.Range(from, to - from + 1).Sum();" },
+    "why": {
+      "en": "The second argument of Enumerable.Range is a count, not an end: Range(3, 5) is 3 to 7, so SumBetween(3, 5) gives 25 instead of 12. Pass to - from + 1.",
+      "ru": "Второй аргумент Enumerable.Range — это количество, а не конец: Range(3, 5) даёт числа от 3 до 7, и SumBetween(3, 5) возвращает 25 вместо 12. Передайте to - from + 1.",
+      "uz": "Enumerable.Range ning ikkinchi argumenti oxiri emas, soni: Range(3, 5) 3 dan 7 gacha sonlarni beradi, shuning uchun SumBetween(3, 5) 12 o'rniga 25 qaytaradi. to - from + 1 ni bering."
+    }
+  }
+]

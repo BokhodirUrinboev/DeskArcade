@@ -1,0 +1,156 @@
+[
+  {
+    "id": "cs-09", "lang": "csharp", "level": "easy", "kind": "off-by-one",
+    "code": [
+      "public static List<Order> Page(List<Order> orders, int page, int size)",
+      "{",
+      "    // page is 1-based: page 1 is the first page",
+      "    return orders.Skip(page * size).Take(size).ToList();",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "    return orders.Skip((page - 1) * size).Take(size).ToList();" },
+    "why": {
+      "en": "Pages start at 1, so page 1 must skip nothing; page * size skips a whole page and the first page never shows. Skip (page - 1) * size.",
+      "ru": "Страницы нумеруются с 1, значит, для первой страницы ничего пропускать не нужно, а page * size пропускает целую страницу, и первая так и не показывается. Нужно Skip((page - 1) * size).",
+      "uz": "Sahifalar 1 dan boshlanadi, demak 1-sahifada hech narsa tashlab ketilmasligi kerak; page * size esa butun bir sahifani tashlab ketadi va birinchi sahifa hech qachon ko'rinmaydi. Skip((page - 1) * size) kerak."
+    }
+  },
+  {
+    "id": "cs-10", "lang": "csharp", "level": "medium", "kind": "overflow",
+    "code": [
+      "public static long TotalBytes(int files, int bytesPerFile)",
+      "{",
+      "    long total = files * bytesPerFile;",
+      "    return total;",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "    long total = (long)files * bytesPerFile;" },
+    "why": {
+      "en": "files * bytesPerFile is worked out in int and overflows before it is widened to long: 3,000 files of 1 MB come out negative. Cast one operand to long first.",
+      "ru": "files * bytesPerFile вычисляется в int и переполняется ещё до расширения до long: 3000 файлов по 1 МБ дают отрицательное число. Сначала приведите один из операндов к long.",
+      "uz": "files * bytesPerFile int da hisoblanadi va long ga kengaytirilishidan oldin to'lib ketadi: 1 MB lik 3000 ta fayl manfiy son beradi. Avval operandlardan birini long ga o'tkazing."
+    }
+  },
+  {
+    "id": "cs-11", "lang": "csharp", "level": "medium", "kind": "mutation",
+    "code": [
+      "public static void RemoveCancelled(List<Order> orders)",
+      "{",
+      "    foreach (var order in orders)",
+      "    {",
+      "        if (order.Status == \"cancelled\")",
+      "            orders.Remove(order);",
+      "    }",
+      "}"
+    ],
+    "bug": [3],
+    "fix": { "3": "    foreach (var order in orders.ToList())" },
+    "why": {
+      "en": "Removing from a list while foreach walks it makes the loop's next step throw InvalidOperationException. Walk a copy (ToList) or use RemoveAll.",
+      "ru": "Если удалять элементы из списка, пока его обходит foreach, следующий шаг цикла бросит InvalidOperationException. Обходите копию (ToList) или используйте RemoveAll.",
+      "uz": "foreach ro'yxatni aylanayotganda undan element o'chirilsa, siklning keyingi qadami InvalidOperationException tashlaydi. Nusxasini aylaning (ToList) yoki RemoveAll dan foydalaning."
+    }
+  },
+  {
+    "id": "cs-12", "lang": "csharp", "level": "easy", "kind": "null",
+    "code": [
+      "public static string CustomerName(List<Customer> customers, int id)",
+      "{",
+      "    // an id that isn't in the list gives \"unknown\"",
+      "    var customer = customers.FirstOrDefault(c => c.Id == id);",
+      "    return customer.Name;",
+      "}"
+    ],
+    "bug": [5],
+    "fix": { "5": "    return customer?.Name ?? \"unknown\";" },
+    "why": {
+      "en": "FirstOrDefault gives null when no customer has that id, and customer.Name then throws NullReferenceException. Use ?. and fall back to \"unknown\".",
+      "ru": "FirstOrDefault возвращает null, если клиента с таким id нет, и тогда customer.Name бросает NullReferenceException. Используйте ?. и запасное значение \"unknown\".",
+      "uz": "Bunday id li mijoz bo'lmasa, FirstOrDefault null qaytaradi va customer.Name NullReferenceException tashlaydi. ?. ishlating va \"unknown\" ni zaxira qiymat qiling."
+    }
+  },
+  {
+    "id": "cs-13", "lang": "csharp", "level": "easy", "kind": "semicolon",
+    "code": [
+      "public static int Digits(int n)",
+      "{",
+      "    int count = 1;",
+      "    while (n >= 10);",
+      "    {",
+      "        n /= 10;",
+      "        count++;",
+      "    }",
+      "    return count;",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "    while (n >= 10)" },
+    "why": {
+      "en": "The semicolon gives the while an empty body: for any n of 10 or more it spins for ever, and the braces below are just a block that never gets to run.",
+      "ru": "Из-за точки с запятой у while пустое тело: при n от 10 и выше цикл крутится бесконечно, а фигурные скобки ниже оказываются обычным блоком, до которого дело так и не доходит.",
+      "uz": "Nuqtali vergul tufayli while ning tanasi bo'sh: n 10 yoki undan katta bo'lsa, sikl cheksiz aylanadi, pastdagi figurali qavslar esa navbati hech qachon kelmaydigan oddiy blokka aylanadi."
+    }
+  },
+  {
+    "id": "cs-14", "lang": "csharp", "level": "easy", "kind": "shadowing",
+    "code": [
+      "public class Counter",
+      "{",
+      "    private int count;",
+      "",
+      "    public void Add(int count)",
+      "    {",
+      "        count += count;",
+      "    }",
+      "",
+      "    public int Total => count;",
+      "}"
+    ],
+    "bug": [7],
+    "fix": { "7": "        this.count += count;" },
+    "why": {
+      "en": "Inside Add, count means the parameter, which hides the field: the line only doubles the parameter and the total stays 0. Write this.count.",
+      "ru": "Внутри Add имя count означает параметр, который скрывает поле: строка лишь удваивает параметр, а итог остаётся 0. Пишите this.count.",
+      "uz": "Add ichida count parametrni bildiradi va u maydonni to'sib qo'yadi: qator faqat parametrni ikki baravar oshiradi, jami esa 0 bo'lib qolaveradi. this.count deb yozing."
+    }
+  },
+  {
+    "id": "cs-15", "lang": "csharp", "level": "easy", "kind": "comparison",
+    "code": [
+      "public static bool CanVote(int age)",
+      "{",
+      "    const int VotingAge = 18;",
+      "    return age > VotingAge;",
+      "}"
+    ],
+    "bug": [4],
+    "fix": { "4": "    return age >= VotingAge;" },
+    "why": {
+      "en": "People may vote from the day they turn 18, but > leaves out everyone who is exactly 18. It should be >=.",
+      "ru": "Голосовать можно с того дня, как исполнилось 18, а > отсекает тех, кому ровно 18. Нужно >=.",
+      "uz": "18 yoshga to'lgan kundan boshlab ovoz berish mumkin, > esa aynan 18 yoshdagilarni chetda qoldiradi. >= bo'lishi kerak."
+    }
+  },
+  {
+    "id": "cs-16", "lang": "csharp", "level": "easy", "kind": "missing-await",
+    "code": [
+      "public async Task SaveAllAsync(IUserStore store, List<User> users)",
+      "{",
+      "    foreach (var user in users)",
+      "    {",
+      "        store.SaveAsync(user);",
+      "    }",
+      "    Console.WriteLine($\"Saved {users.Count} users\");",
+      "}"
+    ],
+    "bug": [5],
+    "fix": { "5": "        await store.SaveAsync(user);" },
+    "why": {
+      "en": "SaveAsync isn't awaited, so each save is started and forgotten: the method reports them saved before they finish, and their errors go unseen. Await each one.",
+      "ru": "SaveAsync не ожидается, поэтому каждое сохранение запускается и забывается: метод сообщает об успехе раньше, чем они закончатся, а их ошибки никто не увидит. Нужен await.",
+      "uz": "SaveAsync kutilmaydi, shuning uchun har bir saqlash ishga tushiriladi-yu, unutiladi: metod ular tugashidan oldin saqlandi deb xabar beradi, xatolari esa ko'rinmay qoladi. Har birini await qiling."
+    }
+  }
+]

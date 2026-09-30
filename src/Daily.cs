@@ -76,6 +76,7 @@ public sealed class Daily
         // 1.8.6 · word and key games
 
         // 1.8.6 · Spot the Bug
+        new("spotbug", "spotbug.found", 8, "Find {0} bugs in Spot the Bug"),
 
         // 1.8.6 · arcade
         new("servers", "servers.served", 40, "Serve {0} requests in Load Balancer"),

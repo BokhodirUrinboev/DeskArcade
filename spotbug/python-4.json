@@ -1,0 +1,142 @@
+[
+  {
+    "id": "py-31", "lang": "python", "level": "medium", "kind": "aliasing",
+    "code": [
+      "def empty_grid(rows, cols):",
+      "    \"\"\"A rows x cols grid of zeros, ready to fill in.\"\"\"",
+      "    grid = [[0] * cols] * rows",
+      "    return grid"
+    ],
+    "bug": [3],
+    "fix": { "3": "    grid = [[0] * cols for _ in range(rows)]" },
+    "why": {
+      "en": "Multiplying the outer list repeats the same row object rows times, so setting grid[0][0] changes the first cell of every row. Build each row separately.",
+      "ru": "Умножение внешнего списка повторяет один и тот же объект строки rows раз, поэтому присваивание grid[0][0] меняет первую ячейку в каждой строке. Создавайте каждую строку отдельно.",
+      "uz": "Tashqi ro'yxatni ko'paytirish bitta qator obyektini rows marta takrorlaydi, shuning uchun grid[0][0] ga qiymat berish har bir qatorning birinchi katagini o'zgartiradi. Har bir qatorni alohida yarating."
+    }
+  },
+  {
+    "id": "py-32", "lang": "python", "level": "medium", "kind": "logic",
+    "code": [
+      "def save_lines(path, lines):",
+      "    for line in lines:",
+      "        with open(path, \"w\", encoding=\"utf-8\") as f:",
+      "            f.write(line + \"\\n\")"
+    ],
+    "bug": [2, 3],
+    "fix": {
+      "2": "    with open(path, \"w\", encoding=\"utf-8\") as f:",
+      "3": "        for line in lines:"
+    },
+    "why": {
+      "en": "Mode \"w\" empties the file every time it is opened, and it is opened once per line, so only the last line survives. Open it once, outside the loop.",
+      "ru": "Режим \"w\" очищает файл при каждом открытии, а открывается он для каждой строки, поэтому остаётся только последняя. Откройте файл один раз, вне цикла.",
+      "uz": "\"w\" rejimi fayl har ochilganda uni bo'shatadi, u esa har bir qator uchun ochiladi, shuning uchun faqat oxirgi qator qoladi. Faylni sikldan tashqarida bir marta oching."
+    }
+  },
+  {
+    "id": "py-33", "lang": "python", "level": "easy", "kind": "off-by-one",
+    "code": [
+      "def numbered(items):",
+      "    \"\"\"Lines like \"1. Apples\", ready to print as a list.\"\"\"",
+      "    lines = [f\"{i}. {item}\" for i, item in enumerate(items)]",
+      "    return \"\\n\".join(lines)"
+    ],
+    "bug": [3],
+    "fix": { "3": "    lines = [f\"{i}. {item}\" for i, item in enumerate(items, start=1)]" },
+    "why": {
+      "en": "enumerate counts from 0, so the list starts with \"0. Apples\". Pass start=1.",
+      "ru": "enumerate считает с 0, поэтому список начинается с «0. Apples». Передайте start=1.",
+      "uz": "enumerate 0 dan sanaydi, shuning uchun ro'yxat «0. Apples» dan boshlanadi. start=1 ni bering."
+    }
+  },
+  {
+    "id": "py-34", "lang": "python", "level": "medium", "kind": "logic",
+    "code": [
+      "import threading",
+      "",
+      "def download_all(urls):",
+      "    threads = [threading.Thread(target=download, args=(u,)) for u in urls]",
+      "    for t in threads:",
+      "        t.start()",
+      "    for t in threads:",
+      "        t.join",
+      "    print(\"all downloads finished\")"
+    ],
+    "bug": [8],
+    "fix": { "8": "        t.join()" },
+    "why": {
+      "en": "t.join without brackets only looks the method up and never calls it, so nothing waits and \"finished\" is printed while downloads are still running. Call t.join().",
+      "ru": "t.join без скобок лишь находит метод, но не вызывает его, поэтому никто ничего не ждёт, и «finished» печатается, пока загрузки ещё идут. Вызовите t.join().",
+      "uz": "Qavssiz t.join metodni faqat topadi, lekin chaqirmaydi, shuning uchun hech narsa kutilmaydi va yuklashlar hali davom etayotganda «finished» chiqadi. t.join() ni chaqiring."
+    }
+  },
+  {
+    "id": "py-35", "lang": "python", "level": "hard", "kind": "hash",
+    "code": [
+      "import zlib",
+      "",
+      "def shard_for(user_id: str, shards: int) -> int:",
+      "    # the same user must land on the same shard after every restart",
+      "    return hash(user_id) % shards"
+    ],
+    "bug": [5],
+    "fix": { "5": "    return zlib.crc32(user_id.encode()) % shards" },
+    "why": {
+      "en": "Python salts string hashes with a new random seed on every run, so hash(user_id) changes after a restart and users move shards. Use a stable hash such as zlib.crc32.",
+      "ru": "Python подмешивает к хешам строк новое случайное зерно при каждом запуске, поэтому hash(user_id) меняется после перезапуска, и пользователи переезжают на другие шарды. Используйте стабильный хеш, например zlib.crc32.",
+      "uz": "Python har ishga tushishda satr xeshlariga yangi tasodifiy urug' qo'shadi, shuning uchun qayta ishga tushirilgandan keyin hash(user_id) o'zgaradi va foydalanuvchilar boshqa shardlarga ko'chib qoladi. zlib.crc32 kabi barqaror xeshdan foydalaning."
+    }
+  },
+  {
+    "id": "py-36", "lang": "python", "level": "hard", "kind": "exception",
+    "code": [
+      "def safe_div(a, b):",
+      "    \"\"\"a / b, or None when b is zero.\"\"\"",
+      "    try:",
+      "        return a / b",
+      "    finally:",
+      "        return None"
+    ],
+    "bug": [5],
+    "fix": { "5": "    except ZeroDivisionError:" },
+    "why": {
+      "en": "A return in finally runs after any return in try and replaces it, so safe_div always gives None, even for 6 / 3. Catch ZeroDivisionError with except.",
+      "ru": "return в finally выполняется после любого return из try и заменяет его, поэтому safe_div всегда возвращает None, даже для 6 / 3. Ловите ZeroDivisionError через except.",
+      "uz": "finally dagi return try dagi har qanday return dan keyin bajariladi va uning o'rnini egallaydi, shuning uchun safe_div hatto 6 / 3 uchun ham doim None qaytaradi. ZeroDivisionError ni except bilan ushlang."
+    }
+  },
+  {
+    "id": "py-37", "lang": "python", "level": "hard", "kind": "dates",
+    "code": [
+      "from datetime import date, timedelta",
+      "",
+      "def next_month(d):",
+      "    \"\"\"The first day of the month after d.\"\"\"",
+      "    return d.replace(day=1, month=d.month + 1)"
+    ],
+    "bug": [5],
+    "fix": { "5": "    return (d.replace(day=28) + timedelta(days=4)).replace(day=1)" },
+    "why": {
+      "en": "In December month + 1 is 13, and replace raises ValueError: month must be in 1..12. Step past the end of the month instead: day 28 plus 4 days is always next month.",
+      "ru": "В декабре month + 1 равно 13, и replace бросает ValueError: month must be in 1..12. Лучше шагнуть за конец месяца: 28-е число плюс 4 дня всегда попадает в следующий месяц.",
+      "uz": "Dekabrda month + 1 13 ga teng va replace ValueError: month must be in 1..12 xatosini tashlaydi. Buning o'rniga oy oxiridan o'ting: 28-kun plyus 4 kun doim keyingi oyga tushadi."
+    }
+  },
+  {
+    "id": "py-38", "lang": "python", "level": "medium", "kind": "comparison",
+    "code": [
+      "ADMINS = \"alice,bob,carol\"",
+      "",
+      "def is_admin(name):",
+      "    return name in ADMINS"
+    ],
+    "bug": [4],
+    "fix": { "4": "    return name in ADMINS.split(\",\")" },
+    "why": {
+      "en": "in on a string looks for a substring, so \"al\", \"b\" and even \"bob,c\" count as admins. Split the string into names and test membership in the list.",
+      "ru": "in для строки ищет подстроку, поэтому «al», «b» и даже «bob,c» считаются администраторами. Разбейте строку на имена и проверяйте вхождение в список.",
+      "uz": "Satr uchun in qism satrni qidiradi, shuning uchun «al», «b» va hatto «bob,c» ham admin hisoblanadi. Satrni ismlarga ajrating va ro'yxatda borligini tekshiring."
+    }
+  }
+]

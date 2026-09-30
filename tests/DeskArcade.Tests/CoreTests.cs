@@ -108,6 +108,12 @@ public class StatsTests
     }
 }
 
+/// <summary>The language is one setting for the whole app: a test that switches it runs alone, so the English labels
+/// other tests check aren't read in Russian halfway.</summary>
+[CollectionDefinition(nameof(LanguageSwitch), DisableParallelization = true)]
+public class LanguageSwitch;
+
+[Collection(nameof(LanguageSwitch))]
 public class LocTests
 {
     [Fact]

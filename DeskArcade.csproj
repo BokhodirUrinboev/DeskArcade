@@ -51,6 +51,8 @@
     <!-- Quiz Night's question packs, and Draw & Guess's words and the computer's pictures -->
     <EmbeddedResource Include="quiz\*.json" LogicalName="quiz/%(Filename)%(Extension)" WithCulture="false" />
     <EmbeddedResource Include="draw\*.json;draw\*.txt" LogicalName="draw/%(Filename)%(Extension)" WithCulture="false" />
+    <!-- Spot the Bug's snippets, one JSON file per batch (see Games/SpotBugDeck.cs) -->
+    <EmbeddedResource Include="spotbug\*.json" LogicalName="spotbug/%(Filename)%(Extension)" WithCulture="false" />
   </ItemGroup>
 
   <ItemGroup>

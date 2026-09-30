@@ -306,6 +306,7 @@ public sealed partial class OverlayWindow : Window, IGameHost
         // 1.8.6 · word and key games (Word Guess, Shortcut Trainer, Bit Flip)
 
         // 1.8.6 · Spot the Bug
+        _games.Add(new SpotBugGame(this));
 
         // 1.8.6 · arcade (Load Balancer, Pipeline)
         _games.Add(new LoadBalancerGame(this));
@@ -386,13 +387,14 @@ public sealed partial class OverlayWindow : Window, IGameHost
         {
             Settings.FirstRun = false;
             SaveSettings();
-            DispatcherTimer.RunOnce(() =>
-            {
-                Fx.Popup(new Vec2(Arena.Left + Arena.Width / 2, Arena.Top + Arena.Height * 0.2), L.T("Welcome to Desk Arcade"),
-                    Color.FromRgb(255, 209, 102), 34, 3, L.T("three things to know"));
-                if (!_demo && !Snapshotting) ShowTour(); // a demo or a snapshot shows the game, not the tour
-                Wake();
-            }, TimeSpan.FromSeconds(2.2));
+            if (!_demo && !Snapshotting) // a demo or a snapshot shows the game, not the welcome and the tour
+                DispatcherTimer.RunOnce(() =>
+                {
+                    Fx.Popup(new Vec2(Arena.Left + Arena.Width / 2, Arena.Top + Arena.Height * 0.2), L.T("Welcome to Desk Arcade"),
+                        Color.FromRgb(255, 209, 102), 34, 3, L.T("three things to know"));
+                    ShowTour();
+                    Wake();
+                }, TimeSpan.FromSeconds(2.2));
         }
 
         if (OperatingSystem.IsLinux())
@@ -941,6 +943,7 @@ public sealed partial class OverlayWindow : Window, IGameHost
         // 1.8.6 · word and key games
 
         // 1.8.6 · Spot the Bug
+        "spotbug" => L.T("click the line with the bug before the fuse burns down — the fix and the reason come after each one"),
 
         // 1.8.6 · arcade
         "pipeline" => L.T("click the grid, then click cells to lay pipe from the commit to the deploy before the build flows"),

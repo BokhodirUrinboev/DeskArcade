@@ -39,7 +39,6 @@ public sealed class LoadBalancerGame : MiniGame
     Vec2 _grab;
     bool _racing, _demo, _over;
     double _demoT;
-    int _bestWave;
 
     sealed class ServerSpot
     {
@@ -139,7 +138,6 @@ public sealed class LoadBalancerGame : MiniGame
         ClearElements();
         _rules = new LoadBalancerRules(Rng, FallSeconds, servers: 0);
         _over = false;
-        _bestWave = 0;
         PlaceStartServers();
         _racing = true;
         Host.RoundStarted();
