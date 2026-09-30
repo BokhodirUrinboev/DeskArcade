@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Avalonia;
 using Avalonia.Animation;
 using Avalonia.Controls;
@@ -9,11 +10,10 @@ using Avalonia.Input;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Threading;
+using DeskArcade.Dev;
 using DeskArcade.Engine;
 
 namespace DeskArcade;
-
-public enum ClaudeStatus { Unknown, Working, Done, Attention }
 
 /// <summary>A command run with "DeskArcade --while".</summary>
 public enum TaskStatus { None, Running, Passed, Failed }
@@ -32,7 +32,7 @@ public sealed class Hud : Border
     readonly Dictionary<string, Border> _tabs = new();
 
     // full board
-    readonly Grid _board = new() { RowDefinitions = new RowDefinitions("Auto,Auto,Auto,Auto,Auto,Auto,Auto") };
+    readonly Grid _board = new() { RowDefinitions = new RowDefinitions("Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto") };
     readonly TextBlock _score = Text(30, FontWeight.Black, "#FFFFFF");
     readonly TextBlock _title = Text(11, FontWeight.Bold, "#9AA4B2");
     readonly TextBlock _best = Text(12, FontWeight.SemiBold, "#FFD166");
@@ -40,9 +40,9 @@ public sealed class Hud : Border
     readonly Border _oppChip;
     readonly Ellipse _oppDot = new() { Width = 8, Height = 8 };
     readonly TextBlock _oppText = Text(11, FontWeight.SemiBold, "#FFFFFF");
-    readonly Border _chip;
-    readonly Ellipse _chipDot = new() { Width = 8, Height = 8 };
-    readonly TextBlock _chipText = Text(11, FontWeight.SemiBold, "#FFFFFF");
+    readonly StackPanel _agentPanel = new() { IsVisible = false }; // a line per coding agent session
+    readonly StackPanel _lanePanel = new() { IsVisible = false };  // status lanes and CI, and the reviews waiting
+    readonly List<DevChip> _agentChips = new(), _laneChips = new();
     readonly Border _taskChip;
     readonly Ellipse _taskDot = new() { Width = 8, Height = 8 };
     readonly TextBlock _taskText = Text(11, FontWeight.SemiBold, "#FFFFFF");
@@ -60,6 +60,7 @@ public sealed class Hud : Border
     readonly TextBlock _pillOppText = Text(11, FontWeight.SemiBold, "#FFFFFF");
     readonly Ellipse _pillDot = new() { Width = 8, Height = 8, IsVisible = false };
     readonly Ellipse _pillTaskDot = new() { Width = 8, Height = 8, IsVisible = false };
+    readonly Ellipse _pillLaneDot = new() { Width = 8, Height = 8, IsVisible = false };
     readonly Border _pillOffice;
     readonly Ellipse _pillOfficeDot = new() { Width = 7, Height = 7 };
     readonly TextBlock _pillOfficeText = Text(11, FontWeight.SemiBold, "#FFFFFF");
@@ -71,11 +72,13 @@ public sealed class Hud : Border
     readonly TranslateTransform _pos = new();
     readonly DispatcherTimer _collapseTimer = new() { Interval = TimeSpan.FromMilliseconds(650) };
 
-    ClaudeStatus _status;
     bool _blinkOn;
-    int _flashes;
-    DateTime? _claudeSince;
-    TimeSpan? _waited;
+    AgentSessions? _sessions;
+    StatusLanes? _lanes;
+    IReadOnlyList<string> _reviews = Array.Empty<string>();
+    DevLook? _agentLook, _laneLook;
+    string _flashKey = "";
+    int _devFlashes;
     TaskStatus _task;
     string _taskLabel = "";
     DateTime? _taskSince;
@@ -109,7 +112,8 @@ public sealed class Hud : Border
         RenderTransform = _pos;
         Opacity = IdleOpacity;
 
-        // --- full board: tabs / score + title + best / context line / opponent chip / claude chip / task chip
+        // --- full board: tabs / score + title + best / context line / opponent chip / agent sessions / task chip /
+        //     lanes, CI and reviews / at-work chip
         var tabs = new WrapPanel { Orientation = Orientation.Horizontal };
         foreach (var game in games)
         {
@@ -171,26 +175,28 @@ public sealed class Hud : Border
         Grid.SetRow(_oppChip, 3);
         _board.Children.Add(_oppChip);
 
-        _chip = Chip(_chipDot, _chipText);
-        Grid.SetRow(_chip, 4);
-        _board.Children.Add(_chip);
+        Grid.SetRow(_agentPanel, 4);
+        _board.Children.Add(_agentPanel);
 
         _taskText.TextTrimming = TextTrimming.CharacterEllipsis;
         _taskChip = Chip(_taskDot, _taskText);
         Grid.SetRow(_taskChip, 5);
         _board.Children.Add(_taskChip);
 
+        Grid.SetRow(_lanePanel, 6);
+        _board.Children.Add(_lanePanel);
+
         _officeText.TextTrimming = TextTrimming.CharacterEllipsis;
         _officeText.MaxWidth = ExpandedWidth - 50;
         _officeChip = Chip(_officeDot, _officeText);
-        Grid.SetRow(_officeChip, 6);
+        Grid.SetRow(_officeChip, 7);
         _board.Children.Add(_officeChip);
         _board.Transitions = new Transitions
         {
             new DoubleTransition { Property = OpacityProperty, Duration = TimeSpan.FromMilliseconds(140) },
         };
 
-        // --- compact pill: icon, score, best, opponent / turn, claude dot, task dot, menu
+        // --- compact pill: icon, score, best, opponent / turn, agents' dot, task dot, lanes' dot, at-work chip, menu
         _pillIcon.VerticalAlignment = VerticalAlignment.Center;
         _pillScore.Margin = new Thickness(6, 0, 0, 1);
         _pillScore.VerticalAlignment = VerticalAlignment.Center;
@@ -211,6 +217,8 @@ public sealed class Hud : Border
         _pillDot.VerticalAlignment = VerticalAlignment.Center;
         _pillTaskDot.Margin = new Thickness(6, 0, 0, 0);
         _pillTaskDot.VerticalAlignment = VerticalAlignment.Center;
+        _pillLaneDot.Margin = new Thickness(6, 0, 0, 0);
+        _pillLaneDot.VerticalAlignment = VerticalAlignment.Center;
         _pillOfficeDot.Margin = new Thickness(0, 0, 4, 0);
         _pillOfficeDot.VerticalAlignment = VerticalAlignment.Center;
         _pillOffice = new Border
@@ -239,12 +247,12 @@ public sealed class Hud : Border
         _pill.Children.Add(_pillOpp);
         _pill.Children.Add(_pillDot);
         _pill.Children.Add(_pillTaskDot);
+        _pill.Children.Add(_pillLaneDot);
         _pill.Children.Add(_pillOffice);
         _pill.Children.Add(_menuButton);
 
         Child = new Panel { Children = { _pill, _board } };
         ApplyState();
-        SetClaude(ClaudeStatus.Unknown);
         ThemeChanged();
 
         _collapseTimer.Tick += (_, _) =>
@@ -299,8 +307,6 @@ public sealed class Hud : Border
     /// <summary>True only while a press or drag is in progress: an open menu needs the mouse, not frames.</summary>
     public bool IsPressed => _pressed;
 
-    public ClaudeStatus Status => _status;
-
     public TaskStatus Task => _task;
 
     // ------------------------------------------------------------------ content
@@ -311,7 +317,7 @@ public sealed class Hud : Border
         MarkTab();
         _title.Text = L.T(title).ToUpperInvariant();
         foreach (var (key, tab) in _tabs) ToolTip.SetTip(tab, L.T(_games[key].Title));
-        UpdateClaudeText();
+        RenderDev();
         _shownOnce = false; // a new game's first score is not a change worth a bump
 
         _pillIcon.Children.Clear();
@@ -433,41 +439,191 @@ public sealed class Hud : Border
     /// <summary>Advances the scoreboard's own animations; true while one runs.</summary>
     public bool Update(double dt) => _anims.Update(dt);
 
-    /// <param name="since">When Claude started working (shows a running timer).</param>
-    /// <param name="waited">How long the finished task took (shown on "done").</param>
-    public void SetClaude(ClaudeStatus status, DateTime? since = null, TimeSpan? waited = null)
+    // ------------------------------------------------------------------ coding agents, status lanes, CI
+
+    /// <summary>One line of the agents' or the lanes' group: a chip with a dot and its text, and the step under it.</summary>
+    sealed class DevChip
     {
-        _status = status;
-        _claudeSince = since;
-        _waited = waited;
-        _flashes = status is ClaudeStatus.Done or ClaudeStatus.Attention && !Fx.ReducedMotion ? 8 : 0;
-        (string dot, string bg) = status switch
+        public readonly Ellipse Dot = new() { Width = 8, Height = 8 };
+        public readonly TextBlock Label = Text(11, FontWeight.SemiBold, "#FFFFFF");
+        public readonly TextBlock Step = Text(10, FontWeight.Normal, "#AEB6C2");
+        public readonly Border Chip;
+        public readonly StackPanel Host = new();
+        public DevLook? Look;
+        public string Key = "";
+
+        public DevChip()
         {
-            ClaudeStatus.Working => ("#FFB020", "#3A2E12"),
-            ClaudeStatus.Done => ("#3DDC84", "#113A24"),
-            ClaudeStatus.Attention => ("#FF5C5C", "#3F1616"),
-            _ => ("#888888", "#222222"),
-        };
-        _chip.IsVisible = _pillDot.IsVisible = status != ClaudeStatus.Unknown;
-        _chipDot.Fill = _pillDot.Fill = Art.Brush(Art.Safe(Color.Parse(dot)));
-        _chip.Background = Art.Brush(bg);
-        _chip.Opacity = _pillDot.Opacity = 1;
-        UpdateClaudeText();
+            Label.TextTrimming = TextTrimming.CharacterEllipsis;
+            Label.MaxWidth = ExpandedWidth - 50;
+            Chip = Hud.Chip(Dot, Label);
+            Chip.Margin = new Thickness(0, 4, 0, 0);
+            Chip.IsVisible = true;
+            Step.TextTrimming = TextTrimming.CharacterEllipsis;
+            Step.MaxWidth = ExpandedWidth - 44;
+            Step.Margin = new Thickness(20, 1, 0, 0);
+            Host.Children.Add(Chip);
+            Host.Children.Add(Step);
+        }
     }
 
-    void UpdateClaudeText()
+    /// <summary>The most agent lines the board shows; more fold into "+N more".</summary>
+    const int MaxAgentLines = 5;
+
+    /// <summary>
+    /// The coding agents' sessions (a line each, with the step under it), the status lanes and CI (a line each, or one
+    /// folded chip past three), and the reviews waiting for you. The pill has one dot for the agents and one for the
+    /// lanes, in the most urgent state, with every line in their tooltips. <paramref name="flashKey"/> (a session's key,
+    /// or "lane:" and a lane's name) flashes the line that just finished.
+    /// </summary>
+    public void SetDev(AgentSessions sessions, StatusLanes lanes, IReadOnlyList<string> reviews, string? flashKey = null)
     {
-        string text = _status switch
+        _sessions = sessions;
+        _lanes = lanes;
+        _reviews = reviews;
+        if (flashKey != null)
         {
-            ClaudeStatus.Working when _claudeSince is DateTime since => L.F("Claude working · {0}", FormatWait(DateTime.UtcNow - since)),
-            ClaudeStatus.Working => L.T("Claude working"),
-            ClaudeStatus.Done when _waited is TimeSpan w && w.TotalSeconds >= 5 => L.F("Claude done after {0}", FormatWait(w)),
-            ClaudeStatus.Done => L.T("Claude done"),
-            ClaudeStatus.Attention => L.T("Claude needs you"),
-            _ => "",
-        };
-        _chipText.Text = text;
-        ToolTip.SetTip(_pillDot, text);
+            _flashKey = flashKey;
+            _devFlashes = Fx.ReducedMotion ? 0 : 8;
+        }
+        RenderDev();
+    }
+
+    /// <summary>Redraws the agents' and lanes' lines (their timers, their colours after a colour-blind switch).</summary>
+    public void RenderDev()
+    {
+        if (_sessions == null || _lanes == null) return;
+        var now = DateTime.UtcNow;
+        RenderAgents(now);
+        RenderLanes(now);
+    }
+
+    void RenderAgents(DateTime now)
+    {
+        var all = _sessions!.All;
+        bool fold = all.Count > MaxAgentLines;
+        int lines = fold ? MaxAgentLines - 1 : all.Count;
+        EnsureChips(_agentChips, _agentPanel, lines + (fold ? 1 : 0));
+        var tip = new StringBuilder();
+        foreach (var s in all)
+        {
+            if (tip.Length > 0) tip.Append('\n');
+            tip.Append(_sessions.Line(s, now));
+            string step = AgentSessions.StepLine(s, now);
+            if (step.Length > 0) tip.Append("\n   ").Append(step);
+        }
+        for (int i = 0; i < lines; i++)
+        {
+            var s = all[i];
+            string line = _sessions.Line(s, now);
+            Fill(_agentChips[i], line, AgentSessions.StepLine(s, now), s.Look(now), s.Key, line);
+        }
+        if (fold)
+        {
+            var rest = all.Skip(lines).ToList();
+            var look = rest.Any(s => s.Look(now) == DevLook.Attention) ? DevLook.Attention : rest.Any(s => s.Look(now) == DevLook.Working) ? DevLook.Working : DevLook.Done;
+            Fill(_agentChips[lines], L.F("+{0} more", rest.Count), "", look, "", string.Join("\n", rest.Select(s => _sessions.Line(s, now))));
+        }
+        _agentPanel.IsVisible = all.Count > 0;
+        _agentLook = _sessions.Urgent(now);
+        _pillDot.IsVisible = _agentLook != null;
+        if (_agentLook is DevLook urgent) _pillDot.Fill = Art.Brush(Art.Safe(Color.Parse(Colours(urgent).Dot)));
+        ToolTip.SetTip(_pillDot, tip.Length > 0 ? tip.ToString() : null);
+    }
+
+    void RenderLanes(DateTime now)
+    {
+        var lanes = _lanes!;
+        int n = lanes.Folded ? 1 : lanes.Count;
+        bool reviews = _reviews.Count > 0;
+        EnsureChips(_laneChips, _lanePanel, n + (reviews ? 1 : 0));
+        if (lanes.Folded) Fill(_laneChips[0], lanes.FoldedLine(now), "", lanes.Urgent(now), "lanes", lanes.AllLines(now));
+        else
+            for (int i = 0; i < n; i++)
+            {
+                var lane = lanes.All[i];
+                string line = StatusLanes.Line(lane, now);
+                Fill(_laneChips[i], line, "", lane.Look(now), "lane:" + lane.Name, line);
+            }
+        string reviewText = _reviews.Count == 1 ? L.T("1 review") : L.F("{0} reviews", _reviews.Count);
+        string reviewTip = reviewText + ":\n" + string.Join("\n", _reviews);
+        if (reviews) Fill(_laneChips[n], reviewText, "", null, "reviews", reviewTip);
+        _lanePanel.IsVisible = lanes.Count > 0 || reviews;
+
+        _laneLook = lanes.Urgent(now);
+        _pillLaneDot.IsVisible = _laneLook != null || reviews;
+        _pillLaneDot.Fill = Art.Brush(Art.Safe(Color.Parse(_laneLook is DevLook look ? Colours(look).Dot : ReviewDot)));
+        string tip = lanes.AllLines(now);
+        if (reviews) tip = tip.Length > 0 ? tip + "\n" + reviewText : reviewText;
+        ToolTip.SetTip(_pillLaneDot, tip.Length > 0 ? tip : null);
+    }
+
+    static void EnsureChips(List<DevChip> chips, StackPanel panel, int count)
+    {
+        while (chips.Count < count)
+        {
+            var chip = new DevChip();
+            chips.Add(chip);
+            panel.Children.Add(chip.Host);
+        }
+        for (int i = 0; i < chips.Count; i++) chips[i].Host.IsVisible = i < count;
+    }
+
+    /// <param name="look">The state's colours; null for the reviews' violet.</param>
+    static void Fill(DevChip chip, string text, string step, DevLook? look, string key, string tip)
+    {
+        if (chip.Label.Text != text) chip.Label.Text = text;
+        if (chip.Step.Text != step) chip.Step.Text = step;
+        chip.Step.IsVisible = step.Length > 0;
+        chip.Key = key;
+        if (chip.Look != look || chip.Dot.Fill == null)
+        {
+            chip.Look = look;
+            var (dot, back) = look is DevLook l ? Colours(l) : (ReviewDot, "#2A2140");
+            chip.Dot.Fill = Art.Brush(Art.Safe(Color.Parse(dot)));
+            chip.Chip.Background = Art.Brush(back);
+            chip.Label.Foreground = Art.Brush(look == DevLook.Stale ? "#B4B9C2" : "#FFFFFF");
+        }
+        ToolTip.SetTip(chip.Chip, tip);
+    }
+
+    const string ReviewDot = "#B388FF";
+
+    /// <summary>The dot and background of a look: amber working, green done or passed, red needing you or failed, blue running, grey quiet.</summary>
+    static (string Dot, string Back) Colours(DevLook look) => look switch
+    {
+        DevLook.Working => ("#FFB020", "#3A2E12"),
+        DevLook.Done or DevLook.Passed => ("#3DDC84", "#113A24"),
+        DevLook.Attention or DevLook.Failed => ("#FF5C5C", "#3F1616"),
+        DevLook.Running => ("#4DA3FF", "#132A45"),
+        _ => ("#8A8F98", "#26282E"),
+    };
+
+    /// <summary>After a colour-blind switch: the dots take their new colours.</summary>
+    public void RecolourDev()
+    {
+        foreach (var chip in _agentChips.Concat(_laneChips)) chip.Dot.Fill = null;
+        RenderDev();
+    }
+
+    /// <summary>The live parts of the agents' and lanes' lines, on the slow blink: timers, pulsing dots, a finished line's flash.</summary>
+    void BlinkDev()
+    {
+        if (_sessions == null || _lanes == null) return;
+        var now = DateTime.UtcNow;
+        if (_sessions.WorkingCount(now) > 0 || _lanes.RunningCount(now) > 0 || _devFlashes > 0) RenderDev();
+        bool dim = !_blinkOn && !Fx.ReducedMotion;
+        bool flash = _devFlashes > 0 && !_blinkOn;
+        foreach (var chip in _agentChips.Concat(_laneChips))
+        {
+            if (!chip.Host.IsVisible) continue;
+            chip.Dot.Opacity = dim && chip.Look is DevLook.Working or DevLook.Running ? 0.35 : 1;
+            chip.Chip.Opacity = flash && chip.Key.Length > 0 && chip.Key == _flashKey ? 0.3 : 1;
+        }
+        bool laneFlash = _flashKey.StartsWith("lane:", StringComparison.Ordinal);
+        _pillDot.Opacity = flash && !laneFlash || dim && _agentLook == DevLook.Working ? 0.35 : 1;
+        _pillLaneDot.Opacity = flash && laneFlash || dim && _laneLook == DevLook.Running ? 0.35 : 1;
+        if (_devFlashes > 0) _devFlashes--;
     }
 
     /// <param name="label">The command, as the scoreboard shows it.</param>
@@ -542,20 +698,7 @@ public sealed class Hud : Border
     public void Blink()
     {
         _blinkOn = !_blinkOn;
-        if (_status == ClaudeStatus.Working)
-        {
-            _chipDot.Opacity = _pillDot.Opacity = _blinkOn ? 1 : 0.35;
-            if (_claudeSince != null) UpdateClaudeText();
-        }
-        else if (_flashes > 0)
-        {
-            _flashes--;
-            _chip.Opacity = _pillDot.Opacity = _blinkOn ? 1 : 0.3;
-        }
-        else
-        {
-            _chipDot.Opacity = _chip.Opacity = _pillDot.Opacity = 1;
-        }
+        BlinkDev();
 
         if (_task == TaskStatus.Running)
         {
