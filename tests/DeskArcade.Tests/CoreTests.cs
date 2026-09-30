@@ -151,8 +151,8 @@ public class TranslationCoverageTests
         {
             if (Path.GetFileName(file).StartsWith("Strings", StringComparison.Ordinal)) continue;
             string text = File.ReadAllText(file);
-            foreach (Match m in Call.Matches(text)) yield return m.Groups[1].Value;
-            foreach (Match m in Title.Matches(text)) yield return m.Groups[1].Value;
+            foreach (Match m in Call.Matches(text)) yield return Literal(m.Groups[1].Value);
+            foreach (Match m in Title.Matches(text)) yield return Literal(m.Groups[1].Value);
         }
         foreach (var a in Achievements.All)
         {
@@ -162,6 +162,9 @@ public class TranslationCoverageTests
         foreach (var c in Daily.Pool) yield return c.Text;
         foreach (var s in DeskArcade.Games.BingoCard.Desk) yield return s.Text; // shown through L.F(square.Text, amount)
     }
+
+    /// <summary>A C# string literal's text as the program sees it: \" and \\ undone.</summary>
+    static string Literal(string source) => Regex.Replace(source, @"\\(.)", m => m.Groups[1].Value);
 
     // strings made only of numbers, placeholders and symbols ("+{0}") need no translation
     static bool NeedsTranslation(string key) => Regex.IsMatch(Regex.Replace(key, @"\{\d+\}", ""), @"\p{L}");
