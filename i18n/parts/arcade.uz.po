@@ -197,3 +197,114 @@ msgstr "Birorta so'rovni yo'qotmasdan 5 ta to'lqinni o'ting"
 #, c-sharp-format
 msgid "Serve {0} requests in Load Balancer"
 msgstr "Yuk taqsimlagichda {0} ta so'rovni bajaring"
+
+msgid "Pipeline"
+msgstr "Konveyer"
+
+msgid "Click the grid to start · lay pipe from the commit to the deploy"
+msgstr "Boshlash uchun maydonni bosing · kommitdan deploygacha quvur yotqizing"
+
+#, c-sharp-format
+msgid "Level {0} · the build flows in {1} s · click a cell to lay the next piece"
+msgstr "{0}-daraja · yig'ilish {1} s dan keyin oqadi · keyingi quvurni qo'yish uchun katakni bosing"
+
+#, c-sharp-format
+msgid "Level {0} · flowing · keep laying ahead of it"
+msgstr "{0}-daraja · oqmoqda · undan oldinda quvur yotqizishda davom eting"
+
+#, c-sharp-format
+msgid "Pipeline · deployed {0} levels, {1} points 🚰"
+msgstr "Konveyer · {0} ta daraja deploy qilindi, {1} ochko 🚰"
+
+#, c-sharp-format
+msgid "the build flows in {0} s"
+msgstr "yig'ilish {0} s dan keyin oqadi"
+
+#, c-sharp-format
+msgid "replaced · −{0} s"
+msgstr "almashtirildi · −{0} s"
+
+msgid "THE BUILD IS FLOWING"
+msgstr "YIG'ILISH OQMOQDA"
+
+#, c-sharp-format
+msgid "tests pass +{0}"
+msgstr "testlar o'tdi +{0}"
+
+#, c-sharp-format
+msgid "review approved +{0}"
+msgstr "ko'rib chiqish ma'qullandi +{0}"
+
+msgid "DEPLOYED!"
+msgstr "DEPLOY QILINDI!"
+
+#, c-sharp-format
+msgid "+{0} · level {1} next"
+msgstr "+{0} · keyingisi {1}-daraja"
+
+msgid "THE BUILD LEAKED"
+msgstr "YIG'ILISH OQIB KETDI"
+
+#, c-sharp-format
+msgid "{0} levels deployed · {1} points · click the grid for another run"
+msgstr "{0} ta daraja deploy qilindi · {1} ochko · yangi o'yin uchun maydonni bosing"
+
+msgid "NEXT"
+msgstr "KEYINGI"
+
+msgid "Deploy now ▶"
+msgstr "Hozir deploy ▶"
+
+msgid "PIPELINE · click to start"
+msgstr "KONVEYER · boshlash uchun bosing"
+
+#, c-sharp-format
+msgid "LEVEL {0} · flows in {1}"
+msgstr "{0}-DARAJA · {1} dan keyin oqadi"
+
+#, c-sharp-format
+msgid "LEVEL {0} · flowing"
+msgstr "{0}-DARAJA · oqmoqda"
+
+msgid "DEPLOYED"
+msgstr "DEPLOY QILINDI"
+
+msgid "LEAKED"
+msgstr "OQIB KETDI"
+
+msgid "commit"
+msgstr "kommit"
+
+msgid "deploy"
+msgstr "deploy"
+
+msgid "test"
+msgstr "test"
+
+msgid "review"
+msgstr "ko'rik"
+
+msgid "click the grid, then click cells to lay pipe from the commit to the deploy before the build flows"
+msgstr "maydonni, keyin kataklarni bosing — yig'ilish oqmasdan kommitdan deploygacha quvur yotqizing"
+
+msgid "Continuous delivery"
+msgstr "Uzluksiz yetkazib berish"
+
+msgid "Deploy 25 Pipeline levels"
+msgstr "Konveyerda 25 ta darajani deploy qiling"
+
+msgid "Release train"
+msgstr "Relizlar poyezdi"
+
+msgid "Reach level 10 in Pipeline"
+msgstr "Konveyerda 10-darajaga yeting"
+
+msgid "Plumber"
+msgstr "Chilangar"
+
+msgid "Lay 500 pieces of pipe"
+msgstr "500 ta quvur yotqizing"
+
+#, c-sharp-format
+msgid "Deploy {0} levels in Pipeline"
+msgstr "Konveyerda {0} ta darajani deploy qiling"

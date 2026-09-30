@@ -197,3 +197,114 @@ msgstr "Пройдите 5 волн, не потеряв ни одного за�
 #, c-sharp-format
 msgid "Serve {0} requests in Load Balancer"
 msgstr "Обслужите {0} запросов в Балансировщике"
+
+msgid "Pipeline"
+msgstr "Конвейер"
+
+msgid "Click the grid to start · lay pipe from the commit to the deploy"
+msgstr "Нажмите на поле, чтобы начать · проложите трубы от коммита до деплоя"
+
+#, c-sharp-format
+msgid "Level {0} · the build flows in {1} s · click a cell to lay the next piece"
+msgstr "Уровень {0} · сборка потечёт через {1} с · нажмите на клетку, чтобы положить следующую трубу"
+
+#, c-sharp-format
+msgid "Level {0} · flowing · keep laying ahead of it"
+msgstr "Уровень {0} · сборка течёт · прокладывайте трубы впереди неё"
+
+#, c-sharp-format
+msgid "Pipeline · deployed {0} levels, {1} points 🚰"
+msgstr "Конвейер · выпущено уровней: {0}, очков: {1} 🚰"
+
+#, c-sharp-format
+msgid "the build flows in {0} s"
+msgstr "сборка потечёт через {0} с"
+
+#, c-sharp-format
+msgid "replaced · −{0} s"
+msgstr "замена · −{0} с"
+
+msgid "THE BUILD IS FLOWING"
+msgstr "СБОРКА ПОТЕКЛА"
+
+#, c-sharp-format
+msgid "tests pass +{0}"
+msgstr "тесты прошли +{0}"
+
+#, c-sharp-format
+msgid "review approved +{0}"
+msgstr "ревью одобрено +{0}"
+
+msgid "DEPLOYED!"
+msgstr "ВЫПУЩЕНО!"
+
+#, c-sharp-format
+msgid "+{0} · level {1} next"
+msgstr "+{0} · дальше уровень {1}"
+
+msgid "THE BUILD LEAKED"
+msgstr "СБОРКА ПРОТЕКЛА"
+
+#, c-sharp-format
+msgid "{0} levels deployed · {1} points · click the grid for another run"
+msgstr "выпущено уровней: {0} · очков: {1} · нажмите на поле для нового захода"
+
+msgid "NEXT"
+msgstr "ДАЛЕЕ"
+
+msgid "Deploy now ▶"
+msgstr "Выпустить сейчас ▶"
+
+msgid "PIPELINE · click to start"
+msgstr "КОНВЕЙЕР · нажмите, чтобы начать"
+
+#, c-sharp-format
+msgid "LEVEL {0} · flows in {1}"
+msgstr "УРОВЕНЬ {0} · течёт через {1}"
+
+#, c-sharp-format
+msgid "LEVEL {0} · flowing"
+msgstr "УРОВЕНЬ {0} · течёт"
+
+msgid "DEPLOYED"
+msgstr "ВЫПУЩЕНО"
+
+msgid "LEAKED"
+msgstr "ПРОТЕКЛО"
+
+msgid "commit"
+msgstr "коммит"
+
+msgid "deploy"
+msgstr "деплой"
+
+msgid "test"
+msgstr "тест"
+
+msgid "review"
+msgstr "ревью"
+
+msgid "click the grid, then click cells to lay pipe from the commit to the deploy before the build flows"
+msgstr "нажмите на поле, затем на клетки — проложите трубы от коммита до деплоя, пока сборка не потекла"
+
+msgid "Continuous delivery"
+msgstr "Непрерывная поставка"
+
+msgid "Deploy 25 Pipeline levels"
+msgstr "Выпустите 25 уровней Конвейера"
+
+msgid "Release train"
+msgstr "Поезд релизов"
+
+msgid "Reach level 10 in Pipeline"
+msgstr "Дойдите до 10-го уровня Конвейера"
+
+msgid "Plumber"
+msgstr "Сантехник"
+
+msgid "Lay 500 pieces of pipe"
+msgstr "Проложите 500 труб"
+
+#, c-sharp-format
+msgid "Deploy {0} levels in Pipeline"
+msgstr "Выпустите {0} уровня в Конвейере"

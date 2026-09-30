@@ -42,6 +42,9 @@ public static class Achievements
         new("spider-win", "solitaire", "Eight legs", "Solve a game of Spider", "solitaire.spider", 1),
         new("servers-500", "servers", "Uptime", "Serve 500 requests in Load Balancer", "servers.served", 500),
         new("servers-wave", "servers", "Black Friday", "Reach wave 8 in Load Balancer", "servers.wave", 8),
+        new("pipeline-deploys", "pipeline", "Continuous delivery", "Deploy 25 Pipeline levels", "pipeline.deploys", 25),
+        new("pipeline-level", "pipeline", "Release train", "Reach level 10 in Pipeline", "pipeline.level", 10),
+        new("pipeline-pieces", "pipeline", "Plumber", "Lay 500 pieces of pipe", "pipeline.pieces", 500),
         new("servers-clean", "servers", "Five nines", "Clear 5 waves without losing a request", "servers.clean", 5),
 
 
