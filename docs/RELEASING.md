@@ -306,24 +306,30 @@ games, how long to record and how to crop.
 
 ## The VS Code extension
 
-`integrations/vscode/` is the extension (`ImperiumGames.desk-arcade`). The release workflow's `vscode` job runs its unit
-tests, sets its version to the release's (`npm version`) and packages
-`desk-arcade-<version>.vsix`, which goes into the GitHub Release with the other files. After the release, the
-`vscode-publish` job publishes that `.vsix` to each registry whose token is set, and skips the others with a note in
-the log. CI runs the unit tests on every push, and the integration tests in a real VS Code under `xvfb`.
+`integrations/vscode/` is the extension (`BokhodirUrinboev.desk-arcade`), published under the maintainer's own name.
+The release workflow's `vscode` job runs its unit tests, sets its version to the release's (`npm version`) and packages
+`desk-arcade-<version>.vsix`, which goes into the GitHub Release with the other files. After the release,
+[`vscode.yml`](../.github/workflows/vscode.yml) builds it again from the tag and publishes it to each registry whose
+token is set, skipping the others with a warning. CI runs the unit tests on every push, and the integration tests in a
+real VS Code under `xvfb`.
+
+To publish a version that is already released (after adding a token, say), run **Actions → VS Code extension → Run
+workflow** from `main` with that version: it builds the extension from `main`, publishes it and replaces the `.vsix`
+on the release.
 
 **One-time setup**, both free:
 
-1. **Visual Studio Marketplace.** Sign in at https://marketplace.visualstudio.com/manage with a Microsoft account and
-   create the publisher `ImperiumGames` (the id in `package.json`). In Azure DevOps (https://dev.azure.com, the same
-   account), User settings → Personal access tokens → New token: organization **All accessible organizations**, scope
-   **Marketplace → Manage**. Put it in the `VSCE_PAT` secret.
+1. **Visual Studio Marketplace.** Sign in at https://marketplace.visualstudio.com/manage/createpublisher with a
+   Microsoft account and create the publisher with the ID `BokhodirUrinboev` (the `publisher` in `package.json`; it
+   can't be changed later) and the name Bokhodir Urinboev. In Azure DevOps (https://dev.azure.com, the same account;
+   create a free organization if asked), User settings → Personal access tokens → New Token: organization **All
+   accessible organizations**, scope **Marketplace → Manage**. Put it in the `VSCE_PAT` secret.
 2. **Open VSX** (VSCodium, Cursor and the other editors that don't use Microsoft's marketplace). Sign in at
-   https://open-vsx.org with GitHub, sign the publisher agreement in the profile, create a token under Access Tokens,
-   and claim the namespace once: `npx ovsx create-namespace ImperiumGames -p <token>`. Put the token in the `OVSX_PAT`
-   secret.
+   https://open-vsx.org with GitHub, sign the publisher agreement in Settings → Profile (with a free Eclipse account),
+   create the namespace `BokhodirUrinboev` under Settings → Namespaces, and a token under Settings → Access Tokens.
+   Put the token in the `OVSX_PAT` secret.
 
-The next tag then publishes the extension to both. To try a build by hand:
+To try a build by hand:
 
 ```bash
 cd integrations/vscode

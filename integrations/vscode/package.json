@@ -3,7 +3,10 @@
   "displayName": "Desk Arcade",
   "description": "%description%",
   "version": "1.8.6",
-  "publisher": "ImperiumGames",
+  "publisher": "BokhodirUrinboev",
+  "author": {
+    "name": "Bokhodir Urinboev"
+  },
   "license": "MIT",
   "icon": "images/icon.png",
   "homepage": "https://github.com/BokhodirUrinboev/DeskArcade#vs-code-extension",

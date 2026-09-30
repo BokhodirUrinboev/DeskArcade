@@ -1,0 +1,85 @@
+# Publishes the VS Code extension (integrations/vscode) to the Visual Studio Marketplace and Open VSX.
+#
+# release.yml runs this after it publishes a release. Run it by hand (Actions → VS Code extension → Run workflow,
+# from main) to publish a version that is already released, for example after adding a token: it builds the
+# extension from the branch it runs on, stamps the version, publishes it, and replaces the .vsix on that release.
+# Each registry is skipped until its token exists as a repository secret: VSCE_PAT (an Azure DevOps token for the
+# BokhodirUrinboev publisher on the Visual Studio Marketplace) and OVSX_PAT (an Open VSX token). Both are free;
+# docs/RELEASING.md says how to get them.
+name: VS Code extension
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        type: string
+        required: true
+    secrets:
+      VSCE_PAT:
+        required: false
+      OVSX_PAT:
+        required: false
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Released version to publish (for example 1.8.6). Its GitHub release must exist.'
+        required: true
+
+permissions:
+  contents: read
+
+env:
+  # Passed through the environment, never pasted into a script, so input can't inject shell code.
+  VERSION: ${{ inputs.version }}
+
+jobs:
+  publish:
+    name: Marketplace and Open VSX
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write # replacing the .vsix on the release, when run by hand
+    defaults:
+      run:
+        working-directory: integrations/vscode
+    steps:
+      - name: Check for tokens
+        id: tokens
+        shell: bash
+        working-directory: .
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: |
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then echo "::error::Not a version: $VERSION"; exit 1; fi
+          if [ -n "$VSCE_PAT" ]; then echo "marketplace=true" >> "$GITHUB_OUTPUT"; else echo "::warning::VSCE_PAT is not set: skipping the Visual Studio Marketplace."; fi
+          if [ -n "$OVSX_PAT" ]; then echo "openvsx=true" >> "$GITHUB_OUTPUT"; else echo "::warning::OVSX_PAT is not set: skipping Open VSX."; fi
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: integrations/vscode/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Unit tests
+        run: npm test
+      # The extension's version follows Desk Arcade's, so each release is a new version on the Marketplace too.
+      - name: Package
+        run: |
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          npx vsce package --out "desk-arcade-$VERSION.vsix"
+      - name: Replace the .vsix on the release
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "v$VERSION" "desk-arcade-$VERSION.vsix" --clobber --repo "$GITHUB_REPOSITORY"
+      - name: Publish to the Visual Studio Marketplace
+        if: steps.tokens.outputs.marketplace == 'true'
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: npx vsce publish --packagePath "desk-arcade-$VERSION.vsix"
+      - name: Publish to Open VSX
+        if: steps.tokens.outputs.openvsx == 'true'
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: npx --yes ovsx@1 publish "desk-arcade-$VERSION.vsix"
