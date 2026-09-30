@@ -53,6 +53,8 @@
     <EmbeddedResource Include="draw\*.json;draw\*.txt" LogicalName="draw/%(Filename)%(Extension)" WithCulture="false" />
     <!-- Spot the Bug's snippets, one JSON file per batch (see Games/SpotBugDeck.cs) -->
     <EmbeddedResource Include="spotbug\*.json" LogicalName="spotbug/%(Filename)%(Extension)" WithCulture="false" />
+    <!-- Word Guess: the answer and allowed-guess lists of each language (see Games/WordGuessRules.cs) -->
+    <EmbeddedResource Include="words\*.txt" LogicalName="words/%(Filename)%(Extension)" WithCulture="false" />
   </ItemGroup>
 
   <ItemGroup>

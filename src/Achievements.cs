@@ -56,6 +56,9 @@ public static class Achievements
         new("hearts-clean", "hearts", "Clean hands", "Take no points in 25 hands", "hearts.clean", 25),
 
         // 1.8.6 · word and key games
+        new("words-25", "words", "Wordsmith", "Solve 25 words in Word Guess", "words.won", 25),
+        new("words-two", "words", "Lucky guess", "Solve a word in two guesses", "words.two", 1),
+        new("words-streak", "words", "Every morning", "Solve the daily word 7 days in a row", "words.streak", 7),
 
         // 1.8.6 · Spot the Bug
         new("spotbug-100", "spotbug", "Bug hunter", "Find 100 bugs in Spot the Bug", "spotbug.found", 100),

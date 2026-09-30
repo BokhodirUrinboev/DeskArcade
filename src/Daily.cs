@@ -74,6 +74,7 @@ public sealed class Daily
         new("hearts", "hearts.hands", 4, "Play {0} hands of Hearts"),
 
         // 1.8.6 · word and key games
+        new("words", "words.won", 2, "Solve {0} words in Word Guess"),
 
         // 1.8.6 · Spot the Bug
         new("spotbug", "spotbug.found", 8, "Find {0} bugs in Spot the Bug"),

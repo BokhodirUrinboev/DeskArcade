@@ -76,6 +76,8 @@ public sealed class Settings
     /// </summary>
     [JsonPropertyName("BoardLevels")]
     public Dictionary<string, int> Levels { get; set; } = new();
+    /// <summary>Small bits of text a game keeps between starts, by key (today's Word Guess guesses, say).</summary>
+    public Dictionary<string, string> GameNotes { get; set; } = new();
     /// <summary>Race the computer in round-based games when nobody is on the LAN: a computer rival plays a round alongside.</summary>
     public bool CpuRival { get; set; } = true;
     /// <summary>Snow, leaves, petals and the like drifting over the desktop while a game moves (tray → Theme → Theme decorations).</summary>

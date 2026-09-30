@@ -304,6 +304,7 @@ public sealed partial class OverlayWindow : Window, IGameHost
         _games.Add(hearts);
 
         // 1.8.6 · word and key games (Word Guess, Shortcut Trainer, Bit Flip)
+        _games.Add(new WordGuessGame(this));
 
         // 1.8.6 · Spot the Bug
         _games.Add(new SpotBugGame(this));
@@ -941,6 +942,7 @@ public sealed partial class OverlayWindow : Window, IGameHost
         "hearts" => L.T("pass three cards, then follow suit — duck the hearts and the queen of spades"),
 
         // 1.8.6 · word and key games
+        "words" => L.T("type a five-letter word and press Enter — green is the right place, yellow is elsewhere in the word"),
 
         // 1.8.6 · Spot the Bug
         "spotbug" => L.T("click the line with the bug before the fuse burns down — the fix and the reason come after each one"),
