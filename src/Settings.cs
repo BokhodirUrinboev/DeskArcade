@@ -144,6 +144,14 @@ public sealed class Settings
     /// <summary>The sticky notes on the desktop.</summary>
     public List<StickyNote> Notes { get; set; } = new();
 
+    // for programmers (see Dev/)
+
+    /// <summary>
+    /// Git repository folders the player added (tray → Coding agents &amp; CI → Add a repo folder…): CI and pull
+    /// requests are followed for them, and the standup notes and "git before you go" read them. Empty is off.
+    /// </summary>
+    public List<string> Repos { get; set; } = new();
+
     // daily challenge (see Daily)
     public string? DailyDate { get; set; }
     public long DailyBase { get; set; }

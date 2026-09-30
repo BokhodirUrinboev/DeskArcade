@@ -66,8 +66,8 @@ public sealed class RoomWindow : Window
 
         _status = Text("", 12, "#AAB3C0");
         _code = Text("", 40, "#FFD166", FontWeight.Black);
-        for (int n = 2; n <= RoomLink.MaxSeats; n++) _seats.Items.Add(L.F("{0} players", n));
-        _seats.SelectedIndex = RoomLink.MaxSeats - 2;
+        for (int n = game.MinPlayers; n <= game.MaxPlayers; n++) _seats.Items.Add(L.F("{0} players", n));
+        _seats.SelectedIndex = Math.Clamp(Math.Min(game.MaxPlayers, RoomLink.MaxSeats) - game.MinPlayers, 0, _seats.Items.Count - 1);
 
         var create = new Button { Content = L.T("Create a room") };
         create.Click += (_, _) =>
@@ -77,7 +77,7 @@ public sealed class RoomWindow : Window
         };
         _start.Click += (_, _) =>
         {
-            _game.StartRoom(_seats.SelectedIndex + 2);
+            _game.StartRoom(_seats.SelectedIndex + _game.MinPlayers);
             _overlay.SwitchGame(_game.Id);
             Close();
         };

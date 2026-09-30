@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Avalonia.Controls;
 using DeskArcade.Engine;
 using DeskArcade.Platform;
@@ -66,6 +67,11 @@ public static class QuickMenu
         lan.Items.Add(Item(L.T("Find games / join by address…"), w.OpenLobby));
         lan.Items.Add(Item(L.T("Durak with co-workers…"), w.OpenDurakRooms));
         lan.Items.Add(Item(L.T("Last Card with co-workers…"), w.OpenLastCardRooms));
+        foreach (var room in w.Games.OfType<Games.IRoomGame>().Where(g => g.Id is not ("durak" or "lastcard")))
+        {
+            string id = room.Id;
+            lan.Items.Add(Item(L.F("{0} with co-workers…", L.T(room.Title)), () => w.OpenRooms(id)));
+        }
         if (w.PetMail.CanSend)
         {
             var mail = Sub(w.PetMail.MenuHeader);

@@ -75,6 +75,10 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public Settings Settings { get; } = Settings.Load();
     public Stats Stats { get; } = Stats.Load();
+    /// <summary>Every wait of the last months (commands, agents, CI, lanes, downloads), for the wait report.</summary>
+    public Dev.WaitLog Waits { get; } = Dev.WaitLog.Load();
+    /// <summary>The record against each co-worker, and the month's ladder rating.</summary>
+    public Rivalries Rivals { get; } = Rivalries.Load();
     public Sound Sound { get; }
     public Fx Fx { get; } = new();
     public Platforms Platforms { get; } = new();
@@ -197,6 +201,8 @@ public sealed class OverlayWindow : Window, IGameHost
         _statsTimer.Tick += (_, _) =>
         {
             Stats.Save();
+            Waits.Save();
+            Rivals.Save();
             if (Themes.Apply(Settings.Theme, DateTime.Today)) OnThemeChanged(); // "seasonal" at the turn of a month
         };
         _root.PointerPressed += OnPointerPressed;
@@ -280,6 +286,16 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new DominoGame(this));
         _games.Add(new JengaGame(this));
         _games.Add(new BridgeGame(this));
+        // 1.8.6 · party games (Quiz Night, Draw & Guess)
+
+        // 1.8.6 · card games (Poker, Hearts)
+
+        // 1.8.6 · word and key games (Word Guess, Shortcut Trainer, Bit Flip)
+
+        // 1.8.6 · Spot the Bug
+
+        // 1.8.6 · arcade (Load Balancer, Pipeline)
+
         _games.Add(new PetGame(this));
         StartPetCompany();
 
@@ -745,6 +761,16 @@ public sealed class OverlayWindow : Window, IGameHost
         "dominoes" => L.T("click a tile that fits an end of the line on the taskbar — nothing fits? draw from the boneyard"),
         "jenga" => L.T("drag a block out of the tower slowly, then lay it on top — don't let the weight lean past what is left"),
         "bridge" => L.T("drag planks onto the rope before the interns reach the gap — and replace the cracked ones"),
+        // 1.8.6 · party games
+
+        // 1.8.6 · card games
+
+        // 1.8.6 · word and key games
+
+        // 1.8.6 · Spot the Bug
+
+        // 1.8.6 · arcade
+
         _ => "",
     };
 
@@ -1071,7 +1097,7 @@ public sealed class OverlayWindow : Window, IGameHost
             case "solo": game.StartSolo(Math.Clamp(n, 1, 3)); break;
             case "host": game.HostRoom(arg.Length > 0 ? Net.RoomLink.CleanCode(arg) : null); break;
             case "join": game.JoinRoom(arg, null); break;
-            case "start": game.StartRoom(Math.Clamp(n, 2, Net.RoomLink.MaxSeats)); break;
+            case "start": game.StartRoom(Math.Clamp(n, game.MinPlayers, game.MaxPlayers)); break;
             case "leave": game.LeaveRoom(); break;
             default: return;
         }
@@ -1102,6 +1128,18 @@ public sealed class OverlayWindow : Window, IGameHost
     public void OpenLastCardRooms()
     {
         if (_games.OfType<LastCardGame>().FirstOrDefault() is { } game) RoomWindow.ShowFor(this, game);
+    }
+
+    /// <summary>The setup window of the room game with this id ("poker", "quiz"...).</summary>
+    public void OpenRooms(string id)
+    {
+        if (_games.OfType<IRoomGame>().FirstOrDefault(g => g.Id == id) is { } game) RoomWindow.ShowFor(this, game);
+    }
+
+    public void RecordResult(string gameId, string opponent, int outcome)
+    {
+        if (_demo || string.IsNullOrWhiteSpace(opponent)) return; // a demo's "co-worker" is another demo
+        Rivals.Record(gameId, opponent, outcome);
     }
 
     public void OpenShortcuts() => ShortcutsWindow.ShowFor(this);
@@ -1803,6 +1841,8 @@ public sealed class OverlayWindow : Window, IGameHost
         _boardTimer.Stop();
         Office.Dispose();
         SaveSettings();
+        Waits.Save();
+        Rivals.Save();
         _cts.Cancel();
         _loopOn = false;
         _platformTimer.Stop();

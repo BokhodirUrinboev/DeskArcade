@@ -25,6 +25,21 @@ public static class Achievements
         new("work-notes", "work", "Note to self", "Tick off 10 sticky notes", "work.notes", 10),
         new("work-timers", "work", "Tea's ready", "Let 10 timers ring", "work.timers", 10),
 
+        // 1.8.6 · coding agents and CI
+
+        // 1.8.6 · the programmer's day
+
+        // 1.8.6 · party games
+
+        // 1.8.6 · card games
+
+        // 1.8.6 · word and key games
+
+        // 1.8.6 · Spot the Bug
+
+        // 1.8.6 · arcade
+
+
         new("hoops-100", "hoops", "Hundred baskets", "Score 100 baskets", "hoops.baskets", 100),
         new("hoops-swish", "hoops", "Nothing but net", "Score 25 swishes", "hoops.swishes", 25),
         new("hoops-streak", "hoops", "Unstoppable", "Make 10 baskets in a row", "hoops.streak", 10),

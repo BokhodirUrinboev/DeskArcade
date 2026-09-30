@@ -65,6 +65,16 @@ public sealed class Daily
         new("dominoes", "dominoes.played", 20, "Lay {0} tiles in Dominoes"),
         new("jenga", "jenga.moved", 12, "Move {0} blocks in Window Jenga"),
         new("bridge", "bridge.saved", 10, "Get {0} interns across the Rope Bridge"),
+        // 1.8.6 · party games
+
+        // 1.8.6 · card games
+
+        // 1.8.6 · word and key games
+
+        // 1.8.6 · Spot the Bug
+
+        // 1.8.6 · arcade
+
     };
 
     readonly Settings _settings;

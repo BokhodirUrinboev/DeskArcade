@@ -1,0 +1,5701 @@
+# Desk Arcade: Russian (ru).
+# The English text is the msgid. Keep {0}-style placeholders, "·" separators and "×" as they are, and keep
+# the number last in "Best {0}"-style lines (the compact scoreboard shows only the last word).
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: ru\n"
+"X-Language-Name: Русский\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. ---- menus, notices, overlay
+msgid "Automatic"
+msgstr "Автоматически"
+
+msgid "Game"
+msgstr "Игра"
+
+msgid "Games"
+msgstr "Игры"
+
+msgid "General"
+msgstr "Общие"
+
+msgid "Next game"
+msgstr "Следующая игра"
+
+msgid "Bring to cursor"
+msgstr "Переместить к курсору"
+
+msgid "Stats & achievements"
+msgstr "Статистика и достижения"
+
+msgid "Stats & achievements…"
+msgstr "Статистика и достижения…"
+
+msgid "Show overlay"
+msgstr "Показать игру"
+
+msgid "Bounce on window tops"
+msgstr "Отскок от верха окон"
+
+msgid "Sound"
+msgstr "Звук"
+
+msgid "Volume"
+msgstr "Громкость"
+
+msgid "Language"
+msgstr "Язык"
+
+msgid "Alerts when Claude finishes"
+msgstr "Оповещать, когда Claude закончит"
+
+msgid "Show the overlay when Claude starts working"
+msgstr "Показывать игру, когда Claude начинает работу"
+
+msgid "Hide the overlay when Claude finishes or needs you"
+msgstr "Скрывать игру, когда Claude закончил или ждёт вас"
+
+msgid "Copy Claude Code hook config"
+msgstr "Скопировать настройки хуков Claude Code"
+
+msgid "Start when I sign in"
+msgstr "Запускать при входе в систему"
+
+msgid "Move to next monitor"
+msgstr "На следующий монитор"
+
+msgid "Check for updates"
+msgstr "Проверить обновления"
+
+msgid "Check for updates automatically"
+msgstr "Проверять обновления автоматически"
+
+#, c-sharp-format
+msgid "Download version {0}…"
+msgstr "Скачать версию {0}…"
+
+msgid "Reset positions"
+msgstr "Сбросить расположение"
+
+msgid "Reset high scores"
+msgstr "Сбросить рекорды"
+
+msgid "Reset stats and achievements"
+msgstr "Сбросить статистику и достижения"
+
+msgid "Exit"
+msgstr "Выход"
+
+msgid "Welcome to Desk Arcade"
+msgstr "Добро пожаловать в Desk Arcade"
+
+#, c-sharp-format
+msgid "click the scoreboard to pick a game · {0} show/hide · {1} next game"
+msgstr "нажмите на табло, чтобы выбрать игру · {0} показать/скрыть · {1} следующая игра"
+
+msgid "Achievement unlocked"
+msgstr "Достижение получено"
+
+msgid "Stats reset"
+msgstr "Статистика сброшена"
+
+msgid "achievements start over"
+msgstr "достижения начнутся заново"
+
+msgid "Hook config copied"
+msgstr "Настройки хуков скопированы"
+
+msgid "merge it into ~/.claude/settings.json"
+msgstr "добавьте их в ~/.claude/settings.json"
+
+#, c-sharp-format
+msgid "Desk Arcade {0} is available"
+msgstr "Доступна Desk Arcade {0}"
+
+msgid "opening the download page"
+msgstr "открываем страницу загрузки"
+
+msgid "download it from the tray menu"
+msgstr "скачайте через меню в трее"
+
+msgid "You're up to date"
+msgstr "У вас последняя версия"
+
+#, c-sharp-format
+msgid "version {0}"
+msgstr "версия {0}"
+
+#, c-sharp-format
+msgid "Time played {0} · achievements {1}/{2}"
+msgstr "Время в игре {0} · достижения {1}/{2}"
+
+#, c-sharp-format
+msgid "{0}h {1}m"
+msgstr "{0} ч {1} мин"
+
+#, c-sharp-format
+msgid "{0}m"
+msgstr "{0} мин"
+
+#. ---- commands run with --while
+#, c-sharp-format
+msgid "{0} passed · {1}"
+msgstr "{0} прошло · {1}"
+
+#, c-sharp-format
+msgid "{0} passed"
+msgstr "{0} прошло"
+
+#, c-sharp-format
+msgid "{0} failed · exit {1}"
+msgstr "{0} упало · код {1}"
+
+#, c-sharp-format
+msgid "{0} · took {1}"
+msgstr "{0} · заняло {1}"
+
+#, c-sharp-format
+msgid "{0} · exit code {1}"
+msgstr "{0} · код выхода {1}"
+
+#, c-sharp-format
+msgid "{0} · you played {1}"
+msgstr "{0} · вы играли {1}"
+
+msgid "Passed"
+msgstr "Готово"
+
+msgid "Failed"
+msgstr "Ошибка"
+
+msgid "It's compiling"
+msgstr "Оно компилируется"
+
+msgid "Be playing when a --while command finishes 10 times"
+msgstr "Играйте в момент, когда команда --while завершится, 10 раз"
+
+#. ---- Claude Code
+msgid "Claude working"
+msgstr "Claude работает"
+
+#, c-sharp-format
+msgid "Claude working · {0}"
+msgstr "Claude работает · {0}"
+
+msgid "Claude done"
+msgstr "Claude закончил"
+
+#, c-sharp-format
+msgid "Claude done after {0}"
+msgstr "Claude закончил за {0}"
+
+msgid "Claude is done"
+msgstr "Claude закончил"
+
+msgid "Claude needs you"
+msgstr "Claude ждёт вас"
+
+msgid "your turn!"
+msgstr "ваш ход!"
+
+msgid "check the terminal"
+msgstr "загляните в терминал"
+
+#, c-sharp-format
+msgid "{0} · waited {1}"
+msgstr "{0} · ожидание {1}"
+
+#. ---- game titles and switch hints
+msgid "Hoops"
+msgstr "Баскетбол"
+
+msgid "Archery"
+msgstr "Стрельба из лука"
+
+msgid "Keepy-Uppy"
+msgstr "Чеканка"
+
+msgid "Mini Golf"
+msgstr "Мини-гольф"
+
+msgid "Bug Squash"
+msgstr "Давилка багов"
+
+msgid "Can Knockdown"
+msgstr "Сбей банки"
+
+msgid "Brick Breaker"
+msgstr "Арканоид"
+
+msgid "Bubble Pop"
+msgstr "Лопни пузыри"
+
+msgid "Air Hockey"
+msgstr "Аэрохоккей"
+
+msgid "Clay Shooting"
+msgstr "Стендовая стрельба"
+
+msgid "Whack-a-Bug"
+msgstr "Прихлопни бага"
+
+msgid "Plinko"
+msgstr "Плинко"
+
+msgid "Tower Stack"
+msgstr "Башня"
+
+msgid "drag the ball and flick it into the hoop"
+msgstr "тяните мяч и бросайте в кольцо"
+
+msgid "drag back from the bow, release to shoot"
+msgstr "оттяните тетиву и отпустите для выстрела"
+
+msgid "click the ball to kick it — don't let it drop"
+msgstr "нажимайте на мяч, чтобы подбить — не роняйте"
+
+msgid "drag back from the ball to putt it into the cup"
+msgstr "оттяните от мяча и ударьте в лунку"
+
+msgid "squash the bugs — spare the ladybugs"
+msgstr "давите багов — божьих коровок не трогайте"
+
+msgid "throw the ball from behind the line"
+msgstr "бросайте мяч из-за линии"
+
+msgid "click the paddle to launch — the mouse steers it"
+msgstr "нажмите на ракетку, чтобы запустить — ею управляет мышь"
+
+msgid "click a bubble to split it — clear them all in time"
+msgstr "нажмите на пузырь, чтобы разделить — успейте лопнуть все"
+
+msgid "drag your mallet and score in the right-hand goal"
+msgstr "двигайте биту и забивайте в правые ворота"
+
+msgid "click the trap machine, then shoot the clays at the top of their arc"
+msgstr "нажмите на метательную машину и стреляйте по тарелкам в верхней точке"
+
+msgid "whack the bugs as they peek out — spare the ladybugs"
+msgstr "бейте багов, когда они выглядывают — божьих коровок не трогайте"
+
+msgid "click the strip to drop a disc — the gold slot is the jackpot"
+msgstr "нажмите на полосу, чтобы бросить диск — золотая ячейка это джекпот"
+
+msgid "click the sliding block to drop it — stack as high as you can"
+msgstr "нажмите на движущийся блок, чтобы сбросить — стройте как можно выше"
+
+#. ---- shared game text
+#, c-sharp-format
+msgid "Best {0}"
+msgstr "Рекорд {0}"
+
+msgid "NEW BEST!"
+msgstr "НОВЫЙ РЕКОРД!"
+
+msgid "NEW BEST ROUND!"
+msgstr "РЕКОРД РАУНДА!"
+
+msgid "GAME OVER"
+msgstr "ИГРА ОКОНЧЕНА"
+
+msgid "ROUND OVER"
+msgstr "РАУНД ОКОНЧЕН"
+
+msgid "TIME!"
+msgstr "ВРЕМЯ!"
+
+#, c-sharp-format
+msgid "{0} points"
+msgstr "очков: {0}"
+
+msgid "that was a feature!"
+msgstr "это была фича!"
+
+#. ---- Hoops
+msgid "Drag the ball, flick it into the hoop"
+msgstr "Тяните мяч и бросайте в кольцо"
+
+#, c-sharp-format
+msgid "Streak {0} · keep going!"
+msgstr "Серия {0} · так держать!"
+
+#, c-sharp-format
+msgid "Streak {0} · ON FIRE ×2"
+msgstr "Серия {0} · В ОГНЕ ×2"
+
+#, c-sharp-format
+msgid "Best streak {0}"
+msgstr "Лучшая серия {0}"
+
+msgid "streak over"
+msgstr "серия прервана"
+
+msgid "DUNK!"
+msgstr "ДАНК!"
+
+msgid "SWISH!"
+msgstr "ЧИСТО!"
+
+msgid "SWISH THREE!"
+msgstr "ЧИСТЫЙ ТРЁХОЧКОВЫЙ!"
+
+msgid "THREE POINTER!"
+msgstr "ТРЁХОЧКОВЫЙ!"
+
+msgid "NICE SHOT!"
+msgstr "ОТЛИЧНЫЙ БРОСОК!"
+
+msgid "ON FIRE!"
+msgstr "В ОГНЕ!"
+
+msgid "points ×2"
+msgstr "очки ×2"
+
+msgid "MOVING HOOP!"
+msgstr "КОЛЬЦО ДВИЖЕТСЯ!"
+
+msgid "NEW BEST STREAK"
+msgstr "НОВАЯ ЛУЧШАЯ СЕРИЯ"
+
+#. ---- Archery
+msgid "calm"
+msgstr "штиль"
+
+#, c-sharp-format
+msgid "Round {0} · {1} arrows · wind {2}"
+msgstr "Раунд {0} · стрел {1} · ветер {2}"
+
+msgid "Round over · pull the bow to play again"
+msgstr "Раунд окончен · натяните лук, чтобы сыграть снова"
+
+#, c-sharp-format
+msgid "Best round {0}"
+msgstr "Лучший раунд {0}"
+
+msgid "pull back to start a round"
+msgstr "натяните, чтобы начать раунд"
+
+#, c-sharp-format
+msgid "{0} arrows · wind {1}"
+msgstr "стрел {0} · ветер {1}"
+
+#, c-sharp-format
+msgid "{0} points · best {1}"
+msgstr "очков: {0} · рекорд {1}"
+
+msgid "BULLSEYE!"
+msgstr "В ЯБЛОЧКО!"
+
+msgid "GOLDEN!"
+msgstr "ЗОЛОТОЙ!"
+
+msgid "POP!"
+msgstr "ХЛОП!"
+
+#. ---- Keepy-Uppy
+msgid "Click the ball to kick it up"
+msgstr "Нажмите на мяч, чтобы подбить его"
+
+#, c-sharp-format
+msgid "Juggles {0} · grab the star!"
+msgstr "Набивания {0} · хватайте звезду!"
+
+#, c-sharp-format
+msgid "Juggles {0} · don't let it drop"
+msgstr "Набивания {0} · не роняйте"
+
+msgid "Dropped!"
+msgstr "Упал!"
+
+#. ---- Mini Golf
+#, c-sharp-format
+msgid "Hole {0}/{1} · par {2} · stroke {3}"
+msgstr "Лунка {0}/{1} · пар {2} · удар {3}"
+
+#, c-sharp-format
+msgid "Round done · {0} vs par · putt to play again"
+msgstr "Раунд окончен · {0} к пару · ударьте, чтобы сыграть снова"
+
+msgid "Best —"
+msgstr "Рекорд —"
+
+msgid "penalty drop"
+msgstr "штрафной удар"
+
+msgid "HOLE IN ONE!"
+msgstr "С ОДНОГО УДАРА!"
+
+msgid "EAGLE!"
+msgstr "ИГЛ!"
+
+msgid "BIRDIE!"
+msgstr "БЁРДИ!"
+
+msgid "PAR"
+msgstr "ПАР"
+
+msgid "BOGEY"
+msgstr "БОГИ"
+
+msgid "DOUBLE BOGEY"
+msgstr "ДАБЛ-БОГИ"
+
+#, c-sharp-format
+msgid "{0} stroke · par {1}"
+msgstr "ударов: {0} · пар {1}"
+
+#, c-sharp-format
+msgid "{0} strokes · par {1}"
+msgstr "ударов: {0} · пар {1}"
+
+msgid "ROUND COMPLETE"
+msgstr "РАУНД ЗАВЕРШЁН"
+
+#, c-sharp-format
+msgid "{0} strokes · {1} vs par"
+msgstr "ударов: {0} · {1} к пару"
+
+#. ---- Bug Squash
+msgid "Squash the sleeping bug to start · spare the ladybugs"
+msgstr "Раздавите спящего бага, чтобы начать · божьих коровок не трогайте"
+
+#, c-sharp-format
+msgid "{0}s left · squashed {1}"
+msgstr "осталось {0} с · раздавлено {1}"
+
+#, c-sharp-format
+msgid "{0}s left · squashed {1} · combo ×{2}"
+msgstr "осталось {0} с · раздавлено {1} · комбо ×{2}"
+
+#, c-sharp-format
+msgid "{0} points · {1} squashed · {2} got away"
+msgstr "очков: {0} · раздавлено {1} · сбежало {2}"
+
+#. ---- Can Knockdown
+#, c-sharp-format
+msgid "Stack {0} · balls {1} · cans left {2}"
+msgstr "Пирамида {0} · мячей {1} · банок осталось {2}"
+
+msgid "Game over · grab the ball to play again"
+msgstr "Игра окончена · возьмите мяч, чтобы сыграть снова"
+
+msgid "CLEAR!"
+msgstr "ЧИСТО!"
+
+#, c-sharp-format
+msgid "+{0} for spare balls"
+msgstr "+{0} за оставшиеся мячи"
+
+msgid "next stack"
+msgstr "следующая пирамида"
+
+#, c-sharp-format
+msgid "{0} points · reached stack {1}"
+msgstr "очков: {0} · дошли до пирамиды {1}"
+
+#. ---- Brick Breaker
+#, c-sharp-format
+msgid "Level {0} · balls {1} · bricks {2}"
+msgstr "Уровень {0} · мячей {1} · кирпичей {2}"
+
+#, c-sharp-format
+msgid "Level {0} · balls {1} · click the paddle to launch"
+msgstr "Уровень {0} · мячей {1} · нажмите на ракетку, чтобы запустить"
+
+msgid "Game over · click the paddle to play again"
+msgstr "Игра окончена · нажмите на ракетку, чтобы сыграть снова"
+
+#, c-sharp-format
+msgid "{0} points · level {1}"
+msgstr "очков: {0} · уровень {1}"
+
+msgid "ball lost"
+msgstr "мяч потерян"
+
+#, c-sharp-format
+msgid "{0} left"
+msgstr "осталось {0}"
+
+msgid "LEVEL CLEAR!"
+msgstr "УРОВЕНЬ ПРОЙДЕН!"
+
+#, c-sharp-format
+msgid "+{0} bonus"
+msgstr "+{0} бонус"
+
+#. ---- Bubble Pop
+msgid "Pop the bubble to start · smaller bubbles score more"
+msgstr "Лопните пузырь, чтобы начать · маленькие дают больше очков"
+
+#, c-sharp-format
+msgid "Wave {0} cleared!"
+msgstr "Волна {0} пройдена!"
+
+#, c-sharp-format
+msgid "Wave {0} · {1}s left · bubbles {2}"
+msgstr "Волна {0} · осталось {1} с · пузырей {2}"
+
+#, c-sharp-format
+msgid "Wave {0} · {1}s left · bubbles {2} · combo ×{3}"
+msgstr "Волна {0} · осталось {1} с · пузырей {2} · комбо ×{3}"
+
+msgid "pop me"
+msgstr "лопни меня"
+
+#, c-sharp-format
+msgid "WAVE {0}"
+msgstr "ВОЛНА {0}"
+
+msgid "WAVE CLEAR!"
+msgstr "ВОЛНА ПРОЙДЕНА!"
+
+#, c-sharp-format
+msgid "+{0} time bonus"
+msgstr "+{0} за время"
+
+#, c-sharp-format
+msgid "{0} points · wave {1}"
+msgstr "очков: {0} · волна {1}"
+
+#. ---- Air Hockey
+#, c-sharp-format
+msgid "First to {0} · CPU level {1} · drag your blue mallet"
+msgstr "До {0} голов · уровень компьютера {1} · двигайте синюю биту"
+
+msgid "Match over · grab your mallet for a rematch"
+msgstr "Матч окончен · возьмите биту для реванша"
+
+#, c-sharp-format
+msgid "Wins {0}"
+msgstr "Победы {0}"
+
+msgid "GOAL!"
+msgstr "ГОЛ!"
+
+msgid "you score"
+msgstr "вы забили"
+
+msgid "CPU scores"
+msgstr "компьютер забил"
+
+#, c-sharp-format
+msgid "Downloading version {0}…"
+msgstr "Загрузка версии {0}…"
+
+msgid "the game restarts when it is done"
+msgstr "после установки игра перезапустится"
+
+msgid "Couldn't download the update"
+msgstr "Не удалось загрузить обновление"
+
+msgid "opening the download page instead"
+msgstr "открываем страницу загрузки"
+
+#, c-sharp-format
+msgid "Install version {0}"
+msgstr "Установить версию {0}"
+
+msgid "Reduce motion"
+msgstr "Меньше анимации"
+
+msgid "Colour-blind friendly colours"
+msgstr "Цвета для дальтоников"
+
+msgid "Accessibility"
+msgstr "Специальные возможности"
+
+msgid "Cat"
+msgstr "Кошка"
+
+msgid "Dog"
+msgstr "Собака"
+
+msgid "Duck"
+msgstr "Утка"
+
+msgid "Pet"
+msgstr "Питомец"
+
+#, c-sharp-format
+msgid "Make {0} baskets in Hoops"
+msgstr "Забросьте {0} мячей в «Баскетболе»"
+
+#, c-sharp-format
+msgid "Pop {0} balloons in Archery"
+msgstr "Лопните {0} шаров в «Стрельбе из лука»"
+
+#, c-sharp-format
+msgid "Squash {0} bugs"
+msgstr "Раздавите {0} жуков"
+
+#, c-sharp-format
+msgid "Score {0} goals in Air Hockey"
+msgstr "Забейте {0} голов в аэрохоккее"
+
+#, c-sharp-format
+msgid "Break {0} clays"
+msgstr "Разбейте {0} тарелочек"
+
+#, c-sharp-format
+msgid "Break {0} bricks"
+msgstr "Разбейте {0} кирпичей"
+
+#, c-sharp-format
+msgid "Knock down {0} cans"
+msgstr "Собейте {0} банок"
+
+#, c-sharp-format
+msgid "Pop {0} bubbles"
+msgstr "Лопните {0} пузырей"
+
+#, c-sharp-format
+msgid "Whack {0} bugs"
+msgstr "Прихлопните {0} жуков"
+
+#, c-sharp-format
+msgid "Play {0} holes of Mini Golf"
+msgstr "Сыграйте {0} лунок в мини-гольф"
+
+#, c-sharp-format
+msgid "Make {0} perfect drops in Tower Stack"
+msgstr "Сделайте {0} идеальных бросков в «Башне»"
+
+#, c-sharp-format
+msgid "Knock down {0} blocks with the Slingshot"
+msgstr "Собейте {0} блоков из рогатки"
+
+#, c-sharp-format
+msgid "Drop {0} Plinko discs"
+msgstr "Бросьте {0} фишек в «Плинко»"
+
+#, c-sharp-format
+msgid "Swish {0} shots in Hoops"
+msgstr "Забросьте {0} чистых мячей в «Баскетболе»"
+
+#, c-sharp-format
+msgid "Capture {0} pieces in Checkers"
+msgstr "Возьмите {0} шашек"
+
+#, c-sharp-format
+msgid "Capture {0} pieces in Chess"
+msgstr "Возьмите {0} фигур в шахматах"
+
+#, c-sharp-format
+msgid "Sink {0} ships in Sea Battle"
+msgstr "Потопите {0} кораблей в «Морском бое»"
+
+msgid "Daily challenge done!"
+msgstr "Задание дня выполнено!"
+
+#, c-sharp-format
+msgid "{0} days in a row"
+msgstr "{0} дней подряд"
+
+msgid "come back tomorrow for a new one"
+msgstr "завтра будет новое"
+
+#, c-sharp-format
+msgid "Today: {0} ({1}/{2})"
+msgstr "Сегодня: {0} ({1}/{2})"
+
+#, c-sharp-format
+msgid "{0} · streak {1}"
+msgstr "{0} · серия {1}"
+
+msgid "Daily player"
+msgstr "Каждый день"
+
+msgid "Finish a daily challenge"
+msgstr "Выполните задание дня"
+
+msgid "Seven in a row"
+msgstr "Семь подряд"
+
+msgid "Finish the daily challenge 7 days in a row"
+msgstr "Выполняйте задание дня 7 дней подряд"
+
+msgid "Resumed"
+msgstr "Продолжаем"
+
+#, c-sharp-format
+msgid "{0} · Claude worked {1}, you played {2}"
+msgstr "{0} · Claude работал {1}, вы играли {2}"
+
+msgid "PAUSED"
+msgstr "ПАУЗА"
+
+msgid "click the game to resume"
+msgstr "нажмите на игру, чтобы продолжить"
+
+msgid "Pause the game when Claude finishes or needs you"
+msgstr "Ставить игру на паузу, когда Claude закончил или ждёт вас"
+
+msgid "Shortcuts"
+msgstr "Горячие клавиши"
+
+msgid "Modifier keys"
+msgstr "Клавиши-модификаторы"
+
+msgid "Show or hide the overlay"
+msgstr "Показать или скрыть оверлей"
+
+msgid "Save"
+msgstr "Сохранить"
+
+msgid "Defaults"
+msgstr "По умолчанию"
+
+msgid "Use three different letters, A to Z."
+msgstr "Выберите три разные буквы от A до Z."
+
+#, c-sharp-format
+msgid "Saved: {0}. They take effect the next time Desk Arcade starts."
+msgstr "Сохранено: {0}. Сочетания заработают при следующем запуске Desk Arcade."
+
+#, c-sharp-format
+msgid "Saved: {0}"
+msgstr "Сохранено: {0}"
+
+#, c-sharp-format
+msgid "Saved, but another app already uses one of these ({0}). Try other letters or keys."
+msgstr "Сохранено, но одно из сочетаний уже занято другой программой ({0}). Попробуйте другие буквы или клавиши."
+
+msgid "Shortcuts…"
+msgstr "Горячие клавиши…"
+
+#, c-sharp-format
+msgid "Race {0}: start a round and they start too"
+msgstr "Гонка с {0}: начните раунд — соперник начнёт тоже"
+
+#, c-sharp-format
+msgid "{0}: {1}{2}"
+msgstr "{0}: {1}{2}"
+
+msgid "done"
+msgstr "готово"
+
+msgid "DEAD HEAT"
+msgstr "НИЧЬЯ"
+
+msgid "YOU WIN THE RACE!"
+msgstr "ВЫ ВЫИГРАЛИ ГОНКУ!"
+
+#, c-sharp-format
+msgid "{0} WINS THE RACE"
+msgstr "{0} ВЫИГРЫВАЕТ ГОНКУ"
+
+#, c-sharp-format
+msgid "{0} – {1}"
+msgstr "{0} – {1}"
+
+msgid "H-O-R-S-E over · grab the ball for a rematch"
+msgstr "H-O-R-S-E окончена · возьмите мяч, чтобы сыграть ещё"
+
+msgid "Match the shot from the marked spot, or take a letter"
+msgstr "Повторите бросок с отмеченного места, иначе получите букву"
+
+#, c-sharp-format
+msgid "{0} has to match your shot"
+msgstr "{0} должен повторить ваш бросок"
+
+msgid "H-O-R-S-E · set a shot from anywhere"
+msgstr "H-O-R-S-E · бросайте откуда угодно"
+
+#, c-sharp-format
+msgid "H-O-R-S-E · {0} is setting a shot"
+msgstr "H-O-R-S-E · {0} задаёт бросок"
+
+msgid "shoot from here"
+msgstr "бросайте отсюда"
+
+#, c-sharp-format
+msgid "{0}'s shot"
+msgstr "бросает {0}"
+
+msgid "shoot from the marked spot"
+msgstr "бросайте с отмеченного места"
+
+msgid "The host picks the game"
+msgstr "Игру выбирает хост"
+
+#, c-sharp-format
+msgid "{0} is hosting"
+msgstr "{0} — хост"
+
+#, c-sharp-format
+msgid "{0} missed — your turn to set"
+msgstr "{0} промахнулся — теперь задаёте вы"
+
+#, c-sharp-format
+msgid "{0} made it — your turn to match"
+msgstr "{0} попал — теперь повторите вы"
+
+msgid "you take a letter"
+msgstr "вы получаете букву"
+
+#, c-sharp-format
+msgid "{0} takes a letter"
+msgstr "{0} получает букву"
+
+msgid "grab the ball for a rematch"
+msgstr "возьмите мяч, чтобы сыграть ещё"
+
+msgid "Find games"
+msgstr "Найти игры"
+
+msgid "Looking for games on your network…"
+msgstr "Ищем игры в вашей сети…"
+
+msgid "Join"
+msgstr "Подключиться"
+
+msgid "Or join by address (ask the host for their IP):"
+msgstr "Или подключитесь по адресу (спросите у хоста его IP):"
+
+#, c-sharp-format
+msgid "{0} · {1} · already playing"
+msgstr "{0} · {1} · уже играет"
+
+#, c-sharp-format
+msgid "{0} · {1}"
+msgstr "{0} · {1}"
+
+msgid "No games yet. Ask your co-worker to pick Play over LAN → Host a game."
+msgstr "Игр пока нет. Попросите коллегу выбрать «Игра по сети» → «Создать игру»."
+
+msgid "Click a game to join it:"
+msgstr "Нажмите на игру, чтобы подключиться:"
+
+msgid "Couldn't search the network."
+msgstr "Не удалось выполнить поиск в сети."
+
+msgid "That doesn't look like an address, e.g. 192.168.1.20"
+msgstr "Это не похоже на адрес, например 192.168.1.20"
+
+#, c-sharp-format
+msgid "sent to {0}"
+msgstr "отправлено: {0}"
+
+#, c-sharp-format
+msgid "from {0}"
+msgstr "от {0}"
+
+#. ---- pet mail: gifts for a co-worker's pet over the LAN
+#, c-sharp-format
+msgid "Send {0}'s pet…"
+msgstr "Отправить питомцу {0}…"
+
+msgid "Send a co-worker's pet…"
+msgstr "Отправить питомцу коллеги…"
+
+msgid "A treat"
+msgstr "Лакомство"
+
+msgid "A ball"
+msgstr "Мячик"
+
+msgid "A ball of yarn"
+msgstr "Клубок ниток"
+
+msgid "A chew bone"
+msgstr "Косточка-грызунок"
+
+msgid "Sent!"
+msgstr "Отправлено!"
+
+#, c-sharp-format
+msgid "{0} for {1}'s pet"
+msgstr "{0} для питомца {1}"
+
+msgid "Wait a moment"
+msgstr "Минутку"
+
+#, c-sharp-format
+msgid "The next parcel can go in {0} s"
+msgstr "Следующую посылку можно отправить через {0} с"
+
+msgid "The parcels on the way have to arrive first"
+msgstr "Сначала должны дойти посылки, которые уже в пути"
+
+#, c-sharp-format
+msgid "{0}'s pet loved it"
+msgstr "Питомцу {0} очень понравилось"
+
+#, c-sharp-format
+msgid "A parcel from {0}"
+msgstr "Посылка от {0}"
+
+msgid "It waits for your Desktop Pet"
+msgstr "Она ждёт вашего питомца"
+
+msgid "Off to open the parcel"
+msgstr "Бежит открывать посылку"
+
+msgid "A parcel is coming down!"
+msgstr "Посылка спускается!"
+
+msgid "A parcel! · click it to open"
+msgstr "Посылка! · нажмите, чтобы открыть"
+
+msgid "Playing with its new toy"
+msgstr "Играет с новой игрушкой"
+
+msgid "Pet post"
+msgstr "Почта для питомцев"
+
+msgid "Send 10 gifts to a co-worker's pet"
+msgstr "Отправьте 10 подарков питомцу коллеги"
+
+msgid "Special delivery"
+msgstr "Особая доставка"
+
+msgid "Open a parcel from a co-worker"
+msgstr "Откройте посылку от коллеги"
+
+msgid "Find games / join by address…"
+msgstr "Найти игры / подключиться по адресу…"
+
+msgid "Send"
+msgstr "Отправить"
+
+msgid "gg"
+msgstr "gg"
+
+msgid "One more?"
+msgstr "Ещё разок?"
+
+msgid "Nice shot!"
+msgstr "Отличный удар!"
+
+msgid "Your move!"
+msgstr "Ваш ход!"
+
+msgid "Ha!"
+msgstr "Ха!"
+
+msgid "Crowned"
+msgstr "Дамка"
+
+msgid "Win a game of Checkers"
+msgstr "Выиграйте партию в шашки"
+
+msgid "Checkmate"
+msgstr "Шах и мат"
+
+msgid "Win a game of Chess"
+msgstr "Выиграйте партию в шахматы"
+
+msgid "Four in a row"
+msgstr "Четыре в ряд"
+
+msgid "Win a game of Connect Four"
+msgstr "Выиграйте в «Четыре в ряд»"
+
+msgid "Three in a row"
+msgstr "Три в ряд"
+
+msgid "Win a game of Tic-tac-toe"
+msgstr "Выиграйте в крестики-нолики"
+
+msgid "Admiral"
+msgstr "Адмирал"
+
+msgid "Win a game of Sea Battle"
+msgstr "Выиграйте в морской бой"
+
+msgid "Office rival"
+msgstr "Соперник по офису"
+
+msgid "Beat a co-worker over the LAN"
+msgstr "Обыграйте коллегу по сети"
+
+msgid "Sea Battle"
+msgstr "Морской бой"
+
+msgid "click the enemy grid to start, then fire — a hit shoots again"
+msgstr "нажмите на поле противника, чтобы начать, затем стреляйте — попадание даёт ещё выстрел"
+
+#, c-sharp-format
+msgid "Waiting for {0} to get ready…"
+msgstr "Ждём, пока {0} приготовится…"
+
+msgid "Click your grid to move your ships · click the enemy grid to start"
+msgstr "Нажмите на своё поле, чтобы переставить корабли · на поле противника — чтобы начать"
+
+msgid "Game over · click a grid for a rematch"
+msgstr "Игра окончена · нажмите на поле, чтобы сыграть ещё"
+
+msgid "Your shot · click the enemy grid · a hit shoots again"
+msgstr "Ваш выстрел · нажмите на поле противника · попадание даёт ещё выстрел"
+
+#, c-sharp-format
+msgid "{0} is aiming…"
+msgstr "{0} целится…"
+
+msgid "SUNK!"
+msgstr "ПОТОПЛЕН!"
+
+msgid "Ship lost"
+msgstr "Корабль потерян"
+
+msgid "click a grid for a rematch"
+msgstr "нажмите на поле, чтобы сыграть ещё"
+
+msgid "Your fleet"
+msgstr "Ваш флот"
+
+msgid "Enemy waters"
+msgstr "Воды противника"
+
+msgid "Your move · click a square · right-drag moves the board"
+msgstr "Ваш ход · нажмите на клетку · правой кнопкой можно сдвинуть доску"
+
+msgid "Tic-tac-toe"
+msgstr "Крестики-нолики"
+
+msgid "Connect Four"
+msgstr "Четыре в ряд"
+
+msgid "The board is full"
+msgstr "Доска заполнена"
+
+msgid "click a column to drop a disc — four in a row wins"
+msgstr "нажмите на столбец, чтобы бросить фишку — побеждают четыре в ряд"
+
+msgid "click a square — three in a row wins"
+msgstr "нажмите на клетку — побеждают три в ряд"
+
+msgid "Chess"
+msgstr "Шахматы"
+
+msgid "Stalemate"
+msgstr "Пат"
+
+msgid "50 moves without a capture or pawn move"
+msgstr "50 ходов без взятий и ходов пешкой"
+
+msgid "Not enough pieces to mate"
+msgstr "Недостаточно фигур для мата"
+
+msgid "15 moves without a capture or a man moving"
+msgstr "15 ходов без взятий и ходов простыми"
+
+msgid "several ways lead there · click each landing on the way"
+msgstr "несколько путей ведут туда · нажимайте на каждое поле по пути"
+
+msgid "DRAW"
+msgstr "НИЧЬЯ"
+
+msgid "40 moves without a capture · click the board for a rematch"
+msgstr "40 ходов без взятий · нажмите на доску, чтобы сыграть ещё"
+
+msgid "Checkers"
+msgstr "Шашки"
+
+msgid "click a piece, then the square it should move to"
+msgstr "нажмите на шашку, затем на клетку, куда её поставить"
+
+#. reversi & gomoku
+msgid "Reversi"
+msgstr "Реверси"
+
+msgid "Gomoku"
+msgstr "Гомоку"
+
+msgid "Your move · click a dotted square · right-drag moves the board"
+msgstr "Ваш ход · нажмите на клетку с точкой · правой кнопкой можно сдвинуть доску"
+
+msgid "Your move · click an intersection · right-drag moves the board"
+msgstr "Ваш ход · нажмите на пересечение линий · правой кнопкой можно сдвинуть доску"
+
+msgid "You have no move · pass"
+msgstr "Вам некуда ходить · пас"
+
+#, c-sharp-format
+msgid "{0} has no move · pass"
+msgstr "{0}: ходов нет · пас"
+
+msgid "Equal discs"
+msgstr "Фишек поровну"
+
+msgid "click a dotted square — outflank discs to flip them, most discs wins"
+msgstr "нажмите на клетку с точкой — окружайте фишки, чтобы перевернуть их; побеждает тот, у кого больше фишек"
+
+msgid "click an intersection — five or more in a row wins (freestyle)"
+msgstr "нажмите на пересечение линий — побеждают пять или больше в ряд (свободные правила)"
+
+msgid "Corner office"
+msgstr "Угловой кабинет"
+
+msgid "Beat the Reversi CPU on Hard or Expert"
+msgstr "Обыграйте компьютер в реверси на уровне «Сложно» или «Эксперт»"
+
+msgid "Landslide"
+msgstr "Разгромная победа"
+
+msgid "Win Reversi with 40 discs or more, or wipe out every disc"
+msgstr "Выиграйте в реверси с 40 фишками или больше либо не оставив сопернику ни одной"
+
+msgid "Five alive"
+msgstr "Пятёрка"
+
+msgid "Beat the Gomoku CPU on Hard or Expert"
+msgstr "Обыграйте компьютер в гомоку на уровне «Сложно» или «Эксперт»"
+
+msgid "Quick five"
+msgstr "Быстрая пятёрка"
+
+msgid "Win Gomoku with fewer than 15 stones"
+msgstr "Выиграйте в гомоку, поставив меньше 15 камней"
+
+#, c-sharp-format
+msgid "Flip {0} discs in Reversi"
+msgstr "Переверните {0} фишек в реверси"
+
+msgid "Game over · click the board for a rematch"
+msgstr "Партия окончена · нажмите на доску, чтобы сыграть ещё"
+
+msgid "Your move · click a piece, then where it goes · right-drag moves the board"
+msgstr "Ваш ход · нажмите на шашку, затем на клетку · правой кнопкой можно сдвинуть доску"
+
+#, c-sharp-format
+msgid "{0} is thinking…"
+msgstr "{0} думает…"
+
+msgid "DOUBLE JUMP!"
+msgstr "ДВЕ ЗА ХОД!"
+
+msgid "TRIPLE JUMP!"
+msgstr "ТРИ ЗА ХОД!"
+
+#, c-sharp-format
+msgid "vs {0}"
+msgstr "соперник: {0}"
+
+msgid "click the board for a rematch"
+msgstr "нажмите на доску, чтобы сыграть ещё"
+
+msgid "Play over LAN"
+msgstr "Игра по сети"
+
+msgid "Host a game"
+msgstr "Создать игру"
+
+msgid "Join a game"
+msgstr "Присоединиться"
+
+msgid "Leave"
+msgstr "Выйти"
+
+msgid "Not connected"
+msgstr "Нет подключения"
+
+msgid "Can't host"
+msgstr "Не удалось создать игру"
+
+#, c-sharp-format
+msgid "UDP port {0} is in use"
+msgstr "UDP-порт {0} занят"
+
+msgid "Waiting for a player to join…"
+msgstr "Ждём второго игрока…"
+
+msgid "Looking for a host…"
+msgstr "Ищем игру…"
+
+#, c-sharp-format
+msgid "Playing with {0}"
+msgstr "Играете с {0}"
+
+msgid "Connected"
+msgstr "Подключено"
+
+msgid "Hosting"
+msgstr "Игра создана"
+
+msgid "CPU"
+msgstr "Компьютер"
+
+#, c-sharp-format
+msgid "First to {0} · vs {1} over LAN · drag your blue mallet"
+msgstr "До {0} голов · против {1} по сети · тяните синюю биту"
+
+#, c-sharp-format
+msgid "{0} scores"
+msgstr "{0} забивает"
+
+#, c-sharp-format
+msgid "{0}–{1} vs {2}"
+msgstr "{0}–{1} · против {2}"
+
+#, c-sharp-format
+msgid "{0} WINS"
+msgstr "{0} ПОБЕЖДАЕТ"
+
+#, c-sharp-format
+msgid "YOU  {0} : {1}  {2}"
+msgstr "ВЫ  {0} : {1}  {2}"
+
+msgid "YOU WIN!"
+msgstr "ВЫ ПОБЕДИЛИ!"
+
+msgid "CPU WINS"
+msgstr "ПОБЕДИЛ КОМПЬЮТЕР"
+
+#, c-sharp-format
+msgid "{0}–{1} · the CPU gets faster"
+msgstr "{0}–{1} · компьютер становится быстрее"
+
+#, c-sharp-format
+msgid "{0}–{1} · grab your mallet for a rematch"
+msgstr "{0}–{1} · возьмите биту для реванша"
+
+#, c-sharp-format
+msgid "YOU  {0} : {1}  CPU"
+msgstr "ВЫ  {0} : {1}  КОМП"
+
+#. ---- Whack-a-Bug
+#, c-sharp-format
+msgid "{0}s left · whacked {1}"
+msgstr "осталось {0} с · прихлопнуто {1}"
+
+msgid "Whack the sleepy bug to start · spare the ladybugs"
+msgstr "Прихлопните сонного бага, чтобы начать · божьих коровок не трогайте"
+
+#, c-sharp-format
+msgid "{0} points · {1} whacked"
+msgstr "очков: {0} · прихлопнуто {1}"
+
+#. ---- Darts
+msgid "Darts"
+msgstr "Дартс"
+
+msgid "hold on the board to aim, let go to throw — finish on a double"
+msgstr "зажмите на мишени, чтобы прицелиться, отпустите, чтобы бросить — закончите удвоением"
+
+msgid "Hold on the board to aim, let go to throw · finish on a double"
+msgstr "Зажмите на мишени, чтобы прицелиться, отпустите, чтобы бросить · финиш удвоением"
+
+#, c-sharp-format
+msgid "Best {0} darts"
+msgstr "Рекорд: {0} дрот."
+
+#, c-sharp-format
+msgid "Game shot in {0} darts · click the board for a new leg"
+msgstr "Лег закрыт за {0} дрот. · нажмите на мишень для новой партии"
+
+#, c-sharp-format
+msgid "Dart {0} of 3 · {1} this turn"
+msgstr "Дротик {0} из 3 · за подход {1}"
+
+msgid "Miss"
+msgstr "Мимо"
+
+msgid "BULL"
+msgstr "БУЛЛ"
+
+msgid "BUST"
+msgstr "ПЕРЕБОР"
+
+#, c-sharp-format
+msgid "back to {0}"
+msgstr "снова {0}"
+
+msgid "GAME SHOT!"
+msgstr "ЛЕГ ЗАКРЫТ!"
+
+#, c-sharp-format
+msgid "{0} darts"
+msgstr "Дротиков: {0}"
+
+#, c-sharp-format
+msgid "{0} darts · new best!"
+msgstr "Дротиков: {0} · новый рекорд!"
+
+msgid "game on!"
+msgstr "игра началась!"
+
+msgid "One hundred and eighty"
+msgstr "Сто восемьдесят"
+
+msgid "Score 180 with three darts"
+msgstr "Наберите 180 очков тремя дротиками"
+
+msgid "Checked out"
+msgstr "Точный финиш"
+
+msgid "Finish 5 games of 501"
+msgstr "Закончите 5 партий в 501"
+
+#, c-sharp-format
+msgid "Hit {0} trebles in Darts"
+msgstr "Попадите в утроение в дартсе {0} раз"
+
+#. ---- Clay Shooting
+msgid "Click the trap machine to start · shoot the clays"
+msgstr "Нажмите на машинку, чтобы начать · стреляйте по тарелкам"
+
+msgid "click to start"
+msgstr "нажмите, чтобы начать"
+
+msgid "DOUBLE!"
+msgstr "ДУПЛЕТ!"
+
+#, c-sharp-format
+msgid "Last round {0}/{1} · click the trap to go again"
+msgstr "Прошлый раунд {0}/{1} · нажмите на машинку, чтобы начать снова"
+
+#, c-sharp-format
+msgid "Pull {0}/{1} · hits {2}"
+msgstr "Бросок {0}/{1} · попаданий {2}"
+
+msgid "still rising"
+msgstr "ещё на подъёме"
+
+#, c-sharp-format
+msgid "{0} of {1} clays hit · {2} points"
+msgstr "попаданий {0} из {1} · очков {2}"
+
+#. ---- Plinko
+msgid "click to drop · right-drag to move"
+msgstr "нажмите, чтобы бросить · правой кнопкой переместить"
+
+msgid "click for a new round"
+msgstr "нажмите для нового раунда"
+
+msgid "Round over · click the drop strip to play again"
+msgstr "Раунд окончен · нажмите на полосу, чтобы сыграть снова"
+
+#, c-sharp-format
+msgid "Discs {0} · jackpots {1}"
+msgstr "Дисков {0} · джекпотов {1}"
+
+#, c-sharp-format
+msgid "{0} points · {1} jackpots"
+msgstr "очков: {0} · джекпотов {1}"
+
+msgid "JACKPOT!"
+msgstr "ДЖЕКПОТ!"
+
+#. ---- Tower Stack
+#, c-sharp-format
+msgid "Height {0} · click the block to drop it"
+msgstr "Высота {0} · нажмите на блок, чтобы сбросить"
+
+msgid "Game over · click the block to play again"
+msgstr "Игра окончена · нажмите на блок, чтобы сыграть снова"
+
+msgid "PERFECT!"
+msgstr "ИДЕАЛЬНО!"
+
+msgid "wider block"
+msgstr "блок шире"
+
+#, c-sharp-format
+msgid "Height {0}"
+msgstr "Высота {0}"
+
+#. ---- Slingshot
+msgid "Slingshot"
+msgstr "Рогатка"
+
+msgid "drag back from the slingshot and let go — knock the tower down"
+msgstr "оттяните рогатку и отпустите — свалите башню"
+
+#, c-sharp-format
+msgid "Tower {0} · stones {1} · blocks {2}"
+msgstr "Башня {0} · камней {1} · блоков {2}"
+
+msgid "Game over · pull the stone to play again"
+msgstr "Игра окончена · оттяните камень, чтобы сыграть снова"
+
+#, c-sharp-format
+msgid "+{0} · spare stones {1}"
+msgstr "+{0} · осталось камней {1}"
+
+msgid "next tower"
+msgstr "следующая башня"
+
+msgid "Tower collapsed"
+msgstr "Башня рухнула"
+
+msgid "building a new one"
+msgstr "строится новая"
+
+#, c-sharp-format
+msgid "{0} points · tower {1}"
+msgstr "очков: {0} · башня {1}"
+
+#. ---- Desktop Pet
+msgid "Desktop Pet"
+msgstr "Питомец"
+
+msgid "click the pet to pet it — drag to carry and throw it"
+msgstr "нажмите на питомца, чтобы погладить — перетащите, чтобы нести и бросить"
+
+msgid "Sleeping · click to wake"
+msgstr "Спит · нажмите, чтобы разбудить"
+
+msgid "Wheee! · let go to throw"
+msgstr "Уиии! · отпустите, чтобы бросить"
+
+msgid "Wheee!"
+msgstr "Уиии!"
+
+msgid "Wants attention · click to pet"
+msgstr "Хочет внимания · нажмите, чтобы погладить"
+
+msgid "Grooming"
+msgstr "Умывается"
+
+msgid "Hunting the cursor"
+msgstr "Охотится на курсор"
+
+msgid "Sleepy"
+msgstr "Хочет спать"
+
+msgid "Zoomies!"
+msgstr "Носится как угорелый!"
+
+msgid "Exploring the window tops"
+msgstr "Гуляет по верхам окон"
+
+msgid "Click to pet · drag to carry"
+msgstr "Нажмите, чтобы погладить · перетащите, чтобы нести"
+
+#, c-sharp-format
+msgid "Pets {0}"
+msgstr "Поглажено {0}"
+
+msgid "z z"
+msgstr "z z"
+
+#. ---- Paper Toss
+msgid "Paper Toss"
+msgstr "Бумажка в корзину"
+
+msgid "flick the paper ball into the bin — mind the fan"
+msgstr "бросьте бумажный комок в корзину — следите за вентилятором"
+
+msgid "Grab the paper ball and flick it into the bin"
+msgstr "Схватите бумажный комок и бросьте его в корзину"
+
+#, c-sharp-format
+msgid "Streak {0} · mind the wind"
+msgstr "Серия {0} · учитывайте ветер"
+
+#, c-sharp-format
+msgid "Wind {0}"
+msgstr "Ветер {0}"
+
+msgid "In!"
+msgstr "Есть!"
+
+msgid "Swish!"
+msgstr "Чисто!"
+
+msgid "Missed!"
+msgstr "Мимо!"
+
+msgid "Wastebasket pro"
+msgstr "Мастер корзины"
+
+msgid "Score 10 in one run"
+msgstr "Наберите 10 очков за одну попытку"
+
+msgid "Clean throw"
+msgstr "Чистый бросок"
+
+msgid "Toss 25 swishes into the bin"
+msgstr "Забросьте в корзину 25 бумажек, не задев края"
+
+#, c-sharp-format
+msgid "Toss {0} paper balls into the bin"
+msgstr "Забросьте в корзину {0} бумажных комков"
+
+#. ---- achievements
+msgid "Coffee break"
+msgstr "Кофе-брейк"
+
+msgid "Play for 30 minutes in total"
+msgstr "Сыграйте в сумме 30 минут"
+
+msgid "Marathon"
+msgstr "Марафон"
+
+msgid "Play for 5 hours in total"
+msgstr "Сыграйте в сумме 5 часов"
+
+msgid "Explorer"
+msgstr "Исследователь"
+
+msgid "Play 6 different games"
+msgstr "Сыграйте в 6 разных игр"
+
+msgid "Pair programmer"
+msgstr "Парный программист"
+
+msgid "Be playing when Claude finishes 10 times"
+msgstr "Играйте в момент, когда Claude заканчивает, 10 раз"
+
+msgid "Hundred baskets"
+msgstr "Сотня попаданий"
+
+msgid "Score 100 baskets"
+msgstr "Забросьте 100 мячей"
+
+msgid "Nothing but net"
+msgstr "Только сетка"
+
+msgid "Score 25 swishes"
+msgstr "Забросьте 25 чистых мячей"
+
+msgid "Unstoppable"
+msgstr "Неудержимый"
+
+msgid "Make 10 baskets in a row"
+msgstr "Забросьте 10 мячей подряд"
+
+msgid "Bullseye"
+msgstr "В яблочко"
+
+msgid "Hit 10 bullseyes"
+msgstr "Попадите в яблочко 10 раз"
+
+msgid "Party pooper"
+msgstr "Зануда"
+
+msgid "Pop 50 balloons"
+msgstr "Лопните 50 шариков"
+
+msgid "Sharpshooter"
+msgstr "Меткий стрелок"
+
+msgid "Score 80 points in one round"
+msgstr "Наберите 80 очков за раунд"
+
+msgid "Keepy-uppy pro"
+msgstr "Мастер чеканки"
+
+msgid "Score 25 points in one run"
+msgstr "Наберите 25 очков за одну попытку"
+
+msgid "Star catcher"
+msgstr "Ловец звёзд"
+
+msgid "Catch 20 stars"
+msgstr "Поймайте 20 звёзд"
+
+msgid "Hole in one"
+msgstr "С одного удара"
+
+msgid "Sink a hole in one"
+msgstr "Загоните мяч в лунку с одного удара"
+
+msgid "Course regular"
+msgstr "Завсегдатай поля"
+
+msgid "Finish 50 holes"
+msgstr "Пройдите 50 лунок"
+
+msgid "Under par"
+msgstr "Ниже пара"
+
+msgid "Finish a round under par"
+msgstr "Завершите раунд ниже пара"
+
+msgid "Exterminator"
+msgstr "Истребитель"
+
+msgid "Squash 200 bugs"
+msgstr "Раздавите 200 багов"
+
+msgid "Combo breaker"
+msgstr "Мастер комбо"
+
+msgid "Reach a ×4 combo"
+msgstr "Наберите комбо ×4"
+
+msgid "Zero bugs"
+msgstr "Ноль багов"
+
+msgid "Score 60 points in one round"
+msgstr "Наберите 60 очков за раунд"
+
+msgid "Tin smasher"
+msgstr "Гроза банок"
+
+msgid "Knock down 100 cans"
+msgstr "Сбейте 100 банок"
+
+msgid "Fairground champion"
+msgstr "Чемпион ярмарки"
+
+msgid "Reach stack 5"
+msgstr "Дойдите до 5-й пирамиды"
+
+msgid "Demolition crew"
+msgstr "Бригада сноса"
+
+msgid "Break 500 bricks"
+msgstr "Разбейте 500 кирпичей"
+
+msgid "Wall breaker"
+msgstr "Разрушитель стен"
+
+msgid "Reach level 4"
+msgstr "Дойдите до 4-го уровня"
+
+msgid "Bubble wrap"
+msgstr "Пупырка"
+
+msgid "Pop 300 bubbles"
+msgstr "Лопните 300 пузырей"
+
+msgid "Wave rider"
+msgstr "Покоритель волн"
+
+msgid "Reach wave 5"
+msgstr "Дойдите до 5-й волны"
+
+msgid "First win"
+msgstr "Первая победа"
+
+msgid "Beat the CPU"
+msgstr "Победите компьютер"
+
+msgid "Sniper"
+msgstr "Снайпер"
+
+msgid "Score 50 goals"
+msgstr "Забейте 50 голов"
+
+msgid "Champion"
+msgstr "Чемпион"
+
+msgid "Beat CPU level 5"
+msgstr "Победите компьютер 5-го уровня"
+
+msgid "Best friends"
+msgstr "Лучшие друзья"
+
+msgid "Pet your desktop pet 50 times"
+msgstr "Погладьте питомца 50 раз"
+
+msgid "Taxi"
+msgstr "Такси"
+
+msgid "Carry your pet 10 times"
+msgstr "Перенесите питомца 10 раз"
+
+msgid "Skyscraper"
+msgstr "Небоскрёб"
+
+msgid "Build a tower 15 blocks high"
+msgstr "Постройте башню из 15 блоков"
+
+msgid "Perfectionist"
+msgstr "Перфекционист"
+
+msgid "Make 10 perfect drops"
+msgstr "Сделайте 10 идеальных сбросов"
+
+msgid "Wrecking ball"
+msgstr "Шар для сноса"
+
+msgid "Knock down 200 blocks"
+msgstr "Сбейте 200 блоков"
+
+msgid "Clean sweep"
+msgstr "Подчистую"
+
+msgid "Clear 10 towers"
+msgstr "Разрушьте 10 башен"
+
+msgid "Bug whacker"
+msgstr "Мухобойка"
+
+msgid "Whack 200 bugs"
+msgstr "Прихлопните 200 багов"
+
+msgid "Lightning hands"
+msgstr "Молниеносные руки"
+
+msgid "Score 50 points in one round"
+msgstr "Наберите 50 очков за раунд"
+
+msgid "Clay breaker"
+msgstr "Гроза тарелок"
+
+msgid "Hit 100 clay targets"
+msgstr "Разбейте 100 тарелок"
+
+msgid "Double trouble"
+msgstr "Дуплет"
+
+msgid "Hit two targets with one shot"
+msgstr "Попадите в две мишени одним выстрелом"
+
+msgid "Jackpot"
+msgstr "Джекпот"
+
+msgid "Land 5 discs in the jackpot slot"
+msgstr "Попадите диском в джекпот 5 раз"
+
+msgid "Disc dropper"
+msgstr "Метатель дисков"
+
+msgid "Drop 100 discs"
+msgstr "Бросьте 100 дисков"
+
+#. 1.5: duels, Pong, series, office leaderboard, themes, pets, breaks
+msgid "A TIE"
+msgstr "НИЧЬЯ"
+
+#, c-sharp-format
+msgid "After {0} minutes of play"
+msgstr "Через {0} минут игры"
+
+msgid "Air Hockey wins"
+msgstr "Победы в аэрохоккее"
+
+#, c-sharp-format
+msgid "Arrow {0}/{1} vs {2} · your shot · wind {3}"
+msgstr "Стрела {0}/{1} против {2} · ваш выстрел · ветер {3}"
+
+msgid "Baskets"
+msgstr "Попадания"
+
+msgid "Beat the Pong CPU at level 5"
+msgstr "Обыграйте компьютер 5-го уровня в Понг"
+
+msgid "Best hoops streak"
+msgstr "Лучшая серия в баскетболе"
+
+msgid "Break reminder"
+msgstr "Напоминание о перерыве"
+
+msgid "Bugs squashed"
+msgstr "Раздавлено жуков"
+
+msgid "Bunny"
+msgstr "Кролик"
+
+msgid "Classic"
+msgstr "Классика"
+
+msgid "Claude is done · back to work"
+msgstr "Claude закончил · за работу"
+
+msgid "Duelist"
+msgstr "Дуэлянт"
+
+#, c-sharp-format
+msgid "First to {0} vs {1} · drag your paddle"
+msgstr "До {0} против {1} · двигайте ракетку"
+
+#, c-sharp-format
+msgid "First to {0} · CPU level {1} · drag your paddle"
+msgstr "До {0} · уровень компьютера {1} · двигайте ракетку"
+
+#, c-sharp-format
+msgid "First to {0} · best of 3 vs {1} · drag your blue mallet"
+msgstr "До {0} · серия до двух побед против {1} · двигайте синюю биту"
+
+msgid "Fox"
+msgstr "Лиса"
+
+msgid "Halloween"
+msgstr "Хэллоуин"
+
+#, c-sharp-format
+msgid "Hole {0} halved"
+msgstr "Лунка {0} вничью"
+
+#, c-sharp-format
+msgid "Hole {0}/{1} vs {2} · your putt"
+msgstr "Лунка {0}/{1} против {2} · ваш удар"
+
+#, c-sharp-format
+msgid "Hole {0}/{1} · you're in · {2} is still putting"
+msgstr "Лунка {0}/{1} · вы в лунке · {2} ещё бьёт"
+
+#, c-sharp-format
+msgid "Hole {0}/{1} · {2} is putting"
+msgstr "Лунка {0}/{1} · бьёт {2}"
+
+msgid "LAN wins"
+msgstr "Победы по сети"
+
+msgid "MATCH HALVED"
+msgstr "НИЧЬЯ"
+
+msgid "Match over · grab your paddle for a rematch"
+msgstr "Матч окончен · возьмите ракетку для реванша"
+
+msgid "Match over · pull the bow for a rematch"
+msgstr "Матч окончен · натяните лук для реванша"
+
+#, c-sharp-format
+msgid "Match over · pull the bow to ask {0} for a rematch"
+msgstr "Матч окончен · натяните лук, чтобы предложить {0} реванш"
+
+#, c-sharp-format
+msgid "Match over · putt to ask {0} for a rematch"
+msgstr "Матч окончен · ударьте, чтобы предложить {0} реванш"
+
+msgid "Match over · putt to play again"
+msgstr "Матч окончен · ударьте, чтобы сыграть ещё"
+
+msgid "Match play"
+msgstr "Матчевая игра"
+
+msgid "Minutes played"
+msgstr "Минут в игре"
+
+msgid "Neon"
+msgstr "Неон"
+
+msgid "No scores yet today. Go play something!"
+msgstr "Сегодня очков ещё нет. Сыграйте во что-нибудь!"
+
+msgid "Off"
+msgstr "Выкл."
+
+msgid "Office leaderboard"
+msgstr "Рейтинг офиса"
+
+msgid "Office leaderboard · today"
+msgstr "Рейтинг офиса · сегодня"
+
+msgid "Only you so far. Co-workers show up here once they share their scores too."
+msgstr "Пока только вы. Коллеги появятся здесь, когда тоже поделятся очками."
+
+msgid "POINT!"
+msgstr "ОЧКО!"
+
+msgid "Paddle legend"
+msgstr "Легенда ракетки"
+
+msgid "Penguin"
+msgstr "Пингвин"
+
+msgid "Pong"
+msgstr "Понг"
+
+msgid "Pong wins"
+msgstr "Победы в Понг"
+
+msgid "Rally master"
+msgstr "Мастер розыгрыша"
+
+msgid "Retro"
+msgstr "Ретро"
+
+msgid "Say “back to work” when Claude is done"
+msgstr "Говорить «за работу», когда Claude закончит"
+
+msgid "Seasonal"
+msgstr "По сезону"
+
+msgid "Series winner"
+msgstr "Победитель серии"
+
+msgid "Share my scores on the local network"
+msgstr "Делиться моими очками в локальной сети"
+
+msgid "Sharing is off. Turn it on to post your scores and see everyone else's. It sends your user name and today's scores to the other computers on your local network, and nothing else."
+msgstr "Обмен выключен. Включите его, чтобы публиковать свои очки и видеть чужие. Он отправляет другим компьютерам в локальной сети только ваше имя пользователя и сегодняшние очки."
+
+msgid "Show the leaderboard…"
+msgstr "Показать рейтинг…"
+
+msgid "Stop sharing my scores"
+msgstr "Перестать делиться очками"
+
+msgid "Tallest tower"
+msgstr "Самая высокая башня"
+
+msgid "Theme"
+msgstr "Тема"
+
+msgid "Win a Mini Golf match over the LAN"
+msgstr "Выиграйте матч в мини-гольф по сети"
+
+msgid "Win a best-of-3 series over the LAN"
+msgstr "Выиграйте серию до двух побед по сети"
+
+msgid "Win a game of Pong"
+msgstr "Выиграйте партию в Понг"
+
+msgid "Win an Archery match over the LAN"
+msgstr "Выиграйте матч по стрельбе из лука по сети"
+
+msgid "Winter"
+msgstr "Зима"
+
+msgid "YOU WIN THE MATCH!"
+msgstr "ВЫ ВЫИГРАЛИ МАТЧ!"
+
+msgid "YOU WIN THE SERIES!"
+msgstr "ВЫ ВЫИГРАЛИ СЕРИЮ!"
+
+#, c-sharp-format
+msgid "You win hole {0}"
+msgstr "Лунка {0} ваша"
+
+#, c-sharp-format
+msgid "You've played {0} minutes"
+msgstr "Вы играете уже {0} минут"
+
+#, c-sharp-format
+msgid "asked {0} for a rematch"
+msgstr "{0} предложен реванш"
+
+msgid "drag your paddle up and down — get the ball past the right edge"
+msgstr "двигайте ракетку вверх и вниз — отправьте мяч за правый край"
+
+#, c-sharp-format
+msgid "holes {0}–{1}"
+msgstr "лунки {0}–{1}"
+
+#, c-sharp-format
+msgid "holes {0}–{1} · putt for a rematch"
+msgstr "лунки {0}–{1} · ударьте для реванша"
+
+#, c-sharp-format
+msgid "series {0}–{1}"
+msgstr "серия {0}–{1}"
+
+msgid "the game will still be here later"
+msgstr "игра подождёт"
+
+msgid "time for a short break · stretch and look away from the screen"
+msgstr "пора сделать перерыв · потянитесь и отведите взгляд от экрана"
+
+msgid "you're in · wait for the next hole"
+msgstr "вы в лунке · ждите следующую"
+
+#, c-sharp-format
+msgid "{0} (you)"
+msgstr "{0} (вы)"
+
+#, c-sharp-format
+msgid "{0} WINS THE MATCH"
+msgstr "{0} ВЫИГРЫВАЕТ МАТЧ"
+
+#, c-sharp-format
+msgid "{0} WINS THE SERIES"
+msgstr "{0} ВЫИГРЫВАЕТ СЕРИЮ"
+
+#, c-sharp-format
+msgid "{0} is in"
+msgstr "{0} в лунке"
+
+#, c-sharp-format
+msgid "{0} is shooting · wind {1}"
+msgstr "стреляет {0} · ветер {1}"
+
+#, c-sharp-format
+msgid "{0} missed"
+msgstr "{0} промахнулся"
+
+#, c-sharp-format
+msgid "{0} players sharing today · updates every 20 seconds"
+msgstr "сегодня делятся очками игроков: {0} · обновление каждые 20 секунд"
+
+#, c-sharp-format
+msgid "{0} wins hole {1}"
+msgstr "лунка {1} за {0}"
+
+#, c-sharp-format
+msgid "{0}'s putt"
+msgstr "бьёт {0}"
+
+#, c-sharp-format
+msgid "{0}–{1} in matches · grab your mallet for a new series"
+msgstr "{0}–{1} по матчам · возьмите биту для новой серии"
+
+#, c-sharp-format
+msgid "{0}–{1} vs {2} · series {3}–{4}"
+msgstr "{0}–{1} против {2} · серия {3}–{4}"
+
+#, c-sharp-format
+msgid "{0}–{1} · grab your paddle for a rematch"
+msgstr "{0}–{1} · возьмите ракетку для реванша"
+
+#, c-sharp-format
+msgid "{0}–{1} · pull the bow for a rematch"
+msgstr "{0}–{1} · натяните лук для реванша"
+
+#, c-sharp-format
+msgid "{0}–{1} · series {2}–{3} · grab your mallet for the next match"
+msgstr "{0}–{1} · серия {2}–{3} · возьмите биту для следующего матча"
+
+#, c-sharp-format
+msgid "{0}–{1} · the CPU gets sharper"
+msgstr "{0}–{1} · компьютер становится точнее"
+
+#. 1.6: Durak, CPU levels, pet tricks
+msgid "(computer players fill empty seats)"
+msgstr "(свободные места займут компьютерные игроки)"
+
+msgid "A DRAW"
+msgstr "НИЧЬЯ"
+
+msgid "A draw · click New game"
+msgstr "Ничья · нажмите «Новая игра»"
+
+msgid "Beat each card (click a card on the table first to choose) or take"
+msgstr "Покройте каждую карту (сначала можно выбрать карту на столе) или возьмите"
+
+msgid "CPU difficulty"
+msgstr "Уровень компьютера"
+
+#, c-sharp-format
+msgid "CPU {0}"
+msgstr "Компьютер {0}"
+
+msgid "Card shark"
+msgstr "Карточный шулер"
+
+msgid "Click Durak on the table to start a game"
+msgstr "Нажмите на стол, чтобы начать игру в дурака"
+
+msgid "Click to pet · right-click for a trick · drag to carry"
+msgstr "Нажмите, чтобы погладить · правый клик — трюк · перетащите, чтобы понести"
+
+msgid "Create a room"
+msgstr "Создать комнату"
+
+msgid "Done"
+msgstr "Бито"
+
+msgid "Durak"
+msgstr "Дурак"
+
+#, c-sharp-format
+msgid "{0} with co-workers"
+msgstr "{0} с коллегами"
+
+#, c-sharp-format
+msgid "{0} with co-workers…"
+msgstr "{0} с коллегами…"
+
+msgid "Durak with co-workers…"
+msgstr "Дурак с коллегами…"
+
+msgid "Escape being the durak 10 times"
+msgstr "10 раз не остаться дураком"
+
+msgid "Get rid of your cards before someone else in Durak"
+msgstr "Избавьтесь от карт раньше другого игрока в дурака"
+
+msgid "IP address (optional)"
+msgstr "IP-адрес (необязательно)"
+
+#, c-sharp-format
+msgid "In room {0} · waiting for the host to start"
+msgstr "Вы в комнате {0} · ждём, когда хост начнёт"
+
+#, c-sharp-format
+msgid "Joining room {0}…"
+msgstr "Подключение к комнате {0}…"
+
+msgid "Leave the room"
+msgstr "Выйти из комнаты"
+
+#, c-sharp-format
+msgid "Looking for room {0}…"
+msgstr "Ищем комнату {0}…"
+
+msgid "NOT THE FOOL!"
+msgstr "НЕ ДУРАК!"
+
+msgid "New game"
+msgstr "Новая игра"
+
+msgid "No room with that code answered. Check the code, or add the host's IP address."
+msgstr "Комната с таким кодом не ответила. Проверьте код или укажите IP-адрес хоста."
+
+msgid "No rooms yet."
+msgstr "Комнат пока нет."
+
+msgid "Not the fool"
+msgstr "Не дурак"
+
+msgid "Or host the game yourself:"
+msgstr "Или создайте игру сами:"
+
+msgid "Or type a room code (and the host's IP if the room doesn't show up):"
+msgstr "Или введите код комнаты (и IP-адрес хоста, если комната не видна):"
+
+msgid "Other games…"
+msgstr "Другие игры…"
+
+msgid "Play 1 computer"
+msgstr "С 1 компьютером"
+
+msgid "Play with"
+msgstr "Играть"
+
+msgid "Play with co-workers…"
+msgstr "Играть с коллегами…"
+
+#, c-sharp-format
+msgid "Play {0} computers"
+msgstr "С компьютерами: {0}"
+
+#, c-sharp-format
+msgid "Room {0} · {1} at the table"
+msgstr "Комната {0} · за столом: {1}"
+
+msgid "Waiting for a co-worker to join…"
+msgstr "Ждём, пока подключится коллега…"
+
+msgid "Start + 1 computer"
+msgstr "Начать + 1 компьютер"
+
+#, c-sharp-format
+msgid "Start + {0} computers"
+msgstr "Начать + компьютеры: {0}"
+
+msgid "Room setup…"
+msgstr "Настройки комнаты…"
+
+msgid "Start with computers only"
+msgstr "Начать только с компьютерами"
+
+msgid "Rooms on your network:"
+msgstr "Комнаты в вашей сети:"
+
+msgid "Show-off"
+msgstr "Хвастунишка"
+
+msgid "Showing off"
+msgstr "Показывает трюк"
+
+msgid "Start the game"
+msgstr "Начать игру"
+
+msgid "Take"
+msgstr "Беру"
+
+msgid "That game has already started."
+msgstr "Эта игра уже началась."
+
+msgid "That room is full."
+msgstr "Эта комната заполнена."
+
+msgid "The last one holding cards is the durak"
+msgstr "Кто последним остался с картами — дурак"
+
+msgid "The room closed · set up a new game"
+msgstr "Комната закрылась · настройте новую игру"
+
+msgid "The room closed."
+msgstr "Комната закрылась."
+
+msgid "Throw in a card of a rank on the table, or click Done"
+msgstr "Подкиньте карту того же достоинства или нажмите «Бито»"
+
+#, c-sharp-format
+msgid "Two to four players on the same network. Everyone needs Desk Arcade {0} or newer."
+msgstr "От двух до четырёх игроков в одной сети. У всех должна быть Desk Arcade {0} или новее."
+
+msgid "That room is playing another game."
+msgstr "В этой комнате играют в другую игру."
+
+msgid "Watch your pet do 25 tricks"
+msgstr "Посмотрите 25 трюков питомца"
+
+#, c-sharp-format
+msgid "Wins {0} · CPU {1}"
+msgstr "Победы {0} · компьютер: {1}"
+
+msgid "YOU'RE THE DURAK!"
+msgstr "ВЫ ДУРАК!"
+
+msgid "You"
+msgstr "Вы"
+
+msgid "You take the cards · the others may still throw in"
+msgstr "Вы берёте карты · остальные ещё могут подкинуть"
+
+#, c-sharp-format
+msgid "You're in room {0} · waiting for the host to start. You can close this window."
+msgstr "Вы в комнате {0} · ждём, когда хост начнёт. Это окно можно закрыть."
+
+msgid "You're out of cards · watching the others finish"
+msgstr "Ваши карты кончились · смотрите, как доиграют другие"
+
+msgid "You're the durak · click New game"
+msgstr "Вы дурак · нажмите «Новая игра»"
+
+#, c-sharp-format
+msgid "Your attack on {0} · play any card"
+msgstr "Вы ходите под {0} · положите любую карту"
+
+msgid "Your room code — tell it to your co-workers:"
+msgstr "Код вашей комнаты — скажите его коллегам:"
+
+msgid "attacking"
+msgstr "ходит"
+
+msgid "better luck next deal"
+msgstr "повезёт в следующий раз"
+
+#, c-sharp-format
+msgid "deck {0}"
+msgstr "колода {0}"
+
+msgid "defending"
+msgstr "отбивается"
+
+#, c-sharp-format
+msgid "discarded {0}"
+msgstr "бито {0}"
+
+msgid "disconnected"
+msgstr "отключился"
+
+msgid "not allowed right now"
+msgstr "сейчас так нельзя"
+
+msgid "out"
+msgstr "вышел"
+
+msgid "play the computer, or set up a room for up to four co-workers"
+msgstr "играйте с компьютером или создайте комнату до четырёх коллег"
+
+msgid "playing"
+msgstr "идёт игра"
+
+msgid "that card can't beat any of them"
+msgstr "эта карта ничего не покрывает"
+
+#, c-sharp-format
+msgid "the CPU goes easier: {0} · click the board for a rematch"
+msgstr "компьютер играет легче: {0} · нажмите на доску, чтобы сыграть ещё"
+
+#, c-sharp-format
+msgid "the CPU moves up to {0}"
+msgstr "компьютер становится сильнее: {0}"
+
+msgid "the last cards went out together"
+msgstr "последние карты ушли одновременно"
+
+#, c-sharp-format
+msgid "trump {0}"
+msgstr "козырь {0}"
+
+#, c-sharp-format
+msgid "{0} (you, host)"
+msgstr "{0} (вы, хост)"
+
+#, c-sharp-format
+msgid "{0} attacks {1}"
+msgstr "{0} ходит под {1}"
+
+#, c-sharp-format
+msgid "{0} is defending"
+msgstr "{0} отбивается"
+
+#, c-sharp-format
+msgid "{0} is the durak"
+msgstr "{0} — дурак"
+
+#, c-sharp-format
+msgid "{0} is the durak · click New game"
+msgstr "{0} — дурак · нажмите «Новая игра»"
+
+#, c-sharp-format
+msgid "{0} left · the computer plays for them"
+msgstr "{0} вышел · за него играет компьютер"
+
+#, c-sharp-format
+msgid "{0} may throw in more"
+msgstr "{0} может подкинуть ещё"
+
+#, c-sharp-format
+msgid "{0} players"
+msgstr "{0} игрока"
+
+#, c-sharp-format
+msgid "{0} takes"
+msgstr "{0} берёт"
+
+#, c-sharp-format
+msgid "{0} · {1} · {2}/{3} players"
+msgstr "{0} · {1} · игроков: {2}/{3}"
+
+msgid "Easy"
+msgstr "Легко"
+
+msgid "Medium"
+msgstr "Средне"
+
+msgid "Hard"
+msgstr "Сложно"
+
+msgid "Expert"
+msgstr "Эксперт"
+
+msgid "Couldn't open a room"
+msgstr "Не удалось открыть комнату"
+
+#, c-sharp-format
+msgid "{0} is back"
+msgstr "{0} вернулся"
+
+#. ---- Fishing
+msgid "Fishing"
+msgstr "Рыбалка"
+
+msgid "drag back from the rod to cast — click when the bobber goes under, hold to reel"
+msgstr "потяните назад от удочки, чтобы забросить — жмите, когда поплавок уйдёт под воду, и держите, чтобы подматывать"
+
+#, c-sharp-format
+msgid "{0}s left · caught {1}"
+msgstr "осталось {0} с · поймано {1}"
+
+msgid "Drag back from the rod tip and let go to cast"
+msgstr "Потяните назад от кончика удочки и отпустите, чтобы забросить"
+
+msgid "Perch"
+msgstr "Окунь"
+
+msgid "Carp"
+msgstr "Карп"
+
+msgid "Pike"
+msgstr "Щука"
+
+msgid "Catfish"
+msgstr "Сом"
+
+msgid "Golden Trout"
+msgstr "Золотая форель"
+
+#, c-sharp-format
+msgid "{0} · {1} kg"
+msgstr "{0} · {1} кг"
+
+#, c-sharp-format
+msgid "+{0} points"
+msgstr "очков: +{0}"
+
+#, c-sharp-format
+msgid "{0} points · {1} caught"
+msgstr "очков: {0} · поймано {1}"
+
+msgid "Too soon!"
+msgstr "Рано!"
+
+msgid "you spooked it"
+msgstr "вы спугнули рыбу"
+
+msgid "Too late!"
+msgstr "Поздно!"
+
+msgid "it stole the bait · reel in"
+msgstr "рыба украла наживку · смотайте леску"
+
+msgid "Line snapped!"
+msgstr "Леска оборвалась!"
+
+msgid "it got away"
+msgstr "рыба ушла"
+
+msgid "Angler"
+msgstr "Рыболов"
+
+msgid "Catch 50 fish"
+msgstr "Поймайте 50 рыб"
+
+msgid "Golden catch"
+msgstr "Золотой улов"
+
+msgid "Catch a golden trout"
+msgstr "Поймайте золотую форель"
+
+#, c-sharp-format
+msgid "Catch {0} fish"
+msgstr "Поймайте рыб: {0}"
+
+#. ---- Bowling
+msgid "Bowling"
+msgstr "Боулинг"
+
+msgid "drag back from the ball and let go — knock all ten pins down"
+msgstr "оттяните шар назад и отпустите — собейте все десять кеглей"
+
+msgid "Drag back from the ball and let go to bowl"
+msgstr "Чтобы бросить, оттяните шар назад и отпустите"
+
+msgid "Game over · drag back from the ball to bowl again"
+msgstr "Игра окончена · оттяните шар, чтобы сыграть ещё"
+
+#, c-sharp-format
+msgid "Frame {0} · ball {1} · pins {2}"
+msgstr "Фрейм {0} · бросок {1} · кеглей {2}"
+
+msgid "STRIKE!"
+msgstr "СТРАЙК!"
+
+msgid "TURKEY!"
+msgstr "ИНДЕЙКА!"
+
+msgid "three strikes in a row"
+msgstr "три страйка подряд"
+
+msgid "SPARE!"
+msgstr "СПЭР!"
+
+msgid "Gutter"
+msgstr "В жёлоб"
+
+msgid "split"
+msgstr "сплит"
+
+msgid "Turkey"
+msgstr "Индейка"
+
+msgid "Bowl three strikes in a row"
+msgstr "Выбейте три страйка подряд"
+
+msgid "League night"
+msgstr "Вечер лиги"
+
+msgid "Score 150 in one game"
+msgstr "Наберите 150 очков за одну игру"
+
+#, c-sharp-format
+msgid "Knock down {0} pins in Bowling"
+msgstr "Собейте {0} кеглей в боулинге"
+
+#. ---- Pool
+msgid "Pool"
+msgstr "Бильярд"
+
+msgid "drag back from the cue ball to shoot — pot every ball in as few shots as you can"
+msgstr "оттяните биток назад, чтобы ударить — забейте все шары за как можно меньшее число ударов"
+
+#, c-sharp-format
+msgid "Shots {0} · balls left {1}"
+msgstr "Ударов {0} · осталось шаров {1}"
+
+#, c-sharp-format
+msgid "Cleared in {0} shots · press the cue ball to rack again"
+msgstr "Стол очищен за {0} ударов · нажмите на биток, чтобы расставить заново"
+
+#, c-sharp-format
+msgid "{0} balls in one shot!"
+msgstr "{0} шара одним ударом!"
+
+msgid "Scratch +1"
+msgstr "Биток в лузе +1"
+
+#, c-sharp-format
+msgid "CLEARED in {0} shots"
+msgstr "ОЧИЩЕНО ЗА {0} УДАРОВ"
+
+msgid "Table cleared"
+msgstr "Стол чист"
+
+msgid "Clear the pool table"
+msgstr "Очистите бильярдный стол"
+
+msgid "Hat trick"
+msgstr "Хет-трик"
+
+msgid "Pot 3 balls with one shot"
+msgstr "Забейте 3 шара одним ударом"
+
+#, c-sharp-format
+msgid "Pot {0} balls in Pool"
+msgstr "Забейте {0} шаров в бильярде"
+
+#. memory
+msgid "Memory"
+msgstr "Мемори"
+
+msgid "Click a card to flip it · find all the pairs"
+msgstr "Нажмите на карту, чтобы открыть её · найдите все пары"
+
+#, c-sharp-format
+msgid "Moves {0} · pairs left {1}"
+msgstr "Ходов {0} · осталось пар {1}"
+
+#, c-sharp-format
+msgid "All pairs in {0} moves · click a card to deal again"
+msgstr "Все пары найдены, ходов: {0} · нажмите на карту, чтобы раздать заново"
+
+#, c-sharp-format
+msgid "Fewest moves {0}"
+msgstr "Рекорд ходов {0}"
+
+msgid "ALL PAIRS!"
+msgstr "ВСЕ ПАРЫ!"
+
+#, c-sharp-format
+msgid "{0} moves · {1}s"
+msgstr "ходов: {0} · {1} с"
+
+msgid "flip two cards at a time — find all the pairs"
+msgstr "открывайте по две карты — найдите все пары"
+
+msgid "Total recall"
+msgstr "Абсолютная память"
+
+msgid "Clear a Memory board"
+msgstr "Найдите все пары в «Мемори»"
+
+msgid "Matchmaker"
+msgstr "Мастер пар"
+
+msgid "Find 100 pairs"
+msgstr "Найдите 100 пар"
+
+#, c-sharp-format
+msgid "Find {0} pairs in Memory"
+msgstr "Найдите пары в «Мемори»: {0}"
+
+#. solitaire
+msgid "Solitaire"
+msgstr "Пасьянс"
+
+msgid "Click the stock to turn a card · click or drag cards to move them"
+msgstr "Нажмите на колоду, чтобы открыть карту · нажимайте на карты или перетаскивайте их"
+
+#, c-sharp-format
+msgid "Moves {0} · {1}"
+msgstr "Ходов {0} · {1}"
+
+#, c-sharp-format
+msgid "Solved in {0} moves · New deal plays again"
+msgstr "Разложен за {0} ходов · «Новая игра» начнёт заново"
+
+msgid "New deal"
+msgstr "Новая игра"
+
+msgid "Sure?"
+msgstr "Точно?"
+
+msgid "Undo"
+msgstr "Отменить"
+
+msgid "SOLVED!"
+msgstr "РАЗЛОЖЕН!"
+
+#, c-sharp-format
+msgid "{0} moves · {1}"
+msgstr "{0} ходов · {1}"
+
+msgid "click the stock to turn a card — click or drag cards onto the piles"
+msgstr "нажмите на колоду, чтобы открыть карту — нажимайте на карты или перетаскивайте их в стопки"
+
+msgid "Patience"
+msgstr "Терпение"
+
+msgid "Solve a game of Solitaire"
+msgstr "Разложите пасьянс"
+
+msgid "Patience of a saint"
+msgstr "Ангельское терпение"
+
+msgid "Solve 10 games of Solitaire"
+msgstr "Разложите пасьянс 10 раз"
+
+msgid "Homeward bound"
+msgstr "Домой"
+
+msgid "Send 500 cards home"
+msgstr "Отправьте домой 500 карт"
+
+#, c-sharp-format
+msgid "Send {0} cards home in Solitaire"
+msgstr "Отправьте домой {0} карт в «Пасьянсе»"
+
+#. last card
+msgid "Last Card"
+msgstr "Последняя карта"
+
+msgid "Last Card with co-workers…"
+msgstr "«Последняя карта» с коллегами…"
+
+msgid "Click Last Card on the table to start a game"
+msgstr "Нажмите «Последняя карта» на столе, чтобы начать игру"
+
+msgid "Match the colour or the number · the first to play their last card wins"
+msgstr "Подбирайте цвет или число · выигрывает тот, кто первым сыграет последнюю карту"
+
+msgid "match the colour or the number — say “last card” when you're down to one"
+msgstr "подбирайте цвет или число — скажите «последняя карта», когда останется одна"
+
+msgid "You went out first · click New game"
+msgstr "Вы выиграли · нажмите «Новая игра»"
+
+#, c-sharp-format
+msgid "{0} went out first · click New game"
+msgstr "Победа: {0} · нажмите «Новая игра»"
+
+#, c-sharp-format
+msgid "{0}'s turn"
+msgstr "Ходит {0}"
+
+msgid "Pick a colour for your wild card"
+msgstr "Выберите цвет для джокера"
+
+msgid "Play the card you drew, or pass"
+msgstr "Сыграйте взятую карту или пасуйте"
+
+#, c-sharp-format
+msgid "Your turn · play on the {0} {1}, or draw from the pile"
+msgstr "Ваш ход · кладите на {0} {1} или возьмите из колоды"
+
+msgid "Skip"
+msgstr "Пропуск"
+
+msgid "Reverse"
+msgstr "Разворот"
+
+msgid "Wild"
+msgstr "Джокер"
+
+msgid "You forgot to say last card!"
+msgstr "Вы не сказали «последняя карта»!"
+
+#, c-sharp-format
+msgid "{0} forgot to say last card!"
+msgstr "{0}: «последняя карта» не сказана!"
+
+msgid "+2 cards"
+msgstr "+2 карты"
+
+msgid "first to play their last card"
+msgstr "вы первым сыграли последнюю карту"
+
+msgid "playing…"
+msgstr "ходит…"
+
+msgid "LAST CARD!"
+msgstr "ПОСЛЕДНЯЯ КАРТА!"
+
+msgid "Last card!"
+msgstr "Последняя карта!"
+
+#, c-sharp-format
+msgid "pile {0}"
+msgstr "колода {0}"
+
+msgid "Pass"
+msgstr "Пас"
+
+msgid "red"
+msgstr "красный"
+
+msgid "yellow"
+msgstr "жёлтый"
+
+msgid "green"
+msgstr "зелёный"
+
+msgid "blue"
+msgstr "синий"
+
+msgid "Out first"
+msgstr "Первым на выход"
+
+msgid "Win a game of Last Card"
+msgstr "Выиграйте партию в «Последнюю карту»"
+
+msgid "Empty-handed"
+msgstr "С пустыми руками"
+
+msgid "Win 10 games of Last Card"
+msgstr "Выиграйте 10 партий в «Последнюю карту»"
+
+msgid "No hard feelings"
+msgstr "Ничего личного"
+
+msgid "Play 20 Wild Draw Fours"
+msgstr "Сыграйте 20 джокеров «+4»"
+
+#, c-sharp-format
+msgid "Play {0} cards in Last Card"
+msgstr "Сыграйте {0} карт в «Последней карте»"
+
+#. interns
+msgid "Interns"
+msgstr "Стажёры"
+
+msgid "pick a tool, then click an intern — get enough of them to the exit"
+msgstr "выберите инструмент и нажмите на стажёра — доведите достаточно стажёров до выхода"
+
+#, c-sharp-format
+msgid "Level {0} · save {1} of {2} · click the hatch to open it"
+msgstr "Уровень {0} · спасите {1} из {2} · нажмите на люк, чтобы открыть"
+
+#, c-sharp-format
+msgid "Level {0} · out {1}/{2} · lost {3} · {4}s left"
+msgstr "Уровень {0} · вышло {1}/{2} · потеряно {3} · осталось {4} с"
+
+#, c-sharp-format
+msgid "Level {0} cleared · click the hatch for the next one"
+msgstr "Уровень {0} пройден · нажмите на люк для следующего"
+
+#, c-sharp-format
+msgid "Saved {0} of {1} needed · click the hatch to try again"
+msgstr "Спасено {0} из нужных {1} · нажмите на люк, чтобы попробовать снова"
+
+#, c-sharp-format
+msgid "Best level {0}"
+msgstr "Лучший уровень {0}"
+
+msgid "EVERYONE MADE IT!"
+msgstr "ДОШЛИ ВСЕ!"
+
+#, c-sharp-format
+msgid "LEVEL {0} CLEARED"
+msgstr "УРОВЕНЬ {0} ПРОЙДЕН"
+
+#, c-sharp-format
+msgid "{0} of {1} saved · {2} needed"
+msgstr "спасено {0} из {1} · нужно {2}"
+
+msgid "NOT ENOUGH"
+msgstr "НЕДОСТАТОЧНО"
+
+msgid "none left"
+msgstr "не осталось"
+
+msgid "not now"
+msgstr "не сейчас"
+
+msgid "EXIT"
+msgstr "ВЫХОД"
+
+msgid "click to try again"
+msgstr "нажмите, чтобы попробовать снова"
+
+msgid "click for the next level"
+msgstr "нажмите для следующего уровня"
+
+msgid "click to open"
+msgstr "нажмите, чтобы открыть"
+
+#, c-sharp-format
+msgid "Umbrella {0}"
+msgstr "Зонт {0}"
+
+#, c-sharp-format
+msgid "Blocker {0}"
+msgstr "Стоп {0}"
+
+#, c-sharp-format
+msgid "Builder {0}"
+msgstr "Строитель {0}"
+
+msgid "Restart"
+msgstr "Заново"
+
+msgid "Onboarding"
+msgstr "Первый день"
+
+msgid "Clear the first level of Interns"
+msgstr "Пройдите первый уровень «Стажёров»"
+
+msgid "Head of department"
+msgstr "Начальник отдела"
+
+msgid "Clear level 10 of Interns"
+msgstr "Пройдите 10-й уровень «Стажёров»"
+
+msgid "Mentor"
+msgstr "Наставник"
+
+msgid "Get 100 interns to the exit"
+msgstr "Доведите до выхода 100 стажёров"
+
+msgid "Nobody left behind"
+msgstr "Никого не бросили"
+
+msgid "Save every intern on a level"
+msgstr "Спасите всех стажёров на уровне"
+
+#, c-sharp-format
+msgid "Get {0} interns to the exit"
+msgstr "Доведите до выхода {0} стажёров"
+
+#. blockfall
+msgid "Blockfall"
+msgstr "Блокопад"
+
+msgid "point over the well to steer — click turns, hold drops faster, right-click drops"
+msgstr "ведите указатель над стаканом — щелчок поворачивает, удержание ускоряет, правый щелчок роняет"
+
+#, c-sharp-format
+msgid "Game over · {0} lines · click the well to play again"
+msgstr "Игра окончена · линий: {0} · нажмите на стакан, чтобы сыграть снова"
+
+msgid "Click the well to start · click turns, right-click drops"
+msgstr "Нажмите на стакан, чтобы начать · щелчок поворачивает, правый щелчок роняет"
+
+#, c-sharp-format
+msgid "Level {0} · lines {1}"
+msgstr "Уровень {0} · линий {1}"
+
+#, c-sharp-format
+msgid "{0} points · {1} lines"
+msgstr "очков: {0} · линий: {1}"
+
+msgid "FOUR LINES!"
+msgstr "ЧЕТЫРЕ ЛИНИИ!"
+
+msgid "Three lines"
+msgstr "Три линии"
+
+msgid "Two lines"
+msgstr "Две линии"
+
+#, c-sharp-format
+msgid "Level {0}"
+msgstr "Уровень {0}"
+
+msgid "Next"
+msgstr "Дальше"
+
+#, c-sharp-format
+msgid "Lines {0}"
+msgstr "Линий {0}"
+
+msgid "Click to play again"
+msgstr "Нажмите, чтобы сыграть снова"
+
+msgid "Click to start"
+msgstr "Нажмите, чтобы начать"
+
+msgid "Four at once"
+msgstr "Сразу четыре"
+
+msgid "Clear four lines with one piece"
+msgstr "Уберите четыре линии одной фигурой"
+
+msgid "Line manager"
+msgstr "Линейный менеджер"
+
+msgid "Clear 200 lines"
+msgstr "Уберите 200 линий"
+
+msgid "Stacked"
+msgstr "Под завязку"
+
+msgid "Score 10,000 points in one game"
+msgstr "Наберите 10 000 очков за игру"
+
+#, c-sharp-format
+msgid "Clear {0} lines in Blockfall"
+msgstr "Уберите {0} линий в «Блокопаде»"
+
+#. marble
+msgid "Marble Run"
+msgstr "Марблы"
+
+msgid "drag ramps and bumpers out of the tray, then click the funnel — land the marble in the cup"
+msgstr "перетащите горки и отбойники из лотка, затем нажмите на воронку — загоните шарик в лунку"
+
+#, c-sharp-format
+msgid "Course {0}/{1} · pieces left {2} · try {3}/{4}"
+msgstr "Трасса {0}/{1} · деталей осталось {2} · попытка {3}/{4}"
+
+#, c-sharp-format
+msgid "Round over · {0} of {1} in the cup · click the funnel to play again"
+msgstr "Раунд окончен · в лунке {0} из {1} · нажмите на воронку, чтобы сыграть снова"
+
+msgid "Drag a ramp or a bumper out of the tray, then click the funnel"
+msgstr "Перетащите горку или отбойник из лотка, затем нажмите на воронку"
+
+msgid "NO HANDS!"
+msgstr "БЕЗ РУК!"
+
+msgid "IN THE CUP!"
+msgstr "В ЛУНКЕ!"
+
+msgid "In the cup"
+msgstr "В лунке"
+
+#, c-sharp-format
+msgid "{0} in a row"
+msgstr "{0} подряд"
+
+#, c-sharp-format
+msgid "{0} of {1} pieces"
+msgstr "деталей: {0} из {1}"
+
+msgid "COURSE LOST"
+msgstr "ТРАССА ПРОИГРАНА"
+
+msgid "MISS"
+msgstr "МИМО"
+
+msgid "on to the next one"
+msgstr "переходим к следующей"
+
+#, c-sharp-format
+msgid "try {0} of {1}"
+msgstr "попытка {0} из {1}"
+
+#, c-sharp-format
+msgid "{0} points · {1} of {2} in the cup"
+msgstr "очков: {0} · в лунке {1} из {2}"
+
+msgid "No pieces left"
+msgstr "Детали кончились"
+
+msgid "right-click a piece to take it back"
+msgstr "правый щелчок по детали вернёт её в лоток"
+
+msgid "Land a marble in the cup in Marble Run"
+msgstr "Загоните шарик в лунку в «Марблах»"
+
+msgid "Look, no ramps"
+msgstr "Смотри, без горок"
+
+msgid "Land a marble in the cup without placing a piece"
+msgstr "Загоните шарик в лунку, не поставив ни одной детали"
+
+msgid "Marble master"
+msgstr "Мастер шариков"
+
+msgid "Land 5 marbles in a row at the first release"
+msgstr "Загоните 5 шариков подряд с первого раза"
+
+#, c-sharp-format
+msgid "Land {0} marbles in the cup in Marble Run"
+msgstr "Загоните {0} шариков в лунку в «Марблах»"
+
+#. sheep
+msgid "Sheep Herding"
+msgstr "Пастух"
+
+msgid "move the cursor to herd the flock into the pen — click to bark"
+msgstr "ведите курсором отару в загон — щелчок, чтобы гавкнуть"
+
+#, c-sharp-format
+msgid "Round {0} · {1} sheep · click the pen to start"
+msgstr "Раунд {0} · овец: {1} · нажмите на загон, чтобы начать"
+
+#, c-sharp-format
+msgid "Round {0} · penned {1}/{2} · {3}s left"
+msgstr "Раунд {0} · в загоне {1}/{2} · осталось {3} с"
+
+#, c-sharp-format
+msgid "Round {0} done · click the pen for the next one"
+msgstr "Раунд {0} пройден · нажмите на загон для следующего"
+
+#, c-sharp-format
+msgid "{0} of {1} penned · click the pen to try again"
+msgstr "В загоне {0} из {1} · нажмите на загон, чтобы попробовать снова"
+
+#, c-sharp-format
+msgid "Round {0} · {1} sheep · {2} seconds"
+msgstr "Раунд {0} · овец: {1} · секунд: {2}"
+
+msgid "ALL PENNED!"
+msgstr "ВСЕ В ЗАГОНЕ!"
+
+#, c-sharp-format
+msgid "{0} points · {1}s to spare"
+msgstr "очков: {0} · в запасе {1} с"
+
+#, c-sharp-format
+msgid "{0} of {1} penned · {2} points"
+msgstr "в загоне {0} из {1} · очков: {2}"
+
+msgid "Woof!"
+msgstr "Гав!"
+
+msgid "click the pen to start"
+msgstr "нажмите на загон, чтобы начать"
+
+msgid "click for the next round"
+msgstr "нажмите для следующего раунда"
+
+msgid "Good dog"
+msgstr "Хороший пёс"
+
+msgid "Pen 100 sheep"
+msgstr "Загоните 100 овец"
+
+msgid "Top dog"
+msgstr "Главный пёс"
+
+msgid "Clear round 5 of Sheep Herding"
+msgstr "Пройдите 5-й раунд «Пастуха»"
+
+msgid "Come by!"
+msgstr "Обходи!"
+
+msgid "Pen the whole flock with 30 seconds to spare"
+msgstr "Загоните всю отару, когда в запасе ещё 30 секунд"
+
+#, c-sharp-format
+msgid "Pen {0} sheep in Sheep Herding"
+msgstr "Загоните {0} овец в «Пастухе»"
+
+#. cannons
+msgid "Cannon Castles"
+msgstr "Пушечные замки"
+
+msgid "drag back from your cannon and let go — mind the wind and knock down their flag"
+msgstr "оттяните назад от своей пушки и отпустите — учитывайте ветер и собейте их флаг"
+
+#, c-sharp-format
+msgid "Game over · click your cannon to ask {0} for a rematch"
+msgstr "Игра окончена · нажмите на пушку, чтобы предложить {0} реванш"
+
+msgid "Game over · click your cannon to play again"
+msgstr "Игра окончена · нажмите на пушку, чтобы сыграть снова"
+
+#, c-sharp-format
+msgid "Your shot · wind {0}"
+msgstr "Ваш выстрел · ветер {0}"
+
+#, c-sharp-format
+msgid "{0} is aiming · wind {1}"
+msgstr "целится {0} · ветер {1}"
+
+#, c-sharp-format
+msgid "The CPU ({0}) is aiming · wind {1}"
+msgstr "Компьютер ({0}) целится · ветер {1}"
+
+msgid "Too short"
+msgstr "Недолёт"
+
+msgid "Too long"
+msgstr "Перелёт"
+
+#, c-sharp-format
+msgid "{0} blocks down"
+msgstr "сбито блоков: {0}"
+
+msgid "Cracked!"
+msgstr "Трещина!"
+
+msgid "Block down!"
+msgstr "Блок сбит!"
+
+msgid "Hit a window"
+msgstr "Попали в окно"
+
+msgid "click your cannon for a rematch"
+msgstr "нажмите на пушку для реванша"
+
+msgid "click your cannon to play again"
+msgstr "нажмите на пушку, чтобы сыграть снова"
+
+msgid "not a block lost!"
+msgstr "не потеряв ни блока!"
+
+msgid "your flag is down"
+msgstr "ваш флаг сбит"
+
+#, c-sharp-format
+msgid "wind {0}"
+msgstr "ветер {0}"
+
+msgid "FLAG DOWN!"
+msgstr "ФЛАГ СБИТ!"
+
+msgid "Castle breaker"
+msgstr "Гроза замков"
+
+msgid "Beat the computer at Hard or Expert in Cannon Castles"
+msgstr "Обыграйте компьютер на уровне «Сложно» или выше в «Пушечных замках»"
+
+msgid "Untouchable"
+msgstr "Неприступный"
+
+msgid "Win Cannon Castles without losing a single block"
+msgstr "Выиграйте «Пушечные замки», не потеряв ни одного блока"
+
+msgid "Siege of the next desk"
+msgstr "Осада соседнего стола"
+
+msgid "Win a Cannon Castles duel over the LAN"
+msgstr "Выиграйте дуэль в «Пушечных замках» по локальной сети"
+
+#, c-sharp-format
+msgid "Knock down {0} castle blocks in Cannon Castles"
+msgstr "Собейте {0} блоков замка в «Пушечных замках»"
+
+#. codebreaker
+msgid "Code Breaker"
+msgstr "Взломщик кода"
+
+msgid "Check"
+msgstr "Проверить"
+
+#, c-sharp-format
+msgid "Guess {0}/{1} · pick a colour, then click a hole"
+msgstr "Попытка {0}/{1} · выберите цвет, затем нажмите на лунку"
+
+#, c-sharp-format
+msgid "Guess {0}/{1} · click Check"
+msgstr "Попытка {0}/{1} · нажмите «Проверить»"
+
+msgid "Code cracked · click the board for a new code"
+msgstr "Код разгадан · нажмите на доску для нового кода"
+
+msgid "Out of guesses · click the board for a new code"
+msgstr "Попытки кончились · нажмите на доску для нового кода"
+
+#, c-sharp-format
+msgid "Fewest guesses {0}"
+msgstr "Рекорд попыток {0}"
+
+msgid "CODE CRACKED!"
+msgstr "КОД РАЗГАДАН!"
+
+#, c-sharp-format
+msgid "{0} of {1} guesses"
+msgstr "попыток: {0} из {1}"
+
+msgid "OUT OF GUESSES"
+msgstr "ПОПЫТКИ КОНЧИЛИСЬ"
+
+msgid "here is the code · click the board for a new code"
+msgstr "вот код · нажмите на доску для нового кода"
+
+msgid "pick a colour, fill the row and click Check — a black pin is the right colour in the right place"
+msgstr "выберите цвет, заполните ряд и нажмите «Проверить» — чёрный штырёк: верный цвет на верном месте"
+
+msgid "Code cracked"
+msgstr "Код взломан"
+
+msgid "Break a code"
+msgstr "Разгадайте код"
+
+msgid "Mind reader"
+msgstr "Телепат"
+
+msgid "Break a code in 4 guesses or fewer"
+msgstr "Разгадайте код за 4 попытки или меньше"
+
+#, c-sharp-format
+msgid "Break {0} codes in Code Breaker"
+msgstr "Разгадайте коды в «Взломщике кода»: {0}"
+
+#. ---- Pinball
+msgid "Pinball"
+msgstr "Пинбол"
+
+msgid "click the ball to serve — press by a flipper to flip it, right-click flips both"
+msgstr "нажмите на шар, чтобы запустить его — нажмите у флиппера, чтобы поднять его, правая кнопка поднимает оба"
+
+#, c-sharp-format
+msgid "Ball {0} of 3"
+msgstr "Шар {0} из 3"
+
+#, c-sharp-format
+msgid "Ball {0} of 3 · ×{1}"
+msgstr "Шар {0} из 3 · ×{1}"
+
+#, c-sharp-format
+msgid "Ball {0} of 3 · click the ball to serve"
+msgstr "Шар {0} из 3 · нажмите на шар, чтобы запустить"
+
+msgid "Game over · click the ball to play again"
+msgstr "Игра окончена · нажмите на шар, чтобы сыграть ещё"
+
+msgid "Drained!"
+msgstr "Шар ушёл!"
+
+#, c-sharp-format
+msgid "×{0} multiplier"
+msgstr "множитель ×{0}"
+
+msgid "Pinball wizard"
+msgstr "Пинбольный волшебник"
+
+msgid "Score 5,000 in one game"
+msgstr "Наберите 5000 очков за одну игру"
+
+msgid "Bumper cars"
+msgstr "Автодром"
+
+msgid "Hit 500 bumpers"
+msgstr "Попадите в бамперы 500 раз"
+
+#, c-sharp-format
+msgid "Hit {0} bumpers in Pinball"
+msgstr "Попадите в бамперы {0} раз в пинболе"
+
+#. ---- 1.8.0: scoreboard, races against the computer, movable boards
+msgid "Your turn"
+msgstr "Ваш ход"
+
+#, c-sharp-format
+msgid "CPU · {0}"
+msgstr "Компьютер · {0}"
+
+msgid "Menu"
+msgstr "Меню"
+
+#, c-sharp-format
+msgid "{0} shows the overlay again"
+msgstr "{0} снова покажет игру"
+
+msgid "or run: deskarcade --signal show"
+msgstr "или выполните: deskarcade --signal show"
+
+msgid "Hide overlay"
+msgstr "Скрыть игру"
+
+msgid "Drag to move"
+msgstr "Перетащите, чтобы переместить"
+
+msgid "Race the computer in solo rounds"
+msgstr "Гонка с компьютером в одиночных раундах"
+
+#, c-sharp-format
+msgid "CPU ({0}): {1}"
+msgstr "Компьютер ({0}): {1}"
+
+#, c-sharp-format
+msgid "CPU ({0}) is heading for {1}"
+msgstr "Компьютер ({0}) идёт к {1}"
+
+msgid "Race the computer: start a round and it plays one too"
+msgstr "Гонка с компьютером: начните раунд, и он сыграет свой"
+
+#, c-sharp-format
+msgid "the CPU goes easier: {0}"
+msgstr "компьютер играет легче: {0}"
+
+msgid "Pacesetter"
+msgstr "Задающий темп"
+
+msgid "Beat the computer in 10 races"
+msgstr "Обыграйте компьютер в 10 гонках"
+
+#. ---- 1.8.0: Linux overlay
+msgid "No tray icon on this desktop"
+msgstr "На этом рабочем столе нет значка в трее"
+
+msgid "the ☰ button on the scoreboard has the menu"
+msgstr "меню находится под кнопкой ☰ на табло"
+
+#. ---- pets in the games
+msgid "Pet keeps me company in games"
+msgstr "Питомец составляет компанию в играх"
+
+msgid "Fish thief!"
+msgstr "Рыбный воришка!"
+
+msgid "your pet ran off with it · it still counts"
+msgstr "питомец утащил её · улов всё равно засчитан"
+
+#. ---- 1.8.0: pets
+msgid "After the ball!"
+msgstr "За мячом!"
+
+msgid "Begging for a treat · click the jar"
+msgstr "Просит лакомство · нажмите на банку"
+
+msgid "Bringing the ball back"
+msgstr "Несёт мяч обратно"
+
+msgid "Catching flies"
+msgstr "Ловит мух"
+
+msgid "Click to pet · right-click for a trick · throw the ball · click the jar for a treat"
+msgstr "Клик — погладить · правая кнопка — трюк · бросьте мяч · нажмите на банку — лакомство"
+
+msgid "Coming over to sit with you"
+msgstr "Идёт посидеть рядом с вами"
+
+msgid "Curled up"
+msgstr "Свернулся клубком"
+
+msgid "Dragon"
+msgstr "Дракон"
+
+msgid "Feed your pet 30 treats"
+msgstr "Дайте питомцу 30 лакомств"
+
+msgid "Fetch!"
+msgstr "Апорт!"
+
+#, c-sharp-format
+msgid "Fetches {0} · Treats {1} · Pets {2}"
+msgstr "Апорт {0} · Лакомства {1} · Поглаживания {2}"
+
+msgid "Flying"
+msgstr "Летит"
+
+msgid "Frog"
+msgstr "Лягушка"
+
+msgid "Good morning!"
+msgstr "Доброе утро!"
+
+msgid "Hamster"
+msgstr "Хомяк"
+
+msgid "Have your pet bring the ball back 20 times"
+msgstr "Пусть питомец принесёт мяч 20 раз"
+
+msgid "Having a look around"
+msgstr "Осматривается"
+
+msgid "Keeping you company"
+msgstr "Составляет вам компанию"
+
+msgid "Meet a co-worker's pet over the LAN"
+msgstr "Встретьте питомца коллеги по локальной сети"
+
+msgid "Nom nom nom"
+msgstr "Ням-ням-ням"
+
+msgid "Off to get a treat"
+msgstr "Бежит за лакомством"
+
+msgid "Owl"
+msgstr "Сова"
+
+msgid "Parrot"
+msgstr "Попугай"
+
+msgid "Playdate"
+msgstr "Встреча питомцев"
+
+msgid "Puffing smoke"
+msgstr "Пускает дым"
+
+msgid "Safe in its shell"
+msgstr "Спрятался в панцирь"
+
+msgid "Stuffing its cheeks"
+msgstr "Набивает щёки"
+
+msgid "Treat time"
+msgstr "Время лакомства"
+
+msgid "Turtle"
+msgstr "Черепаха"
+
+#, c-sharp-format
+msgid "Visiting {0}'s {1}"
+msgstr "В гостях у питомца {0} ({1})"
+
+msgid "Wants to play · throw the ball"
+msgstr "Хочет играть · бросьте мяч"
+
+msgid "Watching the ball"
+msgstr "Следит за мячом"
+
+msgid "Watching you"
+msgstr "Наблюдает за вами"
+
+#. ---- pets grow up, nap on their favourite window and have their own volume
+msgid "Off to nap on its favourite window"
+msgstr "Идёт вздремнуть на любимом окне"
+
+#, c-sharp-format
+msgid "{0} is old and wise now!"
+msgstr "{0} — теперь мудрый питомец!"
+
+#, c-sharp-format
+msgid "{0} is all grown up!"
+msgstr "{0} — теперь взрослый питомец!"
+
+msgid "A new trick · right-click to see it"
+msgstr "Новый трюк · правый клик, чтобы увидеть"
+
+msgid "Pet volume"
+msgstr "Громкость питомца"
+
+msgid "Softer late in the evening"
+msgstr "Тише поздно вечером"
+
+msgid "Quiet"
+msgstr "Тихо"
+
+msgid "Normal"
+msgstr "Обычно"
+
+msgid "Loud"
+msgstr "Громко"
+
+msgid "Young"
+msgstr "Малыш"
+
+msgid "Grown-up"
+msgstr "Взрослый"
+
+msgid "Wise"
+msgstr "Мудрый"
+
+msgid "Pets"
+msgstr "Питомцы"
+
+#, c-sharp-format
+msgid "Next: {0} at {1} days and {2} play"
+msgstr "Дальше: «{0}» — {1} дн. и {2} очк. игры"
+
+msgid "Knows a second trick · right-click it"
+msgstr "Знает второй трюк · правый клик — трюк"
+
+#, c-sharp-format
+msgid "Age {0} d · play {1}"
+msgstr "Возраст {0} дн. · игра {1}"
+
+#, c-sharp-format
+msgid "Favourite nap spot: {0}"
+msgstr "Любимое место для сна: {0}"
+
+msgid "All grown up"
+msgstr "Совсем взрослый"
+
+msgid "Raise a pet until it is grown up"
+msgstr "Вырастите питомца до взрослого"
+
+msgid "Old and wise"
+msgstr "Старый и мудрый"
+
+msgid "Raise a pet until it is old and wise"
+msgstr "Вырастите питомца до мудрого возраста"
+
+msgid "Hello!"
+msgstr "Привет!"
+
+msgid "Pretty bird!"
+msgstr "Красивая птичка!"
+
+msgid "Cracker?"
+msgstr "Печенье?"
+
+#. ---- 1.8.0: board and turn games
+#, c-sharp-format
+msgid "the CPU goes easier: {0} · click a grid for a rematch"
+msgstr "компьютер играет легче: {0} · нажмите на поле, чтобы сыграть ещё"
+
+#. ---- 1.8.0: races, part 1 (Keepy-Uppy, Bug Squash, Can Knockdown, Brick Breaker)
+msgid "GO!"
+msgstr "ПОЕХАЛИ!"
+
+#, c-sharp-format
+msgid "{0} seconds · spare the ladybugs"
+msgstr "{0} секунд · божьих коровок не трогайте"
+
+#. ---- 1.8.0: races, part 2 (Clay Shooting, Plinko, Slingshot, Darts)
+msgid "Click the sheet again to give up the leg"
+msgstr "Нажмите на лист счёта ещё раз, чтобы сдать лег"
+
+msgid "LEG GIVEN UP"
+msgstr "ЛЕГ СДАН"
+
+#. ---- 1.8.0: races, part 3 (Pool, Memory, Code Breaker, Solitaire, Interns)
+msgid "Click a card to flip it · find all the pairs · right-drag moves the cards"
+msgstr "Нажмите на карту, чтобы открыть её · найдите все пары · правой кнопкой можно сдвинуть карты"
+
+msgid "Click the stock to turn a card · click or drag cards to move them · right-drag moves the felt"
+msgstr "Нажмите на колоду, чтобы открыть карту · нажимайте на карты или перетаскивайте их · правой кнопкой можно сдвинуть стол"
+
+#. ---- 1.8.0: animation pass (Bubbles, Whack, Tower, Bowling, Fishing, Pinball, Paper Toss, Blockfall, Hockey, Pong)
+#, c-sharp-format
+msgid "First to {0} · CPU {1} · drag your blue mallet"
+msgstr "До {0} голов · компьютер: {1} · двигайте синюю биту"
+
+#, c-sharp-format
+msgid "First to {0} · CPU {1} · drag your paddle"
+msgstr "До {0} · компьютер: {1} · двигайте ракетку"
+
+msgid "grab your mallet for a rematch"
+msgstr "возьмите биту для реванша"
+
+msgid "grab your paddle for a rematch"
+msgstr "возьмите ракетку для реванша"
+
+#. ---- 1.8.0: Linux updates
+#, c-sharp-format
+msgid "Update {0}%"
+msgstr "Обновление {0}%"
+
+msgid "then PolicyKit asks for your password to install it"
+msgstr "затем PolicyKit спросит ваш пароль для установки"
+
+msgid "This release has no checksum"
+msgstr "У этого выпуска нет контрольной суммы"
+
+msgid "installing the download unverified"
+msgstr "загруженный файл устанавливается без проверки"
+
+msgid "a Flatpak updates with flatpak update · opening the release page"
+msgstr "Flatpak обновляется командой flatpak update · открываю страницу выпуска"
+
+msgid "The update did not install · press Enter to close this window"
+msgstr "Обновление не установилось · нажмите Enter, чтобы закрыть это окно"
+
+#, c-sharp-format
+msgid "Update {0} downloaded"
+msgstr "Обновление {0} скачано"
+
+#, c-sharp-format
+msgid "no pkexec or terminal to install it · it is in {0}"
+msgstr "нет pkexec и терминала для установки · файл лежит в {0}"
+
+msgid "Finishing the update in a terminal"
+msgstr "Завершаем обновление в терминале"
+
+msgid "enter your password there · the game restarts when it is done"
+msgstr "введите там пароль · игра перезапустится, когда всё будет готово"
+
+#, c-sharp-format
+msgid "if it did not install, it is in {0}"
+msgstr "если оно не установилось, файл лежит в {0}"
+
+#, c-sharp-format
+msgid "Installed {0} · restarting"
+msgstr "Установлено {0} · перезапуск"
+
+msgid "the new version starts in a moment"
+msgstr "новая версия запустится через мгновение"
+
+#, c-sharp-format
+msgid "saved in {0} · double-click the .deb to install it"
+msgstr "сохранено в {0} · дважды щёлкните .deb, чтобы установить"
+
+#, c-sharp-format
+msgid "Update failed · exit code {0}"
+msgstr "Обновление не удалось · код выхода {0}"
+
+#, c-sharp-format
+msgid "couldn't replace the running file · the new one is {0}"
+msgstr "не удалось заменить работающий файл · новый: {0}"
+
+#, c-sharp-format
+msgid "Installed {0}"
+msgstr "Установлено {0}"
+
+msgid "start Desk Arcade again to play it"
+msgstr "запустите Desk Arcade снова, чтобы играть"
+
+#. ---- 1.8.0: themes
+msgid "Ocean"
+msgstr "Океан"
+
+msgid "Forest"
+msgstr "Лес"
+
+msgid "Sunset"
+msgstr "Закат"
+
+msgid "Candy"
+msgstr "Конфеты"
+
+msgid "Mono"
+msgstr "Моно"
+
+msgid "Spring"
+msgstr "Весна"
+
+msgid "Autumn"
+msgstr "Осень"
+
+msgid "Midnight"
+msgstr "Полночь"
+
+msgid "Theme decorations"
+msgstr "Украшения темы"
+
+msgid "the desk as you know it"
+msgstr "стол, каким вы его знаете"
+
+msgid "lights on, volume up"
+msgstr "включаем свет, прибавляем звук"
+
+msgid "insert coin"
+msgstr "опустите монету"
+
+msgid "boo"
+msgstr "бу-у"
+
+msgid "mind the snow"
+msgstr "осторожно, снег"
+
+msgid "deep breath"
+msgstr "глубокий вдох"
+
+msgid "quiet under the trees"
+msgstr "тишина под деревьями"
+
+msgid "golden hour"
+msgstr "золотой час"
+
+msgid "sweet"
+msgstr "сладко"
+
+msgid "just the game"
+msgstr "только игра"
+
+msgid "fresh start"
+msgstr "новое начало"
+
+msgid "crunchy leaves"
+msgstr "хрустящие листья"
+
+msgid "lights out"
+msgstr "гасим свет"
+
+#. typing race
+msgid "Typing Race"
+msgstr "Гонка печати"
+
+msgid "click the text and type it — the first car over the line wins"
+msgstr "нажмите на текст и наберите его — побеждает машина, первой пришедшая к финишу"
+
+msgid "Your keys go to the game here · Esc stops"
+msgstr "Клавиши сейчас идут в игру · Esc — стоп"
+
+msgid "Click here to keep typing"
+msgstr "Нажмите здесь, чтобы печатать дальше"
+
+#, c-sharp-format
+msgid "asked {0} for a race"
+msgstr "{0} предложена гонка"
+
+#, c-sharp-format
+msgid "{0} WPM"
+msgstr "{0} сл/мин"
+
+msgid "gave up"
+msgstr "сход"
+
+msgid "Get ready…"
+msgstr "Приготовьтесь…"
+
+#, c-sharp-format
+msgid "Finished · waiting for {0}"
+msgstr "Финиш · ждём: {0}"
+
+msgid "Click the text to keep typing"
+msgstr "Нажмите на текст, чтобы печатать дальше"
+
+#, c-sharp-format
+msgid "Type! · {0}% accuracy"
+msgstr "Печатайте! · точность {0}%"
+
+#, c-sharp-format
+msgid "Click the text to ask {0} for a race"
+msgstr "Нажмите на текст, чтобы предложить гонку: {0}"
+
+#, c-sharp-format
+msgid "Click the text to race · {0}"
+msgstr "Нажмите на текст, чтобы начать гонку · {0}"
+
+#, c-sharp-format
+msgid "Best WPM {0}"
+msgstr "Рекорд сл/мин {0}"
+
+#, c-sharp-format
+msgid "{0} picks the text"
+msgstr "Текст выбирает {0}"
+
+#, c-sharp-format
+msgid "{0}% accuracy · {1}s"
+msgstr "точность {0}% · {1} с"
+
+#, c-sharp-format
+msgid "ahead of {0}"
+msgstr "{0} позади"
+
+#, c-sharp-format
+msgid "ahead of the CPU at {0} WPM"
+msgstr "компьютер позади ({0} сл/мин)"
+
+msgid "you gave up"
+msgstr "вы сдались"
+
+#, c-sharp-format
+msgid "{0} crossed the line first"
+msgstr "первое место: {0}"
+
+#, c-sharp-format
+msgid "the CPU typed {0} WPM"
+msgstr "компьютер печатал {0} сл/мин"
+
+msgid "You gave up"
+msgstr "Вы сдались"
+
+#, c-sharp-format
+msgid "Finished! Waiting for {0}…"
+msgstr "Финиш! Ждём: {0}…"
+
+msgid "Paused · click the text to keep typing"
+msgstr "Пауза · нажмите на текст, чтобы печатать дальше"
+
+#, c-sharp-format
+msgid "{0}% accuracy"
+msgstr "точность {0}%"
+
+msgid "Click the text for the next race"
+msgstr "Нажмите на текст для следующей гонки"
+
+msgid "Click the text to start"
+msgstr "Нажмите на текст, чтобы начать"
+
+msgid "Give up"
+msgstr "Сдаться"
+
+msgid "Touch typist"
+msgstr "Вслепую"
+
+msgid "Finish a race at 40 words per minute"
+msgstr "Финишируйте со скоростью 40 слов в минуту"
+
+msgid "Lightning fingers"
+msgstr "Пальцы-молнии"
+
+msgid "Finish a race at 80 words per minute"
+msgstr "Финишируйте со скоростью 80 слов в минуту"
+
+msgid "Not a single typo"
+msgstr "Ни одной опечатки"
+
+msgid "Finish a race without a mistake"
+msgstr "Пройдите гонку без единой ошибки"
+
+msgid "Ten-finger coder"
+msgstr "Код десятью пальцами"
+
+msgid "Finish 10 races with code"
+msgstr "Пройдите 10 гонок с кодом"
+
+msgid "Pole position"
+msgstr "Поул-позиция"
+
+msgid "Win 25 typing races"
+msgstr "Выиграйте 25 гонок печати"
+
+#, c-sharp-format
+msgid "Type {0} characters in Typing Race"
+msgstr "Наберите {0} знаков в «Гонке печати»"
+
+#, c-sharp-format
+msgid "You won! {0} is still typing…"
+msgstr "Победа! {0} еще печатает…"
+
+#, c-sharp-format
+msgid "{0} won · finish the text for your speed"
+msgstr "Победа за {0} · допечатайте текст, чтобы узнать свою скорость"
+
+msgid "You won! Click the text for the next race"
+msgstr "Победа! Нажмите на текст для следующей гонки"
+
+msgid "You won!"
+msgstr "Победа!"
+
+#. word rain
+msgid "Word Rain"
+msgstr "Дождь из слов"
+
+msgid "click the typewriter, then type the falling words — don't let them reach the taskbar"
+msgstr "нажмите на пишущую машинку и печатайте падающие слова — не дайте им долететь до панели задач"
+
+msgid "Paused · click the typewriter to go on"
+msgstr "Пауза · нажмите на пишущую машинку, чтобы продолжить"
+
+#, c-sharp-format
+msgid "Level {0} · lives {1} · combo ×{2}"
+msgstr "Уровень {0} · жизни {1} · серия ×{2}"
+
+#, c-sharp-format
+msgid "Game over · {0} words · click the typewriter to play again"
+msgstr "Игра окончена · слов: {0} · нажмите на машинку, чтобы сыграть снова"
+
+#, c-sharp-format
+msgid "Click the typewriter to start · {0}"
+msgstr "Нажмите на пишущую машинку, чтобы начать · {0}"
+
+#, c-sharp-format
+msgid "{0} words · level {1} · {2} points"
+msgstr "слов: {0} · уровень {1} · очков: {2}"
+
+#, c-sharp-format
+msgid "LEVEL {0}"
+msgstr "УРОВЕНЬ {0}"
+
+msgid "faster, and longer words"
+msgstr "быстрее, и слова длиннее"
+
+msgid "SPLASH!"
+msgstr "ПЛЮХ!"
+
+msgid "Weather report"
+msgstr "Прогноз погоды"
+
+msgid "Zap 250 falling words"
+msgstr "Собейте 250 падающих слов"
+
+msgid "Monsoon"
+msgstr "Муссон"
+
+msgid "Reach level 8 in Word Rain"
+msgstr "Дойдите до 8-го уровня в «Дожде из слов»"
+
+msgid "Clear skies"
+msgstr "Ясное небо"
+
+msgid "Zap 25 words in a row without a miss"
+msgstr "Собейте 25 слов подряд без промаха"
+
+#, c-sharp-format
+msgid "Zap {0} words in Word Rain"
+msgstr "Собейте {0} слов в «Дожде из слов»"
+
+#. chat and reactions
+#, c-sharp-format
+msgid "Chat with {0}…"
+msgstr "Чат с {0}…"
+
+msgid "Chat with a co-worker…"
+msgstr "Чат с коллегой…"
+
+#, c-sharp-format
+msgid "Chat with {0}"
+msgstr "Чат с {0}"
+
+msgid "Chat"
+msgstr "Чат"
+
+#, c-sharp-format
+msgid "to {0}"
+msgstr "для {0}"
+
+#, c-sharp-format
+msgid "{0} has chat turned off. It turns on when they open the chat."
+msgstr "У {0} чат выключен. Он включится, когда собеседник откроет чат."
+
+#, c-sharp-format
+msgid "{0} wants to chat"
+msgstr "{0} хочет пообщаться"
+
+msgid "Play over LAN → Chat… to answer"
+msgstr "Игра по сети → Чат…, чтобы ответить"
+
+msgid "Only between the two of you, over your local network. Nothing is saved."
+msgstr "Только между вами двумя, по локальной сети. Ничего не сохраняется."
+
+msgid "A moment — the last messages are still on their way"
+msgstr "Минутку — предыдущие сообщения еще в пути"
+
+#, c-sharp-format
+msgid "Message {0}…"
+msgstr "Сообщение для {0}…"
+
+msgid "Chat is on"
+msgstr "Чат включен"
+
+msgid "Not connected — pair up with Play over LAN first"
+msgstr "Нет соединения — сначала подключитесь через «Игру по сети»"
+
+msgid "not delivered"
+msgstr "не доставлено"
+
+msgid "sending…"
+msgstr "отправка…"
+
+msgid "click to reply"
+msgstr "нажмите, чтобы ответить"
+
+msgid "React"
+msgstr "Реакция"
+
+msgid "Thumbs up"
+msgstr "Класс"
+
+msgid "Party!"
+msgstr "Праздник!"
+
+msgid "Coffee?"
+msgstr "Кофе?"
+
+msgid "Ha ha!"
+msgstr "Ха-ха!"
+
+msgid "On fire!"
+msgstr "Огонь!"
+
+msgid "Love it"
+msgstr "Обожаю"
+
+msgid "Nice!"
+msgstr "Здорово!"
+
+msgid "Lunch?"
+msgstr "Обед?"
+
+#. snakes on windows
+msgid "Snakes on Windows"
+msgstr "Змейка на окнах"
+
+msgid "click the sleeping snake — it follows your cursor: eat the apples, don't cross your tail"
+msgstr "нажмите на спящую змейку — она ползет за курсором: ешьте яблоки и не задевайте хвост"
+
+#, c-sharp-format
+msgid "Apples {0} · steer with the cursor · don't cross your tail"
+msgstr "Яблок: {0} · рулите курсором · не задевайте хвост"
+
+#, c-sharp-format
+msgid "Bitten! {0} apples · click the snake to play again"
+msgstr "Укус! Яблок: {0} · нажмите на змейку, чтобы сыграть снова"
+
+msgid "Click the sleeping snake · it follows your cursor"
+msgstr "Нажмите на спящую змейку · она ползет за курсором"
+
+msgid "BITTEN!"
+msgstr "УКУС!"
+
+#, c-sharp-format
+msgid "{0} apples · {1} points"
+msgstr "яблок: {0} · очков: {1}"
+
+msgid "An apple a day"
+msgstr "По яблоку в день"
+
+msgid "Eat 100 apples in Snakes on Windows"
+msgstr "Съешьте 100 яблок в «Змейке на окнах»"
+
+msgid "Python"
+msgstr "Питон"
+
+msgid "Eat 30 apples in one game of Snakes on Windows"
+msgstr "Съешьте 30 яблок за одну игру в «Змейке на окнах»"
+
+msgid "Golden delicious"
+msgstr "Золотое яблочко"
+
+msgid "Eat 10 golden apples"
+msgstr "Съешьте 10 золотых яблок"
+
+#, c-sharp-format
+msgid "Eat {0} apples in Snakes on Windows"
+msgstr "Съешьте {0} яблок в «Змейке на окнах»"
+
+#. asteroids
+msgid "Asteroids"
+msgstr "Астероиды"
+
+msgid "click your ship to launch — it follows the cursor; click a rock to fire at it"
+msgstr "нажмите на корабль, чтобы взлететь, — он летит за курсором; нажмите на камень, чтобы выстрелить"
+
+#, c-sharp-format
+msgid "asked {0} for a game"
+msgstr "{0} предложена игра"
+
+#, c-sharp-format
+msgid "Wave {0} · lives {1} · with {2}"
+msgstr "Волна {0} · жизни {1} · вместе с {2}"
+
+#, c-sharp-format
+msgid "Wave {0} · lives {1} · click a rock to fire"
+msgstr "Волна {0} · жизни {1} · нажмите на камень, чтобы выстрелить"
+
+#, c-sharp-format
+msgid "Game over · wave {0} · click your ship to fly again"
+msgstr "Игра окончена · волна {0} · нажмите на корабль, чтобы взлететь снова"
+
+#, c-sharp-format
+msgid "Click your ship to ask {0} for a game"
+msgstr "Нажмите на корабль, чтобы предложить игру: {0}"
+
+msgid "Click your ship to launch · it follows the cursor, click rocks to fire"
+msgstr "Нажмите на корабль, чтобы взлететь · он летит за курсором, по камням стреляйте щелчком"
+
+#, c-sharp-format
+msgid "wave {0} · {1} points"
+msgstr "волна {0} · очков: {1}"
+
+#, c-sharp-format
+msgid "with {0}"
+msgstr "вместе с {0}"
+
+msgid "Space janitor"
+msgstr "Космический дворник"
+
+msgid "Destroy 200 rocks in Asteroids"
+msgstr "Уничтожьте 200 камней в «Астероидах»"
+
+msgid "Deep space"
+msgstr "Глубокий космос"
+
+msgid "Reach wave 6 in Asteroids"
+msgstr "Дойдите до 6-й волны в «Астероидах»"
+
+msgid "Wingman"
+msgstr "Ведомый"
+
+msgid "Fly a game of Asteroids with a co-worker"
+msgstr "Сыграйте в «Астероиды» вместе с коллегой"
+
+#, c-sharp-format
+msgid "Destroy {0} rocks in Asteroids"
+msgstr "Уничтожьте {0} камней в «Астероидах»"
+
+#. minesweeper and sudoku
+msgid "Minesweeper"
+msgstr "Сапер"
+
+msgid "Sudoku"
+msgstr "Судоку"
+
+msgid "click a cell to open it, right-click to flag a mine — open every safe cell"
+msgstr "нажмите на клетку, чтобы открыть ее, правой кнопкой ставьте флажок — откройте все клетки без мин"
+
+msgid "click a cell, then a digit on the pad — every row, column and box holds 1 to 9 once"
+msgstr "нажмите на клетку, затем на цифру — в каждой строке, столбце и квадрате цифры от 1 до 9 по одному разу"
+
+#, c-sharp-format
+msgid "Cleared in {0}s · click the face for a new board"
+msgstr "Поле пройдено за {0} с · нажмите на смайлик для нового поля"
+
+msgid "Boom! · click the face for a new board"
+msgstr "Бум! · нажмите на смайлик для нового поля"
+
+#, c-sharp-format
+msgid "Mines left {0} · right-click flags"
+msgstr "Осталось мин {0} · правая кнопка ставит флажок"
+
+msgid "Start on the marked cell · right-click flags a mine"
+msgstr "Начните с отмеченной клетки · правая кнопка ставит флажок"
+
+msgid "Click a cell to start · right-click flags a mine"
+msgstr "Нажмите на клетку, чтобы начать · правая кнопка ставит флажок"
+
+#, c-sharp-format
+msgid "{0}s"
+msgstr "{0} с"
+
+#, c-sharp-format
+msgid "Best {0}s"
+msgstr "Рекорд {0} с"
+
+msgid "BOOM!"
+msgstr "БУМ!"
+
+msgid "click the face for a new board"
+msgstr "нажмите на смайлик для нового поля"
+
+msgid "CLEARED!"
+msgstr "ПОЛЕ ЧИСТО!"
+
+#, c-sharp-format
+msgid "today's puzzle in {0}s"
+msgstr "головоломка дня за {0} с"
+
+#, c-sharp-format
+msgid "today's puzzle in {0}"
+msgstr "головоломка дня за {0}"
+
+msgid "LAN race"
+msgstr "Гонка по сети"
+
+msgid "Daily puzzle"
+msgstr "Головоломка дня"
+
+msgid "Random board"
+msgstr "Случайная"
+
+msgid "Beginner"
+msgstr "Новичок"
+
+msgid "Intermediate"
+msgstr "Любитель"
+
+#, c-sharp-format
+msgid "Solved in {0} · New for another puzzle"
+msgstr "Решено за {0} · «Новая» для следующей головоломки"
+
+msgid "Click a cell, then a digit on the pad · right-click clears"
+msgstr "Нажмите на клетку, затем на цифру · правая кнопка стирает"
+
+msgid "Notes on: the pad writes pencil marks"
+msgstr "Заметки включены: цифры пишутся карандашом"
+
+#, c-sharp-format
+msgid "Filled {0}/81 · the same digit again clears the cell"
+msgstr "Заполнено {0}/81 · та же цифра еще раз стирает клетку"
+
+msgid "Notes: on"
+msgstr "Заметки: вкл"
+
+msgid "Notes: off"
+msgstr "Заметки: выкл"
+
+msgid "Erase"
+msgstr "Стереть"
+
+msgid "New"
+msgstr "Новая"
+
+msgid "Sweeper"
+msgstr "Сапер"
+
+msgid "Clear a Minesweeper board"
+msgstr "Пройдите поле в «Сапере»"
+
+msgid "Bomb squad"
+msgstr "Саперный взвод"
+
+msgid "Clear an Expert Minesweeper board"
+msgstr "Пройдите поле «Эксперт» в «Сапере»"
+
+msgid "Quick sweep"
+msgstr "Быстрый сапер"
+
+msgid "Clear a Beginner board in under 20 seconds"
+msgstr "Пройдите поле «Новичок» быстрее чем за 20 секунд"
+
+msgid "Nine by nine"
+msgstr "Девять на девять"
+
+msgid "Solve a Sudoku"
+msgstr "Решите судоку"
+
+msgid "Logician"
+msgstr "Логик"
+
+msgid "Solve a Hard Sudoku"
+msgstr "Решите сложное судоку"
+
+msgid "Daily puzzler"
+msgstr "Каждый день по головоломке"
+
+msgid "Solve 7 daily Sudoku puzzles"
+msgstr "Решите 7 судоку дня"
+
+#, c-sharp-format
+msgid "Open {0} safe cells in Minesweeper"
+msgstr "Откройте {0} безопасных клеток в «Сапере»"
+
+#, c-sharp-format
+msgid "Fill in {0} digits in Sudoku"
+msgstr "Впишите {0} цифр в судоку"
+
+#. mancala
+msgid "Mancala"
+msgstr "Манкала"
+
+msgid "click one of your pits to sow its seeds — the last seed in your store plays again"
+msgstr "нажмите на свою лунку, чтобы посеять семена — последнее семя в вашем амбаре дает еще ход"
+
+msgid "Game over · click the board to ask for a rematch"
+msgstr "Игра окончена · нажмите на доску, чтобы предложить реванш"
+
+msgid "Game over · click the board for a new game"
+msgstr "Игра окончена · нажмите на доску для новой игры"
+
+msgid "Sowing…"
+msgstr "Сеем…"
+
+msgid "Your turn · click one of your pits (the bottom row)"
+msgstr "Ваш ход · нажмите на одну из своих лунок (нижний ряд)"
+
+msgid "Last seed in your store · go again!"
+msgstr "Последнее семя в амбаре · ходите еще!"
+
+#, c-sharp-format
+msgid "{0} goes again"
+msgstr "{0} ходит еще раз"
+
+msgid "Seed saver"
+msgstr "Хранитель семян"
+
+msgid "Win a game of Mancala"
+msgstr "Выиграйте партию в манкалу"
+
+msgid "Master sower"
+msgstr "Мастер сева"
+
+msgid "Beat the Mancala CPU on Hard or Expert"
+msgstr "Обыграйте компьютер в манкалу на уровне «Сложный» или «Эксперт»"
+
+msgid "Big harvest"
+msgstr "Богатый урожай"
+
+msgid "Capture 10 seeds with one move"
+msgstr "Захватите 10 семян за один ход"
+
+#, c-sharp-format
+msgid "Sow {0} seeds in Mancala"
+msgstr "Посейте {0} семян в манкале"
+
+#. blackjack
+msgid "Blackjack"
+msgstr "Блэкджек"
+
+msgid "pick a bet and deal — get closer to 21 than the dealer without going over"
+msgstr "выберите ставку и раздайте — наберите ближе к 21, чем дилер, но не больше"
+
+#, c-sharp-format
+msgid "Hand {0}/{1} · Hit, Stand or Double"
+msgstr "Раздача {0}/{1} · Еще, Хватит или Удвоить"
+
+#, c-sharp-format
+msgid "Round over with {0} chips · click New round"
+msgstr "Раунд окончен, фишек: {0} · нажмите «Новый раунд»"
+
+#, c-sharp-format
+msgid "Hand {0}/{1} · pick a bet and Deal"
+msgstr "Раздача {0}/{1} · выберите ставку и нажмите «Раздать»"
+
+#, c-sharp-format
+msgid "{0} chips"
+msgstr "фишек: {0}"
+
+msgid "BLACKJACK!"
+msgstr "БЛЭКДЖЕК!"
+
+#, c-sharp-format
+msgid "+{0} chips"
+msgstr "+{0} фишек"
+
+msgid "DEALER BUSTS!"
+msgstr "У ДИЛЕРА ПЕРЕБОР!"
+
+msgid "PUSH"
+msgstr "НИЧЬЯ"
+
+msgid "your bet comes back"
+msgstr "ставка возвращается"
+
+#, c-sharp-format
+msgid "−{0} chips"
+msgstr "−{0} фишек"
+
+msgid "DEALER WINS"
+msgstr "ДИЛЕР ВЫИГРАЛ"
+
+#, c-sharp-format
+msgid "{0} chips after ten hands"
+msgstr "фишек после десяти раздач: {0}"
+
+msgid "DEALER STANDS ON SOFT 17 · BLACKJACK PAYS 3 TO 2"
+msgstr "ДИЛЕР ОСТАНАВЛИВАЕТСЯ НА МЯГКИХ 17 · БЛЭКДЖЕК ПЛАТИТ 3 К 2"
+
+msgid "Dealer"
+msgstr "Дилер"
+
+#, c-sharp-format
+msgid "Dealer {0}"
+msgstr "Дилер {0}"
+
+#, c-sharp-format
+msgid "You {0}"
+msgstr "Вы {0}"
+
+#, c-sharp-format
+msgid "Chips {0} · hand {1}/{2}"
+msgstr "Фишки {0} · раздача {1}/{2}"
+
+msgid "Deal"
+msgstr "Раздать"
+
+msgid "Hit"
+msgstr "Еще"
+
+msgid "Stand"
+msgstr "Хватит"
+
+msgid "Double"
+msgstr "Удвоить"
+
+msgid "New round"
+msgstr "Новый раунд"
+
+msgid "Natural"
+msgstr "Натуральный"
+
+msgid "Get a blackjack"
+msgstr "Соберите блэкджек"
+
+msgid "High roller"
+msgstr "Крупная ставка"
+
+msgid "Finish a Blackjack round with 250 chips or more"
+msgstr "Закончите раунд в блэкджек с 250 фишками или больше"
+
+msgid "Card sharp"
+msgstr "Карточный шулер"
+
+msgid "Win 100 hands of Blackjack"
+msgstr "Выиграйте 100 раздач в блэкджек"
+
+#, c-sharp-format
+msgid "Win {0} hands of Blackjack"
+msgstr "Выиграйте {0} раздач в блэкджек"
+
+#. curling
+msgid "Curling"
+msgstr "Керлинг"
+
+msgid "drag back from your stone and let go — hold the mouse ahead of it to sweep"
+msgstr "потяните от своего камня назад и отпустите — держите мышь перед ним, чтобы натирать лед"
+
+msgid "Game over · click the ice to ask for a rematch"
+msgstr "Игра окончена · нажмите на лед, чтобы предложить реванш"
+
+msgid "Game over · click the ice for a new game"
+msgstr "Игра окончена · нажмите на лед для новой игры"
+
+msgid "Hold the mouse on the ice ahead of your stone to sweep"
+msgstr "Держите мышь на льду перед камнем, чтобы натирать"
+
+#, c-sharp-format
+msgid "End {0}/{1} · {2} stones left · drag back from your stone and let go"
+msgstr "Энд {0}/{1} · камней осталось: {2} · потяните от камня назад и отпустите"
+
+#, c-sharp-format
+msgid "End {0}/{1} · {2} to throw"
+msgstr "Энд {0}/{1} · бросает {2}"
+
+msgid "BLANK END"
+msgstr "ПУСТОЙ ЭНД"
+
+msgid "no stone in the house"
+msgstr "в доме нет камней"
+
+#, c-sharp-format
+msgid "YOU SCORE {0}"
+msgstr "ВАШИ ОЧКИ: {0}"
+
+#, c-sharp-format
+msgid "{0} SCORES {1}"
+msgstr "{0}: +{1}"
+
+msgid "Hurry hard!"
+msgstr "Трите сильнее!"
+
+msgid "Win a game of Curling"
+msgstr "Выиграйте партию в керлинг"
+
+msgid "Skipper"
+msgstr "Скип"
+
+msgid "Beat the Curling CPU on Hard or Expert"
+msgstr "Обыграйте компьютер в керлинг на уровне «Сложный» или «Эксперт»"
+
+msgid "Big end"
+msgstr "Большой энд"
+
+msgid "Score 3 or more in one end of Curling"
+msgstr "Наберите 3 очка или больше за один энд в керлинге"
+
+#, c-sharp-format
+msgid "Throw {0} stones in Curling"
+msgstr "Бросьте {0} камней в керлинге"
+
+#. paper planes
+msgid "Paper Planes"
+msgstr "Бумажные самолетики"
+
+msgid "drag back from the paper plane and let go — warm air above windows lifts it"
+msgstr "потяните от самолетика назад и отпустите — теплый воздух над окнами поднимает его"
+
+#, c-sharp-format
+msgid "Round over · {0} points · click the plane for another round"
+msgstr "Раунд окончен · очков: {0} · нажмите на самолетик для нового раунда"
+
+msgid "Gliding…"
+msgstr "Планирует…"
+
+#, c-sharp-format
+msgid "Throw {0}/{1} · drag back from the plane and let go"
+msgstr "Бросок {0}/{1} · потяните от самолетика назад и отпустите"
+
+msgid "CRUMPLED!"
+msgstr "СМЯЛСЯ!"
+
+#, c-sharp-format
+msgid "{0} m · half points"
+msgstr "{0} м · половина очков"
+
+msgid "PERFECT LANDING!"
+msgstr "ИДЕАЛЬНАЯ ПОСАДКА!"
+
+#, c-sharp-format
+msgid "{0} m +{1}"
+msgstr "{0} м +{1}"
+
+#, c-sharp-format
+msgid "{0} m"
+msgstr "{0} м"
+
+#, c-sharp-format
+msgid "{0} points in three throws"
+msgstr "очков за три броска: {0}"
+
+msgid "Paper pilot"
+msgstr "Бумажный пилот"
+
+msgid "Throw 50 paper planes"
+msgstr "Запустите 50 бумажных самолетиков"
+
+msgid "Long haul"
+msgstr "Дальний рейс"
+
+msgid "Fly a paper plane 120 metres"
+msgstr "Запустите самолетик на 120 метров"
+
+msgid "Touchdown"
+msgstr "Касание"
+
+msgid "Land on the strip 5 times"
+msgstr "Приземлитесь на полосу 5 раз"
+
+#, c-sharp-format
+msgid "Throw {0} paper planes"
+msgstr "Запустите {0} бумажных самолетиков"
+
+#. ping-pong cups
+msgid "Ping-Pong Cups"
+msgstr "Мячик в стакан"
+
+msgid "grab the ball, flick it and let go — drop it into the cups; a bounce shot counts double"
+msgstr "возьмите мячик, резко бросьте и отпустите — попадите в стаканы; бросок с отскоком считается вдвойне"
+
+#, c-sharp-format
+msgid "Round over · {0} cups · click the ball for another round"
+msgstr "Раунд окончен · стаканов: {0} · нажмите на мячик для нового раунда"
+
+#, c-sharp-format
+msgid "Balls {0} · cups {1} · flick the ball into a cup"
+msgstr "Мячей {0} · стаканов {1} · бросьте мячик в стакан"
+
+#, c-sharp-format
+msgid "BOUNCE SHOT! +{0}"
+msgstr "С ОТСКОКА! +{0}"
+
+msgid "RACK CLEARED!"
+msgstr "ВСЕ СТАКАНЫ!"
+
+#, c-sharp-format
+msgid "+{0} for the balls left · a new rack"
+msgstr "+{0} за оставшиеся мячи · новые стаканы"
+
+#, c-sharp-format
+msgid "{0} cups · {1} points"
+msgstr "стаканов: {0} · очков: {1}"
+
+msgid "Splash"
+msgstr "Плюх"
+
+msgid "Sink 50 cups"
+msgstr "Попадите в 50 стаканов"
+
+msgid "Off the table"
+msgstr "С отскоком"
+
+msgid "Sink a bounce shot"
+msgstr "Попадите в стакан с отскоком"
+
+msgid "Clean rack"
+msgstr "Чистая работа"
+
+msgid "Clear a rack of six in six throws"
+msgstr "Выбейте все шесть стаканов за шесть бросков"
+
+#, c-sharp-format
+msgid "Sink {0} cups in Ping-Pong Cups"
+msgstr "Попадите в {0} стаканов в «Мячике в стакан»"
+
+#. bingo of work
+msgid "Bingo of Work"
+msgstr "Рабочее бинго"
+
+msgid "squares dab themselves as you work and play — three in a line is a bingo"
+msgstr "клетки отмечаются сами, пока вы работаете и играете — три в ряд дают бинго"
+
+msgid "FULL HOUSE! · a new card is on its way"
+msgstr "ВСЯ КАРТОЧКА! · скоро будет новая"
+
+#, c-sharp-format
+msgid "Squares dab themselves as you play · click a game square to play it · right-click swaps one ({0} left)"
+msgstr "Клетки отмечаются сами, пока вы играете · нажмите на клетку с игрой, чтобы сыграть · правый щелчок меняет клетку (осталось {0})"
+
+#, c-sharp-format
+msgid "Bingos {0}"
+msgstr "Бинго: {0}"
+
+msgid "FREE"
+msgstr "БОНУС"
+
+msgid "FULL HOUSE!"
+msgstr "ВСЯ КАРТОЧКА!"
+
+msgid "Bingo of Work · a new card is ready"
+msgstr "Рабочее бинго · новая карточка готова"
+
+msgid "BINGO!"
+msgstr "БИНГО!"
+
+msgid "a new card is on its way"
+msgstr "скоро будет новая карточка"
+
+msgid "No swaps left on this card"
+msgstr "На этой карточке замен больше нет"
+
+msgid "Nothing to swap it for"
+msgstr "Заменить не на что"
+
+msgid "BINGO"
+msgstr "БИНГО"
+
+msgid "of Work"
+msgstr "на работе"
+
+msgid "Throw this card away?"
+msgstr "Выбросить карточку?"
+
+msgid "New card"
+msgstr "Новая карточка"
+
+msgid "Be playing when Claude finishes"
+msgstr "Играйте, когда Claude закончит"
+
+msgid "Be playing when a --while command finishes"
+msgstr "Играйте, когда закончится команда --while"
+
+msgid "Beat the computer in a race"
+msgstr "Обгоните компьютер в гонке"
+
+msgid "Send a co-worker a reaction"
+msgstr "Отправьте коллеге реакцию"
+
+msgid "Send a co-worker a chat message"
+msgstr "Напишите коллеге в чат"
+
+#, c-sharp-format
+msgid "Pet the pet {0} times"
+msgstr "Погладьте питомца {0} раза"
+
+msgid "Give the pet a treat"
+msgstr "Угостите питомца"
+
+msgid "Play fetch with the pet"
+msgstr "Поиграйте с питомцем в апорт"
+
+msgid "Finish the daily challenge"
+msgstr "Выполните задание дня"
+
+msgid "Unlock an achievement"
+msgstr "Получите достижение"
+
+#, c-sharp-format
+msgid "Play for {0} minutes"
+msgstr "Поиграйте {0} минут"
+
+msgid "Play before 10 AM"
+msgstr "Сыграйте до 10:00"
+
+msgid "Play at lunchtime (12–2 PM)"
+msgstr "Сыграйте в обед (12:00–14:00)"
+
+msgid "Play after 6 PM"
+msgstr "Сыграйте после 18:00"
+
+msgid "Bingo!"
+msgstr "Бинго!"
+
+msgid "Get three in a line on a Bingo of Work card"
+msgstr "Соберите три в ряд на карточке «Рабочего бинго»"
+
+msgid "Full house"
+msgstr "Вся карточка"
+
+msgid "Dab all nine squares of a Bingo of Work card"
+msgstr "Отметьте все девять клеток карточки «Рабочего бинго»"
+
+msgid "Office regular"
+msgstr "Завсегдатай офиса"
+
+msgid "Get 10 bingos"
+msgstr "Соберите 10 бинго"
+
+#, c-sharp-format
+msgid "Dab {0} squares in Bingo of Work"
+msgstr "Отметьте {0} клетки в «Рабочем бинго»"
+
+#. kite
+msgid "Kite"
+msgstr "Воздушный змей"
+
+msgid "click the kite — the string follows your cursor; pull to climb, catch the clouds, dodge the birds"
+msgstr "нажмите на змея — нить следует за курсором; тяните, чтобы набрать высоту, ловите облака, уворачивайтесь от птиц"
+
+#, c-sharp-format
+msgid "{0}s · clouds {1} · pull the string to climb"
+msgstr "{0} с · облаков: {1} · тяните нить, чтобы набрать высоту"
+
+#, c-sharp-format
+msgid "Flight over · {0} clouds · click the kite to fly again"
+msgstr "Полёт окончен · облаков: {0} · нажмите на змея, чтобы запустить снова"
+
+msgid "Click the kite to fly it — the string follows your cursor"
+msgstr "Нажмите на змея, чтобы запустить его — нить следует за курсором"
+
+msgid "It hit the ground"
+msgstr "Упал на землю"
+
+msgid "Snagged on a window"
+msgstr "Зацепился за окно"
+
+msgid "A bird flew into it"
+msgstr "В него врезалась птица"
+
+#, c-sharp-format
+msgid "{0} in a row!"
+msgstr "{0} подряд!"
+
+msgid "FLIGHT OVER"
+msgstr "ПОЛЁТ ОКОНЧЕН"
+
+#, c-sharp-format
+msgid "{0} clouds · {1} stars · {2} points"
+msgstr "облаков: {0} · звёзд: {1} · очков: {2}"
+
+msgid "Head in the clouds"
+msgstr "Витая в облаках"
+
+msgid "Catch 100 clouds with the kite"
+msgstr "Поймайте змеем 100 облаков"
+
+msgid "Steady hands"
+msgstr "Твёрдая рука"
+
+msgid "Fly a whole minute without a crash"
+msgstr "Пролетайте целую минуту без падений"
+
+msgid "High flyer"
+msgstr "Высокий полёт"
+
+msgid "Score 250 in one kite flight"
+msgstr "Наберите 250 очков за один полёт змея"
+
+#, c-sharp-format
+msgid "Catch {0} clouds with the Kite"
+msgstr "Поймайте {0} облаков «Воздушным змеем»"
+
+#. backgammon
+msgid "Backgammon"
+msgstr "Нарды"
+
+msgid "click ROLL, then a checker and where it goes — bring all fifteen home and bear them off first"
+msgstr "нажмите «БРОСОК», затем на шашку и куда её поставить — приведите все пятнадцать домой и выведите их первым"
+
+#, c-sharp-format
+msgid "Your turn · click ROLL · pips {0}–{1}"
+msgstr "Ваш ход · нажмите «БРОСОК» · очки пути {0}–{1}"
+
+msgid "Your move · click a checker, then where it goes"
+msgstr "Ваш ход · нажмите на шашку, затем куда её поставить"
+
+msgid "No moves this time"
+msgstr "Ходов нет"
+
+#, c-sharp-format
+msgid "{0} can't move"
+msgstr "{0}: ходов нет"
+
+msgid "Hit!"
+msgstr "Сбил!"
+
+#, c-sharp-format
+msgid "{0} hits!"
+msgstr "{0} сбивает!"
+
+msgid "a backgammon: triple"
+msgstr "бэкгаммон: втройне"
+
+msgid "a gammon: double"
+msgstr "марс: вдвойне"
+
+#, c-sharp-format
+msgid "{0}–{1} off"
+msgstr "выведено {0}–{1}"
+
+msgid "ROLL"
+msgstr "БРОСОК"
+
+msgid "Borne off"
+msgstr "Все дома"
+
+msgid "Win a game of Backgammon"
+msgstr "Выиграйте партию в нарды"
+
+msgid "Gammon"
+msgstr "Марс"
+
+msgid "Win before the other side bears off a single checker"
+msgstr "Выиграйте, пока соперник не вывел ни одной шашки"
+
+msgid "Backgammon master"
+msgstr "Мастер нард"
+
+msgid "Beat the Hard computer at Backgammon"
+msgstr "Обыграйте в нарды компьютер на уровне «Сложно»"
+
+#, c-sharp-format
+msgid "Bear off {0} checkers in Backgammon"
+msgstr "Выведите {0} шашек в «Нардах»"
+
+#. dominoes
+msgid "Dominoes"
+msgstr "Домино"
+
+msgid "click a tile that fits an end of the line on the taskbar — nothing fits? draw from the boneyard"
+msgstr "нажмите на костяшку, подходящую к концу цепочки на панели задач — ничего не подходит? возьмите из базара"
+
+msgid "Match over · click your tiles to ask for a rematch"
+msgstr "Матч окончен · нажмите на свои костяшки, чтобы попросить реванш"
+
+msgid "Match over · click your tiles for a new match"
+msgstr "Матч окончен · нажмите на свои костяшки для нового матча"
+
+#, c-sharp-format
+msgid "Round over · waiting for {0} to deal"
+msgstr "Раунд окончен · ждём, пока {0} раздаст"
+
+msgid "Round over · click your tiles for the next round"
+msgstr "Раунд окончен · нажмите на свои костяшки для следующего раунда"
+
+msgid "Nothing fits · click the boneyard to draw"
+msgstr "Ничего не подходит · нажмите на базар, чтобы взять костяшку"
+
+#, c-sharp-format
+msgid "Your turn · lay a tile that fits an end · first to {0}"
+msgstr "Ваш ход · положите костяшку к подходящему концу · играем до {0}"
+
+msgid "It doesn't fit an end"
+msgstr "Не подходит ни к одному концу"
+
+msgid "Nothing fits · you pass"
+msgstr "Ничего не подходит · вы пропускаете ход"
+
+#, c-sharp-format
+msgid "{0} passes"
+msgstr "{0} пропускает ход"
+
+msgid "DOMINO!"
+msgstr "ДОМИНО!"
+
+msgid "BLOCKED"
+msgstr "РЫБА"
+
+msgid "a tie: nobody scores"
+msgstr "ничья: очков никто не получает"
+
+#, c-sharp-format
+msgid "you score {0}"
+msgstr "вы получаете {0}"
+
+#, c-sharp-format
+msgid "{0} scores {1}"
+msgstr "{0} получает {1}"
+
+msgid "Your tiles"
+msgstr "Ваши костяшки"
+
+#, c-sharp-format
+msgid "{0} had {1} pips"
+msgstr "у {0} осталось очков: {1}"
+
+#, c-sharp-format
+msgid "{0} · {1} tiles"
+msgstr "{0} · костяшек: {1}"
+
+msgid "Domino!"
+msgstr "Домино!"
+
+msgid "Lay your last tile and go out"
+msgstr "Выложите последнюю костяшку"
+
+msgid "First to fifty"
+msgstr "Первым до пятидесяти"
+
+msgid "Win a match of Dominoes"
+msgstr "Выиграйте матч в домино"
+
+msgid "Stone cold"
+msgstr "Хладнокровие"
+
+msgid "Beat the Hard computer in a Dominoes match"
+msgstr "Обыграйте в домино компьютер на уровне «Сложно»"
+
+#, c-sharp-format
+msgid "Lay {0} tiles in Dominoes"
+msgstr "Выложите {0} костяшек в «Домино»"
+
+#. perevodnoy
+msgid "Beat each card, lay one of the same rank to pass it on, or take"
+msgstr "Отбейте каждую карту, положите карту того же достоинства, чтобы перевести, или возьмите"
+
+msgid "Variant: Perevodnoy (pass it on)"
+msgstr "Вариант: переводной"
+
+msgid "Variant: Podkidnoy (throw-in)"
+msgstr "Вариант: подкидной"
+
+msgid "Not me!"
+msgstr "Не я!"
+
+msgid "Pass an attack on 10 times in Perevodnoy"
+msgstr "Переведите атаку 10 раз в переводного дурака"
+
+#. salvo
+#, c-sharp-format
+msgid "Your salvo · {0} shots left · click the enemy grid"
+msgstr "Ваш залп · осталось выстрелов: {0} · нажмите на поле противника"
+
+msgid "Salvo rules: one shot for each of your ships afloat"
+msgstr "Правила залпа: по выстрелу за каждый ваш корабль на плаву"
+
+msgid "Classic rules: a hit shoots again"
+msgstr "Классические правила: попал — стреляй ещё"
+
+msgid "click to switch"
+msgstr "нажмите, чтобы сменить"
+
+msgid "the host picks"
+msgstr "выбирает хозяин игры"
+
+msgid "Broadside"
+msgstr "Бортовой залп"
+
+msgid "Win a game of Sea Battle with salvo rules"
+msgstr "Выиграйте морской бой по правилам залпа"
+
+#. window jenga
+msgid "Window Jenga"
+msgstr "Дженга на окне"
+
+msgid "drag a block out of the tower slowly, then lay it on top — don't let the weight lean past what is left"
+msgstr "медленно вытяните брусок из башни и положите его наверх — не дайте весу выйти за оставшиеся бруски"
+
+msgid "The tower fell · click its base for a new one"
+msgstr "Башня упала · нажмите на её основание, чтобы построить новую"
+
+msgid "Time's up and it still stands · click its base for a new one"
+msgstr "Время вышло, а башня стоит · нажмите на её основание, чтобы построить новую"
+
+msgid "Click a place on top to lay the block"
+msgstr "Нажмите на место наверху, чтобы положить брусок"
+
+#, c-sharp-format
+msgid "{0}s · drag a block out slowly, then lay it on top"
+msgstr "{0} с · медленно вытяните брусок и положите его наверх"
+
+msgid "Drag a block out slowly, then click the top to lay it"
+msgstr "Медленно вытяните брусок, затем нажмите наверху, чтобы положить его"
+
+msgid "STILL STANDING!"
+msgstr "СТОИТ!"
+
+#, c-sharp-format
+msgid "{0} blocks moved"
+msgstr "переложено брусков: {0}"
+
+msgid "CRASH!"
+msgstr "ГРОХОТ!"
+
+msgid "Careful now"
+msgstr "Осторожно"
+
+msgid "Move 10 blocks in one Window Jenga tower"
+msgstr "Переложите 10 брусков в одной башне «Дженги на окне»"
+
+msgid "Still standing"
+msgstr "Всё ещё стоит"
+
+msgid "Keep a Window Jenga tower up until the time runs out"
+msgstr "Удержите башню «Дженги на окне» до конца времени"
+
+msgid "Master builder"
+msgstr "Мастер-строитель"
+
+msgid "Move 200 blocks in Window Jenga"
+msgstr "Переложите 200 брусков в «Дженге на окне»"
+
+#, c-sharp-format
+msgid "Move {0} blocks in Window Jenga"
+msgstr "Переложите {0} брусков в «Дженге на окне»"
+
+#. rope bridge
+msgid "Rope Bridge"
+msgstr "Верёвочный мост"
+
+msgid "drag planks onto the rope before the interns reach the gap — and replace the cracked ones"
+msgstr "перетащите доски на верёвку, пока стажёры не дошли до пропасти, — и меняйте треснувшие"
+
+#, c-sharp-format
+msgid "{0} of {1} across · click the planks for another round"
+msgstr "перешли {0} из {1} · нажмите на доски для нового раунда"
+
+msgid "Drag planks onto the rope before the interns reach the gap"
+msgstr "Перетащите доски на верёвку, пока стажёры не дошли до пропасти"
+
+#, c-sharp-format
+msgid "Interns {0} of {1} · worn planks crack: replace them in time"
+msgstr "Стажёры: {0} из {1} · старые доски трескаются — меняйте их вовремя"
+
+msgid "No planks yet · more are coming"
+msgstr "Досок пока нет · скоро будут"
+
+msgid "Someone is standing on it"
+msgstr "На ней кто-то стоит"
+
+msgid "Aaah!"
+msgstr "А-а-а!"
+
+msgid "NOBODY FELL!"
+msgstr "НИКТО НЕ УПАЛ!"
+
+#, c-sharp-format
+msgid "{0} of {1} across"
+msgstr "перешли {0} из {1}"
+
+msgid "Safe crossing"
+msgstr "Безопасная переправа"
+
+msgid "Get 50 interns across the Rope Bridge"
+msgstr "Переведите 50 стажёров по верёвочному мосту"
+
+msgid "Nobody fell"
+msgstr "Никто не упал"
+
+msgid "Get all fifteen interns of a round across"
+msgstr "Переведите всех пятнадцать стажёров за раунд"
+
+msgid "Chief engineer"
+msgstr "Главный инженер"
+
+msgid "Lay 200 planks on the Rope Bridge"
+msgstr "Положите 200 досок на верёвочный мост"
+
+#, c-sharp-format
+msgid "Get {0} interns across the Rope Bridge"
+msgstr "Переведите {0} стажёров по «Верёвочному мосту»"
+
+#. ---- at work (1.8.5): breaks, meetings, focus, timers, notes, invites, downloads
+msgid "At work"
+msgstr "На работе"
+
+msgid "Today at work…"
+msgstr "Сегодня на работе…"
+
+msgid "Today"
+msgstr "Сегодня"
+
+msgid "Meeting"
+msgstr "Встреча"
+
+msgid "Meetings"
+msgstr "Встречи"
+
+msgid "Focus"
+msgstr "Фокус"
+
+msgid "Breaks"
+msgstr "Перерывы"
+
+msgid "Timer"
+msgstr "Таймер"
+
+msgid "Reminder"
+msgstr "Напоминание"
+
+msgid "Later"
+msgstr "Позже"
+
+msgid "Stop"
+msgstr "Стоп"
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "Now"
+msgstr "Сейчас"
+
+msgid "Calendar"
+msgstr "Календарь"
+
+msgid "Downloads"
+msgstr "Загрузки"
+
+#, c-sharp-format
+msgid "{0} minutes"
+msgstr "{0} мин"
+
+#, c-sharp-format
+msgid "{0} h {1} min"
+msgstr "{0} ч {1} мин"
+
+#, c-sharp-format
+msgid "{0} min"
+msgstr "{0} мин"
+
+#, c-sharp-format
+msgid "{0} · until {1}"
+msgstr "{0} · до {1}"
+
+#, c-sharp-format
+msgid "{0} in {1}"
+msgstr "{0} через {1}"
+
+#, c-sharp-format
+msgid "Focus {0}/{1} · {2}"
+msgstr "Фокус {0}/{1} · {2}"
+
+#, c-sharp-format
+msgid "Break · {0}"
+msgstr "Перерыв · {0}"
+
+#, c-sharp-format
+msgid "Waiting for {0} · {1}"
+msgstr "Ждём {0} · {1}"
+
+#, c-sharp-format
+msgid "Focusing · {0} left"
+msgstr "Фокус · осталось {0}"
+
+#, c-sharp-format
+msgid "On a break · {0} left"
+msgstr "Перерыв · осталось {0}"
+
+#, c-sharp-format
+msgid "In {0} until {1}"
+msgstr "Сейчас: {0}, до {1}"
+
+#, c-sharp-format
+msgid "Next: {0} at {1}"
+msgstr "Далее: {0} в {1}"
+
+#, c-sharp-format
+msgid "At the computer today: {0}"
+msgstr "За компьютером сегодня: {0}"
+
+#, c-sharp-format
+msgid "Start a {0}-minute focus block"
+msgstr "Начать фокус на {0} мин"
+
+msgid "End the focus block"
+msgstr "Завершить фокус"
+
+#, c-sharp-format
+msgid "{0}-minute breaks"
+msgstr "Перерывы по {0} мин"
+
+msgid "Start the next block after the break"
+msgstr "Начинать следующий блок после перерыва"
+
+msgid "Hold chat and invites while focusing"
+msgstr "Придерживать чат и приглашения во время фокуса"
+
+msgid "Cancel the timers"
+msgstr "Отменить таймеры"
+
+msgid "New sticky note…"
+msgstr "Новый стикер…"
+
+msgid "Breathe for a minute"
+msgstr "Минута дыхания"
+
+msgid "Stretch now"
+msgstr "Размяться сейчас"
+
+msgid "I drank a glass of water"
+msgstr "Я выпил(а) стакан воды"
+
+msgid "Look away every 20 minutes (20-20-20)"
+msgstr "Отводить взгляд каждые 20 минут (20-20-20)"
+
+msgid "No stretch breaks"
+msgstr "Без разминок"
+
+#, c-sharp-format
+msgid "Stretch after {0} minutes at the computer"
+msgstr "Разминка после {0} мин за компьютером"
+
+msgid "No water reminders"
+msgstr "Без напоминаний о воде"
+
+#, c-sharp-format
+msgid "Water every {0} minutes"
+msgstr "Вода каждые {0} мин"
+
+msgid "Connect a calendar…"
+msgstr "Подключить календарь…"
+
+msgid "Calendar…"
+msgstr "Календарь…"
+
+msgid "Only a minute before"
+msgstr "Только за минуту"
+
+#, c-sharp-format
+msgid "{0} minutes before"
+msgstr "За {0} мин"
+
+msgid "Pause the game a minute before"
+msgstr "Ставить игру на паузу за минуту"
+
+msgid "Hide the overlay during meetings"
+msgstr "Скрывать игру во время встреч"
+
+msgid "No invite out"
+msgstr "Нет отправленных приглашений"
+
+msgid "Invites from co-workers"
+msgstr "Приглашения от коллег"
+
+msgid "Invite co-workers"
+msgstr "Пригласить коллег"
+
+msgid "End of the day"
+msgstr "Конец рабочего дня"
+
+msgid "Tell me when downloads finish"
+msgstr "Сообщать о завершении загрузок"
+
+msgid "Hide while presenting or in full screen"
+msgstr "Скрывать во время презентаций и в полноэкранном режиме"
+
+msgid "Coffee"
+msgstr "Кофе"
+
+msgid "Lunch"
+msgstr "Обед"
+
+msgid "A walk"
+msgstr "Прогулка"
+
+msgid "I drank a glass"
+msgstr "Я выпил(а) стакан"
+
+msgid "See you tomorrow"
+msgstr "До завтра"
+
+msgid "EYE BREAK · 20-20-20"
+msgstr "ОТДЫХ ДЛЯ ГЛАЗ · 20-20-20"
+
+msgid "Look far away"
+msgstr "Посмотрите вдаль"
+
+msgid "find something at least 6 metres (20 feet) off, out of a window if you can, and rest your eyes on it"
+msgstr "найдите что-то хотя бы в 6 метрах, лучше за окном, и задержите на нём взгляд"
+
+#, c-sharp-format
+msgid "BREATHING · ROUND {0} OF {1}"
+msgstr "ДЫХАНИЕ · КРУГ {0} ИЗ {1}"
+
+msgid "in, hold, out, hold: four seconds each, slowly, through the nose"
+msgstr "вдох, пауза, выдох, пауза: по четыре секунды, медленно, через нос"
+
+msgid "Breathe in"
+msgstr "Вдох"
+
+msgid "Hold"
+msgstr "Пауза"
+
+msgid "Breathe out"
+msgstr "Выдох"
+
+#, c-sharp-format
+msgid "STRETCH · {0} OF {1}"
+msgstr "РАЗМИНКА · {0} ИЗ {1}"
+
+msgid "Roll your shoulders"
+msgstr "Вращайте плечами"
+
+msgid "slowly backwards, big circles"
+msgstr "медленно назад, большими кругами"
+
+msgid "Tilt your head"
+msgstr "Наклоните голову"
+
+msgid "ear towards the shoulder, one side and then the other"
+msgstr "ухом к плечу, сначала в одну сторону, потом в другую"
+
+msgid "Stretch your wrists"
+msgstr "Потяните запястья"
+
+msgid "arm out, palm up, pull the fingers back gently"
+msgstr "рука вперёд, ладонь вверх, мягко потяните пальцы на себя"
+
+msgid "Stand up and reach"
+msgstr "Встаньте и потянитесь"
+
+msgid "hands up high, then let them fall"
+msgstr "руки высоко вверх, потом опустите"
+
+msgid "WATER"
+msgstr "ВОДА"
+
+msgid "Time for a glass of water"
+msgstr "Пора выпить стакан воды"
+
+msgid "a little and often keeps the headache and the afternoon slump away"
+msgstr "понемногу и часто — и голова не болит, и после обеда не клонит в сон"
+
+msgid "END OF THE DAY"
+msgstr "КОНЕЦ ДНЯ"
+
+msgid "That's the day!"
+msgstr "Вот и день прошёл!"
+
+msgid "well done · leave the rest for tomorrow"
+msgstr "отличная работа · остальное оставьте на завтра"
+
+#, c-sharp-format
+msgid "At the computer: {0}"
+msgstr "За компьютером: {0}"
+
+#, c-sharp-format
+msgid "Focus blocks: {0}"
+msgstr "Блоков фокуса: {0}"
+
+#, c-sharp-format
+msgid "Meetings: {0}"
+msgstr "Встреч: {0}"
+
+#, c-sharp-format
+msgid "Breaks: {0} for the eyes, {1} stretches"
+msgstr "Перерывы: для глаз {0}, разминок {1}"
+
+#, c-sharp-format
+msgid "Breathing minutes: {0}"
+msgstr "Минут дыхания: {0}"
+
+#, c-sharp-format
+msgid "Water: {0} glasses"
+msgstr "Вода: стаканов {0}"
+
+#, c-sharp-format
+msgid "Played: {0}"
+msgstr "Игра: {0}"
+
+#, c-sharp-format
+msgid "At the computer today {0} · focus blocks {1} · breaks {2} · water {3}"
+msgstr "За компьютером сегодня {0} · блоков фокуса {1} · перерывов {2} · воды {3}"
+
+msgid "New sticky note"
+msgstr "Новый стикер"
+
+msgid "Sticky note"
+msgstr "Стикер"
+
+msgid "Call the bank back · send the report · buy milk"
+msgstr "Перезвонить в банк · отправить отчёт · купить молоко"
+
+msgid "No reminder"
+msgstr "Без напоминания"
+
+#, c-sharp-format
+msgid "At the end of the day ({0})"
+msgstr "В конце дня ({0})"
+
+#, c-sharp-format
+msgid "In {0} minutes"
+msgstr "Через {0} мин"
+
+#, c-sharp-format
+msgid "In {0} hours"
+msgstr "Через {0} ч"
+
+#, c-sharp-format
+msgid "As set ({0})"
+msgstr "Как было ({0})"
+
+msgid "Take it down"
+msgstr "Снять"
+
+msgid "Remind me"
+msgstr "Напомнить"
+
+msgid "Done: take the note down"
+msgstr "Готово: снять стикер"
+
+#, c-sharp-format
+msgid "{0} notes is the most"
+msgstr "Больше {0} стикеров нельзя"
+
+msgid "tick one off to make room"
+msgstr "отметьте один выполненным"
+
+#, c-sharp-format
+msgid "the calendar answered {0}"
+msgstr "календарь ответил {0}"
+
+msgid "the calendar is too big"
+msgstr "календарь слишком большой"
+
+msgid "no such file"
+msgstr "такого файла нет"
+
+msgid "No meetings in it. Is it an .ics calendar?"
+msgstr "Встреч не найдено. Это календарь .ics?"
+
+msgid "nothing in the next two weeks"
+msgstr "в ближайшие две недели ничего"
+
+#, c-sharp-format
+msgid "next: {0}, {1} at {2}"
+msgstr "далее: {0}, {1} в {2}"
+
+#, c-sharp-format
+msgid "{0} events · {1}"
+msgstr "событий: {0} · {1}"
+
+#, c-sharp-format
+msgid "Couldn't read it: {0}"
+msgstr "Не удалось прочитать: {0}"
+
+msgid "no answer in time"
+msgstr "не ответил вовремя"
+
+#, c-sharp-format
+msgid "{0} in {1} minutes"
+msgstr "{0} через {1} мин"
+
+#, c-sharp-format
+msgid "at {0}"
+msgstr "в {0}"
+
+#, c-sharp-format
+msgid "{0} in a minute"
+msgstr "{0} через минуту"
+
+msgid "the game is paused · click it to resume"
+msgstr "игра на паузе · нажмите на неё, чтобы продолжить"
+
+#, c-sharp-format
+msgid "{0} is starting"
+msgstr "{0} начинается"
+
+#, c-sharp-format
+msgid "until {0}"
+msgstr "до {0}"
+
+msgid "have a good one"
+msgstr "удачи!"
+
+msgid "Meetings still today:"
+msgstr "Встречи сегодня ещё:"
+
+msgid "Your calendar's .ics link or file. Outlook: Settings → Calendar → Shared calendars → Publish a calendar → ICS. Google Calendar: Settings → your calendar → Secret address in iCal format. It stays on this PC."
+msgstr "Ссылка .ics или файл вашего календаря. Outlook: Параметры → Календарь → Общие календари → Опубликовать календарь → ICS. Google Календарь: Настройки → ваш календарь → Закрытый адрес в формате iCal. Остаётся на этом компьютере."
+
+msgid "File…"
+msgstr "Файл…"
+
+msgid "Pick a calendar file"
+msgstr "Выберите файл календаря"
+
+#, c-sharp-format
+msgid "Last read failed: {0}"
+msgstr "Последнее чтение не удалось: {0}"
+
+msgid "Paste a link or pick a file first."
+msgstr "Сначала вставьте ссылку или выберите файл."
+
+msgid "Reading…"
+msgstr "Читаю…"
+
+msgid "Use this calendar"
+msgstr "Использовать этот календарь"
+
+msgid "Meetings are off."
+msgstr "Встречи выключены."
+
+msgid "Saved. Meetings are read every 15 minutes."
+msgstr "Сохранено. Встречи обновляются каждые 15 минут."
+
+msgid "Turn off"
+msgstr "Выключить"
+
+msgid "Heads-up"
+msgstr "Предупреждать"
+
+msgid "My working day ends at"
+msgstr "Мой рабочий день заканчивается в"
+
+msgid "Then you get the day's summary; an hour later, still at the computer, a nudge to go home."
+msgstr "Тогда вы увидите итоги дня, а через час, если всё ещё за компьютером, — напоминание идти домой."
+
+msgid "Folder…"
+msgstr "Папка…"
+
+msgid "Pick the Downloads folder"
+msgstr "Выберите папку загрузок"
+
+msgid "From a terminal"
+msgstr "Из терминала"
+
+#, c-sharp-format
+msgid "Focus for {0} minutes"
+msgstr "Фокус на {0} мин"
+
+#, c-sharp-format
+msgid "block {0} of {1} · the games wait for the break"
+msgstr "блок {0} из {1} · игры подождут до перерыва"
+
+msgid "Focus ended"
+msgstr "Фокус завершён"
+
+msgid "start another from At work → Focus"
+msgstr "новый — в меню «На работе» → «Фокус»"
+
+msgid "Focus block done!"
+msgstr "Блок фокуса завершён!"
+
+#, c-sharp-format
+msgid "a {0}-minute break · the games are yours"
+msgstr "перерыв {0} мин · игры ваши"
+
+msgid "Back to focus"
+msgstr "Снова фокус"
+
+#, c-sharp-format
+msgid "{0} minutes · block {1} of {2}"
+msgstr "{0} мин · блок {1} из {2}"
+
+msgid "The break is over"
+msgstr "Перерыв окончен"
+
+msgid "start the next focus block from At work → Focus"
+msgstr "следующий блок — в меню «На работе» → «Фокус»"
+
+#, c-sharp-format
+msgid "{0} messages while you focused · the last: {1}"
+msgstr "{0} сообщ. за время фокуса · последнее: {1}"
+
+#, c-sharp-format
+msgid "rings at {0}"
+msgstr "прозвенит в {0}"
+
+msgid "Timers cancelled"
+msgstr "Таймеры отменены"
+
+#, c-sharp-format
+msgid "it rang at {0}"
+msgstr "он прозвенел в {0}"
+
+msgid "time's up"
+msgstr "время вышло"
+
+msgid "Cheers!"
+msgstr "Ваше здоровье!"
+
+msgid "the first glass today"
+msgstr "первый стакан за сегодня"
+
+#, c-sharp-format
+msgid "{0} glasses today"
+msgstr "стаканов за сегодня: {0}"
+
+msgid "Still here?"
+msgstr "Всё ещё здесь?"
+
+#, c-sharp-format
+msgid "it's {0} · the rest can wait until tomorrow"
+msgstr "уже {0} · остальное подождёт до завтра"
+
+msgid "coffee"
+msgstr "кофе"
+
+msgid "lunch"
+msgstr "обед"
+
+msgid "a walk"
+msgstr "прогулка"
+
+#, c-sharp-format
+msgid "{0} now"
+msgstr "{0} сейчас"
+
+msgid "Couldn't send the invite"
+msgstr "Не удалось отправить приглашение"
+
+msgid "Invite sent"
+msgstr "Приглашение отправлено"
+
+#, c-sharp-format
+msgid "{0} · to everyone with invites on"
+msgstr "{0} · всем, у кого включены приглашения"
+
+#, c-sharp-format
+msgid "{0} · no answers yet"
+msgstr "{0} · ответов пока нет"
+
+#, c-sharp-format
+msgid "{0} · {1} coming"
+msgstr "{0} · идут: {1}"
+
+#, c-sharp-format
+msgid "{0} is in!"
+msgstr "{0} идёт!"
+
+#, c-sharp-format
+msgid "{0} can't make it"
+msgstr "{0} не сможет"
+
+#, c-sharp-format
+msgid "{0} is focusing"
+msgstr "{0} в фокусе"
+
+msgid "they will see it at their break"
+msgstr "увидит на перерыве"
+
+msgid "See you there!"
+msgstr "До встречи!"
+
+#, c-sharp-format
+msgid "{0} knows you're coming"
+msgstr "{0} знает, что вы придёте"
+
+msgid "I'm in"
+msgstr "Иду"
+
+msgid "Not now"
+msgstr "Не сейчас"
+
+#, c-sharp-format
+msgid "for {0} more minutes · your chat waits for their break"
+msgstr "ещё {0} мин · сообщения дождутся перерыва"
+
+#, c-sharp-format
+msgid "{0} is on a break"
+msgstr "У {0} перерыв"
+
+msgid "a good moment for a game"
+msgstr "самое время сыграть"
+
+msgid "Watching downloads"
+msgstr "Слежу за загрузками"
+
+msgid "Download finished"
+msgstr "Загрузка завершена"
+
+#, c-sharp-format
+msgid "Waiting for {0}"
+msgstr "Ждём {0}"
+
+msgid "a chime when it is done · play meanwhile"
+msgstr "по готовности прозвучит сигнал · а пока можно поиграть"
+
+#, c-sharp-format
+msgid "No program with id {0}"
+msgstr "Нет программы с id {0}"
+
+msgid "it may have finished already"
+msgstr "возможно, она уже завершилась"
+
+msgid "That is not a web address"
+msgstr "Это не веб-адрес"
+
+msgid "e.g. http://localhost:8080/health"
+msgstr "например, http://localhost:8080/health"
+
+#, c-sharp-format
+msgid "{0} has finished"
+msgstr "{0} завершилась"
+
+#, c-sharp-format
+msgid "{0} is ready"
+msgstr "{0} готов"
+
+#, c-sharp-format
+msgid "{0} never answered"
+msgstr "{0} так и не ответил"
+
+#, c-sharp-format
+msgid "gave up after {0} hours"
+msgstr "перестал ждать через {0} ч"
+
+#, c-sharp-format
+msgid "{0} is up"
+msgstr "{0} отвечает"
+
+#, c-sharp-format
+msgid "after {0}"
+msgstr "спустя {0}"
+
+msgid "Far sighted"
+msgstr "Дальновидный"
+
+msgid "Take 50 eye breaks"
+msgstr "Сделайте 50 перерывов для глаз"
+
+msgid "Limber"
+msgstr "Гибкость"
+
+msgid "Finish 25 stretch breaks"
+msgstr "Завершите 25 разминок"
+
+msgid "Hydrated"
+msgstr "Водный баланс"
+
+msgid "Drink 50 glasses of water"
+msgstr "Выпейте 50 стаканов воды"
+
+msgid "Deep work"
+msgstr "Глубокая работа"
+
+msgid "Finish 10 focus blocks"
+msgstr "Завершите 10 блоков фокуса"
+
+msgid "Breathe easy"
+msgstr "Дышите свободно"
+
+msgid "Breathe for a minute 10 times"
+msgstr "Сделайте минуту дыхания 10 раз"
+
+msgid "Right on time"
+msgstr "Точно вовремя"
+
+msgid "Get a heads-up before 20 meetings"
+msgstr "Получите предупреждение перед 20 встречами"
+
+msgid "Coffee club"
+msgstr "Кофейный клуб"
+
+msgid "Go for coffee, lunch or a walk with co-workers 5 times"
+msgstr "Сходите с коллегами на кофе, обед или прогулку 5 раз"
+
+msgid "Note to self"
+msgstr "Заметка себе"
+
+msgid "Tick off 10 sticky notes"
+msgstr "Отметьте выполненными 10 стикеров"
+
+msgid "Tea's ready"
+msgstr "Чай готов"
+
+msgid "Let 10 timers ring"
+msgstr "Дождитесь звонка 10 таймеров"
+
+msgid "Take a stretch break"
+msgstr "Сделайте разминку"
+
+msgid "Drink a glass of water"
+msgstr "Выпейте стакан воды"
+
+msgid "Finish a focus block"
+msgstr "Завершите блок фокуса"

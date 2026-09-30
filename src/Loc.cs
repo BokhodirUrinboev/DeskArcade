@@ -1,35 +1,34 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace DeskArcade;
 
 /// <summary>
-/// UI text translation. Text is written in English in the code and looked up in the Uzbek or Russian
-/// table in <see cref="Strings"/>; anything missing falls back to English.
+/// UI text translation. Text is written in English in the code and looked up in the table of the language in use
+/// (see <see cref="Strings"/>: one .po file per language); anything missing falls back to English.
 /// </summary>
 public static class L
 {
     /// <summary>Choices for the language menu: setting value and display name (shown untranslated).</summary>
-    public static readonly (string Code, string Name)[] Languages =
-    {
-        ("auto", "Automatic"), ("en", "English"), ("uz", "O'zbekcha"), ("ru", "Русский"),
-    };
+    public static IReadOnlyList<(string Code, string Name)> Languages { get; } =
+        new[] { ("auto", "Automatic"), ("en", "English") }.Concat(Strings.Available).ToArray();
 
     static IReadOnlyDictionary<string, string>? _table;
 
-    /// <summary>The active language: "en", "uz" or "ru".</summary>
+    /// <summary>The active language: "en", or the code of a language with a .po file ("uz", "ru", ...).</summary>
     public static string Code { get; private set; } = "en";
 
     /// <summary>Raised after the active language changes.</summary>
     public static event Action? Changed;
 
-    /// <param name="setting">"auto" (follow the system), "en", "uz" or "ru".</param>
+    /// <param name="setting">"auto" (follow the system), "en", or a language code with a .po file.</param>
     public static void Apply(string? setting)
     {
-        string code = setting is "en" or "uz" or "ru" ? setting : Detect();
-        _table = code switch { "uz" => Strings.Uzbek, "ru" => Strings.Russian, _ => null };
+        string code = setting == "en" || setting != null && Strings.For(setting) != null ? setting : Detect();
+        _table = code == "en" ? null : Strings.For(code);
         bool changed = code != Code;
         Code = code;
         if (changed) Changed?.Invoke();
@@ -43,23 +42,20 @@ public static class L
     public static string F(string english, params object?[] args) =>
         string.Format(CultureInfo.InvariantCulture, T(english), args);
 
-    /// <summary>The system UI language. CultureInfo is invariant in this app, so ask the OS directly.</summary>
+    /// <summary>
+    /// The system UI language, when there is a translation for it; English otherwise. CultureInfo is invariant in this
+    /// app, so ask the OS directly: Windows for its preferred UI languages ("ru-RU"), Linux and macOS through LANGUAGE
+    /// ("uz:ru:en"), LC_ALL, LC_MESSAGES or LANG ("pt_BR.UTF-8").
+    /// </summary>
     static string Detect()
     {
         try
         {
-            if (OperatingSystem.IsWindows())
+            foreach (string wanted in SystemLanguages())
             {
-                int primary = GetUserDefaultUILanguage() & 0x3FF;
-                return primary == 0x19 ? "ru" : primary == 0x43 ? "uz" : "en";
-            }
-            foreach (var name in new[] { "LANGUAGE", "LC_ALL", "LC_MESSAGES", "LANG" })
-            {
-                string? value = Environment.GetEnvironmentVariable(name);
-                if (string.IsNullOrEmpty(value)) continue;
-                if (value.StartsWith("ru", StringComparison.OrdinalIgnoreCase)) return "ru";
-                if (value.StartsWith("uz", StringComparison.OrdinalIgnoreCase)) return "uz";
-                return "en";
+                string code = wanted.Replace('_', '-').Split('-', '.', '@')[0].ToLowerInvariant();
+                if (code == "en") return "en";
+                if (code.Length > 0 && Strings.For(code) != null) return code;
             }
         }
         catch
@@ -69,6 +65,30 @@ public static class L
         return "en";
     }
 
-    [DllImport("kernel32.dll")]
-    static extern ushort GetUserDefaultUILanguage();
+    static IEnumerable<string> SystemLanguages()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            uint count = 0, size = 0;
+            if (GetUserPreferredUILanguages(MuiLanguageName, ref count, null, ref size) && size > 0)
+            {
+                var buffer = new char[size];
+                if (GetUserPreferredUILanguages(MuiLanguageName, ref count, buffer, ref size))
+                    foreach (string name in new string(buffer).Split('\0', StringSplitOptions.RemoveEmptyEntries)) yield return name;
+            }
+            yield break;
+        }
+        foreach (var name in new[] { "LANGUAGE", "LC_ALL", "LC_MESSAGES", "LANG" })
+        {
+            string? value = Environment.GetEnvironmentVariable(name);
+            if (string.IsNullOrEmpty(value)) continue;
+            foreach (string part in value.Split(':', StringSplitOptions.RemoveEmptyEntries)) yield return part;
+            yield break;
+        }
+    }
+
+    const uint MuiLanguageName = 0x8;
+
+    [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+    static extern bool GetUserPreferredUILanguages(uint flags, ref uint count, char[]? buffer, ref uint size);
 }

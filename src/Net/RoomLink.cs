@@ -33,7 +33,7 @@ public sealed record RoomSeat(int Seat, string Name, bool Connected);
 /// </summary>
 public sealed class RoomLink : IDisposable
 {
-    public const int Port = 47822, MaxSeats = 4;
+    public const int Port = 47822, MaxSeats = 4, MaxCapacity = 8;
     /// <summary>The game of a room that doesn't name one.</summary>
     public const string Durak = "durak";
     const string Magic = "DA1";
@@ -71,6 +71,8 @@ public sealed class RoomLink : IDisposable
     public string MyName { get; set; } = LanLink.MyName;
     /// <summary>The game this room plays: a host only lets in players of the same game.</summary>
     public string Game { get; init; } = Durak;
+    /// <summary>How many people the room seats, the host included: <see cref="MaxSeats"/> for the card games, up to <see cref="MaxCapacity"/> for a quiz.</summary>
+    public int Capacity { get; init; } = MaxSeats;
 
     /// <summary>Raised on a background thread when the state or the roster changes.</summary>
     public event Action? Changed;
@@ -291,7 +293,7 @@ public sealed class RoomLink : IDisposable
         {
             int count;
             lock (_gate) count = 1 + _guests.Count(g => g.Value.Connected);
-            TrySend(udp, from, $"rhere|{Code}|{Clean(MyName)}|{count}|{MaxSeats}|{(Open ? 1 : 0)}{GameField}");
+            TrySend(udp, from, $"rhere|{Code}|{Clean(MyName)}|{count}|{Math.Clamp(Capacity, 2, MaxCapacity)}|{(Open ? 1 : 0)}{GameField}");
             return;
         }
         if (kind == "rjoin" && f.Length >= 4)
@@ -318,10 +320,10 @@ public sealed class RoomLink : IDisposable
                     known.Value.Heard = DateTime.UtcNow;
                 }
                 else if (!Open) refusal = "started";
-                else if (_guests.Count + 1 >= MaxSeats) refusal = "full";
+                else if (_guests.Count + 1 >= Math.Clamp(Capacity, 2, MaxCapacity)) refusal = "full";
                 else
                 {
-                    seat = Enumerable.Range(1, MaxSeats - 1).First(s => !_guests.ContainsKey(s));
+                    seat = Enumerable.Range(1, Math.Clamp(Capacity, 2, MaxCapacity) - 1).First(s => !_guests.ContainsKey(s));
                     _guests[seat] = new Guest { Address = from, Name = Clean(f[2]), Nonce = nonce, Heard = DateTime.UtcNow };
                 }
             }

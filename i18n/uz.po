@@ -1,0 +1,5701 @@
+# Desk Arcade: Uzbek (uz).
+# The English text is the msgid. Keep {0}-style placeholders, "·" separators and "×" as they are, and keep
+# the number last in "Best {0}"-style lines (the compact scoreboard shows only the last word).
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: uz\n"
+"X-Language-Name: O'zbekcha\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. ---- menus, notices, overlay
+msgid "Automatic"
+msgstr "Avtomatik"
+
+msgid "Game"
+msgstr "O'yin"
+
+msgid "Games"
+msgstr "O'yinlar"
+
+msgid "General"
+msgstr "Umumiy"
+
+msgid "Next game"
+msgstr "Keyingi o'yin"
+
+msgid "Bring to cursor"
+msgstr "Kursorga olib kelish"
+
+msgid "Stats & achievements"
+msgstr "Statistika va yutuqlar"
+
+msgid "Stats & achievements…"
+msgstr "Statistika va yutuqlar…"
+
+msgid "Show overlay"
+msgstr "O'yinni ko'rsatish"
+
+msgid "Bounce on window tops"
+msgstr "Oyna tepasida sakrash"
+
+msgid "Sound"
+msgstr "Ovoz"
+
+msgid "Volume"
+msgstr "Ovoz balandligi"
+
+msgid "Language"
+msgstr "Til"
+
+msgid "Alerts when Claude finishes"
+msgstr "Claude tugatganda ogohlantirish"
+
+msgid "Show the overlay when Claude starts working"
+msgstr "Claude ishni boshlaganda o'yinni ko'rsatish"
+
+msgid "Hide the overlay when Claude finishes or needs you"
+msgstr "Claude tugatganda yoki sizni kutganda o'yinni yashirish"
+
+msgid "Copy Claude Code hook config"
+msgstr "Claude Code hook sozlamasini nusxalash"
+
+msgid "Start when I sign in"
+msgstr "Tizimga kirganda ishga tushirish"
+
+msgid "Move to next monitor"
+msgstr "Keyingi monitorga o'tkazish"
+
+msgid "Check for updates"
+msgstr "Yangilanishlarni tekshirish"
+
+msgid "Check for updates automatically"
+msgstr "Yangilanishlarni avtomatik tekshirish"
+
+#, c-sharp-format
+msgid "Download version {0}…"
+msgstr "{0} versiyasini yuklab olish…"
+
+msgid "Reset positions"
+msgstr "Joylashuvlarni tiklash"
+
+msgid "Reset high scores"
+msgstr "Rekordlarni tozalash"
+
+msgid "Reset stats and achievements"
+msgstr "Statistika va yutuqlarni tozalash"
+
+msgid "Exit"
+msgstr "Chiqish"
+
+msgid "Welcome to Desk Arcade"
+msgstr "Desk Arcade'ga xush kelibsiz"
+
+#, c-sharp-format
+msgid "click the scoreboard to pick a game · {0} show/hide · {1} next game"
+msgstr "o'yin tanlash uchun hisob taxtasini bosing · {0} ko'rsatish/yashirish · {1} keyingi o'yin"
+
+msgid "Achievement unlocked"
+msgstr "Yutuq ochildi"
+
+msgid "Stats reset"
+msgstr "Statistika tozalandi"
+
+msgid "achievements start over"
+msgstr "yutuqlar boshidan boshlanadi"
+
+msgid "Hook config copied"
+msgstr "Hook sozlamasi nusxalandi"
+
+msgid "merge it into ~/.claude/settings.json"
+msgstr "uni ~/.claude/settings.json fayliga qo'shing"
+
+#, c-sharp-format
+msgid "Desk Arcade {0} is available"
+msgstr "Desk Arcade {0} chiqdi"
+
+msgid "opening the download page"
+msgstr "yuklab olish sahifasi ochilmoqda"
+
+msgid "download it from the tray menu"
+msgstr "uni tray menyusidan yuklab oling"
+
+msgid "You're up to date"
+msgstr "Sizda eng so'nggi versiya"
+
+#, c-sharp-format
+msgid "version {0}"
+msgstr "versiya {0}"
+
+#, c-sharp-format
+msgid "Time played {0} · achievements {1}/{2}"
+msgstr "O'ynalgan vaqt {0} · yutuqlar {1}/{2}"
+
+#, c-sharp-format
+msgid "{0}h {1}m"
+msgstr "{0} soat {1} daq"
+
+#, c-sharp-format
+msgid "{0}m"
+msgstr "{0} daq"
+
+#. ---- commands run with --while
+#, c-sharp-format
+msgid "{0} passed · {1}"
+msgstr "{0} o'tdi · {1}"
+
+#, c-sharp-format
+msgid "{0} passed"
+msgstr "{0} o'tdi"
+
+#, c-sharp-format
+msgid "{0} failed · exit {1}"
+msgstr "{0} xato · kod {1}"
+
+#, c-sharp-format
+msgid "{0} · took {1}"
+msgstr "{0} · {1} davom etdi"
+
+#, c-sharp-format
+msgid "{0} · exit code {1}"
+msgstr "{0} · chiqish kodi {1}"
+
+#, c-sharp-format
+msgid "{0} · you played {1}"
+msgstr "{0} · siz {1} o'ynadingiz"
+
+msgid "Passed"
+msgstr "Tayyor"
+
+msgid "Failed"
+msgstr "Xato"
+
+msgid "It's compiling"
+msgstr "Kompilyatsiya ketyapti"
+
+msgid "Be playing when a --while command finishes 10 times"
+msgstr "--while buyrug'i tugaganda 10 marta o'yin o'ynayotgan bo'ling"
+
+#. ---- Claude Code
+msgid "Claude working"
+msgstr "Claude ishlayapti"
+
+#, c-sharp-format
+msgid "Claude working · {0}"
+msgstr "Claude ishlayapti · {0}"
+
+msgid "Claude done"
+msgstr "Claude tugatdi"
+
+#, c-sharp-format
+msgid "Claude done after {0}"
+msgstr "Claude {0} da tugatdi"
+
+msgid "Claude is done"
+msgstr "Claude tugatdi"
+
+msgid "Claude needs you"
+msgstr "Claude sizni kutyapti"
+
+msgid "your turn!"
+msgstr "navbat sizda!"
+
+msgid "check the terminal"
+msgstr "terminalni tekshiring"
+
+#, c-sharp-format
+msgid "{0} · waited {1}"
+msgstr "{0} · kutildi {1}"
+
+#. ---- game titles and switch hints
+msgid "Hoops"
+msgstr "Basketbol"
+
+msgid "Archery"
+msgstr "Kamondan otish"
+
+msgid "Keepy-Uppy"
+msgstr "To'p tepish"
+
+msgid "Mini Golf"
+msgstr "Mini golf"
+
+msgid "Bug Squash"
+msgstr "Qo'ng'izlarni ezish"
+
+msgid "Can Knockdown"
+msgstr "Bankalarni urish"
+
+msgid "Brick Breaker"
+msgstr "G'isht sindirish"
+
+msgid "Bubble Pop"
+msgstr "Pufakcha yorish"
+
+msgid "Air Hockey"
+msgstr "Havo xokkeyi"
+
+msgid "Clay Shooting"
+msgstr "Nishonga otish"
+
+msgid "Whack-a-Bug"
+msgstr "Qo'ng'iz urish"
+
+msgid "Plinko"
+msgstr "Plinko"
+
+msgid "drag the ball and flick it into the hoop"
+msgstr "to'pni sudrab, halqaga otib yuboring"
+
+msgid "drag back from the bow, release to shoot"
+msgstr "kamondan orqaga torting, otish uchun qo'yib yuboring"
+
+msgid "click the ball to kick it — don't let it drop"
+msgstr "to'pni bosib tepib turing — tushirib yubormang"
+
+msgid "drag back from the ball to putt it into the cup"
+msgstr "to'pdan orqaga torting va chuqurchaga uring"
+
+msgid "squash the bugs — spare the ladybugs"
+msgstr "qo'ng'izlarni ezing — xonqizlarga tegmang"
+
+msgid "throw the ball from behind the line"
+msgstr "to'pni chiziq ortidan oting"
+
+msgid "click the paddle to launch — the mouse steers it"
+msgstr "boshlash uchun raketkani bosing — uni sichqoncha boshqaradi"
+
+msgid "click a bubble to split it — clear them all in time"
+msgstr "pufakchani bosib bo'ling — hammasini vaqtida yo'q qiling"
+
+msgid "drag your mallet and score in the right-hand goal"
+msgstr "tayoqchani sudrab, o'ngdagi darvozaga gol uring"
+
+msgid "click the trap machine, then shoot the clays at the top of their arc"
+msgstr "otish mashinasini bosing, nishonlarni eng yuqori nuqtada uring"
+
+msgid "whack the bugs as they peek out — spare the ladybugs"
+msgstr "mo'ralayotgan qo'ng'izlarni uring — xonqizlarga tegmang"
+
+msgid "click the strip to drop a disc — the gold slot is the jackpot"
+msgstr "disk tashlash uchun chiziqni bosing — oltin katak jekpot"
+
+#. ---- shared game text
+#, c-sharp-format
+msgid "Best {0}"
+msgstr "Rekord {0}"
+
+msgid "NEW BEST!"
+msgstr "YANGI REKORD!"
+
+msgid "NEW BEST ROUND!"
+msgstr "YANGI RAUND REKORDI!"
+
+msgid "GAME OVER"
+msgstr "O'YIN TUGADI"
+
+msgid "ROUND OVER"
+msgstr "RAUND TUGADI"
+
+msgid "TIME!"
+msgstr "VAQT TUGADI!"
+
+#, c-sharp-format
+msgid "{0} points"
+msgstr "{0} ochko"
+
+msgid "that was a feature!"
+msgstr "bu xato emas, imkoniyat edi!"
+
+#. ---- Hoops
+msgid "Drag the ball, flick it into the hoop"
+msgstr "To'pni sudrab, halqaga otib yuboring"
+
+#, c-sharp-format
+msgid "Streak {0} · keep going!"
+msgstr "Seriya {0} · davom eting!"
+
+#, c-sharp-format
+msgid "Streak {0} · ON FIRE ×2"
+msgstr "Seriya {0} · OLOVDA ×2"
+
+#, c-sharp-format
+msgid "Best streak {0}"
+msgstr "Eng uzun seriya {0}"
+
+msgid "streak over"
+msgstr "seriya tugadi"
+
+msgid "DUNK!"
+msgstr "DANK!"
+
+msgid "SWISH!"
+msgstr "TOZA!"
+
+msgid "SWISH THREE!"
+msgstr "TOZA UCH OCHKOLIK!"
+
+msgid "THREE POINTER!"
+msgstr "UCH OCHKOLIK!"
+
+msgid "NICE SHOT!"
+msgstr "ZO'R OTISH!"
+
+msgid "ON FIRE!"
+msgstr "OLOVDA!"
+
+msgid "points ×2"
+msgstr "ochkolar ×2"
+
+msgid "MOVING HOOP!"
+msgstr "HALQA HARAKATDA!"
+
+msgid "NEW BEST STREAK"
+msgstr "YANGI SERIYA REKORDI"
+
+#. ---- Archery
+msgid "calm"
+msgstr "shamolsiz"
+
+#, c-sharp-format
+msgid "Round {0} · {1} arrows · wind {2}"
+msgstr "Raund {0} · o'qlar {1} · shamol {2}"
+
+msgid "Round over · pull the bow to play again"
+msgstr "Raund tugadi · qayta o'ynash uchun kamonni torting"
+
+#, c-sharp-format
+msgid "Best round {0}"
+msgstr "Eng yaxshi raund {0}"
+
+msgid "pull back to start a round"
+msgstr "raundni boshlash uchun torting"
+
+#, c-sharp-format
+msgid "{0} arrows · wind {1}"
+msgstr "o'qlar {0} · shamol {1}"
+
+#, c-sharp-format
+msgid "{0} points · best {1}"
+msgstr "{0} ochko · rekord {1}"
+
+msgid "BULLSEYE!"
+msgstr "MARKAZGA!"
+
+msgid "GOLDEN!"
+msgstr "OLTIN!"
+
+msgid "POP!"
+msgstr "PAQ!"
+
+#. ---- Keepy-Uppy
+msgid "Click the ball to kick it up"
+msgstr "To'pni tepish uchun ustiga bosing"
+
+#, c-sharp-format
+msgid "Juggles {0} · grab the star!"
+msgstr "Tepishlar {0} · yulduzni oling!"
+
+#, c-sharp-format
+msgid "Juggles {0} · don't let it drop"
+msgstr "Tepishlar {0} · tushirmang"
+
+msgid "Dropped!"
+msgstr "Tushib ketdi!"
+
+#. ---- Mini Golf
+#, c-sharp-format
+msgid "Hole {0}/{1} · par {2} · stroke {3}"
+msgstr "Chuqurcha {0}/{1} · par {2} · zarba {3}"
+
+#, c-sharp-format
+msgid "Round done · {0} vs par · putt to play again"
+msgstr "Raund tugadi · parga nisbatan {0} · qayta o'ynash uchun uring"
+
+msgid "Best —"
+msgstr "Rekord —"
+
+msgid "penalty drop"
+msgstr "jarima"
+
+msgid "HOLE IN ONE!"
+msgstr "BIR ZARBADA!"
+
+msgid "EAGLE!"
+msgstr "IGL!"
+
+msgid "BIRDIE!"
+msgstr "BERDI!"
+
+msgid "PAR"
+msgstr "PAR"
+
+msgid "BOGEY"
+msgstr "BOGI"
+
+msgid "DOUBLE BOGEY"
+msgstr "IKKI BOGI"
+
+#, c-sharp-format
+msgid "{0} stroke · par {1}"
+msgstr "{0} zarba · par {1}"
+
+#, c-sharp-format
+msgid "{0} strokes · par {1}"
+msgstr "{0} zarba · par {1}"
+
+msgid "ROUND COMPLETE"
+msgstr "RAUND TUGADI"
+
+#, c-sharp-format
+msgid "{0} strokes · {1} vs par"
+msgstr "{0} zarba · parga nisbatan {1}"
+
+#. ---- Bug Squash
+msgid "Squash the sleeping bug to start · spare the ladybugs"
+msgstr "Boshlash uchun uxlayotgan qo'ng'izni ezing · xonqizlarga tegmang"
+
+#, c-sharp-format
+msgid "{0}s left · squashed {1}"
+msgstr "{0} s qoldi · ezildi {1}"
+
+#, c-sharp-format
+msgid "{0}s left · squashed {1} · combo ×{2}"
+msgstr "{0} s qoldi · ezildi {1} · kombo ×{2}"
+
+#, c-sharp-format
+msgid "{0} points · {1} squashed · {2} got away"
+msgstr "{0} ochko · {1} ta ezildi · {2} ta qochdi"
+
+#. ---- Can Knockdown
+#, c-sharp-format
+msgid "Stack {0} · balls {1} · cans left {2}"
+msgstr "Piramida {0} · to'plar {1} · qolgan bankalar {2}"
+
+msgid "Game over · grab the ball to play again"
+msgstr "O'yin tugadi · qayta o'ynash uchun to'pni oling"
+
+msgid "CLEAR!"
+msgstr "TOZA!"
+
+#, c-sharp-format
+msgid "+{0} for spare balls"
+msgstr "ortiqcha to'plar uchun +{0}"
+
+msgid "next stack"
+msgstr "keyingi piramida"
+
+#, c-sharp-format
+msgid "{0} points · reached stack {1}"
+msgstr "{0} ochko · {1}-piramidagacha yetdingiz"
+
+#. ---- Brick Breaker
+#, c-sharp-format
+msgid "Level {0} · balls {1} · bricks {2}"
+msgstr "Daraja {0} · to'plar {1} · g'ishtlar {2}"
+
+#, c-sharp-format
+msgid "Level {0} · balls {1} · click the paddle to launch"
+msgstr "Daraja {0} · to'plar {1} · boshlash uchun raketkani bosing"
+
+msgid "Game over · click the paddle to play again"
+msgstr "O'yin tugadi · qayta o'ynash uchun raketkani bosing"
+
+#, c-sharp-format
+msgid "{0} points · level {1}"
+msgstr "{0} ochko · daraja {1}"
+
+msgid "ball lost"
+msgstr "to'p yo'qoldi"
+
+#, c-sharp-format
+msgid "{0} left"
+msgstr "{0} ta qoldi"
+
+msgid "LEVEL CLEAR!"
+msgstr "DARAJA O'TILDI!"
+
+#, c-sharp-format
+msgid "+{0} bonus"
+msgstr "+{0} bonus"
+
+#. ---- Bubble Pop
+msgid "Pop the bubble to start · smaller bubbles score more"
+msgstr "Boshlash uchun pufakchani yoring · kichiklari ko'proq ochko beradi"
+
+#, c-sharp-format
+msgid "Wave {0} cleared!"
+msgstr "{0}-to'lqin tozalandi!"
+
+#, c-sharp-format
+msgid "Wave {0} · {1}s left · bubbles {2}"
+msgstr "To'lqin {0} · {1} s qoldi · pufakchalar {2}"
+
+#, c-sharp-format
+msgid "Wave {0} · {1}s left · bubbles {2} · combo ×{3}"
+msgstr "To'lqin {0} · {1} s qoldi · pufakchalar {2} · kombo ×{3}"
+
+msgid "pop me"
+msgstr "yor meni"
+
+#, c-sharp-format
+msgid "WAVE {0}"
+msgstr "{0}-TO'LQIN"
+
+msgid "WAVE CLEAR!"
+msgstr "TO'LQIN TOZALANDI!"
+
+#, c-sharp-format
+msgid "+{0} time bonus"
+msgstr "+{0} vaqt bonusi"
+
+#, c-sharp-format
+msgid "{0} points · wave {1}"
+msgstr "{0} ochko · to'lqin {1}"
+
+#. ---- Air Hockey
+#, c-sharp-format
+msgid "First to {0} · CPU level {1} · drag your blue mallet"
+msgstr "{0} golgacha · kompyuter darajasi {1} · ko'k tayoqchani suring"
+
+msgid "Match over · grab your mallet for a rematch"
+msgstr "O'yin tugadi · qayta o'ynash uchun tayoqchani oling"
+
+#, c-sharp-format
+msgid "Wins {0}"
+msgstr "G'alabalar {0}"
+
+msgid "GOAL!"
+msgstr "GOL!"
+
+msgid "you score"
+msgstr "siz gol urdingiz"
+
+msgid "CPU scores"
+msgstr "kompyuter gol urdi"
+
+#, c-sharp-format
+msgid "Downloading version {0}…"
+msgstr "{0} versiyasi yuklanmoqda…"
+
+msgid "the game restarts when it is done"
+msgstr "tugagach o'yin qayta ishga tushadi"
+
+msgid "Couldn't download the update"
+msgstr "Yangilanishni yuklab bo'lmadi"
+
+msgid "opening the download page instead"
+msgstr "o'rniga yuklab olish sahifasi ochilmoqda"
+
+#, c-sharp-format
+msgid "Install version {0}"
+msgstr "{0} versiyasini o'rnatish"
+
+msgid "Reduce motion"
+msgstr "Harakatni kamaytirish"
+
+msgid "Colour-blind friendly colours"
+msgstr "Rang ko'rlik uchun qulay ranglar"
+
+msgid "Accessibility"
+msgstr "Qulayliklar"
+
+msgid "Cat"
+msgstr "Mushuk"
+
+msgid "Dog"
+msgstr "Kuchuk"
+
+msgid "Duck"
+msgstr "O'rdak"
+
+msgid "Pet"
+msgstr "Uy hayvoni"
+
+#, c-sharp-format
+msgid "Make {0} baskets in Hoops"
+msgstr "Hoops'da {0} ta to'p tushiring"
+
+#, c-sharp-format
+msgid "Pop {0} balloons in Archery"
+msgstr "Kamondan otishda {0} ta shar yorilsin"
+
+#, c-sharp-format
+msgid "Squash {0} bugs"
+msgstr "{0} ta qo'ng'izni ezing"
+
+#, c-sharp-format
+msgid "Score {0} goals in Air Hockey"
+msgstr "Havo xokkeyida {0} ta gol uring"
+
+#, c-sharp-format
+msgid "Break {0} clays"
+msgstr "{0} ta nishonni sindiring"
+
+#, c-sharp-format
+msgid "Break {0} bricks"
+msgstr "{0} ta g'ishtni sindiring"
+
+#, c-sharp-format
+msgid "Knock down {0} cans"
+msgstr "{0} ta bankani yiqiting"
+
+#, c-sharp-format
+msgid "Pop {0} bubbles"
+msgstr "{0} ta pufakni yoring"
+
+#, c-sharp-format
+msgid "Whack {0} bugs"
+msgstr "{0} ta qo'ng'izni uring"
+
+#, c-sharp-format
+msgid "Play {0} holes of Mini Golf"
+msgstr "Mini golfda {0} ta chuqur o'ynang"
+
+#, c-sharp-format
+msgid "Make {0} perfect drops in Tower Stack"
+msgstr "Minorada {0} ta aniq tushirish qiling"
+
+#, c-sharp-format
+msgid "Knock down {0} blocks with the Slingshot"
+msgstr "Rogatka bilan {0} ta blokni yiqiting"
+
+#, c-sharp-format
+msgid "Drop {0} Plinko discs"
+msgstr "Plinkoda {0} ta disk tashlang"
+
+#, c-sharp-format
+msgid "Swish {0} shots in Hoops"
+msgstr "Hoops'da {0} ta toza zarba bering"
+
+#, c-sharp-format
+msgid "Capture {0} pieces in Checkers"
+msgstr "Shashkada {0} ta tosh oling"
+
+#, c-sharp-format
+msgid "Capture {0} pieces in Chess"
+msgstr "Shaxmatda {0} ta dona oling"
+
+#, c-sharp-format
+msgid "Sink {0} ships in Sea Battle"
+msgstr "Dengiz jangida {0} ta kemani cho'ktiring"
+
+msgid "Daily challenge done!"
+msgstr "Kunlik vazifa bajarildi!"
+
+#, c-sharp-format
+msgid "{0} days in a row"
+msgstr "{0} kun ketma-ket"
+
+msgid "come back tomorrow for a new one"
+msgstr "ertaga yangisi uchun qaytib keling"
+
+#, c-sharp-format
+msgid "Today: {0} ({1}/{2})"
+msgstr "Bugun: {0} ({1}/{2})"
+
+#, c-sharp-format
+msgid "{0} · streak {1}"
+msgstr "{0} · ketma-ket {1}"
+
+msgid "Daily player"
+msgstr "Kunlik o'yinchi"
+
+msgid "Finish a daily challenge"
+msgstr "Kunlik vazifani bajaring"
+
+msgid "Seven in a row"
+msgstr "Ketma-ket yetti"
+
+msgid "Finish the daily challenge 7 days in a row"
+msgstr "Kunlik vazifani 7 kun ketma-ket bajaring"
+
+msgid "Resumed"
+msgstr "Davom etmoqda"
+
+#, c-sharp-format
+msgid "{0} · Claude worked {1}, you played {2}"
+msgstr "{0} · Claude {1} ishladi, siz {2} o'ynadingiz"
+
+msgid "PAUSED"
+msgstr "PAUZA"
+
+msgid "click the game to resume"
+msgstr "davom ettirish uchun o'yinni bosing"
+
+msgid "Pause the game when Claude finishes or needs you"
+msgstr "Claude tugatganda yoki sizni kutganda o'yinni to'xtatish"
+
+msgid "Shortcuts"
+msgstr "Tezkor tugmalar"
+
+msgid "Modifier keys"
+msgstr "Yordamchi tugmalar"
+
+msgid "Show or hide the overlay"
+msgstr "O'yinni ko'rsatish yoki yashirish"
+
+msgid "Save"
+msgstr "Saqlash"
+
+msgid "Defaults"
+msgstr "Standart"
+
+msgid "Use three different letters, A to Z."
+msgstr "A dan Z gacha uchta har xil harf tanlang."
+
+#, c-sharp-format
+msgid "Saved: {0}. They take effect the next time Desk Arcade starts."
+msgstr "Saqlandi: {0}. Desk Arcade keyingi safar ishga tushganda kuchga kiradi."
+
+#, c-sharp-format
+msgid "Saved: {0}"
+msgstr "Saqlandi: {0}"
+
+#, c-sharp-format
+msgid "Saved, but another app already uses one of these ({0}). Try other letters or keys."
+msgstr "Saqlandi, lekin ulardan birini boshqa dastur ishlatmoqda ({0}). Boshqa harf yoki tugmalarni tanlang."
+
+msgid "Shortcuts…"
+msgstr "Tezkor tugmalar…"
+
+#, c-sharp-format
+msgid "Race {0}: start a round and they start too"
+msgstr "{0} bilan poyga: raund boshlang, u ham boshlaydi"
+
+#, c-sharp-format
+msgid "{0}: {1}{2}"
+msgstr "{0}: {1}{2}"
+
+msgid "done"
+msgstr "tugadi"
+
+msgid "DEAD HEAT"
+msgstr "DURANG"
+
+msgid "YOU WIN THE RACE!"
+msgstr "POYGADA YUTDINGIZ!"
+
+#, c-sharp-format
+msgid "{0} WINS THE RACE"
+msgstr "POYGADA {0} YUTDI"
+
+#, c-sharp-format
+msgid "{0} – {1}"
+msgstr "{0} – {1}"
+
+msgid "H-O-R-S-E over · grab the ball for a rematch"
+msgstr "H-O-R-S-E tugadi · qayta o'ynash uchun to'pni oling"
+
+msgid "Match the shot from the marked spot, or take a letter"
+msgstr "Belgilangan joydan xuddi shunday oting, aks holda harf olasiz"
+
+#, c-sharp-format
+msgid "{0} has to match your shot"
+msgstr "{0} sizning zarbangizni takrorlashi kerak"
+
+msgid "H-O-R-S-E · set a shot from anywhere"
+msgstr "H-O-R-S-E · istalgan joydan zarba bering"
+
+#, c-sharp-format
+msgid "H-O-R-S-E · {0} is setting a shot"
+msgstr "H-O-R-S-E · {0} zarba bermoqda"
+
+msgid "shoot from here"
+msgstr "shu yerdan oting"
+
+#, c-sharp-format
+msgid "{0}'s shot"
+msgstr "{0} ning navbati"
+
+msgid "shoot from the marked spot"
+msgstr "belgilangan joydan oting"
+
+msgid "The host picks the game"
+msgstr "O'yinni xost tanlaydi"
+
+#, c-sharp-format
+msgid "{0} is hosting"
+msgstr "{0} — xost"
+
+#, c-sharp-format
+msgid "{0} missed — your turn to set"
+msgstr "{0} xato qildi — endi siz otasiz"
+
+#, c-sharp-format
+msgid "{0} made it — your turn to match"
+msgstr "{0} tushirdi — endi siz takrorlang"
+
+msgid "you take a letter"
+msgstr "siz harf oldingiz"
+
+#, c-sharp-format
+msgid "{0} takes a letter"
+msgstr "{0} harf oldi"
+
+msgid "grab the ball for a rematch"
+msgstr "qayta o'ynash uchun to'pni oling"
+
+msgid "Find games"
+msgstr "O'yinlarni topish"
+
+msgid "Looking for games on your network…"
+msgstr "Tarmoqda o'yinlar qidirilmoqda…"
+
+msgid "Join"
+msgstr "Qo'shilish"
+
+msgid "Or join by address (ask the host for their IP):"
+msgstr "Yoki manzil orqali qo'shiling (o'yin ochgandan IP manzilini so'rang):"
+
+#, c-sharp-format
+msgid "{0} · {1} · already playing"
+msgstr "{0} · {1} · allaqachon o'ynayapti"
+
+#, c-sharp-format
+msgid "{0} · {1}"
+msgstr "{0} · {1}"
+
+msgid "No games yet. Ask your co-worker to pick Play over LAN → Host a game."
+msgstr "Hozircha o'yin yo'q. Hamkasbingizdan Tarmoq orqali o'ynash → O'yin ochishni tanlashini so'rang."
+
+msgid "Click a game to join it:"
+msgstr "Qo'shilish uchun o'yinni bosing:"
+
+msgid "Couldn't search the network."
+msgstr "Tarmoqni qidirib bo'lmadi."
+
+msgid "That doesn't look like an address, e.g. 192.168.1.20"
+msgstr "Bu manzilga o'xshamaydi, masalan 192.168.1.20"
+
+#, c-sharp-format
+msgid "sent to {0}"
+msgstr "{0} ga yuborildi"
+
+#, c-sharp-format
+msgid "from {0}"
+msgstr "{0} dan"
+
+#. ---- pet mail: gifts for a co-worker's pet over the LAN
+#, c-sharp-format
+msgid "Send {0}'s pet…"
+msgstr "{0}ning uy hayvoniga yuborish…"
+
+msgid "Send a co-worker's pet…"
+msgstr "Hamkasbning uy hayvoniga yuborish…"
+
+msgid "A treat"
+msgstr "Shirinlik"
+
+msgid "A ball"
+msgstr "To'p"
+
+msgid "A ball of yarn"
+msgstr "Ip koptokcha"
+
+msgid "A chew bone"
+msgstr "Kemiriladigan suyak"
+
+msgid "Sent!"
+msgstr "Yuborildi!"
+
+#, c-sharp-format
+msgid "{0} for {1}'s pet"
+msgstr "{1}ning uy hayvoni uchun: {0}"
+
+msgid "Wait a moment"
+msgstr "Biroz kuting"
+
+#, c-sharp-format
+msgid "The next parcel can go in {0} s"
+msgstr "Keyingi posilkani {0} soniyadan keyin yuborish mumkin"
+
+msgid "The parcels on the way have to arrive first"
+msgstr "Avval yo'ldagi posilkalar yetib borishi kerak"
+
+#, c-sharp-format
+msgid "{0}'s pet loved it"
+msgstr "{0}ning uy hayvoniga juda yoqdi"
+
+#, c-sharp-format
+msgid "A parcel from {0}"
+msgstr "{0}dan posilka"
+
+msgid "It waits for your Desktop Pet"
+msgstr "U uy hayvoningizni kutyapti"
+
+msgid "Off to open the parcel"
+msgstr "Posilkani ochgani ketdi"
+
+msgid "A parcel is coming down!"
+msgstr "Posilka tushyapti!"
+
+msgid "A parcel! · click it to open"
+msgstr "Posilka! · ochish uchun bosing"
+
+msgid "Playing with its new toy"
+msgstr "Yangi o'yinchog'i bilan o'ynayapti"
+
+msgid "Pet post"
+msgstr "Uy hayvonlari pochtasi"
+
+msgid "Send 10 gifts to a co-worker's pet"
+msgstr "Hamkasbingizning uy hayvoniga 10 ta sovg'a yuboring"
+
+msgid "Special delivery"
+msgstr "Maxsus yetkazib berish"
+
+msgid "Open a parcel from a co-worker"
+msgstr "Hamkasbingizdan kelgan posilkani oching"
+
+msgid "Find games / join by address…"
+msgstr "O'yin topish / manzil orqali qo'shilish…"
+
+msgid "Send"
+msgstr "Yuborish"
+
+msgid "gg"
+msgstr "gg"
+
+msgid "One more?"
+msgstr "Yana bittami?"
+
+msgid "Nice shot!"
+msgstr "Zo'r zarba!"
+
+msgid "Your move!"
+msgstr "Sizning navbatingiz!"
+
+msgid "Ha!"
+msgstr "Ha-ha!"
+
+msgid "Crowned"
+msgstr "Toj kiydi"
+
+msgid "Win a game of Checkers"
+msgstr "Shashkada bir marta yuting"
+
+msgid "Checkmate"
+msgstr "Mat"
+
+msgid "Win a game of Chess"
+msgstr "Shaxmatda bir marta yuting"
+
+msgid "Four in a row"
+msgstr "To'rttasi qatorda"
+
+msgid "Win a game of Connect Four"
+msgstr "To'rtta qatorda bir marta yuting"
+
+msgid "Three in a row"
+msgstr "Uchtasi qatorda"
+
+msgid "Win a game of Tic-tac-toe"
+msgstr "X-O da bir marta yuting"
+
+msgid "Admiral"
+msgstr "Admiral"
+
+msgid "Win a game of Sea Battle"
+msgstr "Dengiz jangida bir marta yuting"
+
+msgid "Office rival"
+msgstr "Ofisdagi raqib"
+
+msgid "Beat a co-worker over the LAN"
+msgstr "Tarmoq orqali hamkasbingizni yuting"
+
+msgid "Sea Battle"
+msgstr "Dengiz jangi"
+
+msgid "click the enemy grid to start, then fire — a hit shoots again"
+msgstr "boshlash uchun dushman maydonini bosing, keyin o'q uzing — tekkizsangiz yana otasiz"
+
+#, c-sharp-format
+msgid "Waiting for {0} to get ready…"
+msgstr "{0} tayyor bo'lishi kutilmoqda…"
+
+msgid "Click your grid to move your ships · click the enemy grid to start"
+msgstr "Kemalarni joylashtirish uchun o'z maydoningizni bosing · boshlash uchun dushman maydonini bosing"
+
+msgid "Game over · click a grid for a rematch"
+msgstr "O'yin tugadi · qayta o'ynash uchun maydonni bosing"
+
+msgid "Your shot · click the enemy grid · a hit shoots again"
+msgstr "Sizning navbatingiz · dushman maydonini bosing · tekkizsangiz yana otasiz"
+
+#, c-sharp-format
+msgid "{0} is aiming…"
+msgstr "{0} nishonga olmoqda…"
+
+msgid "SUNK!"
+msgstr "CHO'KDI!"
+
+msgid "Ship lost"
+msgstr "Kema yo'qotildi"
+
+msgid "click a grid for a rematch"
+msgstr "qayta o'ynash uchun maydonni bosing"
+
+msgid "Your fleet"
+msgstr "Sizning flotingiz"
+
+msgid "Enemy waters"
+msgstr "Dushman suvlari"
+
+msgid "Your move · click a square · right-drag moves the board"
+msgstr "Sizning yurishingiz · katakni bosing · taxtani o'ng tugma bilan suring"
+
+msgid "Tic-tac-toe"
+msgstr "X-O"
+
+msgid "Connect Four"
+msgstr "To'rtta qator"
+
+msgid "The board is full"
+msgstr "Taxta to'ldi"
+
+msgid "click a column to drop a disc — four in a row wins"
+msgstr "diskni tashlash uchun ustunni bosing — to'rttasi qatorda yutadi"
+
+msgid "click a square — three in a row wins"
+msgstr "katakni bosing — uchtasi qatorda yutadi"
+
+msgid "Chess"
+msgstr "Shaxmat"
+
+msgid "Stalemate"
+msgstr "Pat"
+
+msgid "50 moves without a capture or pawn move"
+msgstr "50 yurish davomida hech narsa olinmadi va piyoda yurmadi"
+
+msgid "Not enough pieces to mate"
+msgstr "Mat qilish uchun donalar yetarli emas"
+
+msgid "15 moves without a capture or a man moving"
+msgstr "15 yurish davomida hech narsa olinmadi va oddiy toshlar yurmadi"
+
+msgid "several ways lead there · click each landing on the way"
+msgstr "u yerga bir necha yo'l olib boradi · yo'ldagi har bir katakni bosing"
+
+msgid "DRAW"
+msgstr "DURANG"
+
+msgid "40 moves without a capture · click the board for a rematch"
+msgstr "40 yurish davomida hech narsa olinmadi · qayta o'ynash uchun taxtani bosing"
+
+msgid "Checkers"
+msgstr "Shashka"
+
+msgid "click a piece, then the square it should move to"
+msgstr "toshni bosing, keyin u boradigan katakni"
+
+#. reversi & gomoku
+msgid "Reversi"
+msgstr "Reversi"
+
+msgid "Gomoku"
+msgstr "Gomoku"
+
+msgid "Your move · click a dotted square · right-drag moves the board"
+msgstr "Sizning yurishingiz · nuqtali katakni bosing · taxtani o'ng tugma bilan suring"
+
+msgid "Your move · click an intersection · right-drag moves the board"
+msgstr "Sizning yurishingiz · chiziqlar kesishgan joyni bosing · taxtani o'ng tugma bilan suring"
+
+msgid "You have no move · pass"
+msgstr "Sizda yurish yo'q · pas"
+
+#, c-sharp-format
+msgid "{0} has no move · pass"
+msgstr "{0}: yurish yo'q · pas"
+
+msgid "Equal discs"
+msgstr "Disklar teng"
+
+msgid "click a dotted square — outflank discs to flip them, most discs wins"
+msgstr "nuqtali katakni bosing — disklarni o'rab ag'daring, eng ko'p diskli yutadi"
+
+msgid "click an intersection — five or more in a row wins (freestyle)"
+msgstr "chiziqlar kesishgan joyni bosing — qatorda besh yoki undan ko'pi yutadi (erkin qoidalar)"
+
+msgid "Corner office"
+msgstr "Burchakdagi kabinet"
+
+msgid "Beat the Reversi CPU on Hard or Expert"
+msgstr "Reversida kompyuterni «Qiyin» yoki «Ekspert» darajasida yuting"
+
+msgid "Landslide"
+msgstr "Katta g'alaba"
+
+msgid "Win Reversi with 40 discs or more, or wipe out every disc"
+msgstr "Reversida 40 va undan ko'p disk bilan yoki raqibga bitta ham disk qoldirmay yuting"
+
+msgid "Five alive"
+msgstr "Beshlik"
+
+msgid "Beat the Gomoku CPU on Hard or Expert"
+msgstr "Gomokuda kompyuterni «Qiyin» yoki «Ekspert» darajasida yuting"
+
+msgid "Quick five"
+msgstr "Tezkor beshlik"
+
+msgid "Win Gomoku with fewer than 15 stones"
+msgstr "Gomokuda 15 tadan kam tosh qo'yib yuting"
+
+#, c-sharp-format
+msgid "Flip {0} discs in Reversi"
+msgstr "Reversida {0} ta diskni ag'daring"
+
+msgid "Game over · click the board for a rematch"
+msgstr "O'yin tugadi · qayta o'ynash uchun taxtani bosing"
+
+msgid "Your move · click a piece, then where it goes · right-drag moves the board"
+msgstr "Sizning yurishingiz · toshni, keyin katakni bosing · taxtani o'ng tugma bilan suring"
+
+#, c-sharp-format
+msgid "{0} is thinking…"
+msgstr "{0} o'ylayapti…"
+
+msgid "DOUBLE JUMP!"
+msgstr "IKKITA OLDI!"
+
+msgid "TRIPLE JUMP!"
+msgstr "UCHTA OLDI!"
+
+#, c-sharp-format
+msgid "vs {0}"
+msgstr "{0} bilan"
+
+msgid "click the board for a rematch"
+msgstr "qayta o'ynash uchun taxtani bosing"
+
+msgid "Play over LAN"
+msgstr "Tarmoq orqali o'ynash"
+
+msgid "Host a game"
+msgstr "O'yin ochish"
+
+msgid "Join a game"
+msgstr "O'yinga qo'shilish"
+
+msgid "Leave"
+msgstr "Chiqish"
+
+msgid "Not connected"
+msgstr "Ulanmagan"
+
+msgid "Can't host"
+msgstr "O'yin ochib bo'lmadi"
+
+#, c-sharp-format
+msgid "UDP port {0} is in use"
+msgstr "UDP {0} porti band"
+
+msgid "Waiting for a player to join…"
+msgstr "O'yinchi qo'shilishi kutilmoqda…"
+
+msgid "Looking for a host…"
+msgstr "O'yin qidirilmoqda…"
+
+#, c-sharp-format
+msgid "Playing with {0}"
+msgstr "{0} bilan o'ynayapsiz"
+
+msgid "Connected"
+msgstr "Ulandi"
+
+msgid "Hosting"
+msgstr "O'yin ochildi"
+
+msgid "CPU"
+msgstr "Kompyuter"
+
+#, c-sharp-format
+msgid "First to {0} · vs {1} over LAN · drag your blue mallet"
+msgstr "{0} golgacha · tarmoqda {1} bilan · ko'k tayoqchani torting"
+
+#, c-sharp-format
+msgid "{0} scores"
+msgstr "{0} gol urdi"
+
+#, c-sharp-format
+msgid "{0}–{1} vs {2}"
+msgstr "{0}–{1} · {2} bilan"
+
+#, c-sharp-format
+msgid "{0} WINS"
+msgstr "{0} YUTDI"
+
+#, c-sharp-format
+msgid "YOU  {0} : {1}  {2}"
+msgstr "SIZ  {0} : {1}  {2}"
+
+msgid "YOU WIN!"
+msgstr "SIZ YUTDINGIZ!"
+
+msgid "CPU WINS"
+msgstr "KOMPYUTER YUTDI"
+
+#, c-sharp-format
+msgid "{0}–{1} · the CPU gets faster"
+msgstr "{0}–{1} · kompyuter tezlashadi"
+
+#, c-sharp-format
+msgid "{0}–{1} · grab your mallet for a rematch"
+msgstr "{0}–{1} · qayta o'ynash uchun tayoqchani oling"
+
+#, c-sharp-format
+msgid "YOU  {0} : {1}  CPU"
+msgstr "SIZ  {0} : {1}  KOMP"
+
+#. ---- Whack-a-Bug
+#, c-sharp-format
+msgid "{0}s left · whacked {1}"
+msgstr "{0} s qoldi · urildi {1}"
+
+msgid "Whack the sleepy bug to start · spare the ladybugs"
+msgstr "Boshlash uchun mudrayotgan qo'ng'izni uring · xonqizlarga tegmang"
+
+#, c-sharp-format
+msgid "{0} points · {1} whacked"
+msgstr "{0} ochko · {1} ta urildi"
+
+#. ---- Darts
+msgid "Darts"
+msgstr "Dart"
+
+msgid "hold on the board to aim, let go to throw — finish on a double"
+msgstr "nishonga olish uchun doskani bosib turing, otish uchun qo'yib yuboring — dubl bilan yakunlang"
+
+msgid "Hold on the board to aim, let go to throw · finish on a double"
+msgstr "Nishonga olish uchun doskani bosib turing, otish uchun qo'yib yuboring · dubl bilan yakunlang"
+
+#, c-sharp-format
+msgid "Best {0} darts"
+msgstr "Rekord {0} ta dart"
+
+#, c-sharp-format
+msgid "Game shot in {0} darts · click the board for a new leg"
+msgstr "{0} ta dartda yakunlandi · yangi o'yin uchun doskani bosing"
+
+#, c-sharp-format
+msgid "Dart {0} of 3 · {1} this turn"
+msgstr "3 tadan {0}-dart · bu navbatda {1}"
+
+msgid "Miss"
+msgstr "Xato"
+
+msgid "BULL"
+msgstr "MARKAZ"
+
+msgid "BUST"
+msgstr "OSHIB KETDI"
+
+#, c-sharp-format
+msgid "back to {0}"
+msgstr "yana {0}"
+
+msgid "GAME SHOT!"
+msgstr "O'YIN YAKUNLANDI!"
+
+#, c-sharp-format
+msgid "{0} darts"
+msgstr "{0} ta dart"
+
+#, c-sharp-format
+msgid "{0} darts · new best!"
+msgstr "{0} ta dart · yangi rekord!"
+
+msgid "game on!"
+msgstr "o'yin boshlandi!"
+
+msgid "One hundred and eighty"
+msgstr "Bir yuz sakson"
+
+msgid "Score 180 with three darts"
+msgstr "Uchta dart bilan 180 ochko to'plang"
+
+msgid "Checked out"
+msgstr "Aniq yakun"
+
+msgid "Finish 5 games of 501"
+msgstr "501 o'yinini 5 marta yakunlang"
+
+#, c-sharp-format
+msgid "Hit {0} trebles in Darts"
+msgstr "Dartda {0} marta triplga tekkizing"
+
+#. ---- Clay Shooting
+msgid "Click the trap machine to start · shoot the clays"
+msgstr "Boshlash uchun otish mashinasini bosing · nishonlarni uring"
+
+msgid "click to start"
+msgstr "boshlash uchun bosing"
+
+msgid "DOUBLE!"
+msgstr "DUPLET!"
+
+#, c-sharp-format
+msgid "Last round {0}/{1} · click the trap to go again"
+msgstr "Oxirgi raund {0}/{1} · qayta boshlash uchun mashinani bosing"
+
+#, c-sharp-format
+msgid "Pull {0}/{1} · hits {2}"
+msgstr "Otish {0}/{1} · tegdi {2}"
+
+msgid "still rising"
+msgstr "hali ko'tarilmoqda"
+
+#, c-sharp-format
+msgid "{0} of {1} clays hit · {2} points"
+msgstr "{1} tadan {0} ta nishon · {2} ochko"
+
+#. ---- Plinko
+msgid "click to drop · right-drag to move"
+msgstr "tashlash uchun bosing · surish uchun o'ng tugma bilan torting"
+
+msgid "click for a new round"
+msgstr "yangi raund uchun bosing"
+
+msgid "Round over · click the drop strip to play again"
+msgstr "Raund tugadi · qayta o'ynash uchun tashlash chizig'ini bosing"
+
+#, c-sharp-format
+msgid "Discs {0} · jackpots {1}"
+msgstr "Disklar {0} · jekpotlar {1}"
+
+#, c-sharp-format
+msgid "{0} points · {1} jackpots"
+msgstr "{0} ochko · {1} jekpot"
+
+msgid "JACKPOT!"
+msgstr "JEKPOT!"
+
+#. ---- Tower Stack
+msgid "Tower Stack"
+msgstr "Minora"
+
+msgid "click the sliding block to drop it — stack as high as you can"
+msgstr "sirpanayotgan blokni tashlash uchun bosing — iloji boricha baland quring"
+
+#, c-sharp-format
+msgid "Height {0} · click the block to drop it"
+msgstr "Balandlik {0} · tashlash uchun blokni bosing"
+
+msgid "Game over · click the block to play again"
+msgstr "O'yin tugadi · qayta o'ynash uchun blokni bosing"
+
+msgid "PERFECT!"
+msgstr "MUKAMMAL!"
+
+msgid "wider block"
+msgstr "kengroq blok"
+
+#, c-sharp-format
+msgid "Height {0}"
+msgstr "Balandlik {0}"
+
+#. ---- Slingshot
+msgid "Slingshot"
+msgstr "Sopqon"
+
+msgid "drag back from the slingshot and let go — knock the tower down"
+msgstr "sopqondan orqaga torting va qo'yib yuboring — minorani yiqiting"
+
+#, c-sharp-format
+msgid "Tower {0} · stones {1} · blocks {2}"
+msgstr "Minora {0} · toshlar {1} · bloklar {2}"
+
+msgid "Game over · pull the stone to play again"
+msgstr "O'yin tugadi · qayta o'ynash uchun toshni torting"
+
+#, c-sharp-format
+msgid "+{0} · spare stones {1}"
+msgstr "+{0} · ortiqcha toshlar {1}"
+
+msgid "next tower"
+msgstr "keyingi minora"
+
+msgid "Tower collapsed"
+msgstr "Minora quladi"
+
+msgid "building a new one"
+msgstr "yangisi qurilmoqda"
+
+#, c-sharp-format
+msgid "{0} points · tower {1}"
+msgstr "{0} ochko · minora {1}"
+
+#. ---- Desktop Pet
+msgid "Desktop Pet"
+msgstr "Uy hayvoni"
+
+msgid "click the pet to pet it — drag to carry and throw it"
+msgstr "erkalash uchun hayvonchani bosing — ko'tarib otish uchun torting"
+
+msgid "Sleeping · click to wake"
+msgstr "Uxlayapti · uyg'otish uchun bosing"
+
+msgid "Wheee! · let go to throw"
+msgstr "Uuuh! · otish uchun qo'yib yuboring"
+
+msgid "Wheee!"
+msgstr "Uuuh!"
+
+msgid "Wants attention · click to pet"
+msgstr "E'tibor so'rayapti · erkalash uchun bosing"
+
+msgid "Grooming"
+msgstr "Yuvinmoqda"
+
+msgid "Hunting the cursor"
+msgstr "Kursorni ovlayapti"
+
+msgid "Sleepy"
+msgstr "Uyqusi kelyapti"
+
+msgid "Zoomies!"
+msgstr "Quyundek chopyapti!"
+
+msgid "Exploring the window tops"
+msgstr "Oynalar tepasini kezmoqda"
+
+msgid "Click to pet · drag to carry"
+msgstr "Erkalash uchun bosing · ko'tarish uchun torting"
+
+#, c-sharp-format
+msgid "Pets {0}"
+msgstr "Erkalashlar {0}"
+
+msgid "z z"
+msgstr "z z"
+
+#. ---- Paper Toss
+msgid "Paper Toss"
+msgstr "Qog'oz savatga"
+
+msgid "flick the paper ball into the bin — mind the fan"
+msgstr "qog'oz koptokni savatga otib yuboring — ventilyatorga e'tibor bering"
+
+msgid "Grab the paper ball and flick it into the bin"
+msgstr "Qog'oz koptokni ushlab, savatga otib yuboring"
+
+#, c-sharp-format
+msgid "Streak {0} · mind the wind"
+msgstr "Ketma-ket {0} · shamolni hisobga oling"
+
+#, c-sharp-format
+msgid "Wind {0}"
+msgstr "Shamol {0}"
+
+msgid "In!"
+msgstr "Tushdi!"
+
+msgid "Swish!"
+msgstr "Toza!"
+
+msgid "Missed!"
+msgstr "Tushmadi!"
+
+msgid "Wastebasket pro"
+msgstr "Savat ustasi"
+
+msgid "Score 10 in one run"
+msgstr "Bir urinishda 10 ochko to'plang"
+
+msgid "Clean throw"
+msgstr "Toza otish"
+
+msgid "Toss 25 swishes into the bin"
+msgstr "Savatga chetiga tegizmasdan 25 marta tushiring"
+
+#, c-sharp-format
+msgid "Toss {0} paper balls into the bin"
+msgstr "Savatga {0} ta qog'oz koptok tushiring"
+
+#. ---- achievements
+msgid "Coffee break"
+msgstr "Qahva tanaffusi"
+
+msgid "Play for 30 minutes in total"
+msgstr "Jami 30 daqiqa o'ynang"
+
+msgid "Marathon"
+msgstr "Marafon"
+
+msgid "Play for 5 hours in total"
+msgstr "Jami 5 soat o'ynang"
+
+msgid "Explorer"
+msgstr "Kashfiyotchi"
+
+msgid "Play 6 different games"
+msgstr "6 xil o'yin o'ynang"
+
+msgid "Pair programmer"
+msgstr "Juftlikda dasturchi"
+
+msgid "Be playing when Claude finishes 10 times"
+msgstr "Claude ishni tugatganda 10 marta o'yinda bo'ling"
+
+msgid "Hundred baskets"
+msgstr "Yuzta to'p"
+
+msgid "Score 100 baskets"
+msgstr "100 ta to'p kiriting"
+
+msgid "Nothing but net"
+msgstr "Faqat to'r"
+
+msgid "Score 25 swishes"
+msgstr "25 marta toza kiriting"
+
+msgid "Unstoppable"
+msgstr "To'xtatib bo'lmas"
+
+msgid "Make 10 baskets in a row"
+msgstr "Ketma-ket 10 ta to'p kiriting"
+
+msgid "Bullseye"
+msgstr "Nishon markazi"
+
+msgid "Hit 10 bullseyes"
+msgstr "Markazga 10 marta tegizing"
+
+msgid "Party pooper"
+msgstr "Bayram buzar"
+
+msgid "Pop 50 balloons"
+msgstr "50 ta sharni yoring"
+
+msgid "Sharpshooter"
+msgstr "Mergan"
+
+msgid "Score 80 points in one round"
+msgstr "Bir raundda 80 ochko to'plang"
+
+msgid "Keepy-uppy pro"
+msgstr "To'p tepish ustasi"
+
+msgid "Score 25 points in one run"
+msgstr "Bir urinishda 25 ochko to'plang"
+
+msgid "Star catcher"
+msgstr "Yulduz tutuvchi"
+
+msgid "Catch 20 stars"
+msgstr "20 ta yulduz tuting"
+
+msgid "Hole in one"
+msgstr "Bir zarbada"
+
+msgid "Sink a hole in one"
+msgstr "Bir zarbada chuqurchaga kiriting"
+
+msgid "Course regular"
+msgstr "Maydon faxriysi"
+
+msgid "Finish 50 holes"
+msgstr "50 ta chuqurchani tugating"
+
+msgid "Under par"
+msgstr "Pardan kam"
+
+msgid "Finish a round under par"
+msgstr "Raundni pardan kam zarbada tugating"
+
+msgid "Exterminator"
+msgstr "Yo'q qiluvchi"
+
+msgid "Squash 200 bugs"
+msgstr "200 ta qo'ng'izni ezing"
+
+msgid "Combo breaker"
+msgstr "Kombo ustasi"
+
+msgid "Reach a ×4 combo"
+msgstr "×4 komboga yeting"
+
+msgid "Zero bugs"
+msgstr "Xatosiz"
+
+msgid "Score 60 points in one round"
+msgstr "Bir raundda 60 ochko to'plang"
+
+msgid "Tin smasher"
+msgstr "Banka ezuvchi"
+
+msgid "Knock down 100 cans"
+msgstr "100 ta bankani yiqiting"
+
+msgid "Fairground champion"
+msgstr "Yarmarka chempioni"
+
+msgid "Reach stack 5"
+msgstr "5-piramidaga yeting"
+
+msgid "Demolition crew"
+msgstr "Buzuvchilar brigadasi"
+
+msgid "Break 500 bricks"
+msgstr "500 ta g'ishtni sindiring"
+
+msgid "Wall breaker"
+msgstr "Devor buzar"
+
+msgid "Reach level 4"
+msgstr "4-darajaga yeting"
+
+msgid "Bubble wrap"
+msgstr "Pufakchali plyonka"
+
+msgid "Pop 300 bubbles"
+msgstr "300 ta pufakcha yoring"
+
+msgid "Wave rider"
+msgstr "To'lqin ustasi"
+
+msgid "Reach wave 5"
+msgstr "5-to'lqinga yeting"
+
+msgid "First win"
+msgstr "Birinchi g'alaba"
+
+msgid "Beat the CPU"
+msgstr "Kompyuterni yenging"
+
+msgid "Sniper"
+msgstr "Snayper"
+
+msgid "Score 50 goals"
+msgstr "50 ta gol uring"
+
+msgid "Champion"
+msgstr "Chempion"
+
+msgid "Beat CPU level 5"
+msgstr "Kompyuterni 5-darajada yenging"
+
+msgid "Best friends"
+msgstr "Eng yaqin do'stlar"
+
+msgid "Pet your desktop pet 50 times"
+msgstr "Uy hayvoningizni 50 marta erkalang"
+
+msgid "Taxi"
+msgstr "Taksi"
+
+msgid "Carry your pet 10 times"
+msgstr "Uy hayvoningizni 10 marta ko'tarib boring"
+
+msgid "Skyscraper"
+msgstr "Osmono'par bino"
+
+msgid "Build a tower 15 blocks high"
+msgstr "15 blok balandlikda minora quring"
+
+msgid "Perfectionist"
+msgstr "Mukammallikparast"
+
+msgid "Make 10 perfect drops"
+msgstr "10 marta mukammal tashlang"
+
+msgid "Wrecking ball"
+msgstr "Buzuvchi shar"
+
+msgid "Knock down 200 blocks"
+msgstr "200 ta blokni yiqiting"
+
+msgid "Clean sweep"
+msgstr "Toza g'alaba"
+
+msgid "Clear 10 towers"
+msgstr "10 ta minorani tozalang"
+
+msgid "Bug whacker"
+msgstr "Qo'ng'iz uruvchi"
+
+msgid "Whack 200 bugs"
+msgstr "200 ta qo'ng'izni uring"
+
+msgid "Lightning hands"
+msgstr "Chaqqon qo'llar"
+
+msgid "Score 50 points in one round"
+msgstr "Bir raundda 50 ochko to'plang"
+
+msgid "Clay breaker"
+msgstr "Nishon sindiruvchi"
+
+msgid "Hit 100 clay targets"
+msgstr "100 ta loy nishonni uring"
+
+msgid "Double trouble"
+msgstr "Ikki karra omad"
+
+msgid "Hit two targets with one shot"
+msgstr "Bitta o'q bilan ikki nishonni uring"
+
+msgid "Jackpot"
+msgstr "Jekpot"
+
+msgid "Land 5 discs in the jackpot slot"
+msgstr "Jekpot katagiga 5 ta disk tushiring"
+
+msgid "Disc dropper"
+msgstr "Disk tashlovchi"
+
+msgid "Drop 100 discs"
+msgstr "100 ta disk tashlang"
+
+#. 1.5: duels, Pong, series, office leaderboard, themes, pets, breaks
+msgid "A TIE"
+msgstr "DURANG"
+
+#, c-sharp-format
+msgid "After {0} minutes of play"
+msgstr "{0} daqiqa o'yindan keyin"
+
+msgid "Air Hockey wins"
+msgstr "Havo xokkeyi g'alabalari"
+
+#, c-sharp-format
+msgid "Arrow {0}/{1} vs {2} · your shot · wind {3}"
+msgstr "O'q {0}/{1} · {2} bilan · siz otasiz · shamol {3}"
+
+msgid "Baskets"
+msgstr "To'plar"
+
+msgid "Beat the Pong CPU at level 5"
+msgstr "Pongda 5-darajali kompyuterni yuting"
+
+msgid "Best hoops streak"
+msgstr "Eng uzun basketbol seriyasi"
+
+msgid "Break reminder"
+msgstr "Tanaffus eslatmasi"
+
+msgid "Bugs squashed"
+msgstr "Ezilgan hasharotlar"
+
+msgid "Bunny"
+msgstr "Quyon"
+
+msgid "Classic"
+msgstr "Klassik"
+
+msgid "Claude is done · back to work"
+msgstr "Claude tugatdi · ishga qayting"
+
+msgid "Duelist"
+msgstr "Duelchi"
+
+#, c-sharp-format
+msgid "First to {0} vs {1} · drag your paddle"
+msgstr "{0} ochkogacha · {1} bilan · raketkangizni suring"
+
+#, c-sharp-format
+msgid "First to {0} · CPU level {1} · drag your paddle"
+msgstr "{0} ochkogacha · kompyuter darajasi {1} · raketkangizni suring"
+
+#, c-sharp-format
+msgid "First to {0} · best of 3 vs {1} · drag your blue mallet"
+msgstr "{0} golgacha · {1} bilan 3 o'yinlik seriya · ko'k bitangizni suring"
+
+msgid "Fox"
+msgstr "Tulki"
+
+msgid "Halloween"
+msgstr "Xellouin"
+
+#, c-sharp-format
+msgid "Hole {0} halved"
+msgstr "{0}-chuqur durang"
+
+#, c-sharp-format
+msgid "Hole {0}/{1} vs {2} · your putt"
+msgstr "Chuqur {0}/{1} · {2} bilan · siz urasiz"
+
+#, c-sharp-format
+msgid "Hole {0}/{1} · you're in · {2} is still putting"
+msgstr "Chuqur {0}/{1} · siz tushirdingiz · {2} hali urmoqda"
+
+#, c-sharp-format
+msgid "Hole {0}/{1} · {2} is putting"
+msgstr "Chuqur {0}/{1} · {2} urmoqda"
+
+msgid "LAN wins"
+msgstr "LAN g'alabalari"
+
+msgid "MATCH HALVED"
+msgstr "DURANG"
+
+msgid "Match over · grab your paddle for a rematch"
+msgstr "O'yin tugadi · qayta o'ynash uchun raketkani ushlang"
+
+msgid "Match over · pull the bow for a rematch"
+msgstr "O'yin tugadi · qayta o'ynash uchun kamonni torting"
+
+#, c-sharp-format
+msgid "Match over · pull the bow to ask {0} for a rematch"
+msgstr "O'yin tugadi · {0}dan revansh so'rash uchun kamonni torting"
+
+#, c-sharp-format
+msgid "Match over · putt to ask {0} for a rematch"
+msgstr "O'yin tugadi · {0}dan revansh so'rash uchun uring"
+
+msgid "Match over · putt to play again"
+msgstr "O'yin tugadi · yana o'ynash uchun uring"
+
+msgid "Match play"
+msgstr "Match play"
+
+msgid "Minutes played"
+msgstr "O'ynalgan daqiqalar"
+
+msgid "Neon"
+msgstr "Neon"
+
+msgid "No scores yet today. Go play something!"
+msgstr "Bugun hali ochko yo'q. Biror narsa o'ynang!"
+
+msgid "Off"
+msgstr "O'chiq"
+
+msgid "Office leaderboard"
+msgstr "Ofis reytingi"
+
+msgid "Office leaderboard · today"
+msgstr "Ofis reytingi · bugun"
+
+msgid "Only you so far. Co-workers show up here once they share their scores too."
+msgstr "Hozircha faqat siz. Hamkasblaringiz ham ochkolarini ulashsa, shu yerda paydo bo'ladi."
+
+msgid "POINT!"
+msgstr "OCHKO!"
+
+msgid "Paddle legend"
+msgstr "Raketka afsonasi"
+
+msgid "Penguin"
+msgstr "Pingvin"
+
+msgid "Pong"
+msgstr "Pong"
+
+msgid "Pong wins"
+msgstr "Pong g'alabalari"
+
+msgid "Rally master"
+msgstr "Rozigrish ustasi"
+
+msgid "Retro"
+msgstr "Retro"
+
+msgid "Say “back to work” when Claude is done"
+msgstr "Claude tugatganda «ishga qayting» deng"
+
+msgid "Seasonal"
+msgstr "Mavsumiy"
+
+msgid "Series winner"
+msgstr "Seriya g'olibi"
+
+msgid "Share my scores on the local network"
+msgstr "Ochkolarimni mahalliy tarmoqda ulashish"
+
+msgid "Sharing is off. Turn it on to post your scores and see everyone else's. It sends your user name and today's scores to the other computers on your local network, and nothing else."
+msgstr "Ulashish o'chiq. Ochkolaringizni joylash va boshqalarnikini ko'rish uchun yoqing. U mahalliy tarmoqdagi boshqa kompyuterlarga faqat foydalanuvchi nomingiz va bugungi ochkolaringizni yuboradi."
+
+msgid "Show the leaderboard…"
+msgstr "Reytingni ko'rsatish…"
+
+msgid "Stop sharing my scores"
+msgstr "Ochkolarimni ulashishni to'xtatish"
+
+msgid "Tallest tower"
+msgstr "Eng baland minora"
+
+msgid "Theme"
+msgstr "Mavzu"
+
+msgid "Win a Mini Golf match over the LAN"
+msgstr "Tarmoq orqali mini golf o'yinida yuting"
+
+msgid "Win a best-of-3 series over the LAN"
+msgstr "Tarmoq orqali 3 o'yinlik seriyada yuting"
+
+msgid "Win a game of Pong"
+msgstr "Pongda yuting"
+
+msgid "Win an Archery match over the LAN"
+msgstr "Tarmoq orqali kamondan otish o'yinida yuting"
+
+msgid "Winter"
+msgstr "Qish"
+
+msgid "YOU WIN THE MATCH!"
+msgstr "SIZ O'YINDA YUTDINGIZ!"
+
+msgid "YOU WIN THE SERIES!"
+msgstr "SIZ SERIYADA YUTDINGIZ!"
+
+#, c-sharp-format
+msgid "You win hole {0}"
+msgstr "{0}-chuqurni siz yutdingiz"
+
+#, c-sharp-format
+msgid "You've played {0} minutes"
+msgstr "Siz {0} daqiqa o'ynadingiz"
+
+#, c-sharp-format
+msgid "asked {0} for a rematch"
+msgstr "{0}dan revansh so'raldi"
+
+msgid "drag your paddle up and down — get the ball past the right edge"
+msgstr "raketkani yuqoriga-pastga suring — to'pni o'ng chetdan o'tkazing"
+
+#, c-sharp-format
+msgid "holes {0}–{1}"
+msgstr "chuqurlar {0}–{1}"
+
+#, c-sharp-format
+msgid "holes {0}–{1} · putt for a rematch"
+msgstr "chuqurlar {0}–{1} · revansh uchun uring"
+
+#, c-sharp-format
+msgid "series {0}–{1}"
+msgstr "seriya {0}–{1}"
+
+msgid "the game will still be here later"
+msgstr "o'yin keyin ham shu yerda bo'ladi"
+
+msgid "time for a short break · stretch and look away from the screen"
+msgstr "qisqa tanaffus vaqti · cho'zilib, ekrandan ko'z uzing"
+
+msgid "you're in · wait for the next hole"
+msgstr "siz tushirdingiz · keyingi chuqurni kuting"
+
+#, c-sharp-format
+msgid "{0} (you)"
+msgstr "{0} (siz)"
+
+#, c-sharp-format
+msgid "{0} WINS THE MATCH"
+msgstr "{0} O'YINDA YUTDI"
+
+#, c-sharp-format
+msgid "{0} WINS THE SERIES"
+msgstr "{0} SERIYADA YUTDI"
+
+#, c-sharp-format
+msgid "{0} is in"
+msgstr "{0} tushirdi"
+
+#, c-sharp-format
+msgid "{0} is shooting · wind {1}"
+msgstr "{0} otmoqda · shamol {1}"
+
+#, c-sharp-format
+msgid "{0} missed"
+msgstr "{0} tegmadi"
+
+#, c-sharp-format
+msgid "{0} players sharing today · updates every 20 seconds"
+msgstr "bugun {0} o'yinchi ulashmoqda · har 20 soniyada yangilanadi"
+
+#, c-sharp-format
+msgid "{0} wins hole {1}"
+msgstr "{1}-chuqurni {0} yutdi"
+
+#, c-sharp-format
+msgid "{0}'s putt"
+msgstr "{0} urmoqda"
+
+#, c-sharp-format
+msgid "{0}–{1} in matches · grab your mallet for a new series"
+msgstr "o'yinlar {0}–{1} · yangi seriya uchun bitani ushlang"
+
+#, c-sharp-format
+msgid "{0}–{1} vs {2} · series {3}–{4}"
+msgstr "{0}–{1} · {2} bilan · seriya {3}–{4}"
+
+#, c-sharp-format
+msgid "{0}–{1} · grab your paddle for a rematch"
+msgstr "{0}–{1} · revansh uchun raketkani ushlang"
+
+#, c-sharp-format
+msgid "{0}–{1} · pull the bow for a rematch"
+msgstr "{0}–{1} · revansh uchun kamonni torting"
+
+#, c-sharp-format
+msgid "{0}–{1} · series {2}–{3} · grab your mallet for the next match"
+msgstr "{0}–{1} · seriya {2}–{3} · keyingi o'yin uchun bitani ushlang"
+
+#, c-sharp-format
+msgid "{0}–{1} · the CPU gets sharper"
+msgstr "{0}–{1} · kompyuter kuchayadi"
+
+#. 1.6: Durak, CPU levels, pet tricks
+msgid "(computer players fill empty seats)"
+msgstr "(bo'sh o'rinlarni kompyuter egallaydi)"
+
+msgid "A DRAW"
+msgstr "DURANG"
+
+msgid "A draw · click New game"
+msgstr "Durang · «Yangi o'yin»ni bosing"
+
+msgid "Beat each card (click a card on the table first to choose) or take"
+msgstr "Har bir kartani yoping (avval stoldagi kartani tanlash mumkin) yoki oling"
+
+msgid "CPU difficulty"
+msgstr "Kompyuter darajasi"
+
+#, c-sharp-format
+msgid "CPU {0}"
+msgstr "Kompyuter {0}"
+
+msgid "Card shark"
+msgstr "Karta ustasi"
+
+msgid "Click Durak on the table to start a game"
+msgstr "O'yinni boshlash uchun stolda Durakni bosing"
+
+msgid "Click to pet · right-click for a trick · drag to carry"
+msgstr "Silash uchun bosing · o'ng tugma — hiyla · ko'tarish uchun suring"
+
+msgid "Create a room"
+msgstr "Xona yaratish"
+
+msgid "Done"
+msgstr "Bito"
+
+msgid "Durak"
+msgstr "Durak"
+
+#, c-sharp-format
+msgid "{0} with co-workers"
+msgstr "Hamkasblar bilan {0}"
+
+#, c-sharp-format
+msgid "{0} with co-workers…"
+msgstr "Hamkasblar bilan {0}…"
+
+msgid "Durak with co-workers…"
+msgstr "Hamkasblar bilan Durak…"
+
+msgid "Escape being the durak 10 times"
+msgstr "10 marta durak bo'lmang"
+
+msgid "Get rid of your cards before someone else in Durak"
+msgstr "Durakda kartalaringizdan boshqalardan oldin qutuling"
+
+msgid "IP address (optional)"
+msgstr "IP manzil (ixtiyoriy)"
+
+#, c-sharp-format
+msgid "In room {0} · waiting for the host to start"
+msgstr "{0} xonasidasiz · xost boshlashini kuting"
+
+#, c-sharp-format
+msgid "Joining room {0}…"
+msgstr "{0} xonasiga qo'shilmoqda…"
+
+msgid "Leave the room"
+msgstr "Xonadan chiqish"
+
+#, c-sharp-format
+msgid "Looking for room {0}…"
+msgstr "{0} xonasi qidirilmoqda…"
+
+msgid "NOT THE FOOL!"
+msgstr "DURAK EMASSIZ!"
+
+msgid "New game"
+msgstr "Yangi o'yin"
+
+msgid "No room with that code answered. Check the code, or add the host's IP address."
+msgstr "Bu kodli xona javob bermadi. Kodni tekshiring yoki xost IP manzilini qo'shing."
+
+msgid "No rooms yet."
+msgstr "Hozircha xonalar yo'q."
+
+msgid "Not the fool"
+msgstr "Durak emas"
+
+msgid "Or host the game yourself:"
+msgstr "Yoki o'yinni o'zingiz boshqaring:"
+
+msgid "Or type a room code (and the host's IP if the room doesn't show up):"
+msgstr "Yoki xona kodini kiriting (xona ko'rinmasa, xost IP manzilini ham):"
+
+msgid "Other games…"
+msgstr "Boshqa o'yinlar…"
+
+msgid "Play 1 computer"
+msgstr "1 ta kompyuter bilan"
+
+msgid "Play with"
+msgstr "O'yinchilar:"
+
+msgid "Play with co-workers…"
+msgstr "Hamkasblar bilan o'ynash…"
+
+#, c-sharp-format
+msgid "Play {0} computers"
+msgstr "{0} ta kompyuter bilan"
+
+#, c-sharp-format
+msgid "Room {0} · {1} at the table"
+msgstr "{0} xonasi · stolda {1} kishi"
+
+msgid "Waiting for a co-worker to join…"
+msgstr "Hamkasb qo'shilishini kutyapmiz…"
+
+msgid "Start + 1 computer"
+msgstr "Boshlash + 1 kompyuter"
+
+#, c-sharp-format
+msgid "Start + {0} computers"
+msgstr "Boshlash + {0} ta kompyuter"
+
+msgid "Room setup…"
+msgstr "Xona sozlamalari…"
+
+msgid "Start with computers only"
+msgstr "Faqat kompyuterlar bilan boshlash"
+
+msgid "Rooms on your network:"
+msgstr "Tarmog'ingizdagi xonalar:"
+
+msgid "Show-off"
+msgstr "Maqtanchoq"
+
+msgid "Showing off"
+msgstr "Hiyla ko'rsatmoqda"
+
+msgid "Start the game"
+msgstr "O'yinni boshlash"
+
+msgid "Take"
+msgstr "Olish"
+
+msgid "That game has already started."
+msgstr "Bu o'yin allaqachon boshlangan."
+
+msgid "That room is full."
+msgstr "Bu xona to'la."
+
+msgid "The last one holding cards is the durak"
+msgstr "Oxirida kartasi qolgan o'yinchi — durak"
+
+msgid "The room closed · set up a new game"
+msgstr "Xona yopildi · yangi o'yin sozlang"
+
+msgid "The room closed."
+msgstr "Xona yopildi."
+
+msgid "Throw in a card of a rank on the table, or click Done"
+msgstr "Stoldagi qiymatdagi kartani tashlang yoki «Bito»ni bosing"
+
+#, c-sharp-format
+msgid "Two to four players on the same network. Everyone needs Desk Arcade {0} or newer."
+msgstr "Bir tarmoqda ikki-to'rt o'yinchi. Hammada Desk Arcade {0} yoki yangisi bo'lishi kerak."
+
+msgid "That room is playing another game."
+msgstr "Bu xonada boshqa o'yin o'ynalyapti."
+
+msgid "Watch your pet do 25 tricks"
+msgstr "Uy hayvoningiz 25 ta hiyla ko'rsatsin"
+
+#, c-sharp-format
+msgid "Wins {0} · CPU {1}"
+msgstr "G'alabalar {0} · kompyuter: {1}"
+
+msgid "YOU'RE THE DURAK!"
+msgstr "SIZ DURAKSIZ!"
+
+msgid "You"
+msgstr "Siz"
+
+msgid "You take the cards · the others may still throw in"
+msgstr "Kartalarni olasiz · boshqalar yana tashlashi mumkin"
+
+#, c-sharp-format
+msgid "You're in room {0} · waiting for the host to start. You can close this window."
+msgstr "Siz {0} xonasidasiz · xost boshlashini kuting. Bu oynani yopishingiz mumkin."
+
+msgid "You're out of cards · watching the others finish"
+msgstr "Kartalaringiz tugadi · boshqalar tugatishini kuzating"
+
+msgid "You're the durak · click New game"
+msgstr "Siz duraksiz · «Yangi o'yin»ni bosing"
+
+#, c-sharp-format
+msgid "Your attack on {0} · play any card"
+msgstr "{0}ga hujum qilasiz · istalgan kartani tashlang"
+
+msgid "Your room code — tell it to your co-workers:"
+msgstr "Xona kodingiz — hamkasblaringizga ayting:"
+
+msgid "attacking"
+msgstr "hujumda"
+
+msgid "better luck next deal"
+msgstr "keyingi safar omad"
+
+#, c-sharp-format
+msgid "deck {0}"
+msgstr "koloda {0}"
+
+msgid "defending"
+msgstr "himoyada"
+
+#, c-sharp-format
+msgid "discarded {0}"
+msgstr "bito {0}"
+
+msgid "disconnected"
+msgstr "uzildi"
+
+msgid "not allowed right now"
+msgstr "hozir mumkin emas"
+
+msgid "out"
+msgstr "chiqdi"
+
+msgid "play the computer, or set up a room for up to four co-workers"
+msgstr "kompyuter bilan o'ynang yoki to'rt hamkasbgacha xona oching"
+
+msgid "playing"
+msgstr "o'ynalmoqda"
+
+msgid "that card can't beat any of them"
+msgstr "bu karta hech birini yopa olmaydi"
+
+#, c-sharp-format
+msgid "the CPU goes easier: {0} · click the board for a rematch"
+msgstr "kompyuter osonlashdi: {0} · revansh uchun taxtani bosing"
+
+#, c-sharp-format
+msgid "the CPU moves up to {0}"
+msgstr "kompyuter kuchaydi: {0}"
+
+msgid "the last cards went out together"
+msgstr "oxirgi kartalar bir vaqtda tugadi"
+
+#, c-sharp-format
+msgid "trump {0}"
+msgstr "kozir {0}"
+
+#, c-sharp-format
+msgid "{0} (you, host)"
+msgstr "{0} (siz, xost)"
+
+#, c-sharp-format
+msgid "{0} attacks {1}"
+msgstr "{0} {1}ga hujum qilmoqda"
+
+#, c-sharp-format
+msgid "{0} is defending"
+msgstr "{0} himoyalanmoqda"
+
+#, c-sharp-format
+msgid "{0} is the durak"
+msgstr "{0} — durak"
+
+#, c-sharp-format
+msgid "{0} is the durak · click New game"
+msgstr "{0} — durak · «Yangi o'yin»ni bosing"
+
+#, c-sharp-format
+msgid "{0} left · the computer plays for them"
+msgstr "{0} chiqdi · uning o'rniga kompyuter o'ynaydi"
+
+#, c-sharp-format
+msgid "{0} may throw in more"
+msgstr "{0} yana tashlashi mumkin"
+
+#, c-sharp-format
+msgid "{0} players"
+msgstr "{0} o'yinchi"
+
+#, c-sharp-format
+msgid "{0} takes"
+msgstr "{0} oladi"
+
+#, c-sharp-format
+msgid "{0} · {1} · {2}/{3} players"
+msgstr "{0} · {1} · {2}/{3} o'yinchi"
+
+msgid "Easy"
+msgstr "Oson"
+
+msgid "Medium"
+msgstr "O'rta"
+
+msgid "Hard"
+msgstr "Qiyin"
+
+msgid "Expert"
+msgstr "Ekspert"
+
+msgid "Couldn't open a room"
+msgstr "Xonani ochib bo'lmadi"
+
+#, c-sharp-format
+msgid "{0} is back"
+msgstr "{0} qaytdi"
+
+#. ---- Fishing
+msgid "Fishing"
+msgstr "Baliq ovi"
+
+msgid "drag back from the rod to cast — click when the bobber goes under, hold to reel"
+msgstr "tashlash uchun qarmoqdan orqaga torting — po'plavok suvga botganda bosing, ipni o'rash uchun bosib turing"
+
+#, c-sharp-format
+msgid "{0}s left · caught {1}"
+msgstr "{0} s qoldi · tutildi {1}"
+
+msgid "Drag back from the rod tip and let go to cast"
+msgstr "Qarmoq uchidan orqaga torting va tashlash uchun qo'yib yuboring"
+
+msgid "Perch"
+msgstr "Olabug'a"
+
+msgid "Carp"
+msgstr "Zog'ora baliq"
+
+msgid "Pike"
+msgstr "Cho'rtan"
+
+msgid "Catfish"
+msgstr "Laqqa baliq"
+
+msgid "Golden Trout"
+msgstr "Oltin gulmoy"
+
+#, c-sharp-format
+msgid "{0} · {1} kg"
+msgstr "{0} · {1} kg"
+
+#, c-sharp-format
+msgid "+{0} points"
+msgstr "+{0} ochko"
+
+#, c-sharp-format
+msgid "{0} points · {1} caught"
+msgstr "{0} ochko · {1} ta baliq"
+
+msgid "Too soon!"
+msgstr "Juda erta!"
+
+msgid "you spooked it"
+msgstr "baliqni cho'chitib yubordingiz"
+
+msgid "Too late!"
+msgstr "Kechikdingiz!"
+
+msgid "it stole the bait · reel in"
+msgstr "xo'rakni o'g'irlab ketdi · ipni o'rab oling"
+
+msgid "Line snapped!"
+msgstr "Ip uzildi!"
+
+msgid "it got away"
+msgstr "baliq qochib ketdi"
+
+msgid "Angler"
+msgstr "Baliqchi"
+
+msgid "Catch 50 fish"
+msgstr "50 ta baliq tuting"
+
+msgid "Golden catch"
+msgstr "Oltin o'lja"
+
+msgid "Catch a golden trout"
+msgstr "Oltin gulmoy tuting"
+
+#, c-sharp-format
+msgid "Catch {0} fish"
+msgstr "{0} ta baliq tuting"
+
+#. ---- Bowling
+msgid "Bowling"
+msgstr "Bouling"
+
+msgid "drag back from the ball and let go — knock all ten pins down"
+msgstr "to'pdan orqaga torting va qo'yib yuboring — o'nta kegelni ham yiqiting"
+
+msgid "Drag back from the ball and let go to bowl"
+msgstr "Otish uchun to'pdan orqaga torting va qo'yib yuboring"
+
+msgid "Game over · drag back from the ball to bowl again"
+msgstr "O'yin tugadi · qayta o'ynash uchun to'pdan orqaga torting"
+
+#, c-sharp-format
+msgid "Frame {0} · ball {1} · pins {2}"
+msgstr "Freym {0} · {1}-otish · kegellar {2}"
+
+msgid "STRIKE!"
+msgstr "STRAYK!"
+
+msgid "TURKEY!"
+msgstr "KURKA!"
+
+msgid "three strikes in a row"
+msgstr "ketma-ket uchta strayk"
+
+msgid "SPARE!"
+msgstr "SPEYR!"
+
+msgid "Gutter"
+msgstr "Novga tushdi"
+
+msgid "split"
+msgstr "split"
+
+msgid "Turkey"
+msgstr "Kurka"
+
+msgid "Bowl three strikes in a row"
+msgstr "Ketma-ket uchta strayk qiling"
+
+msgid "League night"
+msgstr "Liga oqshomi"
+
+msgid "Score 150 in one game"
+msgstr "Bir o'yinda 150 ochko to'plang"
+
+#, c-sharp-format
+msgid "Knock down {0} pins in Bowling"
+msgstr "Boulingda {0} ta kegelni yiqiting"
+
+#. ---- Pool
+msgid "Pool"
+msgstr "Bilyard"
+
+msgid "drag back from the cue ball to shoot — pot every ball in as few shots as you can"
+msgstr "urish uchun oq shardan orqaga torting — barcha sharlarni iloji boricha kam zarbada tushiring"
+
+#, c-sharp-format
+msgid "Shots {0} · balls left {1}"
+msgstr "Zarbalar {0} · qolgan sharlar {1}"
+
+#, c-sharp-format
+msgid "Cleared in {0} shots · press the cue ball to rack again"
+msgstr "{0} zarbada tozalandi · qayta terish uchun oq sharni bosing"
+
+#, c-sharp-format
+msgid "{0} balls in one shot!"
+msgstr "Bitta zarbada {0} ta shar!"
+
+msgid "Scratch +1"
+msgstr "Oq shar tushdi +1"
+
+#, c-sharp-format
+msgid "CLEARED in {0} shots"
+msgstr "{0} ZARBADA TOZALANDI"
+
+msgid "Table cleared"
+msgstr "Stol tozalandi"
+
+msgid "Clear the pool table"
+msgstr "Bilyard stolini tozalang"
+
+msgid "Hat trick"
+msgstr "Xet-trik"
+
+msgid "Pot 3 balls with one shot"
+msgstr "Bitta zarbada 3 ta shar tushiring"
+
+#, c-sharp-format
+msgid "Pot {0} balls in Pool"
+msgstr "Bilyardda {0} ta shar tushiring"
+
+#. memory
+msgid "Memory"
+msgstr "Xotira"
+
+msgid "Click a card to flip it · find all the pairs"
+msgstr "Kartani ochish uchun ustiga bosing · barcha juftlarni toping"
+
+#, c-sharp-format
+msgid "Moves {0} · pairs left {1}"
+msgstr "Yurishlar {0} · qolgan juftlar {1}"
+
+#, c-sharp-format
+msgid "All pairs in {0} moves · click a card to deal again"
+msgstr "Barcha juftlar {0} yurishda topildi · qayta tarqatish uchun kartani bosing"
+
+#, c-sharp-format
+msgid "Fewest moves {0}"
+msgstr "Eng kam yurish {0}"
+
+msgid "ALL PAIRS!"
+msgstr "BARCHA JUFTLAR!"
+
+#, c-sharp-format
+msgid "{0} moves · {1}s"
+msgstr "{0} yurish · {1} s"
+
+msgid "flip two cards at a time — find all the pairs"
+msgstr "bir yo'la ikkita kartani oching — barcha juftlarni toping"
+
+msgid "Total recall"
+msgstr "Mukammal xotira"
+
+msgid "Clear a Memory board"
+msgstr "«Xotira»da barcha juftlarni toping"
+
+msgid "Matchmaker"
+msgstr "Juftlar ustasi"
+
+msgid "Find 100 pairs"
+msgstr "100 ta juft toping"
+
+#, c-sharp-format
+msgid "Find {0} pairs in Memory"
+msgstr "«Xotira»da {0} ta juft toping"
+
+#. solitaire
+msgid "Solitaire"
+msgstr "Pasyans"
+
+msgid "Click the stock to turn a card · click or drag cards to move them"
+msgstr "Kartani ochish uchun to'plamni bosing · kartalarni bosing yoki suring"
+
+#, c-sharp-format
+msgid "Moves {0} · {1}"
+msgstr "Yurishlar {0} · {1}"
+
+#, c-sharp-format
+msgid "Solved in {0} moves · New deal plays again"
+msgstr "{0} yurishda yechildi · «Yangi o'yin» qayta boshlaydi"
+
+msgid "New deal"
+msgstr "Yangi o'yin"
+
+msgid "Sure?"
+msgstr "Aniqmi?"
+
+msgid "Undo"
+msgstr "Ortga"
+
+msgid "SOLVED!"
+msgstr "YECHILDI!"
+
+#, c-sharp-format
+msgid "{0} moves · {1}"
+msgstr "{0} yurish · {1}"
+
+msgid "click the stock to turn a card — click or drag cards onto the piles"
+msgstr "to'plamni bosib kartani oching — kartalarni bosing yoki qatorlarga suring"
+
+msgid "Patience"
+msgstr "Sabr-toqat"
+
+msgid "Solve a game of Solitaire"
+msgstr "Pasyansni bir marta yeching"
+
+msgid "Patience of a saint"
+msgstr "Avliyo sabri"
+
+msgid "Solve 10 games of Solitaire"
+msgstr "Pasyansni 10 marta yeching"
+
+msgid "Homeward bound"
+msgstr "Uyga qaytish"
+
+msgid "Send 500 cards home"
+msgstr "500 ta kartani uyga yuboring"
+
+#, c-sharp-format
+msgid "Send {0} cards home in Solitaire"
+msgstr "Pasyansda {0} ta kartani uyga yuboring"
+
+#. last card
+msgid "Last Card"
+msgstr "Oxirgi karta"
+
+msgid "Last Card with co-workers…"
+msgstr "Hamkasblar bilan «Oxirgi karta»…"
+
+msgid "Click Last Card on the table to start a game"
+msgstr "O'yinni boshlash uchun stoldagi «Oxirgi karta»ni bosing"
+
+msgid "Match the colour or the number · the first to play their last card wins"
+msgstr "Rang yoki raqamni moslang · oxirgi kartasini birinchi tashlagan yutadi"
+
+msgid "match the colour or the number — say “last card” when you're down to one"
+msgstr "rang yoki raqamni moslang — bitta karta qolganda «oxirgi karta» deng"
+
+msgid "You went out first · click New game"
+msgstr "Siz birinchi bo'lib chiqdingiz · «Yangi o'yin»ni bosing"
+
+#, c-sharp-format
+msgid "{0} went out first · click New game"
+msgstr "{0} birinchi bo'lib chiqdi · «Yangi o'yin»ni bosing"
+
+#, c-sharp-format
+msgid "{0}'s turn"
+msgstr "{0} yurishi"
+
+msgid "Pick a colour for your wild card"
+msgstr "Joker kartangiz uchun rang tanlang"
+
+msgid "Play the card you drew, or pass"
+msgstr "Olgan kartangizni tashlang yoki o'tkazib yuboring"
+
+#, c-sharp-format
+msgid "Your turn · play on the {0} {1}, or draw from the pile"
+msgstr "Sizning yurishingiz · {0} {1} ustiga tashlang yoki to'plamdan oling"
+
+msgid "Skip"
+msgstr "O'tkazish"
+
+msgid "Reverse"
+msgstr "Teskari"
+
+msgid "Wild"
+msgstr "Joker"
+
+msgid "You forgot to say last card!"
+msgstr "Siz «oxirgi karta» deyishni unutdingiz!"
+
+#, c-sharp-format
+msgid "{0} forgot to say last card!"
+msgstr "{0} «oxirgi karta» deyishni unutdi!"
+
+msgid "+2 cards"
+msgstr "+2 karta"
+
+msgid "first to play their last card"
+msgstr "oxirgi kartasini birinchi tashladingiz"
+
+msgid "playing…"
+msgstr "o'ynayapti…"
+
+msgid "LAST CARD!"
+msgstr "OXIRGI KARTA!"
+
+msgid "Last card!"
+msgstr "Oxirgi karta!"
+
+#, c-sharp-format
+msgid "pile {0}"
+msgstr "to'plam {0}"
+
+msgid "Pass"
+msgstr "O'tkazish"
+
+msgid "red"
+msgstr "qizil"
+
+msgid "yellow"
+msgstr "sariq"
+
+msgid "green"
+msgstr "yashil"
+
+msgid "blue"
+msgstr "ko'k"
+
+msgid "Out first"
+msgstr "Birinchi chiqdi"
+
+msgid "Win a game of Last Card"
+msgstr "«Oxirgi karta»da bir marta yuting"
+
+msgid "Empty-handed"
+msgstr "Qo'li bo'sh"
+
+msgid "Win 10 games of Last Card"
+msgstr "«Oxirgi karta»da 10 marta yuting"
+
+msgid "No hard feelings"
+msgstr "Xafa bo'lmang"
+
+msgid "Play 20 Wild Draw Fours"
+msgstr "20 marta «Joker +4» tashlang"
+
+#, c-sharp-format
+msgid "Play {0} cards in Last Card"
+msgstr "«Oxirgi karta»da {0} ta karta tashlang"
+
+#. interns
+msgid "Interns"
+msgstr "Stajyorlar"
+
+msgid "pick a tool, then click an intern — get enough of them to the exit"
+msgstr "asbobni tanlang, so'ng stajyorni bosing — yetarlicha stajyorni chiqishga olib boring"
+
+#, c-sharp-format
+msgid "Level {0} · save {1} of {2} · click the hatch to open it"
+msgstr "{0}-daraja · {2} tadan {1} tasini qutqaring · lyukni ochish uchun bosing"
+
+#, c-sharp-format
+msgid "Level {0} · out {1}/{2} · lost {3} · {4}s left"
+msgstr "{0}-daraja · chiqdi {1}/{2} · yo'qotildi {3} · {4} s qoldi"
+
+#, c-sharp-format
+msgid "Level {0} cleared · click the hatch for the next one"
+msgstr "{0}-daraja o'tildi · keyingisi uchun lyukni bosing"
+
+#, c-sharp-format
+msgid "Saved {0} of {1} needed · click the hatch to try again"
+msgstr "Kerakli {1} tadan {0} tasi qutqarildi · qayta urinish uchun lyukni bosing"
+
+#, c-sharp-format
+msgid "Best level {0}"
+msgstr "Eng yaxshi daraja {0}"
+
+msgid "EVERYONE MADE IT!"
+msgstr "HAMMA YETIB KELDI!"
+
+#, c-sharp-format
+msgid "LEVEL {0} CLEARED"
+msgstr "{0}-DARAJA O'TILDI"
+
+#, c-sharp-format
+msgid "{0} of {1} saved · {2} needed"
+msgstr "{1} tadan {0} tasi qutqarildi · {2} ta kerak edi"
+
+msgid "NOT ENOUGH"
+msgstr "YETARLI EMAS"
+
+msgid "none left"
+msgstr "qolmadi"
+
+msgid "not now"
+msgstr "hozir emas"
+
+msgid "EXIT"
+msgstr "CHIQISH"
+
+msgid "click to try again"
+msgstr "qayta urinish uchun bosing"
+
+msgid "click for the next level"
+msgstr "keyingi daraja uchun bosing"
+
+msgid "click to open"
+msgstr "ochish uchun bosing"
+
+#, c-sharp-format
+msgid "Umbrella {0}"
+msgstr "Soyabon {0}"
+
+#, c-sharp-format
+msgid "Blocker {0}"
+msgstr "To'suvchi {0}"
+
+#, c-sharp-format
+msgid "Builder {0}"
+msgstr "Quruvchi {0}"
+
+msgid "Restart"
+msgstr "Qaytadan"
+
+msgid "Onboarding"
+msgstr "Ishga kirish"
+
+msgid "Clear the first level of Interns"
+msgstr "«Stajyorlar»ning birinchi darajasini o'ting"
+
+msgid "Head of department"
+msgstr "Bo'lim boshlig'i"
+
+msgid "Clear level 10 of Interns"
+msgstr "«Stajyorlar»ning 10-darajasini o'ting"
+
+msgid "Mentor"
+msgstr "Ustoz"
+
+msgid "Get 100 interns to the exit"
+msgstr "100 ta stajyorni chiqishga olib boring"
+
+msgid "Nobody left behind"
+msgstr "Hech kim qolmadi"
+
+msgid "Save every intern on a level"
+msgstr "Bir darajada barcha stajyorlarni qutqaring"
+
+#, c-sharp-format
+msgid "Get {0} interns to the exit"
+msgstr "{0} ta stajyorni chiqishga olib boring"
+
+#. blockfall
+msgid "Blockfall"
+msgstr "Bloklar"
+
+msgid "point over the well to steer — click turns, hold drops faster, right-click drops"
+msgstr "boshqarish uchun sichqonchani quduq ustida suring — bosish buradi, bosib turish tezlashtiradi, o'ng tugma tushiradi"
+
+#, c-sharp-format
+msgid "Game over · {0} lines · click the well to play again"
+msgstr "O'yin tugadi · {0} qator · qayta o'ynash uchun quduqni bosing"
+
+msgid "Click the well to start · click turns, right-click drops"
+msgstr "Boshlash uchun quduqni bosing · bosish buradi, o'ng tugma tushiradi"
+
+#, c-sharp-format
+msgid "Level {0} · lines {1}"
+msgstr "{0}-daraja · qatorlar {1}"
+
+#, c-sharp-format
+msgid "{0} points · {1} lines"
+msgstr "{0} ochko · {1} qator"
+
+msgid "FOUR LINES!"
+msgstr "TO'RT QATOR!"
+
+msgid "Three lines"
+msgstr "Uch qator"
+
+msgid "Two lines"
+msgstr "Ikki qator"
+
+#, c-sharp-format
+msgid "Level {0}"
+msgstr "{0}-daraja"
+
+msgid "Next"
+msgstr "Keyingisi"
+
+#, c-sharp-format
+msgid "Lines {0}"
+msgstr "Qatorlar {0}"
+
+msgid "Click to play again"
+msgstr "Qayta o'ynash uchun bosing"
+
+msgid "Click to start"
+msgstr "Boshlash uchun bosing"
+
+msgid "Four at once"
+msgstr "Birdaniga to'rtta"
+
+msgid "Clear four lines with one piece"
+msgstr "Bitta bo'lak bilan to'rt qatorni tozalang"
+
+msgid "Line manager"
+msgstr "Qator boshlig'i"
+
+msgid "Clear 200 lines"
+msgstr "200 qatorni tozalang"
+
+msgid "Stacked"
+msgstr "Taxlangan"
+
+msgid "Score 10,000 points in one game"
+msgstr "Bir o'yinda 10 000 ochko to'plang"
+
+#, c-sharp-format
+msgid "Clear {0} lines in Blockfall"
+msgstr "«Bloklar»da {0} qatorni tozalang"
+
+#. marble
+msgid "Marble Run"
+msgstr "Sharcha yo'li"
+
+msgid "drag ramps and bumpers out of the tray, then click the funnel — land the marble in the cup"
+msgstr "tovoqdan qiyalik va zarbagichlarni sudrab qo'ying, so'ng voronkani bosing — sharchani chuqurchaga tushiring"
+
+#, c-sharp-format
+msgid "Course {0}/{1} · pieces left {2} · try {3}/{4}"
+msgstr "Yo'l {0}/{1} · qolgan detallar {2} · urinish {3}/{4}"
+
+#, c-sharp-format
+msgid "Round over · {0} of {1} in the cup · click the funnel to play again"
+msgstr "Raund tugadi · {1} tadan {0} tasi chuqurchada · qayta o'ynash uchun voronkani bosing"
+
+msgid "Drag a ramp or a bumper out of the tray, then click the funnel"
+msgstr "Tovoqdan qiyalik yoki zarbagichni sudrab qo'ying, so'ng voronkani bosing"
+
+msgid "NO HANDS!"
+msgstr "QO'LSIZ!"
+
+msgid "IN THE CUP!"
+msgstr "CHUQURCHADA!"
+
+msgid "In the cup"
+msgstr "Chuqurchada"
+
+#, c-sharp-format
+msgid "{0} in a row"
+msgstr "ketma-ket {0}"
+
+#, c-sharp-format
+msgid "{0} of {1} pieces"
+msgstr "{1} tadan {0} ta detal"
+
+msgid "COURSE LOST"
+msgstr "YO'L BOY BERILDI"
+
+msgid "MISS"
+msgstr "TUSHMADI"
+
+msgid "on to the next one"
+msgstr "keyingisiga o'tamiz"
+
+#, c-sharp-format
+msgid "try {0} of {1}"
+msgstr "urinish {0}/{1}"
+
+#, c-sharp-format
+msgid "{0} points · {1} of {2} in the cup"
+msgstr "{0} ochko · {2} tadan {1} tasi chuqurchada"
+
+msgid "No pieces left"
+msgstr "Detallar qolmadi"
+
+msgid "right-click a piece to take it back"
+msgstr "detalni qaytarish uchun uni o'ng tugma bilan bosing"
+
+msgid "Land a marble in the cup in Marble Run"
+msgstr "«Sharcha yo'li»da sharchani chuqurchaga tushiring"
+
+msgid "Look, no ramps"
+msgstr "Qarang, qiyaliksiz"
+
+msgid "Land a marble in the cup without placing a piece"
+msgstr "Birorta detal qo'ymasdan sharchani chuqurchaga tushiring"
+
+msgid "Marble master"
+msgstr "Sharcha ustasi"
+
+msgid "Land 5 marbles in a row at the first release"
+msgstr "Birinchi urinishda ketma-ket 5 ta sharchani chuqurchaga tushiring"
+
+#, c-sharp-format
+msgid "Land {0} marbles in the cup in Marble Run"
+msgstr "«Sharcha yo'li»da {0} ta sharchani chuqurchaga tushiring"
+
+#. sheep
+msgid "Sheep Herding"
+msgstr "Cho'pon"
+
+msgid "move the cursor to herd the flock into the pen — click to bark"
+msgstr "sichqoncha bilan suruvni qo'raga haydang — it hurishi uchun bosing"
+
+#, c-sharp-format
+msgid "Round {0} · {1} sheep · click the pen to start"
+msgstr "{0}-raund · {1} ta qo'y · boshlash uchun qo'rani bosing"
+
+#, c-sharp-format
+msgid "Round {0} · penned {1}/{2} · {3}s left"
+msgstr "{0}-raund · qo'rada {1}/{2} · {3} s qoldi"
+
+#, c-sharp-format
+msgid "Round {0} done · click the pen for the next one"
+msgstr "{0}-raund tugadi · keyingisi uchun qo'rani bosing"
+
+#, c-sharp-format
+msgid "{0} of {1} penned · click the pen to try again"
+msgstr "{1} tadan {0} tasi qo'rada · qayta urinish uchun qo'rani bosing"
+
+#, c-sharp-format
+msgid "Round {0} · {1} sheep · {2} seconds"
+msgstr "{0}-raund · {1} ta qo'y · {2} soniya"
+
+msgid "ALL PENNED!"
+msgstr "HAMMASI QO'RADA!"
+
+#, c-sharp-format
+msgid "{0} points · {1}s to spare"
+msgstr "{0} ochko · {1} s zaxirada"
+
+#, c-sharp-format
+msgid "{0} of {1} penned · {2} points"
+msgstr "{1} tadan {0} tasi qo'rada · {2} ochko"
+
+msgid "Woof!"
+msgstr "Vov!"
+
+msgid "click the pen to start"
+msgstr "boshlash uchun qo'rani bosing"
+
+msgid "click for the next round"
+msgstr "keyingi raund uchun bosing"
+
+msgid "Good dog"
+msgstr "Yaxshi it"
+
+msgid "Pen 100 sheep"
+msgstr "100 ta qo'yni qo'raga kiriting"
+
+msgid "Top dog"
+msgstr "Bosh it"
+
+msgid "Clear round 5 of Sheep Herding"
+msgstr "«Cho'pon»da 5-raundni o'ting"
+
+msgid "Come by!"
+msgstr "Aylanib o't!"
+
+msgid "Pen the whole flock with 30 seconds to spare"
+msgstr "Butun suruvni 30 soniya zaxira bilan qo'raga kiriting"
+
+#, c-sharp-format
+msgid "Pen {0} sheep in Sheep Herding"
+msgstr "«Cho'pon»da {0} ta qo'yni qo'raga kiriting"
+
+#. cannons
+msgid "Cannon Castles"
+msgstr "Zambarak qal'alari"
+
+msgid "drag back from your cannon and let go — mind the wind and knock down their flag"
+msgstr "zambarakdan orqaga torting va qo'yib yuboring — shamolni hisobga oling va raqib bayrog'ini yiqiting"
+
+#, c-sharp-format
+msgid "Game over · click your cannon to ask {0} for a rematch"
+msgstr "O'yin tugadi · {0}dan revansh so'rash uchun zambarakni bosing"
+
+msgid "Game over · click your cannon to play again"
+msgstr "O'yin tugadi · qayta o'ynash uchun zambarakni bosing"
+
+#, c-sharp-format
+msgid "Your shot · wind {0}"
+msgstr "Siz otasiz · shamol {0}"
+
+#, c-sharp-format
+msgid "{0} is aiming · wind {1}"
+msgstr "{0} nishonga olmoqda · shamol {1}"
+
+#, c-sharp-format
+msgid "The CPU ({0}) is aiming · wind {1}"
+msgstr "Kompyuter ({0}) nishonga olmoqda · shamol {1}"
+
+msgid "Too short"
+msgstr "Yetmadi"
+
+msgid "Too long"
+msgstr "Oshib ketdi"
+
+#, c-sharp-format
+msgid "{0} blocks down"
+msgstr "{0} ta blok qulatildi"
+
+msgid "Cracked!"
+msgstr "Yorildi!"
+
+msgid "Block down!"
+msgstr "Blok qulatildi!"
+
+msgid "Hit a window"
+msgstr "Oynaga tegdi"
+
+msgid "click your cannon for a rematch"
+msgstr "revansh uchun zambarakni bosing"
+
+msgid "click your cannon to play again"
+msgstr "qayta o'ynash uchun zambarakni bosing"
+
+msgid "not a block lost!"
+msgstr "birorta blok yo'qotmay!"
+
+msgid "your flag is down"
+msgstr "bayrog'ingiz yiqildi"
+
+#, c-sharp-format
+msgid "wind {0}"
+msgstr "shamol {0}"
+
+msgid "FLAG DOWN!"
+msgstr "BAYROQ YIQILDI!"
+
+msgid "Castle breaker"
+msgstr "Qal'a buzuvchi"
+
+msgid "Beat the computer at Hard or Expert in Cannon Castles"
+msgstr "«Zambarak qal'alari»da kompyuterni «Qiyin» yoki undan yuqori darajada yenging"
+
+msgid "Untouchable"
+msgstr "Daxlsiz"
+
+msgid "Win Cannon Castles without losing a single block"
+msgstr "«Zambarak qal'alari»da birorta ham blok yo'qotmay yuting"
+
+msgid "Siege of the next desk"
+msgstr "Qo'shni stol qamali"
+
+msgid "Win a Cannon Castles duel over the LAN"
+msgstr "Lokal tarmoqda «Zambarak qal'alari» duelida g'alaba qozoning"
+
+#, c-sharp-format
+msgid "Knock down {0} castle blocks in Cannon Castles"
+msgstr "«Zambarak qal'alari»da {0} ta qal'a blokini qulating"
+
+#. codebreaker
+msgid "Code Breaker"
+msgstr "Kod buzuvchi"
+
+msgid "Check"
+msgstr "Tekshirish"
+
+#, c-sharp-format
+msgid "Guess {0}/{1} · pick a colour, then click a hole"
+msgstr "Taxmin {0}/{1} · rangni tanlang, so'ng teshikni bosing"
+
+#, c-sharp-format
+msgid "Guess {0}/{1} · click Check"
+msgstr "Taxmin {0}/{1} · «Tekshirish»ni bosing"
+
+msgid "Code cracked · click the board for a new code"
+msgstr "Kod topildi · yangi kod uchun taxtani bosing"
+
+msgid "Out of guesses · click the board for a new code"
+msgstr "Taxminlar tugadi · yangi kod uchun taxtani bosing"
+
+#, c-sharp-format
+msgid "Fewest guesses {0}"
+msgstr "Eng kam taxmin {0}"
+
+msgid "CODE CRACKED!"
+msgstr "KOD TOPILDI!"
+
+#, c-sharp-format
+msgid "{0} of {1} guesses"
+msgstr "{1} taxmindan {0} tasi"
+
+msgid "OUT OF GUESSES"
+msgstr "TAXMINLAR TUGADI"
+
+msgid "here is the code · click the board for a new code"
+msgstr "mana kod · yangi kod uchun taxtani bosing"
+
+msgid "pick a colour, fill the row and click Check — a black pin is the right colour in the right place"
+msgstr "rangni tanlang, qatorni to'ldiring va «Tekshirish»ni bosing — qora pin: to'g'ri rang to'g'ri joyda"
+
+msgid "Code cracked"
+msgstr "Kod ochildi"
+
+msgid "Break a code"
+msgstr "Kodni toping"
+
+msgid "Mind reader"
+msgstr "Fikr o'quvchi"
+
+msgid "Break a code in 4 guesses or fewer"
+msgstr "Kodni 4 yoki undan kam taxminda toping"
+
+#, c-sharp-format
+msgid "Break {0} codes in Code Breaker"
+msgstr "«Kod buzuvchi»da {0} ta kodni toping"
+
+#. ---- Pinball
+msgid "Pinball"
+msgstr "Pinbol"
+
+msgid "click the ball to serve — press by a flipper to flip it, right-click flips both"
+msgstr "o'yinga kiritish uchun to'pni bosing — flipperni ko'tarish uchun uning yonini bosing, o'ng tugma ikkalasini ko'taradi"
+
+#, c-sharp-format
+msgid "Ball {0} of 3"
+msgstr "To'p {0} / 3"
+
+#, c-sharp-format
+msgid "Ball {0} of 3 · ×{1}"
+msgstr "To'p {0} / 3 · ×{1}"
+
+#, c-sharp-format
+msgid "Ball {0} of 3 · click the ball to serve"
+msgstr "To'p {0} / 3 · o'yinga kiritish uchun to'pni bosing"
+
+msgid "Game over · click the ball to play again"
+msgstr "O'yin tugadi · qayta o'ynash uchun to'pni bosing"
+
+msgid "Drained!"
+msgstr "To'p tushib ketdi!"
+
+#, c-sharp-format
+msgid "×{0} multiplier"
+msgstr "×{0} ko'paytirgich"
+
+msgid "Pinball wizard"
+msgstr "Pinbol sehrgari"
+
+msgid "Score 5,000 in one game"
+msgstr "Bitta o'yinda 5000 ochko to'plang"
+
+msgid "Bumper cars"
+msgstr "Bamper poygasi"
+
+msgid "Hit 500 bumpers"
+msgstr "Bamperlarga 500 marta tegizing"
+
+#, c-sharp-format
+msgid "Hit {0} bumpers in Pinball"
+msgstr "Pinbolda bamperlarga {0} marta tegizing"
+
+#. ---- 1.8.0: scoreboard, races against the computer, movable boards
+msgid "Your turn"
+msgstr "Sizning yurishingiz"
+
+#, c-sharp-format
+msgid "CPU · {0}"
+msgstr "Kompyuter ({0})"
+
+msgid "Menu"
+msgstr "Menyu"
+
+#, c-sharp-format
+msgid "{0} shows the overlay again"
+msgstr "{0} o'yinni yana ko'rsatadi"
+
+msgid "or run: deskarcade --signal show"
+msgstr "yoki ishga tushiring: deskarcade --signal show"
+
+msgid "Hide overlay"
+msgstr "O'yinni yashirish"
+
+msgid "Drag to move"
+msgstr "Ko'chirish uchun torting"
+
+msgid "Race the computer in solo rounds"
+msgstr "Yakka raundlarda kompyuter bilan poyga"
+
+#, c-sharp-format
+msgid "CPU ({0}): {1}"
+msgstr "Kompyuter ({0}): {1}"
+
+#, c-sharp-format
+msgid "CPU ({0}) is heading for {1}"
+msgstr "Kompyuter ({0}) {1} ga intilmoqda"
+
+msgid "Race the computer: start a round and it plays one too"
+msgstr "Kompyuter bilan poyga: raund boshlang, u ham o'ynaydi"
+
+#, c-sharp-format
+msgid "the CPU goes easier: {0}"
+msgstr "kompyuter osonlashdi: {0}"
+
+msgid "Pacesetter"
+msgstr "Sur'at beruvchi"
+
+msgid "Beat the computer in 10 races"
+msgstr "Kompyuterni 10 poygada yutib chiqing"
+
+#. ---- 1.8.0: Linux overlay
+msgid "No tray icon on this desktop"
+msgstr "Bu ish stolida trey belgisi yo'q"
+
+msgid "the ☰ button on the scoreboard has the menu"
+msgstr "menyu hisob taxtasidagi ☰ tugmasida"
+
+#. ---- pets in the games
+msgid "Pet keeps me company in games"
+msgstr "Uy hayvoni o'yinlarda hamroh bo'ladi"
+
+msgid "Fish thief!"
+msgstr "Baliq o'g'risi!"
+
+msgid "your pet ran off with it · it still counts"
+msgstr "uy hayvoningiz uni olib qochdi · ov baribir hisoblanadi"
+
+#. ---- 1.8.0: pets
+msgid "After the ball!"
+msgstr "To'p ketidan!"
+
+msgid "Begging for a treat · click the jar"
+msgstr "Shirinlik so'rayapti · idishni bosing"
+
+msgid "Bringing the ball back"
+msgstr "To'pni olib kelyapti"
+
+msgid "Catching flies"
+msgstr "Pashsha tutyapti"
+
+msgid "Click to pet · right-click for a trick · throw the ball · click the jar for a treat"
+msgstr "Silash uchun bosing · nayrang uchun o'ng tugma · to'pni uloqtiring · shirinlik uchun idishni bosing"
+
+msgid "Coming over to sit with you"
+msgstr "Yoningizga o'tirgani kelyapti"
+
+msgid "Curled up"
+msgstr "G'ujanak bo'lib yotibdi"
+
+msgid "Dragon"
+msgstr "Ajdar"
+
+msgid "Feed your pet 30 treats"
+msgstr "Uy hayvoningizga 30 ta shirinlik bering"
+
+msgid "Fetch!"
+msgstr "Olib kel!"
+
+#, c-sharp-format
+msgid "Fetches {0} · Treats {1} · Pets {2}"
+msgstr "Olib kelish {0} · Shirinlik {1} · Silash {2}"
+
+msgid "Flying"
+msgstr "Uchyapti"
+
+msgid "Frog"
+msgstr "Qurbaqa"
+
+msgid "Good morning!"
+msgstr "Xayrli tong!"
+
+msgid "Hamster"
+msgstr "Xomyak"
+
+msgid "Have your pet bring the ball back 20 times"
+msgstr "Uy hayvoningiz to'pni 20 marta olib kelsin"
+
+msgid "Having a look around"
+msgstr "Atrofga qarayapti"
+
+msgid "Keeping you company"
+msgstr "Sizga hamroh bo'lyapti"
+
+msgid "Meet a co-worker's pet over the LAN"
+msgstr "Hamkasbingizning uy hayvoni bilan tarmoq orqali uchrashing"
+
+msgid "Nom nom nom"
+msgstr "Nam-nam-nam"
+
+msgid "Off to get a treat"
+msgstr "Shirinlik olgani ketdi"
+
+msgid "Owl"
+msgstr "Boyqush"
+
+msgid "Parrot"
+msgstr "To'tiqush"
+
+msgid "Playdate"
+msgstr "Uchrashuv"
+
+msgid "Puffing smoke"
+msgstr "Tutun chiqaryapti"
+
+msgid "Safe in its shell"
+msgstr "Qobig'ida bekinib olgan"
+
+msgid "Stuffing its cheeks"
+msgstr "Lunjini to'ldiryapti"
+
+msgid "Treat time"
+msgstr "Shirinlik vaqti"
+
+msgid "Turtle"
+msgstr "Toshbaqa"
+
+#, c-sharp-format
+msgid "Visiting {0}'s {1}"
+msgstr "{0}ning uy hayvoni ({1}) bilan uchrashyapti"
+
+msgid "Wants to play · throw the ball"
+msgstr "O'ynagisi kelyapti · to'pni uloqtiring"
+
+msgid "Watching the ball"
+msgstr "To'pni kuzatyapti"
+
+msgid "Watching you"
+msgstr "Sizni kuzatyapti"
+
+#. ---- pets grow up, nap on their favourite window and have their own volume
+msgid "Off to nap on its favourite window"
+msgstr "Sevimli oynasida mizg'igani ketdi"
+
+#, c-sharp-format
+msgid "{0} is old and wise now!"
+msgstr "{0} endi keksa va dono!"
+
+#, c-sharp-format
+msgid "{0} is all grown up!"
+msgstr "{0} endi katta bo'ldi!"
+
+msgid "A new trick · right-click to see it"
+msgstr "Yangi hiyla · ko'rish uchun o'ng tugma"
+
+msgid "Pet volume"
+msgstr "Uy hayvoni ovozi"
+
+msgid "Softer late in the evening"
+msgstr "Kechqurun sekinroq"
+
+msgid "Quiet"
+msgstr "Past"
+
+msgid "Normal"
+msgstr "O'rtacha"
+
+msgid "Loud"
+msgstr "Baland"
+
+msgid "Young"
+msgstr "Kichkina"
+
+msgid "Grown-up"
+msgstr "Katta"
+
+msgid "Wise"
+msgstr "Dono"
+
+msgid "Pets"
+msgstr "Uy hayvonlari"
+
+#, c-sharp-format
+msgid "Next: {0} at {1} days and {2} play"
+msgstr "Keyingisi: {0} — {1} kun va {2} o'yin ochkosi"
+
+msgid "Knows a second trick · right-click it"
+msgstr "Ikkinchi hiylani biladi · o'ng tugma — hiyla"
+
+#, c-sharp-format
+msgid "Age {0} d · play {1}"
+msgstr "Yoshi {0} kun · o'yin {1}"
+
+#, c-sharp-format
+msgid "Favourite nap spot: {0}"
+msgstr "Sevimli uxlash joyi: {0}"
+
+msgid "All grown up"
+msgstr "Katta bo'ldi"
+
+msgid "Raise a pet until it is grown up"
+msgstr "Uy hayvoningizni katta bo'lguncha o'stiring"
+
+msgid "Old and wise"
+msgstr "Keksa va dono"
+
+msgid "Raise a pet until it is old and wise"
+msgstr "Uy hayvoningizni keksa va dono bo'lguncha o'stiring"
+
+msgid "Hello!"
+msgstr "Salom!"
+
+msgid "Pretty bird!"
+msgstr "Chiroyli qush!"
+
+msgid "Cracker?"
+msgstr "Pechenye?"
+
+#. ---- 1.8.0: board and turn games
+#, c-sharp-format
+msgid "the CPU goes easier: {0} · click a grid for a rematch"
+msgstr "kompyuter osonlashdi: {0} · qayta o'ynash uchun maydonni bosing"
+
+#. ---- 1.8.0: races, part 1 (Keepy-Uppy, Bug Squash, Can Knockdown, Brick Breaker)
+msgid "GO!"
+msgstr "BOSHLANDI!"
+
+#, c-sharp-format
+msgid "{0} seconds · spare the ladybugs"
+msgstr "{0} soniya · xonqizlarga tegmang"
+
+#. ---- 1.8.0: races, part 2 (Clay Shooting, Plinko, Slingshot, Darts)
+msgid "Click the sheet again to give up the leg"
+msgstr "Legdan voz kechish uchun jadvalni yana bir bor bosing"
+
+msgid "LEG GIVEN UP"
+msgstr "LEGDAN VOZ KECHILDI"
+
+#. ---- 1.8.0: races, part 3 (Pool, Memory, Code Breaker, Solitaire, Interns)
+msgid "Click a card to flip it · find all the pairs · right-drag moves the cards"
+msgstr "Kartani ochish uchun ustiga bosing · barcha juftlarni toping · kartalarni o'ng tugma bilan suring"
+
+msgid "Click the stock to turn a card · click or drag cards to move them · right-drag moves the felt"
+msgstr "Kartani ochish uchun to'plamni bosing · kartalarni bosing yoki suring · stolni o'ng tugma bilan suring"
+
+#. ---- 1.8.0: animation pass (Bubbles, Whack, Tower, Bowling, Fishing, Pinball, Paper Toss, Blockfall, Hockey, Pong)
+#, c-sharp-format
+msgid "First to {0} · CPU {1} · drag your blue mallet"
+msgstr "{0} golgacha · kompyuter: {1} · ko'k tayoqchani suring"
+
+#, c-sharp-format
+msgid "First to {0} · CPU {1} · drag your paddle"
+msgstr "{0} ochkogacha · kompyuter: {1} · raketkangizni suring"
+
+msgid "grab your mallet for a rematch"
+msgstr "qayta o'ynash uchun tayoqchani oling"
+
+msgid "grab your paddle for a rematch"
+msgstr "revansh uchun raketkani ushlang"
+
+#. ---- 1.8.0: Linux updates
+#, c-sharp-format
+msgid "Update {0}%"
+msgstr "Yangilanish {0}%"
+
+msgid "then PolicyKit asks for your password to install it"
+msgstr "keyin PolicyKit o'rnatish uchun parolingizni so'raydi"
+
+msgid "This release has no checksum"
+msgstr "Bu relizda nazorat yig'indisi yo'q"
+
+msgid "installing the download unverified"
+msgstr "yuklab olingan fayl tekshiruvsiz o'rnatilmoqda"
+
+msgid "a Flatpak updates with flatpak update · opening the release page"
+msgstr "Flatpak flatpak update bilan yangilanadi · reliz sahifasi ochilmoqda"
+
+msgid "The update did not install · press Enter to close this window"
+msgstr "Yangilanish o'rnatilmadi · bu oynani yopish uchun Enter bosing"
+
+#, c-sharp-format
+msgid "Update {0} downloaded"
+msgstr "{0} yangilanishi yuklab olindi"
+
+#, c-sharp-format
+msgid "no pkexec or terminal to install it · it is in {0}"
+msgstr "o'rnatish uchun pkexec ham, terminal ham yo'q · fayl {0} ichida"
+
+msgid "Finishing the update in a terminal"
+msgstr "Yangilanish terminalda yakunlanmoqda"
+
+msgid "enter your password there · the game restarts when it is done"
+msgstr "parolingizni o'sha yerda kiriting · tugagach o'yin qayta ishga tushadi"
+
+#, c-sharp-format
+msgid "if it did not install, it is in {0}"
+msgstr "agar o'rnatilmagan bo'lsa, fayl {0} ichida"
+
+#, c-sharp-format
+msgid "Installed {0} · restarting"
+msgstr "{0} o'rnatildi · qayta ishga tushmoqda"
+
+msgid "the new version starts in a moment"
+msgstr "yangi versiya birozdan keyin ishga tushadi"
+
+#, c-sharp-format
+msgid "saved in {0} · double-click the .deb to install it"
+msgstr "{0} ichida saqlandi · o'rnatish uchun .deb faylini ikki marta bosing"
+
+#, c-sharp-format
+msgid "Update failed · exit code {0}"
+msgstr "Yangilanish muvaffaqiyatsiz · chiqish kodi {0}"
+
+#, c-sharp-format
+msgid "couldn't replace the running file · the new one is {0}"
+msgstr "ishlayotgan faylni almashtirib bo'lmadi · yangisi: {0}"
+
+#, c-sharp-format
+msgid "Installed {0}"
+msgstr "{0} o'rnatildi"
+
+msgid "start Desk Arcade again to play it"
+msgstr "o'ynash uchun Desk Arcade'ni qayta ishga tushiring"
+
+#. ---- 1.8.0: themes
+msgid "Ocean"
+msgstr "Okean"
+
+msgid "Forest"
+msgstr "O'rmon"
+
+msgid "Sunset"
+msgstr "Shom"
+
+msgid "Candy"
+msgstr "Shirinlik"
+
+msgid "Mono"
+msgstr "Mono"
+
+msgid "Spring"
+msgstr "Bahor"
+
+msgid "Autumn"
+msgstr "Kuz"
+
+msgid "Midnight"
+msgstr "Yarim tun"
+
+msgid "Theme decorations"
+msgstr "Mavzu bezaklari"
+
+msgid "the desk as you know it"
+msgstr "o'zingiz bilgan stol"
+
+msgid "lights on, volume up"
+msgstr "chiroqlar yoqilgan, ovoz balandroq"
+
+msgid "insert coin"
+msgstr "tanga tashlang"
+
+msgid "boo"
+msgstr "buu"
+
+msgid "mind the snow"
+msgstr "qorga ehtiyot bo'ling"
+
+msgid "deep breath"
+msgstr "chuqur nafas oling"
+
+msgid "quiet under the trees"
+msgstr "daraxtlar ostida sokinlik"
+
+msgid "golden hour"
+msgstr "oltin soat"
+
+msgid "sweet"
+msgstr "shirin"
+
+msgid "just the game"
+msgstr "faqat o'yin"
+
+msgid "fresh start"
+msgstr "yangi boshlanish"
+
+msgid "crunchy leaves"
+msgstr "shitirlagan barglar"
+
+msgid "lights out"
+msgstr "chiroqlar o'chdi"
+
+#. typing race
+msgid "Typing Race"
+msgstr "Tez yozish poygasi"
+
+msgid "click the text and type it — the first car over the line wins"
+msgstr "matnni bosing va uni tering — marraga birinchi yetgan mashina yutadi"
+
+msgid "Your keys go to the game here · Esc stops"
+msgstr "Tugmalaringiz hozir o'yinga boradi · Esc — to'xtatish"
+
+msgid "Click here to keep typing"
+msgstr "Yozishni davom ettirish uchun shu yerni bosing"
+
+#, c-sharp-format
+msgid "asked {0} for a race"
+msgstr "{0}ga poyga taklif qilindi"
+
+#, c-sharp-format
+msgid "{0} WPM"
+msgstr "{0} so'z/daq"
+
+msgid "gave up"
+msgstr "taslim bo'ldi"
+
+msgid "Get ready…"
+msgstr "Tayyorlaning…"
+
+#, c-sharp-format
+msgid "Finished · waiting for {0}"
+msgstr "Marra · {0} kutilmoqda"
+
+msgid "Click the text to keep typing"
+msgstr "Yozishni davom ettirish uchun matnni bosing"
+
+#, c-sharp-format
+msgid "Type! · {0}% accuracy"
+msgstr "Tering! · aniqlik {0}%"
+
+#, c-sharp-format
+msgid "Click the text to ask {0} for a race"
+msgstr "{0}ga poyga taklif qilish uchun matnni bosing"
+
+#, c-sharp-format
+msgid "Click the text to race · {0}"
+msgstr "Poygani boshlash uchun matnni bosing · {0}"
+
+#, c-sharp-format
+msgid "Best WPM {0}"
+msgstr "Rekord so'z/daq {0}"
+
+#, c-sharp-format
+msgid "{0} picks the text"
+msgstr "Matnni {0} tanlaydi"
+
+#, c-sharp-format
+msgid "{0}% accuracy · {1}s"
+msgstr "aniqlik {0}% · {1} s"
+
+#, c-sharp-format
+msgid "ahead of {0}"
+msgstr "{0} ortda qoldi"
+
+#, c-sharp-format
+msgid "ahead of the CPU at {0} WPM"
+msgstr "kompyuter ortda qoldi ({0} so'z/daq)"
+
+msgid "you gave up"
+msgstr "siz taslim bo'ldingiz"
+
+#, c-sharp-format
+msgid "{0} crossed the line first"
+msgstr "marraga birinchi {0} yetdi"
+
+#, c-sharp-format
+msgid "the CPU typed {0} WPM"
+msgstr "kompyuter {0} so'z/daq tezlikda yozdi"
+
+msgid "You gave up"
+msgstr "Siz taslim bo'ldingiz"
+
+#, c-sharp-format
+msgid "Finished! Waiting for {0}…"
+msgstr "Marra! {0} kutilmoqda…"
+
+msgid "Paused · click the text to keep typing"
+msgstr "Pauza · davom ettirish uchun matnni bosing"
+
+#, c-sharp-format
+msgid "{0}% accuracy"
+msgstr "aniqlik {0}%"
+
+msgid "Click the text for the next race"
+msgstr "Keyingi poyga uchun matnni bosing"
+
+msgid "Click the text to start"
+msgstr "Boshlash uchun matnni bosing"
+
+msgid "Give up"
+msgstr "Taslim bo'lish"
+
+msgid "Touch typist"
+msgstr "Ko'r usulda yozuvchi"
+
+msgid "Finish a race at 40 words per minute"
+msgstr "Poygani daqiqasiga 40 so'z tezlikda tugating"
+
+msgid "Lightning fingers"
+msgstr "Chaqmoq barmoqlar"
+
+msgid "Finish a race at 80 words per minute"
+msgstr "Poygani daqiqasiga 80 so'z tezlikda tugating"
+
+msgid "Not a single typo"
+msgstr "Birorta ham xatosiz"
+
+msgid "Finish a race without a mistake"
+msgstr "Poygani bitta ham xatosiz tugating"
+
+msgid "Ten-finger coder"
+msgstr "O'n barmoqli dasturchi"
+
+msgid "Finish 10 races with code"
+msgstr "Kod bilan 10 ta poygani tugating"
+
+msgid "Pole position"
+msgstr "Birinchi qator"
+
+msgid "Win 25 typing races"
+msgstr "25 ta yozish poygasida g'alaba qozoning"
+
+#, c-sharp-format
+msgid "Type {0} characters in Typing Race"
+msgstr "«Tez yozish poygasi»da {0} ta belgi tering"
+
+#, c-sharp-format
+msgid "You won! {0} is still typing…"
+msgstr "G'alaba! {0} hali yozmoqda…"
+
+#, c-sharp-format
+msgid "{0} won · finish the text for your speed"
+msgstr "{0} yutdi · tezligingizni bilish uchun matnni oxirigacha tering"
+
+msgid "You won! Click the text for the next race"
+msgstr "G'alaba! Keyingi poyga uchun matnni bosing"
+
+msgid "You won!"
+msgstr "G'alaba!"
+
+#. word rain
+msgid "Word Rain"
+msgstr "So'z yomg'iri"
+
+msgid "click the typewriter, then type the falling words — don't let them reach the taskbar"
+msgstr "yozuv mashinkasini bosing va tushayotgan so'zlarni tering — ularni vazifalar paneliga yetkazmang"
+
+msgid "Paused · click the typewriter to go on"
+msgstr "Pauza · davom ettirish uchun yozuv mashinkasini bosing"
+
+#, c-sharp-format
+msgid "Level {0} · lives {1} · combo ×{2}"
+msgstr "Daraja {0} · jon {1} · seriya ×{2}"
+
+#, c-sharp-format
+msgid "Game over · {0} words · click the typewriter to play again"
+msgstr "O'yin tugadi · {0} ta so'z · qayta o'ynash uchun mashinkani bosing"
+
+#, c-sharp-format
+msgid "Click the typewriter to start · {0}"
+msgstr "Boshlash uchun yozuv mashinkasini bosing · {0}"
+
+#, c-sharp-format
+msgid "{0} words · level {1} · {2} points"
+msgstr "{0} ta so'z · daraja {1} · {2} ochko"
+
+#, c-sharp-format
+msgid "LEVEL {0}"
+msgstr "DARAJA {0}"
+
+msgid "faster, and longer words"
+msgstr "tezroq, so'zlar esa uzunroq"
+
+msgid "SPLASH!"
+msgstr "SHALOP!"
+
+msgid "Weather report"
+msgstr "Ob-havo ma'lumoti"
+
+msgid "Zap 250 falling words"
+msgstr "250 ta tushayotgan so'zni urib tushiring"
+
+msgid "Monsoon"
+msgstr "Musson"
+
+msgid "Reach level 8 in Word Rain"
+msgstr "«So'z yomg'iri»da 8-darajaga yeting"
+
+msgid "Clear skies"
+msgstr "Musaffo osmon"
+
+msgid "Zap 25 words in a row without a miss"
+msgstr "Ketma-ket 25 ta so'zni xatosiz urib tushiring"
+
+#, c-sharp-format
+msgid "Zap {0} words in Word Rain"
+msgstr "«So'z yomg'iri»da {0} ta so'zni urib tushiring"
+
+#. chat and reactions
+#, c-sharp-format
+msgid "Chat with {0}…"
+msgstr "{0} bilan suhbat…"
+
+msgid "Chat with a co-worker…"
+msgstr "Hamkasb bilan suhbat…"
+
+#, c-sharp-format
+msgid "Chat with {0}"
+msgstr "{0} bilan suhbat"
+
+msgid "Chat"
+msgstr "Suhbat"
+
+#, c-sharp-format
+msgid "to {0}"
+msgstr "{0}ga"
+
+#, c-sharp-format
+msgid "{0} has chat turned off. It turns on when they open the chat."
+msgstr "{0}da suhbat o'chirilgan. U suhbatni ochganda yoqiladi."
+
+#, c-sharp-format
+msgid "{0} wants to chat"
+msgstr "{0} suhbatlashmoqchi"
+
+msgid "Play over LAN → Chat… to answer"
+msgstr "Javob berish uchun: Tarmoq orqali o'ynash → Suhbat…"
+
+msgid "Only between the two of you, over your local network. Nothing is saved."
+msgstr "Faqat ikkingiz o'rtasida, mahalliy tarmoq orqali. Hech narsa saqlanmaydi."
+
+msgid "A moment — the last messages are still on their way"
+msgstr "Bir daqiqa — oldingi xabarlar hali yo'lda"
+
+#, c-sharp-format
+msgid "Message {0}…"
+msgstr "{0}ga xabar…"
+
+msgid "Chat is on"
+msgstr "Suhbat yoqilgan"
+
+msgid "Not connected — pair up with Play over LAN first"
+msgstr "Ulanmagan — avval «Tarmoq orqali o'ynash» bilan ulaning"
+
+msgid "not delivered"
+msgstr "yetkazilmadi"
+
+msgid "sending…"
+msgstr "yuborilmoqda…"
+
+msgid "click to reply"
+msgstr "javob berish uchun bosing"
+
+msgid "React"
+msgstr "Munosabat"
+
+msgid "Thumbs up"
+msgstr "Zo'r"
+
+msgid "Party!"
+msgstr "Bayram!"
+
+msgid "Coffee?"
+msgstr "Qahva?"
+
+msgid "Ha ha!"
+msgstr "Ha-ha!"
+
+msgid "On fire!"
+msgstr "Olov!"
+
+msgid "Love it"
+msgstr "Juda yoqdi"
+
+msgid "Nice!"
+msgstr "Ajoyib!"
+
+msgid "Lunch?"
+msgstr "Tushlik?"
+
+#. snakes on windows
+msgid "Snakes on Windows"
+msgstr "Oynalardagi ilon"
+
+msgid "click the sleeping snake — it follows your cursor: eat the apples, don't cross your tail"
+msgstr "uxlayotgan ilonni bosing — u kursor ortidan o'rmalaydi: olmalarni yeng, dumingizga tegmang"
+
+#, c-sharp-format
+msgid "Apples {0} · steer with the cursor · don't cross your tail"
+msgstr "Olmalar {0} · kursor bilan boshqaring · dumingizga tegmang"
+
+#, c-sharp-format
+msgid "Bitten! {0} apples · click the snake to play again"
+msgstr "Chaqib oldi! {0} ta olma · qayta o'ynash uchun ilonni bosing"
+
+msgid "Click the sleeping snake · it follows your cursor"
+msgstr "Uxlayotgan ilonni bosing · u kursor ortidan o'rmalaydi"
+
+msgid "BITTEN!"
+msgstr "CHAQDI!"
+
+#, c-sharp-format
+msgid "{0} apples · {1} points"
+msgstr "{0} ta olma · {1} ochko"
+
+msgid "An apple a day"
+msgstr "Kuniga bitta olma"
+
+msgid "Eat 100 apples in Snakes on Windows"
+msgstr "«Oynalardagi ilon»da 100 ta olma yeng"
+
+msgid "Python"
+msgstr "Piton"
+
+msgid "Eat 30 apples in one game of Snakes on Windows"
+msgstr "«Oynalardagi ilon»da bir o'yinda 30 ta olma yeng"
+
+msgid "Golden delicious"
+msgstr "Oltin olma"
+
+msgid "Eat 10 golden apples"
+msgstr "10 ta oltin olma yeng"
+
+#, c-sharp-format
+msgid "Eat {0} apples in Snakes on Windows"
+msgstr "«Oynalardagi ilon»da {0} ta olma yeng"
+
+#. asteroids
+msgid "Asteroids"
+msgstr "Asteroidlar"
+
+msgid "click your ship to launch — it follows the cursor; click a rock to fire at it"
+msgstr "uchish uchun kemangizni bosing — u kursor ortidan uchadi; otish uchun toshni bosing"
+
+#, c-sharp-format
+msgid "asked {0} for a game"
+msgstr "{0}ga o'yin taklif qilindi"
+
+#, c-sharp-format
+msgid "Wave {0} · lives {1} · with {2}"
+msgstr "To'lqin {0} · jon {1} · {2} bilan birga"
+
+#, c-sharp-format
+msgid "Wave {0} · lives {1} · click a rock to fire"
+msgstr "To'lqin {0} · jon {1} · otish uchun toshni bosing"
+
+#, c-sharp-format
+msgid "Game over · wave {0} · click your ship to fly again"
+msgstr "O'yin tugadi · to'lqin {0} · qayta uchish uchun kemani bosing"
+
+#, c-sharp-format
+msgid "Click your ship to ask {0} for a game"
+msgstr "{0}ga o'yin taklif qilish uchun kemangizni bosing"
+
+msgid "Click your ship to launch · it follows the cursor, click rocks to fire"
+msgstr "Uchish uchun kemangizni bosing · u kursor ortidan uchadi, toshlarni bosib oting"
+
+#, c-sharp-format
+msgid "wave {0} · {1} points"
+msgstr "to'lqin {0} · {1} ochko"
+
+#, c-sharp-format
+msgid "with {0}"
+msgstr "{0} bilan"
+
+msgid "Space janitor"
+msgstr "Kosmik farrosh"
+
+msgid "Destroy 200 rocks in Asteroids"
+msgstr "«Asteroidlar»da 200 ta toshni yo'q qiling"
+
+msgid "Deep space"
+msgstr "Olis koinot"
+
+msgid "Reach wave 6 in Asteroids"
+msgstr "«Asteroidlar»da 6-to'lqinga yeting"
+
+msgid "Wingman"
+msgstr "Qanotdosh"
+
+msgid "Fly a game of Asteroids with a co-worker"
+msgstr "Hamkasbingiz bilan birga «Asteroidlar» o'ynang"
+
+#, c-sharp-format
+msgid "Destroy {0} rocks in Asteroids"
+msgstr "«Asteroidlar»da {0} ta toshni yo'q qiling"
+
+#. minesweeper and sudoku
+msgid "Minesweeper"
+msgstr "Sapyor"
+
+msgid "Sudoku"
+msgstr "Sudoku"
+
+msgid "click a cell to open it, right-click to flag a mine — open every safe cell"
+msgstr "katakni ochish uchun bosing, minaga o'ng tugma bilan bayroqcha qo'ying — barcha xavfsiz kataklarni oching"
+
+msgid "click a cell, then a digit on the pad — every row, column and box holds 1 to 9 once"
+msgstr "katakni, keyin raqamni bosing — har bir qator, ustun va kvadratda 1 dan 9 gacha raqamlar bir martadan bo'ladi"
+
+#, c-sharp-format
+msgid "Cleared in {0}s · click the face for a new board"
+msgstr "{0} soniyada tozalandi · yangi maydon uchun yuzchani bosing"
+
+msgid "Boom! · click the face for a new board"
+msgstr "Portladi! · yangi maydon uchun yuzchani bosing"
+
+#, c-sharp-format
+msgid "Mines left {0} · right-click flags"
+msgstr "Qolgan minalar {0} · o'ng tugma bayroqcha qo'yadi"
+
+msgid "Start on the marked cell · right-click flags a mine"
+msgstr "Belgilangan katakdan boshlang · o'ng tugma bayroqcha qo'yadi"
+
+msgid "Click a cell to start · right-click flags a mine"
+msgstr "Boshlash uchun katakni bosing · o'ng tugma bayroqcha qo'yadi"
+
+#, c-sharp-format
+msgid "{0}s"
+msgstr "{0} s"
+
+#, c-sharp-format
+msgid "Best {0}s"
+msgstr "Rekord {0} s"
+
+msgid "BOOM!"
+msgstr "PORTLADI!"
+
+msgid "click the face for a new board"
+msgstr "yangi maydon uchun yuzchani bosing"
+
+msgid "CLEARED!"
+msgstr "TOZALANDI!"
+
+#, c-sharp-format
+msgid "today's puzzle in {0}s"
+msgstr "kun jumbog'i {0} soniyada"
+
+#, c-sharp-format
+msgid "today's puzzle in {0}"
+msgstr "kun jumbog'i {0} da"
+
+msgid "LAN race"
+msgstr "Tarmoq poygasi"
+
+msgid "Daily puzzle"
+msgstr "Kun jumbog'i"
+
+msgid "Random board"
+msgstr "Tasodifiy"
+
+msgid "Beginner"
+msgstr "Boshlovchi"
+
+msgid "Intermediate"
+msgstr "O'rtacha"
+
+#, c-sharp-format
+msgid "Solved in {0} · New for another puzzle"
+msgstr "{0} da yechildi · boshqa jumboq uchun «Yangi»"
+
+msgid "Click a cell, then a digit on the pad · right-click clears"
+msgstr "Katakni, keyin raqamni bosing · o'ng tugma o'chiradi"
+
+msgid "Notes on: the pad writes pencil marks"
+msgstr "Eslatmalar yoqilgan: raqamlar qalamda yoziladi"
+
+#, c-sharp-format
+msgid "Filled {0}/81 · the same digit again clears the cell"
+msgstr "To'ldirildi {0}/81 · o'sha raqam yana bosilsa katak tozalanadi"
+
+msgid "Notes: on"
+msgstr "Eslatmalar: yoq"
+
+msgid "Notes: off"
+msgstr "Eslatmalar: o'ch"
+
+msgid "Erase"
+msgstr "O'chirish"
+
+msgid "New"
+msgstr "Yangi"
+
+msgid "Sweeper"
+msgstr "Sapyor"
+
+msgid "Clear a Minesweeper board"
+msgstr "«Sapyor»da maydonni tozalang"
+
+msgid "Bomb squad"
+msgstr "Sapyorlar otryadi"
+
+msgid "Clear an Expert Minesweeper board"
+msgstr "«Sapyor»da «Ekspert» maydonini tozalang"
+
+msgid "Quick sweep"
+msgstr "Tezkor sapyor"
+
+msgid "Clear a Beginner board in under 20 seconds"
+msgstr "«Boshlovchi» maydonini 20 soniyadan tez tozalang"
+
+msgid "Nine by nine"
+msgstr "To'qqizga to'qqiz"
+
+msgid "Solve a Sudoku"
+msgstr "Sudokuni yeching"
+
+msgid "Logician"
+msgstr "Mantiqchi"
+
+msgid "Solve a Hard Sudoku"
+msgstr "Qiyin sudokuni yeching"
+
+msgid "Daily puzzler"
+msgstr "Har kuni jumboq"
+
+msgid "Solve 7 daily Sudoku puzzles"
+msgstr "Kunning 7 ta sudokusini yeching"
+
+#, c-sharp-format
+msgid "Open {0} safe cells in Minesweeper"
+msgstr "«Sapyor»da {0} ta xavfsiz katakni oching"
+
+#, c-sharp-format
+msgid "Fill in {0} digits in Sudoku"
+msgstr "Sudokuga {0} ta raqam yozing"
+
+#. mancala
+msgid "Mancala"
+msgstr "Mankala"
+
+msgid "click one of your pits to sow its seeds — the last seed in your store plays again"
+msgstr "urug'larni ekish uchun o'z chuqurchangizni bosing — oxirgi urug' omboringizga tushsa, yana yurasiz"
+
+msgid "Game over · click the board to ask for a rematch"
+msgstr "O'yin tugadi · revansh so'rash uchun taxtani bosing"
+
+msgid "Game over · click the board for a new game"
+msgstr "O'yin tugadi · yangi o'yin uchun taxtani bosing"
+
+msgid "Sowing…"
+msgstr "Ekilmoqda…"
+
+msgid "Your turn · click one of your pits (the bottom row)"
+msgstr "Sizning navbatingiz · o'z chuqurchalaringizdan birini bosing (pastki qator)"
+
+msgid "Last seed in your store · go again!"
+msgstr "Oxirgi urug' omboringizda · yana yuring!"
+
+#, c-sharp-format
+msgid "{0} goes again"
+msgstr "{0} yana yuradi"
+
+msgid "Seed saver"
+msgstr "Urug' saqlovchi"
+
+msgid "Win a game of Mancala"
+msgstr "Mankalada bir o'yinni yuting"
+
+msgid "Master sower"
+msgstr "Ekish ustasi"
+
+msgid "Beat the Mancala CPU on Hard or Expert"
+msgstr "Mankalada kompyuterni «Qiyin» yoki «Ekspert» darajasida yuting"
+
+msgid "Big harvest"
+msgstr "Mo'l hosil"
+
+msgid "Capture 10 seeds with one move"
+msgstr "Bir yurishda 10 ta urug'ni oling"
+
+#, c-sharp-format
+msgid "Sow {0} seeds in Mancala"
+msgstr "Mankalada {0} ta urug' eking"
+
+#. blackjack
+msgid "Blackjack"
+msgstr "Blekjek"
+
+msgid "pick a bet and deal — get closer to 21 than the dealer without going over"
+msgstr "tikishni tanlang va tarqating — 21 dan oshirmay, dilerdan ko'ra unga yaqinroq to'plang"
+
+#, c-sharp-format
+msgid "Hand {0}/{1} · Hit, Stand or Double"
+msgstr "Tarqatish {0}/{1} · Yana, Yetarli yoki Ikki barobar"
+
+#, c-sharp-format
+msgid "Round over with {0} chips · click New round"
+msgstr "Raund tugadi, {0} ta fishka · «Yangi raund»ni bosing"
+
+#, c-sharp-format
+msgid "Hand {0}/{1} · pick a bet and Deal"
+msgstr "Tarqatish {0}/{1} · tikishni tanlang va «Tarqatish»ni bosing"
+
+#, c-sharp-format
+msgid "{0} chips"
+msgstr "{0} fishka"
+
+msgid "BLACKJACK!"
+msgstr "BLEKJEK!"
+
+#, c-sharp-format
+msgid "+{0} chips"
+msgstr "+{0} fishka"
+
+msgid "DEALER BUSTS!"
+msgstr "DILER OSHIRIB YUBORDI!"
+
+msgid "PUSH"
+msgstr "DURANG"
+
+msgid "your bet comes back"
+msgstr "tikishingiz qaytadi"
+
+#, c-sharp-format
+msgid "−{0} chips"
+msgstr "−{0} fishka"
+
+msgid "DEALER WINS"
+msgstr "DILER YUTDI"
+
+#, c-sharp-format
+msgid "{0} chips after ten hands"
+msgstr "o'nta tarqatishdan keyin {0} fishka"
+
+msgid "DEALER STANDS ON SOFT 17 · BLACKJACK PAYS 3 TO 2"
+msgstr "DILER YUMSHOQ 17 DA TO'XTAYDI · BLEKJEK 3 GA 2 TO'LAYDI"
+
+msgid "Dealer"
+msgstr "Diler"
+
+#, c-sharp-format
+msgid "Dealer {0}"
+msgstr "Diler {0}"
+
+#, c-sharp-format
+msgid "You {0}"
+msgstr "Siz {0}"
+
+#, c-sharp-format
+msgid "Chips {0} · hand {1}/{2}"
+msgstr "Fishkalar {0} · tarqatish {1}/{2}"
+
+msgid "Deal"
+msgstr "Tarqatish"
+
+msgid "Hit"
+msgstr "Yana"
+
+msgid "Stand"
+msgstr "Yetarli"
+
+msgid "Double"
+msgstr "Ikki barobar"
+
+msgid "New round"
+msgstr "Yangi raund"
+
+msgid "Natural"
+msgstr "Tabiiy"
+
+msgid "Get a blackjack"
+msgstr "Blekjek to'plang"
+
+msgid "High roller"
+msgstr "Katta tikuvchi"
+
+msgid "Finish a Blackjack round with 250 chips or more"
+msgstr "Blekjek raundini 250 yoki undan ko'p fishka bilan tugating"
+
+msgid "Card sharp"
+msgstr "Karta ustasi"
+
+msgid "Win 100 hands of Blackjack"
+msgstr "Blekjekda 100 ta tarqatishni yuting"
+
+#, c-sharp-format
+msgid "Win {0} hands of Blackjack"
+msgstr "Blekjekda {0} ta tarqatishni yuting"
+
+#. curling
+msgid "Curling"
+msgstr "Kerling"
+
+msgid "drag back from your stone and let go — hold the mouse ahead of it to sweep"
+msgstr "toshingizdan orqaga torting va qo'yib yuboring — muzni ishqalash uchun sichqonchani uning oldida ushlab turing"
+
+msgid "Game over · click the ice to ask for a rematch"
+msgstr "O'yin tugadi · revansh so'rash uchun muzni bosing"
+
+msgid "Game over · click the ice for a new game"
+msgstr "O'yin tugadi · yangi o'yin uchun muzni bosing"
+
+msgid "Hold the mouse on the ice ahead of your stone to sweep"
+msgstr "Muzni ishqalash uchun sichqonchani toshingiz oldida ushlab turing"
+
+#, c-sharp-format
+msgid "End {0}/{1} · {2} stones left · drag back from your stone and let go"
+msgstr "End {0}/{1} · {2} ta tosh qoldi · toshdan orqaga torting va qo'yib yuboring"
+
+#, c-sharp-format
+msgid "End {0}/{1} · {2} to throw"
+msgstr "End {0}/{1} · {2} otadi"
+
+msgid "BLANK END"
+msgstr "BO'SH END"
+
+msgid "no stone in the house"
+msgstr "uyda tosh yo'q"
+
+#, c-sharp-format
+msgid "YOU SCORE {0}"
+msgstr "SIZGA {0} OCHKO"
+
+#, c-sharp-format
+msgid "{0} SCORES {1}"
+msgstr "{0}: +{1}"
+
+msgid "Hurry hard!"
+msgstr "Kuchliroq ishqalang!"
+
+msgid "Win a game of Curling"
+msgstr "Kerlingda bir o'yinni yuting"
+
+msgid "Skipper"
+msgstr "Skip"
+
+msgid "Beat the Curling CPU on Hard or Expert"
+msgstr "Kerlingda kompyuterni «Qiyin» yoki «Ekspert» darajasida yuting"
+
+msgid "Big end"
+msgstr "Katta end"
+
+msgid "Score 3 or more in one end of Curling"
+msgstr "Kerlingda bir endda 3 yoki undan ko'p ochko oling"
+
+#, c-sharp-format
+msgid "Throw {0} stones in Curling"
+msgstr "Kerlingda {0} ta tosh oting"
+
+#. paper planes
+msgid "Paper Planes"
+msgstr "Qog'oz samolyotlar"
+
+msgid "drag back from the paper plane and let go — warm air above windows lifts it"
+msgstr "samolyotchadan orqaga torting va qo'yib yuboring — oynalar ustidagi iliq havo uni ko'taradi"
+
+#, c-sharp-format
+msgid "Round over · {0} points · click the plane for another round"
+msgstr "Raund tugadi · {0} ochko · yangi raund uchun samolyotchani bosing"
+
+msgid "Gliding…"
+msgstr "Parvoz qilmoqda…"
+
+#, c-sharp-format
+msgid "Throw {0}/{1} · drag back from the plane and let go"
+msgstr "Otish {0}/{1} · samolyotchadan orqaga torting va qo'yib yuboring"
+
+msgid "CRUMPLED!"
+msgstr "G'IJIMLANDI!"
+
+#, c-sharp-format
+msgid "{0} m · half points"
+msgstr "{0} m · yarim ochko"
+
+msgid "PERFECT LANDING!"
+msgstr "A'LO QO'NISH!"
+
+#, c-sharp-format
+msgid "{0} m +{1}"
+msgstr "{0} m +{1}"
+
+#, c-sharp-format
+msgid "{0} m"
+msgstr "{0} m"
+
+#, c-sharp-format
+msgid "{0} points in three throws"
+msgstr "uchta otishda {0} ochko"
+
+msgid "Paper pilot"
+msgstr "Qog'oz uchuvchi"
+
+msgid "Throw 50 paper planes"
+msgstr "50 ta qog'oz samolyotcha uchiring"
+
+msgid "Long haul"
+msgstr "Uzoq parvoz"
+
+msgid "Fly a paper plane 120 metres"
+msgstr "Qog'oz samolyotchani 120 metrga uchiring"
+
+msgid "Touchdown"
+msgstr "Qo'nish"
+
+msgid "Land on the strip 5 times"
+msgstr "Uchish yo'lagiga 5 marta qo'ning"
+
+#, c-sharp-format
+msgid "Throw {0} paper planes"
+msgstr "{0} ta qog'oz samolyotcha uchiring"
+
+#. ping-pong cups
+msgid "Ping-Pong Cups"
+msgstr "Stakanga to'p"
+
+msgid "grab the ball, flick it and let go — drop it into the cups; a bounce shot counts double"
+msgstr "to'pni ushlang, keskin otib qo'yib yuboring — stakanlarga tushiring; sakrab tushgan to'p ikki barobar hisoblanadi"
+
+#, c-sharp-format
+msgid "Round over · {0} cups · click the ball for another round"
+msgstr "Raund tugadi · {0} ta stakan · yangi raund uchun to'pni bosing"
+
+#, c-sharp-format
+msgid "Balls {0} · cups {1} · flick the ball into a cup"
+msgstr "To'plar {0} · stakanlar {1} · to'pni stakanga oting"
+
+#, c-sharp-format
+msgid "BOUNCE SHOT! +{0}"
+msgstr "SAKRAB TUSHDI! +{0}"
+
+msgid "RACK CLEARED!"
+msgstr "HAMMA STAKANLAR!"
+
+#, c-sharp-format
+msgid "+{0} for the balls left · a new rack"
+msgstr "qolgan to'plar uchun +{0} · yangi stakanlar"
+
+#, c-sharp-format
+msgid "{0} cups · {1} points"
+msgstr "{0} ta stakan · {1} ochko"
+
+msgid "Splash"
+msgstr "Shalop"
+
+msgid "Sink 50 cups"
+msgstr "50 ta stakanga tushiring"
+
+msgid "Off the table"
+msgstr "Sakratib"
+
+msgid "Sink a bounce shot"
+msgstr "To'pni sakratib stakanga tushiring"
+
+msgid "Clean rack"
+msgstr "Toza ish"
+
+msgid "Clear a rack of six in six throws"
+msgstr "Oltita stakanni oltita otishda tushiring"
+
+#, c-sharp-format
+msgid "Sink {0} cups in Ping-Pong Cups"
+msgstr "«Stakanga to'p»da {0} ta stakanga tushiring"
+
+#. bingo of work
+msgid "Bingo of Work"
+msgstr "Ish bingosi"
+
+msgid "squares dab themselves as you work and play — three in a line is a bingo"
+msgstr "katakchalar ishlab-o'ynab turganingizda o'zi belgilanadi — bir qatorda uchtasi bingo"
+
+msgid "FULL HOUSE! · a new card is on its way"
+msgstr "BUTUN KARTA! · yangisi yo'lda"
+
+#, c-sharp-format
+msgid "Squares dab themselves as you play · click a game square to play it · right-click swaps one ({0} left)"
+msgstr "Katakchalar o'ynaganingizda o'zi belgilanadi · o'yinli katakchani bossangiz, o'sha o'yin ochiladi · o'ng tugma bittasini almashtiradi ({0} ta qoldi)"
+
+#, c-sharp-format
+msgid "Bingos {0}"
+msgstr "Bingolar {0}"
+
+msgid "FREE"
+msgstr "BONUS"
+
+msgid "FULL HOUSE!"
+msgstr "BUTUN KARTA!"
+
+msgid "Bingo of Work · a new card is ready"
+msgstr "Ish bingosi · yangi karta tayyor"
+
+msgid "BINGO!"
+msgstr "BINGO!"
+
+msgid "a new card is on its way"
+msgstr "yangi karta yo'lda"
+
+msgid "No swaps left on this card"
+msgstr "Bu kartada almashtirish qolmadi"
+
+msgid "Nothing to swap it for"
+msgstr "Almashtirishga hech narsa yo'q"
+
+msgid "BINGO"
+msgstr "BINGO"
+
+msgid "of Work"
+msgstr "ishda"
+
+msgid "Throw this card away?"
+msgstr "Kartani tashlaysizmi?"
+
+msgid "New card"
+msgstr "Yangi karta"
+
+msgid "Be playing when Claude finishes"
+msgstr "Claude tugatganda o'ynab turing"
+
+msgid "Be playing when a --while command finishes"
+msgstr "--while buyrug'i tugaganda o'ynab turing"
+
+msgid "Beat the computer in a race"
+msgstr "Poygada kompyuterni yuting"
+
+msgid "Send a co-worker a reaction"
+msgstr "Hamkasbingizga reaksiya yuboring"
+
+msgid "Send a co-worker a chat message"
+msgstr "Hamkasbingizga chatda yozing"
+
+#, c-sharp-format
+msgid "Pet the pet {0} times"
+msgstr "Uy hayvonini {0} marta silang"
+
+msgid "Give the pet a treat"
+msgstr "Uy hayvoniga shirinlik bering"
+
+msgid "Play fetch with the pet"
+msgstr "Uy hayvoni bilan «olib kel» o'ynang"
+
+msgid "Finish the daily challenge"
+msgstr "Kunlik vazifani bajaring"
+
+msgid "Unlock an achievement"
+msgstr "Yutuq oching"
+
+#, c-sharp-format
+msgid "Play for {0} minutes"
+msgstr "{0} daqiqa o'ynang"
+
+msgid "Play before 10 AM"
+msgstr "Soat 10:00 gacha o'ynang"
+
+msgid "Play at lunchtime (12–2 PM)"
+msgstr "Tushlikda o'ynang (12:00–14:00)"
+
+msgid "Play after 6 PM"
+msgstr "Soat 18:00 dan keyin o'ynang"
+
+msgid "Bingo!"
+msgstr "Bingo!"
+
+msgid "Get three in a line on a Bingo of Work card"
+msgstr "«Ish bingosi» kartasida bir qatorga uchtasini to'plang"
+
+msgid "Full house"
+msgstr "Butun karta"
+
+msgid "Dab all nine squares of a Bingo of Work card"
+msgstr "«Ish bingosi» kartasining to'qqizala katakchasini belgilang"
+
+msgid "Office regular"
+msgstr "Ofis doimiysi"
+
+msgid "Get 10 bingos"
+msgstr "10 marta bingo qiling"
+
+#, c-sharp-format
+msgid "Dab {0} squares in Bingo of Work"
+msgstr "«Ish bingosi»da {0} ta katakchani belgilang"
+
+#. kite
+msgid "Kite"
+msgstr "Varrak"
+
+msgid "click the kite — the string follows your cursor; pull to climb, catch the clouds, dodge the birds"
+msgstr "varrakni bosing — ip kursoringizga ergashadi; balandlash uchun torting, bulutlarni tuting, qushlardan qoching"
+
+#, c-sharp-format
+msgid "{0}s · clouds {1} · pull the string to climb"
+msgstr "{0} s · bulutlar {1} · balandlash uchun ipni torting"
+
+#, c-sharp-format
+msgid "Flight over · {0} clouds · click the kite to fly again"
+msgstr "Parvoz tugadi · {0} ta bulut · yana uchirish uchun varrakni bosing"
+
+msgid "Click the kite to fly it — the string follows your cursor"
+msgstr "Uchirish uchun varrakni bosing — ip kursoringizga ergashadi"
+
+msgid "It hit the ground"
+msgstr "Yerga urildi"
+
+msgid "Snagged on a window"
+msgstr "Oynaga ilinib qoldi"
+
+msgid "A bird flew into it"
+msgstr "Unga qush urilib ketdi"
+
+#, c-sharp-format
+msgid "{0} in a row!"
+msgstr "Ketma-ket {0} ta!"
+
+msgid "FLIGHT OVER"
+msgstr "PARVOZ TUGADI"
+
+#, c-sharp-format
+msgid "{0} clouds · {1} stars · {2} points"
+msgstr "{0} ta bulut · {1} ta yulduz · {2} ochko"
+
+msgid "Head in the clouds"
+msgstr "Bulutlar orasida"
+
+msgid "Catch 100 clouds with the kite"
+msgstr "Varrak bilan 100 ta bulut tuting"
+
+msgid "Steady hands"
+msgstr "Mustahkam qo'l"
+
+msgid "Fly a whole minute without a crash"
+msgstr "Bir daqiqa davomida yiqilmasdan uching"
+
+msgid "High flyer"
+msgstr "Baland parvoz"
+
+msgid "Score 250 in one kite flight"
+msgstr "Varrakning bitta parvozida 250 ochko to'plang"
+
+#, c-sharp-format
+msgid "Catch {0} clouds with the Kite"
+msgstr "«Varrak»da {0} ta bulut tuting"
+
+#. backgammon
+msgid "Backgammon"
+msgstr "Nard"
+
+msgid "click ROLL, then a checker and where it goes — bring all fifteen home and bear them off first"
+msgstr "«TASHLASH»ni bosing, so'ng toshni va uni qayerga qo'yishni — o'n beshtasini uyga olib kelib, birinchi bo'lib chiqaring"
+
+#, c-sharp-format
+msgid "Your turn · click ROLL · pips {0}–{1}"
+msgstr "Sizning navbatingiz · «TASHLASH»ni bosing · qolgan yo'l {0}–{1}"
+
+msgid "Your move · click a checker, then where it goes"
+msgstr "Sizning yurishingiz · toshni, so'ng uni qayerga qo'yishni bosing"
+
+msgid "No moves this time"
+msgstr "Bu safar yurish yo'q"
+
+#, c-sharp-format
+msgid "{0} can't move"
+msgstr "{0} yura olmaydi"
+
+msgid "Hit!"
+msgstr "Urildi!"
+
+#, c-sharp-format
+msgid "{0} hits!"
+msgstr "{0} urib oldi!"
+
+msgid "a backgammon: triple"
+msgstr "bekgammon: uch barobar"
+
+msgid "a gammon: double"
+msgstr "mars: ikki barobar"
+
+#, c-sharp-format
+msgid "{0}–{1} off"
+msgstr "chiqarildi {0}–{1}"
+
+msgid "ROLL"
+msgstr "TASHLASH"
+
+msgid "Borne off"
+msgstr "Hammasi uyda"
+
+msgid "Win a game of Backgammon"
+msgstr "Nardda bir o'yinni yuting"
+
+msgid "Gammon"
+msgstr "Mars"
+
+msgid "Win before the other side bears off a single checker"
+msgstr "Raqib bitta ham tosh chiqarmasdan yuting"
+
+msgid "Backgammon master"
+msgstr "Nard ustasi"
+
+msgid "Beat the Hard computer at Backgammon"
+msgstr "Nardda «Qiyin» darajadagi kompyuterni yuting"
+
+#, c-sharp-format
+msgid "Bear off {0} checkers in Backgammon"
+msgstr "«Nard»da {0} ta tosh chiqaring"
+
+#. dominoes
+msgid "Dominoes"
+msgstr "Domino"
+
+msgid "click a tile that fits an end of the line on the taskbar — nothing fits? draw from the boneyard"
+msgstr "vazifalar panelidagi zanjir uchiga mos toshni bosing — hech biri mos kelmasa, bozordan oling"
+
+msgid "Match over · click your tiles to ask for a rematch"
+msgstr "O'yin tugadi · revansh so'rash uchun toshlaringizni bosing"
+
+msgid "Match over · click your tiles for a new match"
+msgstr "O'yin tugadi · yangi o'yin uchun toshlaringizni bosing"
+
+#, c-sharp-format
+msgid "Round over · waiting for {0} to deal"
+msgstr "Raund tugadi · {0} tarqatishini kutyapmiz"
+
+msgid "Round over · click your tiles for the next round"
+msgstr "Raund tugadi · keyingi raund uchun toshlaringizni bosing"
+
+msgid "Nothing fits · click the boneyard to draw"
+msgstr "Hech biri mos emas · tosh olish uchun bozorni bosing"
+
+#, c-sharp-format
+msgid "Your turn · lay a tile that fits an end · first to {0}"
+msgstr "Sizning navbatingiz · uchiga mos toshni qo'ying · {0} gacha o'ynaymiz"
+
+msgid "It doesn't fit an end"
+msgstr "Hech bir uchiga mos emas"
+
+msgid "Nothing fits · you pass"
+msgstr "Hech biri mos emas · navbatni o'tkazasiz"
+
+#, c-sharp-format
+msgid "{0} passes"
+msgstr "{0} navbatni o'tkazadi"
+
+msgid "DOMINO!"
+msgstr "DOMINO!"
+
+msgid "BLOCKED"
+msgstr "YOPILDI"
+
+msgid "a tie: nobody scores"
+msgstr "durang: hech kim ochko olmaydi"
+
+#, c-sharp-format
+msgid "you score {0}"
+msgstr "siz {0} ochko olasiz"
+
+#, c-sharp-format
+msgid "{0} scores {1}"
+msgstr "{0} {1} ochko oladi"
+
+msgid "Your tiles"
+msgstr "Toshlaringiz"
+
+#, c-sharp-format
+msgid "{0} had {1} pips"
+msgstr "{0}da {1} ochko qoldi"
+
+#, c-sharp-format
+msgid "{0} · {1} tiles"
+msgstr "{0} · {1} ta tosh"
+
+msgid "Domino!"
+msgstr "Domino!"
+
+msgid "Lay your last tile and go out"
+msgstr "Oxirgi toshingizni qo'yib chiqing"
+
+msgid "First to fifty"
+msgstr "Birinchi bo'lib ellikka"
+
+msgid "Win a match of Dominoes"
+msgstr "Dominoda bir o'yinni yuting"
+
+msgid "Stone cold"
+msgstr "Sovuqqon"
+
+msgid "Beat the Hard computer in a Dominoes match"
+msgstr "Dominoda «Qiyin» darajadagi kompyuterni yuting"
+
+#, c-sharp-format
+msgid "Lay {0} tiles in Dominoes"
+msgstr "«Domino»da {0} ta tosh qo'ying"
+
+#. perevodnoy
+msgid "Beat each card, lay one of the same rank to pass it on, or take"
+msgstr "Har bir kartani uring, o'tkazish uchun xuddi shu qiymatdagi kartani qo'ying yoki oling"
+
+msgid "Variant: Perevodnoy (pass it on)"
+msgstr "Turi: o'tkazma"
+
+msgid "Variant: Podkidnoy (throw-in)"
+msgstr "Turi: tashlama"
+
+msgid "Not me!"
+msgstr "Men emas!"
+
+msgid "Pass an attack on 10 times in Perevodnoy"
+msgstr "O'tkazma durakda hujumni 10 marta o'tkazing"
+
+#. salvo
+#, c-sharp-format
+msgid "Your salvo · {0} shots left · click the enemy grid"
+msgstr "Sizning zalpingiz · {0} ta o'q qoldi · dushman maydonini bosing"
+
+msgid "Salvo rules: one shot for each of your ships afloat"
+msgstr "Zalp qoidalari: suzib yurgan har bir kemangiz uchun bitta o'q"
+
+msgid "Classic rules: a hit shoots again"
+msgstr "Klassik qoidalar: tekkizsangiz yana otasiz"
+
+msgid "click to switch"
+msgstr "almashtirish uchun bosing"
+
+msgid "the host picks"
+msgstr "o'yin egasi tanlaydi"
+
+msgid "Broadside"
+msgstr "Bort zalpi"
+
+msgid "Win a game of Sea Battle with salvo rules"
+msgstr "Dengiz jangida zalp qoidalari bilan yuting"
+
+#. window jenga
+msgid "Window Jenga"
+msgstr "Oynadagi Jenga"
+
+msgid "drag a block out of the tower slowly, then lay it on top — don't let the weight lean past what is left"
+msgstr "minoradan bir g'ishtchani sekin torting va tepasiga qo'ying — og'irlik qolgan g'ishtchalardan chiqib ketmasin"
+
+msgid "The tower fell · click its base for a new one"
+msgstr "Minora qulab tushdi · yangisi uchun uning asosini bosing"
+
+msgid "Time's up and it still stands · click its base for a new one"
+msgstr "Vaqt tugadi, minora esa turibdi · yangisi uchun uning asosini bosing"
+
+msgid "Click a place on top to lay the block"
+msgstr "G'ishtchani qo'yish uchun tepadagi joyni bosing"
+
+#, c-sharp-format
+msgid "{0}s · drag a block out slowly, then lay it on top"
+msgstr "{0} s · g'ishtchani sekin torting va tepasiga qo'ying"
+
+msgid "Drag a block out slowly, then click the top to lay it"
+msgstr "G'ishtchani sekin torting, so'ng qo'yish uchun tepani bosing"
+
+msgid "STILL STANDING!"
+msgstr "HALI TURIBDI!"
+
+#, c-sharp-format
+msgid "{0} blocks moved"
+msgstr "{0} ta g'ishtcha ko'chirildi"
+
+msgid "CRASH!"
+msgstr "QULADI!"
+
+msgid "Careful now"
+msgstr "Ehtiyot bo'ling"
+
+msgid "Move 10 blocks in one Window Jenga tower"
+msgstr "«Oynadagi Jenga»ning bitta minorasida 10 ta g'ishtchani ko'chiring"
+
+msgid "Still standing"
+msgstr "Hali turibdi"
+
+msgid "Keep a Window Jenga tower up until the time runs out"
+msgstr "«Oynadagi Jenga» minorasini vaqt tugaguncha ushlab turing"
+
+msgid "Master builder"
+msgstr "Usta quruvchi"
+
+msgid "Move 200 blocks in Window Jenga"
+msgstr "«Oynadagi Jenga»da 200 ta g'ishtchani ko'chiring"
+
+#, c-sharp-format
+msgid "Move {0} blocks in Window Jenga"
+msgstr "«Oynadagi Jenga»da {0} ta g'ishtchani ko'chiring"
+
+#. rope bridge
+msgid "Rope Bridge"
+msgstr "Arqon ko'prik"
+
+msgid "drag planks onto the rope before the interns reach the gap — and replace the cracked ones"
+msgstr "stajyorlar jarlikka yetguncha taxtalarni arqonga torting — yorilganlarini esa almashtiring"
+
+#, c-sharp-format
+msgid "{0} of {1} across · click the planks for another round"
+msgstr "{1} tadan {0} tasi o'tdi · yangi raund uchun taxtalarni bosing"
+
+msgid "Drag planks onto the rope before the interns reach the gap"
+msgstr "Stajyorlar jarlikka yetguncha taxtalarni arqonga torting"
+
+#, c-sharp-format
+msgid "Interns {0} of {1} · worn planks crack: replace them in time"
+msgstr "Stajyorlar {1} tadan {0} · eskigan taxtalar yoriladi — ularni o'z vaqtida almashtiring"
+
+msgid "No planks yet · more are coming"
+msgstr "Hozircha taxta yo'q · tez orada keladi"
+
+msgid "Someone is standing on it"
+msgstr "Uning ustida kimdir turibdi"
+
+msgid "Aaah!"
+msgstr "Voy-y-y!"
+
+msgid "NOBODY FELL!"
+msgstr "HECH KIM YIQILMADI!"
+
+#, c-sharp-format
+msgid "{0} of {1} across"
+msgstr "{1} tadan {0} tasi o'tdi"
+
+msgid "Safe crossing"
+msgstr "Xavfsiz o'tish"
+
+msgid "Get 50 interns across the Rope Bridge"
+msgstr "Arqon ko'prikdan 50 ta stajyorni o'tkazing"
+
+msgid "Nobody fell"
+msgstr "Hech kim yiqilmadi"
+
+msgid "Get all fifteen interns of a round across"
+msgstr "Raunddagi o'n besh stajyorning hammasini o'tkazing"
+
+msgid "Chief engineer"
+msgstr "Bosh muhandis"
+
+msgid "Lay 200 planks on the Rope Bridge"
+msgstr "Arqon ko'prikka 200 ta taxta qo'ying"
+
+#, c-sharp-format
+msgid "Get {0} interns across the Rope Bridge"
+msgstr "«Arqon ko'prik»dan {0} ta stajyorni o'tkazing"
+
+#. ---- at work (1.8.5): breaks, meetings, focus, timers, notes, invites, downloads
+msgid "At work"
+msgstr "Ishda"
+
+msgid "Today at work…"
+msgstr "Bugun ishda…"
+
+msgid "Today"
+msgstr "Bugun"
+
+msgid "Meeting"
+msgstr "Uchrashuv"
+
+msgid "Meetings"
+msgstr "Uchrashuvlar"
+
+msgid "Focus"
+msgstr "Fokus"
+
+msgid "Breaks"
+msgstr "Tanaffuslar"
+
+msgid "Timer"
+msgstr "Taymer"
+
+msgid "Reminder"
+msgstr "Eslatma"
+
+msgid "Later"
+msgstr "Keyinroq"
+
+msgid "Stop"
+msgstr "To'xtatish"
+
+msgid "Cancel"
+msgstr "Bekor qilish"
+
+msgid "Now"
+msgstr "Hozir"
+
+msgid "Calendar"
+msgstr "Kalendar"
+
+msgid "Downloads"
+msgstr "Yuklab olishlar"
+
+#, c-sharp-format
+msgid "{0} minutes"
+msgstr "{0} daqiqa"
+
+#, c-sharp-format
+msgid "{0} h {1} min"
+msgstr "{0} soat {1} daq"
+
+#, c-sharp-format
+msgid "{0} min"
+msgstr "{0} daq"
+
+#, c-sharp-format
+msgid "{0} · until {1}"
+msgstr "{0} · {1} gacha"
+
+#, c-sharp-format
+msgid "{0} in {1}"
+msgstr "{0} · {1} qoldi"
+
+#, c-sharp-format
+msgid "Focus {0}/{1} · {2}"
+msgstr "Fokus {0}/{1} · {2}"
+
+#, c-sharp-format
+msgid "Break · {0}"
+msgstr "Tanaffus · {0}"
+
+#, c-sharp-format
+msgid "Waiting for {0} · {1}"
+msgstr "{0} kutilmoqda · {1}"
+
+#, c-sharp-format
+msgid "Focusing · {0} left"
+msgstr "Fokus · {0} qoldi"
+
+#, c-sharp-format
+msgid "On a break · {0} left"
+msgstr "Tanaffus · {0} qoldi"
+
+#, c-sharp-format
+msgid "In {0} until {1}"
+msgstr "Hozir: {0}, {1} gacha"
+
+#, c-sharp-format
+msgid "Next: {0} at {1}"
+msgstr "Keyingisi: {0}, soat {1} da"
+
+#, c-sharp-format
+msgid "At the computer today: {0}"
+msgstr "Bugun kompyuter oldida: {0}"
+
+#, c-sharp-format
+msgid "Start a {0}-minute focus block"
+msgstr "{0} daqiqalik fokusni boshlash"
+
+msgid "End the focus block"
+msgstr "Fokusni tugatish"
+
+#, c-sharp-format
+msgid "{0}-minute breaks"
+msgstr "{0} daqiqalik tanaffuslar"
+
+msgid "Start the next block after the break"
+msgstr "Tanaffusdan keyin keyingi blokni boshlash"
+
+msgid "Hold chat and invites while focusing"
+msgstr "Fokus paytida suhbat va takliflarni kechiktirish"
+
+msgid "Cancel the timers"
+msgstr "Taymerlarni bekor qilish"
+
+msgid "New sticky note…"
+msgstr "Yangi eslatma qog'ozi…"
+
+msgid "Breathe for a minute"
+msgstr "Bir daqiqa nafas mashqi"
+
+msgid "Stretch now"
+msgstr "Hozir badanni cho'zish"
+
+msgid "I drank a glass of water"
+msgstr "Bir stakan suv ichdim"
+
+msgid "Look away every 20 minutes (20-20-20)"
+msgstr "Har 20 daqiqada uzoqqa qarash (20-20-20)"
+
+msgid "No stretch breaks"
+msgstr "Mashqsiz"
+
+#, c-sharp-format
+msgid "Stretch after {0} minutes at the computer"
+msgstr "Kompyuter oldida {0} daqiqadan keyin mashq"
+
+msgid "No water reminders"
+msgstr "Suv eslatmalarisiz"
+
+#, c-sharp-format
+msgid "Water every {0} minutes"
+msgstr "Har {0} daqiqada suv"
+
+msgid "Connect a calendar…"
+msgstr "Kalendarni ulash…"
+
+msgid "Calendar…"
+msgstr "Kalendar…"
+
+msgid "Only a minute before"
+msgstr "Faqat bir daqiqa oldin"
+
+#, c-sharp-format
+msgid "{0} minutes before"
+msgstr "{0} daqiqa oldin"
+
+msgid "Pause the game a minute before"
+msgstr "Bir daqiqa oldin o'yinni to'xtatish"
+
+msgid "Hide the overlay during meetings"
+msgstr "Uchrashuv paytida o'yinni yashirish"
+
+msgid "No invite out"
+msgstr "Yuborilgan taklif yo'q"
+
+msgid "Invites from co-workers"
+msgstr "Hamkasblardan takliflar"
+
+msgid "Invite co-workers"
+msgstr "Hamkasblarni taklif qilish"
+
+msgid "End of the day"
+msgstr "Ish kuni oxiri"
+
+msgid "Tell me when downloads finish"
+msgstr "Yuklab olish tugaganda xabar berish"
+
+msgid "Hide while presenting or in full screen"
+msgstr "Taqdimot va to'liq ekran rejimida yashirish"
+
+msgid "Coffee"
+msgstr "Qahva"
+
+msgid "Lunch"
+msgstr "Tushlik"
+
+msgid "A walk"
+msgstr "Sayr"
+
+msgid "I drank a glass"
+msgstr "Bir stakan ichdim"
+
+msgid "See you tomorrow"
+msgstr "Ertagacha"
+
+msgid "EYE BREAK · 20-20-20"
+msgstr "KO'Z UCHUN TANAFFUS · 20-20-20"
+
+msgid "Look far away"
+msgstr "Uzoqqa qarang"
+
+msgid "find something at least 6 metres (20 feet) off, out of a window if you can, and rest your eyes on it"
+msgstr "kamida 6 metr uzoqdagi narsani toping, iloji bo'lsa derazadan tashqarida, va ko'zingizni unga qadang"
+
+#, c-sharp-format
+msgid "BREATHING · ROUND {0} OF {1}"
+msgstr "NAFAS · DAVRA {0}/{1}"
+
+msgid "in, hold, out, hold: four seconds each, slowly, through the nose"
+msgstr "nafas oling, to'xtang, chiqaring, to'xtang: har biri to'rt soniya, sekin, burun orqali"
+
+msgid "Breathe in"
+msgstr "Nafas oling"
+
+msgid "Hold"
+msgstr "Ushlab turing"
+
+msgid "Breathe out"
+msgstr "Nafas chiqaring"
+
+#, c-sharp-format
+msgid "STRETCH · {0} OF {1}"
+msgstr "MASHQ · {0}/{1}"
+
+msgid "Roll your shoulders"
+msgstr "Yelkalaringizni aylantiring"
+
+msgid "slowly backwards, big circles"
+msgstr "sekin orqaga, katta doiralar bilan"
+
+msgid "Tilt your head"
+msgstr "Boshingizni egib turing"
+
+msgid "ear towards the shoulder, one side and then the other"
+msgstr "qulog'ingizni yelkaga, avval bir tomonga, keyin boshqasiga"
+
+msgid "Stretch your wrists"
+msgstr "Bilaklaringizni cho'zing"
+
+msgid "arm out, palm up, pull the fingers back gently"
+msgstr "qo'lni oldinga, kaftni yuqoriga, barmoqlarni sekin orqaga torting"
+
+msgid "Stand up and reach"
+msgstr "Turing va cho'ziling"
+
+msgid "hands up high, then let them fall"
+msgstr "qo'llarni baland ko'taring, so'ng tushiring"
+
+msgid "WATER"
+msgstr "SUV"
+
+msgid "Time for a glass of water"
+msgstr "Bir stakan suv ichish vaqti"
+
+msgid "a little and often keeps the headache and the afternoon slump away"
+msgstr "oz-ozdan va tez-tez ichsangiz, bosh og'rimaydi va tushdan keyin uyqu bosmaydi"
+
+msgid "END OF THE DAY"
+msgstr "KUN OXIRI"
+
+msgid "That's the day!"
+msgstr "Kun ham tugadi!"
+
+msgid "well done · leave the rest for tomorrow"
+msgstr "barakalla · qolganini ertaga qoldiring"
+
+#, c-sharp-format
+msgid "At the computer: {0}"
+msgstr "Kompyuter oldida: {0}"
+
+#, c-sharp-format
+msgid "Focus blocks: {0}"
+msgstr "Fokus bloklari: {0}"
+
+#, c-sharp-format
+msgid "Meetings: {0}"
+msgstr "Uchrashuvlar: {0}"
+
+#, c-sharp-format
+msgid "Breaks: {0} for the eyes, {1} stretches"
+msgstr "Tanaffuslar: ko'z uchun {0}, mashq {1}"
+
+#, c-sharp-format
+msgid "Breathing minutes: {0}"
+msgstr "Nafas daqiqalari: {0}"
+
+#, c-sharp-format
+msgid "Water: {0} glasses"
+msgstr "Suv: {0} stakan"
+
+#, c-sharp-format
+msgid "Played: {0}"
+msgstr "O'yin: {0}"
+
+#, c-sharp-format
+msgid "At the computer today {0} · focus blocks {1} · breaks {2} · water {3}"
+msgstr "Bugun kompyuter oldida {0} · fokus bloklari {1} · tanaffuslar {2} · suv {3}"
+
+msgid "New sticky note"
+msgstr "Yangi eslatma qog'ozi"
+
+msgid "Sticky note"
+msgstr "Eslatma qog'ozi"
+
+msgid "Call the bank back · send the report · buy milk"
+msgstr "Bankka qayta qo'ng'iroq · hisobotni yuborish · sut olish"
+
+msgid "No reminder"
+msgstr "Eslatmasiz"
+
+#, c-sharp-format
+msgid "At the end of the day ({0})"
+msgstr "Kun oxirida ({0})"
+
+#, c-sharp-format
+msgid "In {0} minutes"
+msgstr "{0} daqiqadan keyin"
+
+#, c-sharp-format
+msgid "In {0} hours"
+msgstr "{0} soatdan keyin"
+
+#, c-sharp-format
+msgid "As set ({0})"
+msgstr "Avvalgidek ({0})"
+
+msgid "Take it down"
+msgstr "Olib tashlash"
+
+msgid "Remind me"
+msgstr "Eslatish"
+
+msgid "Done: take the note down"
+msgstr "Bajarildi: eslatmani olib tashlash"
+
+#, c-sharp-format
+msgid "{0} notes is the most"
+msgstr "Ko'pi bilan {0} ta eslatma"
+
+msgid "tick one off to make room"
+msgstr "joy ochish uchun bittasini bajarilgan deb belgilang"
+
+#, c-sharp-format
+msgid "the calendar answered {0}"
+msgstr "kalendar {0} deb javob berdi"
+
+msgid "the calendar is too big"
+msgstr "kalendar juda katta"
+
+msgid "no such file"
+msgstr "bunday fayl yo'q"
+
+msgid "No meetings in it. Is it an .ics calendar?"
+msgstr "Uchrashuvlar topilmadi. Bu .ics kalendarmi?"
+
+msgid "nothing in the next two weeks"
+msgstr "keyingi ikki haftada hech narsa yo'q"
+
+#, c-sharp-format
+msgid "next: {0}, {1} at {2}"
+msgstr "keyingisi: {0}, {1}, soat {2}"
+
+#, c-sharp-format
+msgid "{0} events · {1}"
+msgstr "{0} ta tadbir · {1}"
+
+#, c-sharp-format
+msgid "Couldn't read it: {0}"
+msgstr "O'qib bo'lmadi: {0}"
+
+msgid "no answer in time"
+msgstr "vaqtida javob bermadi"
+
+#, c-sharp-format
+msgid "{0} in {1} minutes"
+msgstr "{0} · {1} daqiqadan keyin"
+
+#, c-sharp-format
+msgid "at {0}"
+msgstr "soat {0} da"
+
+#, c-sharp-format
+msgid "{0} in a minute"
+msgstr "{0} · bir daqiqadan keyin"
+
+msgid "the game is paused · click it to resume"
+msgstr "o'yin to'xtatildi · davom ettirish uchun ustiga bosing"
+
+#, c-sharp-format
+msgid "{0} is starting"
+msgstr "{0} boshlanmoqda"
+
+#, c-sharp-format
+msgid "until {0}"
+msgstr "{0} gacha"
+
+msgid "have a good one"
+msgstr "omad!"
+
+msgid "Meetings still today:"
+msgstr "Bugun yana uchrashuvlar:"
+
+msgid "Your calendar's .ics link or file. Outlook: Settings → Calendar → Shared calendars → Publish a calendar → ICS. Google Calendar: Settings → your calendar → Secret address in iCal format. It stays on this PC."
+msgstr "Kalendaringizning .ics havolasi yoki fayli. Outlook: Sozlamalar → Kalendar → Umumiy kalendarlar → Kalendarni nashr qilish → ICS. Google Kalendar: Sozlamalar → kalendaringiz → iCal formatidagi maxfiy manzil. U shu kompyuterda qoladi."
+
+msgid "File…"
+msgstr "Fayl…"
+
+msgid "Pick a calendar file"
+msgstr "Kalendar faylini tanlang"
+
+#, c-sharp-format
+msgid "Last read failed: {0}"
+msgstr "Oxirgi o'qish muvaffaqiyatsiz: {0}"
+
+msgid "Paste a link or pick a file first."
+msgstr "Avval havolani qo'ying yoki faylni tanlang."
+
+msgid "Reading…"
+msgstr "O'qilmoqda…"
+
+msgid "Use this calendar"
+msgstr "Shu kalendardan foydalanish"
+
+msgid "Meetings are off."
+msgstr "Uchrashuvlar o'chirilgan."
+
+msgid "Saved. Meetings are read every 15 minutes."
+msgstr "Saqlandi. Uchrashuvlar har 15 daqiqada o'qiladi."
+
+msgid "Turn off"
+msgstr "O'chirish"
+
+msgid "Heads-up"
+msgstr "Ogohlantirish"
+
+msgid "My working day ends at"
+msgstr "Ish kunim tugaydi soat"
+
+msgid "Then you get the day's summary; an hour later, still at the computer, a nudge to go home."
+msgstr "Shunda kun yakunini ko'rasiz; bir soatdan keyin hali kompyuter oldida bo'lsangiz, uyga borish eslatmasi."
+
+msgid "Folder…"
+msgstr "Jild…"
+
+msgid "Pick the Downloads folder"
+msgstr "Yuklab olishlar jildini tanlang"
+
+msgid "From a terminal"
+msgstr "Terminaldan"
+
+#, c-sharp-format
+msgid "Focus for {0} minutes"
+msgstr "{0} daqiqa fokus"
+
+#, c-sharp-format
+msgid "block {0} of {1} · the games wait for the break"
+msgstr "{1} tadan {0}-blok · o'yinlar tanaffusni kutadi"
+
+msgid "Focus ended"
+msgstr "Fokus tugadi"
+
+msgid "start another from At work → Focus"
+msgstr "yangisini «Ishda» → «Fokus» dan boshlang"
+
+msgid "Focus block done!"
+msgstr "Fokus bloki tugadi!"
+
+#, c-sharp-format
+msgid "a {0}-minute break · the games are yours"
+msgstr "{0} daqiqa tanaffus · o'yinlar sizniki"
+
+msgid "Back to focus"
+msgstr "Yana fokus"
+
+#, c-sharp-format
+msgid "{0} minutes · block {1} of {2}"
+msgstr "{0} daqiqa · {2} tadan {1}-blok"
+
+msgid "The break is over"
+msgstr "Tanaffus tugadi"
+
+msgid "start the next focus block from At work → Focus"
+msgstr "keyingi blokni «Ishda» → «Fokus» dan boshlang"
+
+#, c-sharp-format
+msgid "{0} messages while you focused · the last: {1}"
+msgstr "Fokus paytida {0} ta xabar · oxirgisi: {1}"
+
+#, c-sharp-format
+msgid "rings at {0}"
+msgstr "soat {0} da jiringlaydi"
+
+msgid "Timers cancelled"
+msgstr "Taymerlar bekor qilindi"
+
+#, c-sharp-format
+msgid "it rang at {0}"
+msgstr "u soat {0} da jiringladi"
+
+msgid "time's up"
+msgstr "vaqt tugadi"
+
+msgid "Cheers!"
+msgstr "Salomatlik uchun!"
+
+msgid "the first glass today"
+msgstr "bugungi birinchi stakan"
+
+#, c-sharp-format
+msgid "{0} glasses today"
+msgstr "bugun {0} stakan"
+
+msgid "Still here?"
+msgstr "Hali shu yerdamisiz?"
+
+#, c-sharp-format
+msgid "it's {0} · the rest can wait until tomorrow"
+msgstr "soat {0} · qolgani ertagacha kutadi"
+
+msgid "coffee"
+msgstr "qahva"
+
+msgid "lunch"
+msgstr "tushlik"
+
+msgid "a walk"
+msgstr "sayr"
+
+#, c-sharp-format
+msgid "{0} now"
+msgstr "{0} hozir"
+
+msgid "Couldn't send the invite"
+msgstr "Taklifni yuborib bo'lmadi"
+
+msgid "Invite sent"
+msgstr "Taklif yuborildi"
+
+#, c-sharp-format
+msgid "{0} · to everyone with invites on"
+msgstr "{0} · takliflari yoqilgan hammaga"
+
+#, c-sharp-format
+msgid "{0} · no answers yet"
+msgstr "{0} · hali javob yo'q"
+
+#, c-sharp-format
+msgid "{0} · {1} coming"
+msgstr "{0} · keladi: {1}"
+
+#, c-sharp-format
+msgid "{0} is in!"
+msgstr "{0} keladi!"
+
+#, c-sharp-format
+msgid "{0} can't make it"
+msgstr "{0} kela olmaydi"
+
+#, c-sharp-format
+msgid "{0} is focusing"
+msgstr "{0} fokusda"
+
+msgid "they will see it at their break"
+msgstr "tanaffusda ko'radi"
+
+msgid "See you there!"
+msgstr "Ko'rishguncha!"
+
+#, c-sharp-format
+msgid "{0} knows you're coming"
+msgstr "{0} kelishingizni biladi"
+
+msgid "I'm in"
+msgstr "Boraman"
+
+msgid "Not now"
+msgstr "Hozir emas"
+
+#, c-sharp-format
+msgid "for {0} more minutes · your chat waits for their break"
+msgstr "yana {0} daqiqa · xabarlaringiz tanaffusni kutadi"
+
+#, c-sharp-format
+msgid "{0} is on a break"
+msgstr "{0} tanaffusda"
+
+msgid "a good moment for a game"
+msgstr "o'yin uchun ayni vaqt"
+
+msgid "Watching downloads"
+msgstr "Yuklab olishlar kuzatilmoqda"
+
+msgid "Download finished"
+msgstr "Yuklab olish tugadi"
+
+#, c-sharp-format
+msgid "Waiting for {0}"
+msgstr "{0} kutilmoqda"
+
+msgid "a chime when it is done · play meanwhile"
+msgstr "tayyor bo'lganda signal chalinadi · hozircha o'ynang"
+
+#, c-sharp-format
+msgid "No program with id {0}"
+msgstr "{0} id li dastur yo'q"
+
+msgid "it may have finished already"
+msgstr "u allaqachon tugagan bo'lishi mumkin"
+
+msgid "That is not a web address"
+msgstr "Bu veb-manzil emas"
+
+msgid "e.g. http://localhost:8080/health"
+msgstr "masalan, http://localhost:8080/health"
+
+#, c-sharp-format
+msgid "{0} has finished"
+msgstr "{0} tugadi"
+
+#, c-sharp-format
+msgid "{0} is ready"
+msgstr "{0} tayyor"
+
+#, c-sharp-format
+msgid "{0} never answered"
+msgstr "{0} javob bermadi"
+
+#, c-sharp-format
+msgid "gave up after {0} hours"
+msgstr "{0} soatdan keyin kutish to'xtatildi"
+
+#, c-sharp-format
+msgid "{0} is up"
+msgstr "{0} ishlayapti"
+
+#, c-sharp-format
+msgid "after {0}"
+msgstr "{0} dan keyin"
+
+msgid "Far sighted"
+msgstr "Uzoqni ko'ruvchi"
+
+msgid "Take 50 eye breaks"
+msgstr "Ko'z uchun 50 marta tanaffus qiling"
+
+msgid "Limber"
+msgstr "Egiluvchan"
+
+msgid "Finish 25 stretch breaks"
+msgstr "25 ta mashqni oxirigacha bajaring"
+
+msgid "Hydrated"
+msgstr "Suvga to'yingan"
+
+msgid "Drink 50 glasses of water"
+msgstr "50 stakan suv iching"
+
+msgid "Deep work"
+msgstr "Chuqur ish"
+
+msgid "Finish 10 focus blocks"
+msgstr "10 ta fokus blokini tugating"
+
+msgid "Breathe easy"
+msgstr "Yengil nafas"
+
+msgid "Breathe for a minute 10 times"
+msgstr "10 marta bir daqiqa nafas mashqi qiling"
+
+msgid "Right on time"
+msgstr "Aynan vaqtida"
+
+msgid "Get a heads-up before 20 meetings"
+msgstr "20 ta uchrashuvdan oldin ogohlantirish oling"
+
+msgid "Coffee club"
+msgstr "Qahva klubi"
+
+msgid "Go for coffee, lunch or a walk with co-workers 5 times"
+msgstr "Hamkasblar bilan 5 marta qahva, tushlik yoki sayrga boring"
+
+msgid "Note to self"
+msgstr "O'zimga eslatma"
+
+msgid "Tick off 10 sticky notes"
+msgstr "10 ta eslatma qog'ozini bajarilgan deb belgilang"
+
+msgid "Tea's ready"
+msgstr "Choy tayyor"
+
+msgid "Let 10 timers ring"
+msgstr "10 ta taymer jiringlashini kuting"
+
+msgid "Take a stretch break"
+msgstr "Badanni cho'zib oling"
+
+msgid "Drink a glass of water"
+msgstr "Bir stakan suv iching"
+
+msgid "Finish a focus block"
+msgstr "Fokus blokini tugating"

@@ -70,6 +70,11 @@ public sealed class Tray : IDisposable
         lan.Add(Item(L.T("Find games / join by address…"), () => _w.OpenLobby()));
         lan.Add(Item(L.T("Durak with co-workers…"), () => _w.OpenDurakRooms()));
         lan.Add(Item(L.T("Last Card with co-workers…"), () => _w.OpenLastCardRooms()));
+        foreach (var room in _w.Games.OfType<Games.IRoomGame>().Where(g => g.Id is not ("durak" or "lastcard")))
+        {
+            string id = room.Id;
+            lan.Add(Item(L.F("{0} with co-workers…", L.T(room.Title)), () => _w.OpenRooms(id)));
+        }
         var emotes = new NativeMenu();
         for (int i = 0; i < Net.LanLink.Emotes.Length; i++)
         {
