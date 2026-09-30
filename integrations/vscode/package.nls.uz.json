@@ -1,0 +1,15 @@
+{
+  "description": "Siz o'ynayotganingizda vazifalar va debug seanslari Desk Arcade hisob taxtasida qator yoqadi, holat qatoridagi tugma esa o'yinni ko'rsatadi yoki yashiradi.",
+  "command.playWhileItBuilds": "Yig'ish paytida o'ynash",
+  "command.toggle": "O'yinni ko'rsatish yoki yashirish",
+  "command.next": "Keyingi o'yin",
+  "config.tasks.enabled": "Jarayon ishga tushiradigan har bir vazifa uchun hisob taxtasida qator yoqish: build, test, tasks.json dagi har qanday vazifa. Watch kabi fon vazifalari qator yoqmaydi.",
+  "config.tasks.which": "Qaysi vazifalar hisob taxtasida qator yoqadi.",
+  "config.tasks.which.all": "Barcha vazifalar",
+  "config.tasks.which.buildAndTest": "Faqat build va test guruhlaridagi vazifalar",
+  "config.debug.enabled": "Har bir debug seansi uchun hisob taxtasida qator yoqish.",
+  "config.lanePrefix": "Hisob taxtasidagi har bir qator nomi oldidan qo'yiladigan matn, masalan `VS Code · `. `${folder}` ish maydoni papkasining nomiga almashadi: `${folder} · ` natijasi `api · build`.",
+  "config.statusBar": "Holat qatorida Desk Arcade tugmasini ko'rsatish.",
+  "config.profile": "Ulanadigan Desk Arcade nusxasining `--profile` nomi. Odatdagisi uchun bo'sh qoldiring.",
+  "config.programPath": "Desk Arcade odatdagi joyda bo'lmasa, u qayerda (masalan, AppImage). Faqat Desk Arcade ishlamayotganda uni **O'yinni ko'rsatish yoki yashirish**, **Keyingi o'yin** va **Yig'ish paytida o'ynash** buyruqlari bilan ishga tushirish uchun kerak; vazifalar va debug seanslari uni hech qachon ishga tushirmaydi."
+}

@@ -1,0 +1,56 @@
+{
+  // The tasks the integration tests run. "process" tasks keep the exact exit code (a shell may turn it into 1).
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "pass",
+      "type": "process",
+      "command": "node",
+      "args": ["exit.js", "0", "300"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "fail",
+      "type": "process",
+      "command": "node",
+      "args": ["exit.js", "3", "300"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "compile",
+      "type": "shell",
+      "command": "node exit.js 0 300",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "unit tests",
+      "type": "process",
+      "command": "node",
+      "args": ["exit.js", "0", "300"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "long",
+      "type": "process",
+      "command": "node",
+      "args": ["exit.js", "0", "60000"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "watch",
+      "type": "process",
+      "command": "node",
+      "args": ["exit.js", "0", "1000"],
+      "options": { "cwd": "${workspaceFolder}" },
+      "isBackground": true,
+      "problemMatcher": []
+    }
+  ]
+}

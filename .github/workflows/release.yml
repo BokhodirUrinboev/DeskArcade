@@ -5,7 +5,8 @@
 #   2. git tag v1.3.0 && git push origin v1.3.0
 # The tag must match the csproj version, so the packages upgrade an existing install correctly.
 # Once the release is out, packages.yml publishes it to the Homebrew tap, the Scoop bucket, winget, Chocolatey
-# and the AUR.
+# and the AUR. The VS Code extension (integrations/vscode) is packaged with the same version and attached to the
+# release, and goes to the Visual Studio Marketplace and Open VSX when the VSCE_PAT and OVSX_PAT secrets exist.
 # docs/RELEASING.md lists every artifact and covers code signing, the package managers and Flathub.
 name: Release
 
@@ -330,10 +331,41 @@ jobs:
           path: dist/macos/${{ matrix.arch }}/DeskArcade-*.zip
           if-no-files-found: error
 
+  vscode:
+    name: VS Code extension (.vsix)
+    needs: version
+    runs-on: ubuntu-24.04
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    defaults:
+      run:
+        working-directory: integrations/vscode
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: integrations/vscode/package-lock.json
+      - name: Install
+        run: npm ci
+      - name: Unit tests
+        run: npm test
+      # The extension's version follows Desk Arcade's, so each release is a new version on the Marketplace too.
+      - name: Package
+        run: |
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          npx vsce package --out "desk-arcade-$VERSION.vsix"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: vscode
+          path: integrations/vscode/desk-arcade-*.vsix
+          if-no-files-found: error
+
   release:
     name: Publish release
     if: github.event_name == 'push'
-    needs: [version, linux, windows, macos]
+    needs: [version, linux, windows, macos, vscode]
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -354,6 +386,10 @@ jobs:
           pattern: macos-*
           path: packages
           merge-multiple: true
+      - uses: actions/download-artifact@v8
+        with:
+          name: vscode
+          path: packages
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -378,6 +414,7 @@ jobs:
           | Other Linux (aarch64), portable | \`DeskArcade-$VERSION-aarch64.AppImage\` — \`chmod +x\` it and run it |
           | macOS 14+ (Apple silicon) | \`DeskArcade-$VERSION-macos-arm64.zip\` |
           | macOS 14+ (Intel) | \`DeskArcade-$VERSION-macos-x64.zip\` |
+          | VS Code extension (VS Code, VSCodium, Cursor) | \`desk-arcade-$VERSION.vsix\` — \`code --install-extension desk-arcade-$VERSION.vsix\` |
 
           The installers and .deb packages upgrade an existing install in place; settings and high scores are kept.
           $windows_note
@@ -390,6 +427,46 @@ jobs:
             --title "Desk Arcade $VERSION" \
             --notes-file notes.md \
             --generate-notes
+
+  # Publishes the extension once the release is out. Each registry is skipped until its token exists as a
+  # repository secret: VSCE_PAT (an Azure DevOps token for the ImperiumGames publisher on the Visual Studio
+  # Marketplace) and OVSX_PAT (an Open VSX token). vsce and ovsx read them from the environment. Both are free.
+  vscode-publish:
+    name: Publish the VS Code extension
+    if: github.event_name == 'push'
+    needs: [version, release]
+    runs-on: ubuntu-24.04
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - name: Check for tokens
+        id: tokens
+        shell: bash
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: |
+          if [ -n "$VSCE_PAT" ]; then echo "marketplace=true" >> "$GITHUB_OUTPUT"; else echo "No VSCE_PAT: skipping the Visual Studio Marketplace."; fi
+          if [ -n "$OVSX_PAT" ]; then echo "openvsx=true" >> "$GITHUB_OUTPUT"; else echo "No OVSX_PAT: skipping Open VSX."; fi
+      - uses: actions/download-artifact@v8
+        if: steps.tokens.outputs.marketplace == 'true' || steps.tokens.outputs.openvsx == 'true'
+        with:
+          name: vscode
+          path: vsix
+      - uses: actions/setup-node@v7
+        if: steps.tokens.outputs.marketplace == 'true' || steps.tokens.outputs.openvsx == 'true'
+        with:
+          node-version: 22
+      - name: Publish to the Visual Studio Marketplace
+        if: steps.tokens.outputs.marketplace == 'true'
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: npx --yes @vscode/vsce@4 publish --packagePath "vsix/desk-arcade-$VERSION.vsix"
+      - name: Publish to Open VSX
+        if: steps.tokens.outputs.openvsx == 'true'
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: npx --yes ovsx@1 publish "vsix/desk-arcade-$VERSION.vsix"
 
   package-managers:
     name: Package managers
