@@ -6,13 +6,17 @@ using DeskArcade.Platform;
 namespace DeskArcade;
 
 /// <summary>
-/// Tiny software mixer so short sounds can overlap with low latency. All clips are synthesized;
-/// the platform only supplies a raw 16-bit mono output (waveOut on Windows, PulseAudio on Linux).
+/// Tiny software mixer so short sounds can overlap with low latency, and a focus sound can play under them for hours.
+/// All of it is synthesized; the platform only supplies a raw 16-bit mono output (waveOut on Windows, PulseAudio on
+/// Linux, AudioQueue on macOS). When nothing has played for a couple of seconds the mixer thread sleeps until the next
+/// sound, so a quiet Desk Arcade costs no CPU here.
 /// </summary>
 public sealed partial class Sound : IDisposable
 {
     const int Rate = 44100;
     const int BufSamples = 512;
+    /// <summary>Silence written after the last sound before the mixer sleeps: the tail plays out, and a device that waits for a full buffer starts.</summary>
+    const int TailBuffers = 2 * Rate / BufSamples;
 
     readonly Dictionary<string, float[]> _clips = new();
     readonly List<Voice> _voices = new();
@@ -21,6 +25,7 @@ public sealed partial class Sound : IDisposable
     readonly short[] _mix = new short[BufSamples];
     readonly IAudioOutput? _out;
     readonly Thread? _thread;
+    readonly AutoResetEvent _wake = new(false);
     volatile bool _running;
 
     public bool Enabled { get; set; } = true;
@@ -51,6 +56,7 @@ public sealed partial class Sound : IDisposable
             if (_voices.Count > 16) _voices.RemoveAt(0);
             _voices.Add(new Voice { Clip = clip, Vol = (float)Math.Clamp(vol, 0, 1.5), Rate = pitch });
         }
+        _wake.Set();
     }
 
     /// <summary>The synthesized samples of a clip (for tests), or null if there is no such clip.</summary>
@@ -60,12 +66,21 @@ public sealed partial class Sound : IDisposable
     {
         try
         {
+            int quiet = TailBuffers; // nothing has played yet: sleep until something does
             while (_running)
             {
+                bool playing;
+                lock (_lock) playing = _voices.Count > 0 || _focus.Active;
+                if (!playing && quiet >= TailBuffers)
+                {
+                    _wake.WaitOne(); // Play, the focus sound or Dispose wakes it
+                    continue;
+                }
                 if (_out!.CanWrite)
                 {
                     MixInto(_mix);
                     _out.Write(_mix);
+                    quiet = playing ? 0 : quiet + 1;
                 }
                 else
                 {
@@ -99,6 +114,7 @@ public sealed partial class Sound : IDisposable
                 }
                 if (voice.Pos >= clip.Length - 1) _voices.RemoveAt(v);
             }
+            if (_focus.Active) _focus.MixInto(acc); // its own volume, not the games' master volume
         }
         for (int s = 0; s < BufSamples; s++)
         {
@@ -217,6 +233,7 @@ public sealed partial class Sound : IDisposable
     public void Dispose()
     {
         _running = false;
+        _wake.Set();
         _thread?.Join(300);
         _out?.Dispose();
     }
