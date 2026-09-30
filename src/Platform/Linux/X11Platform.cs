@@ -500,6 +500,18 @@ public sealed class X11Platform : IDesktopPlatform
         return Office.FullScreen.Covers(new PixelRect(x, y, attributes.Width, attributes.Height), monitor);
     }
 
+    /// <summary>
+    /// The active window's _NET_WM_PID. Under Wayland only X11 apps are seen; a native Wayland app in front gives null.
+    /// </summary>
+    public int? ForegroundProcessId()
+    {
+        if (_dpy == IntPtr.Zero) return null;
+        long[] active = ReadLongs(_root, _atomActiveWindow);
+        if (active.Length == 0 || !Ewmh.IsRealWindow(active[0])) return null;
+        long[] pid = ReadLongs((IntPtr)active[0], _atomWmPid);
+        return pid.Length > 0 && pid[0] is > 0 and <= int.MaxValue ? (int)pid[0] : null;
+    }
+
     static string AutostartFile => Path.Combine(
         Environment.GetEnvironmentVariable("XDG_CONFIG_HOME") is { Length: > 0 } xdg
             ? xdg

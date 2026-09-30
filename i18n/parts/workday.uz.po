@@ -1,0 +1,405 @@
+# Desk Arcade: Uzbek (uz), 1.8.7 "the programmer's day": the morning card, standup notes, room to focus,
+# today's three, git before you go, where the day went and the wait report.
+# The English text is the msgid. Keep {0}-style placeholders, "·" separators and "×" as they are.
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. ---- My day: the menu and Today at work
+msgid "My day"
+msgstr "Mening kunim"
+
+msgid "Show the morning card"
+msgstr "Ertalabki kartochkani ko'rsatish"
+
+msgid "Today's three…"
+msgstr "Bugungi uch ish…"
+
+msgid "Copy standup notes"
+msgstr "Standup qaydlarini nusxalash"
+
+msgid "The wait report…"
+msgstr "Kutishlar hisoboti…"
+
+#, c-sharp-format
+msgid "Cancel the focus block at {0}"
+msgstr "Soat {0} dagi fokusni bekor qilish"
+
+msgid "No focus block planned"
+msgstr "Fokus rejalashtirilmagan"
+
+msgid "Morning card"
+msgstr "Ertalabki kartochka"
+
+msgid "Git before you go"
+msgstr "Ketishdan oldin git"
+
+msgid "Where the day went"
+msgstr "Kun qayerga ketdi"
+
+msgid "Free between meetings:"
+msgstr "Uchrashuvlar orasidagi bo'sh vaqt:"
+
+#, c-sharp-format
+msgid "{0} free"
+msgstr "{0} bo'sh"
+
+#, c-sharp-format
+msgid "A focus block starts at {0}"
+msgstr "Fokus soat {0} da boshlanadi"
+
+msgid "A morning card on the first activity of a working day: standup notes, room to focus, today's three"
+msgstr "Ish kuni boshida ertalabki kartochka: standup uchun qaydlar, fokus uchun vaqt, bugungi uch ish"
+
+#, c-sharp-format
+msgid "Repos: {0}"
+msgstr "Repozitoriylar: {0}"
+
+msgid "Git before you go: the end-of-day card lists repos with changes not committed, commits not pushed and stashes, half an hour earlier on Fridays"
+msgstr "Ketishdan oldin git: kun oxiri kartochkasi commit qilinmagan o'zgarishlar, push qilinmagan commitlar va stashlar bor repozitoriylarni ko'rsatadi, jumada esa yarim soat oldinroq keladi"
+
+msgid "Where the day went: note the program in front once a minute (its name, never a window title), kept 30 days on this PC"
+msgstr "Kun qayerga ketdi: daqiqada bir marta oldindagi dasturni yozib borish (faqat nomi, hech qachon oyna sarlavhasi emas); shu kompyuterda 30 kun saqlanadi"
+
+#, c-sharp-format
+msgid "Today: {0}"
+msgstr "Bugun: {0}"
+
+msgid "Save as CSV…"
+msgstr "CSV sifatida saqlash…"
+
+msgid "Save where the day went"
+msgstr "Kun qayerga ketganini saqlash"
+
+#, c-sharp-format
+msgid "Couldn't save it: {0}"
+msgstr "Saqlab bo'lmadi: {0}"
+
+msgid "Add your repos under Coding agents & CI → Add a repo folder…"
+msgstr "Repozitoriylaringizni qo'shing: «Kod agentlari va CI» → «Repozitoriy papkasini qo'shish…»"
+
+#. ---- the morning card
+msgid "GOOD MORNING"
+msgstr "XAYRLI TONG"
+
+msgid "Start the day"
+msgstr "Kunni boshlash"
+
+msgid "no meetings today"
+msgstr "bugun uchrashuv yo'q"
+
+msgid "one meeting today"
+msgstr "bugun bitta uchrashuv"
+
+#, c-sharp-format
+msgid "{0} meetings today"
+msgstr "bugun {0} ta uchrashuv"
+
+msgid "Monday"
+msgstr "Dushanba"
+
+msgid "Tuesday"
+msgstr "Seshanba"
+
+msgid "Wednesday"
+msgstr "Chorshanba"
+
+msgid "Thursday"
+msgstr "Payshanba"
+
+msgid "Friday"
+msgstr "Juma"
+
+msgid "Saturday"
+msgstr "Shanba"
+
+msgid "Sunday"
+msgstr "Yakshanba"
+
+#. ---- standup notes
+#, c-sharp-format
+msgid "Standup notes · {0}"
+msgstr "Standup qaydlari · {0}"
+
+msgid "Copy the notes"
+msgstr "Qaydlarni nusxalash"
+
+msgid "Copied ✓"
+msgstr "Nusxalandi ✓"
+
+#, c-sharp-format
+msgid "{0}: 1 commit"
+msgstr "{0}: 1 ta commit"
+
+#, c-sharp-format
+msgid "{0}: {1} commits"
+msgstr "{0}: {1} ta commit"
+
+#, c-sharp-format
+msgid "  and {0} more"
+msgstr "  yana {0} ta"
+
+msgid "no commits by you that day"
+msgstr "o'sha kuni sizdan commit yo'q"
+
+#, c-sharp-format
+msgid "{0}: git has no user.email to find your commits by"
+msgstr "{0}: git'da commitlaringizni topish uchun user.email yo'q"
+
+#, c-sharp-format
+msgid "{0}: couldn't read it ({1})"
+msgstr "{0}: o'qib bo'lmadi ({1})"
+
+#, c-sharp-format
+msgid "Merged: #{0} {1}"
+msgstr "Birlashtirildi: #{0} {1}"
+
+#, c-sharp-format
+msgid "In meetings: {0}"
+msgstr "Uchrashuvlarda: {0}"
+
+msgid "Standup notes copied"
+msgstr "Standup qaydlari nusxalandi"
+
+#, c-sharp-format
+msgid "{0} · paste them in the standup chat"
+msgstr "{0} · ularni standup chatiga joylang"
+
+#. ---- room to focus
+msgid "Room to focus"
+msgstr "Fokus uchun vaqt"
+
+#, c-sharp-format
+msgid "{0} free from {1}, focus then?"
+msgstr "Soat {1} dan {0} bo'sh — o'shanda fokus qilasizmi?"
+
+#, c-sharp-format
+msgid "{0} free from now, focus now?"
+msgstr "Hozir {0} bo'sh — fokusni boshlaysizmi?"
+
+#, c-sharp-format
+msgid "Focus at {0}"
+msgstr "Soat {0} da fokus"
+
+msgid "Focusing now ✓"
+msgstr "Fokus boshlandi ✓"
+
+msgid "no 25 minutes free between meetings today"
+msgstr "bugun uchrashuvlar orasida 25 daqiqa ham bo'sh vaqt yo'q"
+
+#, c-sharp-format
+msgid "{0} minutes · a notice when it starts"
+msgstr "{0} daqiqa · boshlanganda xabar beraman"
+
+#. ---- today's three
+msgid "Today's three"
+msgstr "Bugungi uch ish"
+
+msgid "up to three things to get done today"
+msgstr "bugun bajarilishi kerak bo'lgan uchtagacha ish"
+
+msgid "carried over from last time"
+msgstr "o'tgan safardan o'tkazilgan"
+
+msgid "Write them…"
+msgstr "Yozish…"
+
+msgid "Change…"
+msgstr "O'zgartirish…"
+
+msgid "Up to three things to get done today. They sit under the scoreboard; click one when it's done."
+msgstr "Bugun bajariladigan uchtagacha ish. Ular hisob taxtasi ostida turadi; bajarilganda ustiga bosing."
+
+msgid "Finish the report"
+msgstr "Hisobotni tugatish"
+
+msgid "Review the pull request"
+msgstr "Pull requestni ko'rib chiqish"
+
+msgid "Call the supplier"
+msgstr "Yetkazib beruvchiga qo'ng'iroq qilish"
+
+msgid "All of today's three done!"
+msgstr "Bugungi uch ishning hammasi bajarildi!"
+
+msgid "a good day's work"
+msgstr "yaxshi ishladingiz"
+
+msgid "under the scoreboard · click one when it's done"
+msgstr "hisob taxtasi ostida · bajarilganda ustiga bosing"
+
+msgid "tick what got done · the rest carries over to tomorrow"
+msgstr "bajarilganini belgilang · qolgani ertaga o'tadi"
+
+msgid "1 thing carried over to tomorrow"
+msgstr "1 ta ish ertaga o'tdi"
+
+#, c-sharp-format
+msgid "{0} things carried over to tomorrow"
+msgstr "{0} ta ish ertaga o'tdi"
+
+msgid "it waits under the scoreboard"
+msgstr "u hisob taxtasi ostida kutib turadi"
+
+#. ---- git before you go
+msgid "git didn't answer in time"
+msgstr "git o'z vaqtida javob bermadi"
+
+msgid "1 uncommitted change"
+msgstr "1 ta commit qilinmagan o'zgarish"
+
+#, c-sharp-format
+msgid "{0} uncommitted changes"
+msgstr "{0} ta commit qilinmagan o'zgarish"
+
+msgid "1 commit not pushed"
+msgstr "1 ta commit push qilinmagan"
+
+#, c-sharp-format
+msgid "{0} commits not pushed"
+msgstr "{0} ta commit push qilinmagan"
+
+#, c-sharp-format
+msgid "{0} (no remote)"
+msgstr "{0} (remote yo'q)"
+
+msgid "1 stash"
+msgstr "1 ta stash"
+
+#, c-sharp-format
+msgid "{0} stashes"
+msgstr "{0} ta stash"
+
+#, c-sharp-format
+msgid "{0}: all committed and pushed ✓"
+msgstr "{0}: hammasi commit va push qilingan ✓"
+
+#, c-sharp-format
+msgid "All {0} repos committed and pushed ✓"
+msgstr "Barcha {0} ta repozitoriy commit va push qilingan ✓"
+
+#. ---- where the day went
+msgid "browser"
+msgstr "brauzer"
+
+msgid "terminal"
+msgstr "terminal"
+
+msgid "other programs"
+msgstr "boshqa dasturlar"
+
+msgid "Noting where the day goes"
+msgstr "Kun qayerga ketayotgani yozib borilmoqda"
+
+msgid "the program in front, once a minute · never a window title"
+msgstr "oldindagi dastur, daqiqada bir marta · hech qachon oyna sarlavhasi emas"
+
+#. ---- the wait report
+msgid "Wait report"
+msgstr "Kutishlar hisoboti"
+
+#, c-sharp-format
+msgid "Wait report · {0}"
+msgstr "Kutishlar hisoboti · {0}"
+
+msgid "The wait report"
+msgstr "Kutishlar hisoboti"
+
+msgid "Last week's waits"
+msgstr "O'tgan haftadagi kutishlar"
+
+#, c-sharp-format
+msgid "Waited {0} · played {1} of it"
+msgstr "Kutish {0} · shundan o'yin {1}"
+
+#, c-sharp-format
+msgid "Waited {0} in all"
+msgstr "Jami kutish: {0}"
+
+msgid "Nothing waited on"
+msgstr "Kutishlar bo'lmadi"
+
+msgid "builds, tests, CI and coding agents show here once you wait on them"
+msgstr "build, test, CI va kod agentlarini kutganingizda ular shu yerda chiqadi"
+
+#, c-sharp-format
+msgid "Builds and tests: {0} ({1})"
+msgstr "Build va testlar: {0} ({1})"
+
+#, c-sharp-format
+msgid "CI runs: {0} ({1})"
+msgstr "CI ishga tushirishlari: {0} ({1})"
+
+#, c-sharp-format
+msgid "Coding agents: {0} ({1})"
+msgstr "Kod agentlari: {0} ({1})"
+
+#, c-sharp-format
+msgid "Downloads and other waits: {0} ({1})"
+msgstr "Yuklab olishlar va boshqa kutishlar: {0} ({1})"
+
+#, c-sharp-format
+msgid "Played while waiting: {0} ({1} %)"
+msgstr "Kutish paytida o'yin: {0} ({1} %)"
+
+msgid "Slowest"
+msgstr "Eng sekinlari"
+
+msgid "Getting slower"
+msgstr "Sekinlashayotganlar"
+
+#, c-sharp-format
+msgid "{0}: {1}, once"
+msgstr "{0}: {1}, bir marta"
+
+#, c-sharp-format
+msgid "{0}: {1} on average, {2} runs"
+msgstr "{0}: o'rtacha {1}, {2} marta"
+
+#, c-sharp-format
+msgid "{0}: {1} on average, up {2} % in a month"
+msgstr "{0}: o'rtacha {1}, bir oyda {2} % sekinlashdi"
+
+msgid "Copy the report"
+msgstr "Hisobotni nusxalash"
+
+msgid "In the stats window…"
+msgstr "Statistika oynasida…"
+
+msgid "Close the report"
+msgstr "Hisobotni yopish"
+
+msgid "Games & achievements"
+msgstr "O'yinlar va yutuqlar"
+
+msgid "The last seven days; the trends compare them with the four weeks before."
+msgstr "Oxirgi yetti kun; o'zgarishlar ularni oldingi to'rt hafta bilan solishtiradi."
+
+msgid "Run builds and tests with arcade, follow CI and coding agents, or wait for downloads, and the waits show here."
+msgstr "Build va testlarni arcade orqali ishga tushiring, CI va kod agentlarini kuzating yoki yuklab olishlarni kuting — kutishlar shu yerda chiqadi."
+
+msgid "Nothing is getting slower."
+msgstr "Hech narsa sekinlashmayapti."
+
+#. ---- achievements
+msgid "Ready for standup"
+msgstr "Standupga tayyor"
+
+msgid "Copy the standup notes 5 times"
+msgstr "Standup qaydlarini 5 marta nusxalang"
+
+msgid "Three for three"
+msgstr "Uchdan uch"
+
+msgid "Finish all of today's three 5 times"
+msgstr "Bugungi uch ishning hammasini 5 marta bajaring"
+
+msgid "Clean desk"
+msgstr "Toza stol"
+
+msgid "Leave 10 days with every repo committed and pushed"
+msgstr "10 kun hamma repozitoriylar commit va push qilingan holda uyga keting"

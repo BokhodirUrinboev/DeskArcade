@@ -1,0 +1,405 @@
+# Desk Arcade: Russian (ru), 1.8.7 "the programmer's day": the morning card, standup notes, room to focus,
+# today's three, git before you go, where the day went and the wait report.
+# The English text is the msgid. Keep {0}-style placeholders, "·" separators and "×" as they are.
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. ---- My day: the menu and Today at work
+msgid "My day"
+msgstr "Мой день"
+
+msgid "Show the morning card"
+msgstr "Показать утреннюю карточку"
+
+msgid "Today's three…"
+msgstr "Три дела на сегодня…"
+
+msgid "Copy standup notes"
+msgstr "Скопировать заметки к стендапу"
+
+msgid "The wait report…"
+msgstr "Отчёт об ожиданиях…"
+
+#, c-sharp-format
+msgid "Cancel the focus block at {0}"
+msgstr "Отменить фокус в {0}"
+
+msgid "No focus block planned"
+msgstr "Фокус не запланирован"
+
+msgid "Morning card"
+msgstr "Утренняя карточка"
+
+msgid "Git before you go"
+msgstr "Git перед уходом"
+
+msgid "Where the day went"
+msgstr "Куда ушёл день"
+
+msgid "Free between meetings:"
+msgstr "Свободно между встречами:"
+
+#, c-sharp-format
+msgid "{0} free"
+msgstr "свободно {0}"
+
+#, c-sharp-format
+msgid "A focus block starts at {0}"
+msgstr "Фокус начнётся в {0}"
+
+msgid "A morning card on the first activity of a working day: standup notes, room to focus, today's three"
+msgstr "Утренняя карточка в начале рабочего дня: заметки к стендапу, время для фокуса, три дела на сегодня"
+
+#, c-sharp-format
+msgid "Repos: {0}"
+msgstr "Репозитории: {0}"
+
+msgid "Git before you go: the end-of-day card lists repos with changes not committed, commits not pushed and stashes, half an hour earlier on Fridays"
+msgstr "Git перед уходом: карточка конца дня показывает репозитории с незакоммиченными изменениями, неотправленными коммитами и stash, а по пятницам приходит на полчаса раньше"
+
+msgid "Where the day went: note the program in front once a minute (its name, never a window title), kept 30 days on this PC"
+msgstr "Куда ушёл день: раз в минуту запоминать активную программу (только её название, никогда не заголовок окна); хранится 30 дней на этом ПК"
+
+#, c-sharp-format
+msgid "Today: {0}"
+msgstr "Сегодня: {0}"
+
+msgid "Save as CSV…"
+msgstr "Сохранить в CSV…"
+
+msgid "Save where the day went"
+msgstr "Сохранить, куда ушёл день"
+
+#, c-sharp-format
+msgid "Couldn't save it: {0}"
+msgstr "Не удалось сохранить: {0}"
+
+msgid "Add your repos under Coding agents & CI → Add a repo folder…"
+msgstr "Добавьте свои репозитории: «Агенты кода и CI» → «Добавить папку репозитория…»"
+
+#. ---- the morning card
+msgid "GOOD MORNING"
+msgstr "ДОБРОЕ УТРО"
+
+msgid "Start the day"
+msgstr "Начать день"
+
+msgid "no meetings today"
+msgstr "сегодня встреч нет"
+
+msgid "one meeting today"
+msgstr "сегодня одна встреча"
+
+#, c-sharp-format
+msgid "{0} meetings today"
+msgstr "встреч сегодня: {0}"
+
+msgid "Monday"
+msgstr "Понедельник"
+
+msgid "Tuesday"
+msgstr "Вторник"
+
+msgid "Wednesday"
+msgstr "Среда"
+
+msgid "Thursday"
+msgstr "Четверг"
+
+msgid "Friday"
+msgstr "Пятница"
+
+msgid "Saturday"
+msgstr "Суббота"
+
+msgid "Sunday"
+msgstr "Воскресенье"
+
+#. ---- standup notes
+#, c-sharp-format
+msgid "Standup notes · {0}"
+msgstr "Заметки к стендапу · {0}"
+
+msgid "Copy the notes"
+msgstr "Скопировать заметки"
+
+msgid "Copied ✓"
+msgstr "Скопировано ✓"
+
+#, c-sharp-format
+msgid "{0}: 1 commit"
+msgstr "{0}: 1 коммит"
+
+#, c-sharp-format
+msgid "{0}: {1} commits"
+msgstr "{0}: коммитов {1}"
+
+#, c-sharp-format
+msgid "  and {0} more"
+msgstr "  и ещё {0}"
+
+msgid "no commits by you that day"
+msgstr "ваших коммитов в тот день нет"
+
+#, c-sharp-format
+msgid "{0}: git has no user.email to find your commits by"
+msgstr "{0}: в git не задан user.email, по которому можно найти ваши коммиты"
+
+#, c-sharp-format
+msgid "{0}: couldn't read it ({1})"
+msgstr "{0}: не удалось прочитать ({1})"
+
+#, c-sharp-format
+msgid "Merged: #{0} {1}"
+msgstr "Влит: #{0} {1}"
+
+#, c-sharp-format
+msgid "In meetings: {0}"
+msgstr "На встречах: {0}"
+
+msgid "Standup notes copied"
+msgstr "Заметки к стендапу скопированы"
+
+#, c-sharp-format
+msgid "{0} · paste them in the standup chat"
+msgstr "{0} · вставьте их в чат стендапа"
+
+#. ---- room to focus
+msgid "Room to focus"
+msgstr "Время для фокуса"
+
+#, c-sharp-format
+msgid "{0} free from {1}, focus then?"
+msgstr "С {1} свободно {0} — сосредоточиться в это время?"
+
+#, c-sharp-format
+msgid "{0} free from now, focus now?"
+msgstr "Сейчас свободно {0} — начать фокус?"
+
+#, c-sharp-format
+msgid "Focus at {0}"
+msgstr "Фокус в {0}"
+
+msgid "Focusing now ✓"
+msgstr "Фокус начался ✓"
+
+msgid "no 25 minutes free between meetings today"
+msgstr "сегодня между встречами нет даже 25 свободных минут"
+
+#, c-sharp-format
+msgid "{0} minutes · a notice when it starts"
+msgstr "{0} мин · напомню, когда начнётся"
+
+#. ---- today's three
+msgid "Today's three"
+msgstr "Три дела на сегодня"
+
+msgid "up to three things to get done today"
+msgstr "до трёх дел, которые нужно сделать сегодня"
+
+msgid "carried over from last time"
+msgstr "перенесено с прошлого раза"
+
+msgid "Write them…"
+msgstr "Записать…"
+
+msgid "Change…"
+msgstr "Изменить…"
+
+msgid "Up to three things to get done today. They sit under the scoreboard; click one when it's done."
+msgstr "До трёх дел на сегодня. Они будут под табло; нажмите на дело, когда оно сделано."
+
+msgid "Finish the report"
+msgstr "Дописать отчёт"
+
+msgid "Review the pull request"
+msgstr "Посмотреть пул-реквест"
+
+msgid "Call the supplier"
+msgstr "Позвонить поставщику"
+
+msgid "All of today's three done!"
+msgstr "Все три дела на сегодня сделаны!"
+
+msgid "a good day's work"
+msgstr "хорошо поработали"
+
+msgid "under the scoreboard · click one when it's done"
+msgstr "под табло · нажмите на дело, когда оно сделано"
+
+msgid "tick what got done · the rest carries over to tomorrow"
+msgstr "отметьте сделанное · остальное перейдёт на завтра"
+
+msgid "1 thing carried over to tomorrow"
+msgstr "1 дело перенесено на завтра"
+
+#, c-sharp-format
+msgid "{0} things carried over to tomorrow"
+msgstr "перенесено на завтра дел: {0}"
+
+msgid "it waits under the scoreboard"
+msgstr "оно ждёт под табло"
+
+#. ---- git before you go
+msgid "git didn't answer in time"
+msgstr "git не ответил вовремя"
+
+msgid "1 uncommitted change"
+msgstr "1 незакоммиченное изменение"
+
+#, c-sharp-format
+msgid "{0} uncommitted changes"
+msgstr "незакоммиченных изменений: {0}"
+
+msgid "1 commit not pushed"
+msgstr "1 коммит не отправлен"
+
+#, c-sharp-format
+msgid "{0} commits not pushed"
+msgstr "не отправлено коммитов: {0}"
+
+#, c-sharp-format
+msgid "{0} (no remote)"
+msgstr "{0} (нет remote)"
+
+msgid "1 stash"
+msgstr "1 stash"
+
+#, c-sharp-format
+msgid "{0} stashes"
+msgstr "stash: {0}"
+
+#, c-sharp-format
+msgid "{0}: all committed and pushed ✓"
+msgstr "{0}: всё закоммичено и отправлено ✓"
+
+#, c-sharp-format
+msgid "All {0} repos committed and pushed ✓"
+msgstr "Все репозитории ({0}) закоммичены и отправлены ✓"
+
+#. ---- where the day went
+msgid "browser"
+msgstr "браузер"
+
+msgid "terminal"
+msgstr "терминал"
+
+msgid "other programs"
+msgstr "другие программы"
+
+msgid "Noting where the day goes"
+msgstr "Записываю, куда уходит день"
+
+msgid "the program in front, once a minute · never a window title"
+msgstr "активная программа раз в минуту · никогда не заголовок окна"
+
+#. ---- the wait report
+msgid "Wait report"
+msgstr "Отчёт об ожиданиях"
+
+#, c-sharp-format
+msgid "Wait report · {0}"
+msgstr "Отчёт об ожиданиях · {0}"
+
+msgid "The wait report"
+msgstr "Отчёт об ожиданиях"
+
+msgid "Last week's waits"
+msgstr "Ожидания прошлой недели"
+
+#, c-sharp-format
+msgid "Waited {0} · played {1} of it"
+msgstr "Ожидание {0} · из них игра {1}"
+
+#, c-sharp-format
+msgid "Waited {0} in all"
+msgstr "Всего ожидания: {0}"
+
+msgid "Nothing waited on"
+msgstr "Ожиданий не было"
+
+msgid "builds, tests, CI and coding agents show here once you wait on them"
+msgstr "сборки, тесты, CI и агенты кода появятся здесь, когда вы начнёте их ждать"
+
+#, c-sharp-format
+msgid "Builds and tests: {0} ({1})"
+msgstr "Сборки и тесты: {0} ({1})"
+
+#, c-sharp-format
+msgid "CI runs: {0} ({1})"
+msgstr "Запуски CI: {0} ({1})"
+
+#, c-sharp-format
+msgid "Coding agents: {0} ({1})"
+msgstr "Агенты кода: {0} ({1})"
+
+#, c-sharp-format
+msgid "Downloads and other waits: {0} ({1})"
+msgstr "Загрузки и другие ожидания: {0} ({1})"
+
+#, c-sharp-format
+msgid "Played while waiting: {0} ({1} %)"
+msgstr "Игра во время ожидания: {0} ({1} %)"
+
+msgid "Slowest"
+msgstr "Самые долгие"
+
+msgid "Getting slower"
+msgstr "Становится медленнее"
+
+#, c-sharp-format
+msgid "{0}: {1}, once"
+msgstr "{0}: {1}, один раз"
+
+#, c-sharp-format
+msgid "{0}: {1} on average, {2} runs"
+msgstr "{0}: в среднем {1}, запусков {2}"
+
+#, c-sharp-format
+msgid "{0}: {1} on average, up {2} % in a month"
+msgstr "{0}: в среднем {1}, за месяц дольше на {2} %"
+
+msgid "Copy the report"
+msgstr "Скопировать отчёт"
+
+msgid "In the stats window…"
+msgstr "В окне статистики…"
+
+msgid "Close the report"
+msgstr "Закрыть отчёт"
+
+msgid "Games & achievements"
+msgstr "Игры и достижения"
+
+msgid "The last seven days; the trends compare them with the four weeks before."
+msgstr "Последние семь дней; тренды сравнивают их с четырьмя неделями до этого."
+
+msgid "Run builds and tests with arcade, follow CI and coding agents, or wait for downloads, and the waits show here."
+msgstr "Запускайте сборки и тесты через arcade, следите за CI и агентами кода или ждите загрузки — и ожидания появятся здесь."
+
+msgid "Nothing is getting slower."
+msgstr "Ничего не становится медленнее."
+
+#. ---- achievements
+msgid "Ready for standup"
+msgstr "К стендапу готов"
+
+msgid "Copy the standup notes 5 times"
+msgstr "Скопируйте заметки к стендапу 5 раз"
+
+msgid "Three for three"
+msgstr "Три из трёх"
+
+msgid "Finish all of today's three 5 times"
+msgstr "Сделайте все три дела на сегодня 5 раз"
+
+msgid "Clean desk"
+msgstr "Чистый стол"
+
+msgid "Leave 10 days with every repo committed and pushed"
+msgstr "10 раз уйдите домой, когда всё закоммичено и отправлено"

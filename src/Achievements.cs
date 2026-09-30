@@ -28,6 +28,9 @@ public static class Achievements
         // 1.8.6 · coding agents and CI
 
         // 1.8.6 · the programmer's day
+        new("work-standup", "work", "Ready for standup", "Copy the standup notes 5 times", "work.standup", 5),
+        new("work-three", "work", "Three for three", "Finish all of today's three 5 times", "work.three", 5),
+        new("work-pushed", "work", "Clean desk", "Leave 10 days with every repo committed and pushed", "work.pushed", 10),
 
         // 1.8.6 · party games
 

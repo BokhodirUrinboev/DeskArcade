@@ -91,6 +91,7 @@ public sealed partial class OfficeDesk : IDisposable
         _tick.Stop();
         _invites.Dispose();
         _downloadTimer.Stop();
+        SaveMyDay();
     }
 
     // ------------------------------------------------------------------ state for the rest of the overlay
@@ -112,11 +113,13 @@ public sealed partial class OfficeDesk : IDisposable
         if (_card != null) into.Add(HitShape.Box(_card.Area));
         if (_inviteCard != null) into.Add(HitShape.Box(_inviteCardRect));
         CollectNoteShapes(into);
+        CollectThreeShapes(into);
     }
 
     /// <summary>One frame; true while a card or a note still moves.</summary>
     public bool Update(double dt)
     {
+        FollowScoreboard();
         bool busy = false;
         if (_card != null)
         {
@@ -175,6 +178,7 @@ public sealed partial class OfficeDesk : IDisposable
         StepWaits(dt);
         StepBreaks(dt);
         if (_tickCount % 15 == 0) StepEndOfDay(atComputer);
+        StepMyDay(utc, atComputer);
         if (_tickCount % 30 == 0) _w.RefreshTray(); // the status line's minutes
         SaveNotesIfMoved();
         FlushHeld(utc);
@@ -307,6 +311,7 @@ public sealed partial class OfficeDesk : IDisposable
         bool want = !_fullScreen && (_card != null || _inviteCard != null || _dragging != null || DateTime.UtcNow < _peekUntil);
         if (want && !_w.OverlayVisible) _w.SetPeek(true);
         else if (!want && _w.IsPeeking) _w.SetPeek(false);
+        PlaceThree(); // under the scoreboard, so not while only peeking out
     }
 
     // ------------------------------------------------------------------ the scoreboard's at-work line
@@ -399,7 +404,7 @@ public sealed partial class OfficeDesk : IDisposable
             case "eyes": ShowCard(CoachKind.Eye); return true;
             case "water": ShowCard(CoachKind.Water); return true;
             case "drank": DrankWater(); return true;
-            case "dayend": ShowCard(CoachKind.DayEnd); return true;
+            case "dayend": ShowDayEnd(); return true;
             case "focus": StartFocus(null); return true;
             case "focus-stop": StopFocus(); return true;
             case "timers-cancel": CancelTimers(); return true;
@@ -410,6 +415,7 @@ public sealed partial class OfficeDesk : IDisposable
             case "lunch": SendInvite(Net.InviteKind.Lunch, 15); return true;
             case "walk": SendInvite(Net.InviteKind.Walk, 0); return true;
         }
+        if (SignalMyDay(msg)) return true;
         int colon = msg.IndexOf(':');
         if (colon < 0) return false;
         string verb = msg[..colon], arg = msg[(colon + 1)..];
@@ -845,11 +851,11 @@ public sealed partial class OfficeDesk : IDisposable
     }
 
     /// <summary>Shows a card (replacing one that is up); the overlay peeks out for it when hidden, and the game pauses under it.</summary>
-    void ShowCard(CoachKind kind)
+    void ShowCard(CoachKind kind, CardContent? content = null)
     {
         if (_fullScreen) return; // nobody wants a stretch on the projector
         if (_card != null) CloseCard(later: true);
-        var card = new CoachCard(kind, this, _w.Arena, DaySummary());
+        var card = new CoachCard(kind, this, _w.Arena, content ?? new CardContent());
         card.Finished += result =>
         {
             OnCardFinished(kind, result);
@@ -857,7 +863,7 @@ public sealed partial class OfficeDesk : IDisposable
         };
         _card = card;
         _w.OfficeLayer.Children.Add(card.Root);
-        _w.Sound.Play(kind == CoachKind.DayEnd ? "done" : "attention", 0.55);
+        _w.Sound.Play(kind is CoachKind.DayEnd or CoachKind.Morning ? "done" : "attention", 0.55);
         UpdatePeek();
         _w.HitShapesChanged();
     }
@@ -888,6 +894,7 @@ public sealed partial class OfficeDesk : IDisposable
         }
         if (result == CoachResult.Done && kind is CoachKind.Eye or CoachKind.Stretch or CoachKind.Breathe)
             _w.Sound.Play("score", 0.5);
+        MyDayCardFinished(kind, result);
     }
 
     void CloseCard(bool later = false)
@@ -921,10 +928,10 @@ public sealed partial class OfficeDesk : IDisposable
     void StepEndOfDay(bool atComputer)
     {
         if (_fullScreen) return; // the wrap-up waits for the presentation to end rather than get lost
-        switch (_day.Step(DateTime.Now, EndOfDay.ParseTime(S.WorkEnd), atComputer && (_idle ?? 0) < 300, ActiveToday))
+        switch (_day.Step(DateTime.Now, WorkEndToday, atComputer && (_idle ?? 0) < 300, ActiveToday))
         {
             case DayCue.WrapUp:
-                ShowCard(CoachKind.DayEnd);
+                ShowDayEnd();
                 break;
             case DayCue.StillHere:
                 Say(L.T("Still here?"), L.F("it's {0} · the rest can wait until tomorrow", DateTime.Now.ToString("HH:mm", CultureInfo.InvariantCulture)), Violet);

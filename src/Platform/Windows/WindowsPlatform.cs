@@ -189,6 +189,15 @@ public sealed class WindowsPlatform : IDesktopPlatform
         return Office.FullScreen.Covers(new PixelRect(rc.Left, rc.Top, rc.Right - rc.Left, rc.Bottom - rc.Top), monitor);
     }
 
+    /// <summary>The process of the foreground window (GetForegroundWindow, GetWindowThreadProcessId); null when there is none.</summary>
+    public int? ForegroundProcessId()
+    {
+        IntPtr fg = Win32.GetForegroundWindow();
+        if (fg == IntPtr.Zero) return null;
+        Win32.GetWindowThreadProcessId(fg, out uint pid);
+        return pid == 0 ? null : (int)pid;
+    }
+
     public bool AutostartEnabled
     {
         get
