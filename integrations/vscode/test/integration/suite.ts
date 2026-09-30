@@ -249,7 +249,7 @@ test("with Desk Arcade closed, tasks run as usual and lanes resume when it is ba
 // --------------------------------------------------------------------------------------------------------- runner
 
 export async function run(): Promise<void> {
-    const extension = vscode.extensions.getExtension<DeskArcadeApi>("ImperiumGames.desk-arcade");
+    const extension = vscode.extensions.getExtension<DeskArcadeApi>("BokhodirUrinboev.desk-arcade");
     assert.ok(extension, "the extension is not loaded");
     api = await extension.activate();
     folder = vscode.workspace.workspaceFolders![0];

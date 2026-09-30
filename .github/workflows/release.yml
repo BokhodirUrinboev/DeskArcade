@@ -428,45 +428,19 @@ jobs:
             --notes-file notes.md \
             --generate-notes
 
-  # Publishes the extension once the release is out. Each registry is skipped until its token exists as a
-  # repository secret: VSCE_PAT (an Azure DevOps token for the ImperiumGames publisher on the Visual Studio
-  # Marketplace) and OVSX_PAT (an Open VSX token). vsce and ovsx read them from the environment. Both are free.
+  # Publishes the extension to the Visual Studio Marketplace and Open VSX once the release is out; vscode.yml skips
+  # each registry until its token (VSCE_PAT, OVSX_PAT) exists as a repository secret.
   vscode-publish:
     name: Publish the VS Code extension
-    if: github.event_name == 'push'
     needs: [version, release]
-    runs-on: ubuntu-24.04
-    env:
-      VERSION: ${{ needs.version.outputs.version }}
-    steps:
-      - name: Check for tokens
-        id: tokens
-        shell: bash
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
-          OVSX_PAT: ${{ secrets.OVSX_PAT }}
-        run: |
-          if [ -n "$VSCE_PAT" ]; then echo "marketplace=true" >> "$GITHUB_OUTPUT"; else echo "No VSCE_PAT: skipping the Visual Studio Marketplace."; fi
-          if [ -n "$OVSX_PAT" ]; then echo "openvsx=true" >> "$GITHUB_OUTPUT"; else echo "No OVSX_PAT: skipping Open VSX."; fi
-      - uses: actions/download-artifact@v8
-        if: steps.tokens.outputs.marketplace == 'true' || steps.tokens.outputs.openvsx == 'true'
-        with:
-          name: vscode
-          path: vsix
-      - uses: actions/setup-node@v7
-        if: steps.tokens.outputs.marketplace == 'true' || steps.tokens.outputs.openvsx == 'true'
-        with:
-          node-version: 22
-      - name: Publish to the Visual Studio Marketplace
-        if: steps.tokens.outputs.marketplace == 'true'
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
-        run: npx --yes @vscode/vsce@4 publish --packagePath "vsix/desk-arcade-$VERSION.vsix"
-      - name: Publish to Open VSX
-        if: steps.tokens.outputs.openvsx == 'true'
-        env:
-          OVSX_PAT: ${{ secrets.OVSX_PAT }}
-        run: npx --yes ovsx@1 publish "vsix/desk-arcade-$VERSION.vsix"
+    permissions:
+      contents: write
+    uses: ./.github/workflows/vscode.yml
+    with:
+      version: ${{ needs.version.outputs.version }}
+    secrets:
+      VSCE_PAT: ${{ secrets.VSCE_PAT }}
+      OVSX_PAT: ${{ secrets.OVSX_PAT }}
 
   package-managers:
     name: Package managers
