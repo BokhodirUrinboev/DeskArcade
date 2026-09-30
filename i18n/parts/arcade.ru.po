@@ -1,0 +1,81 @@
+# Desk Arcade: Russian (ru), the 1.8.6 arcade games: Load Balancer, Pipeline, FreeCell and Spider.
+# The English text is the msgid. Keep {0}-style placeholders, "·" separators and "×" as they are, and keep
+# the number last in "Best {0}"-style lines (the compact scoreboard shows only the last word).
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: ru\n"
+"X-Language-Name: Русский\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. ---- Solitaire: FreeCell and Spider
+msgid "Klondike"
+msgstr "Косынка"
+
+msgid "FreeCell"
+msgstr "Свободная ячейка"
+
+msgid "Spider"
+msgstr "Паук"
+
+msgid "One suit"
+msgstr "Одна масть"
+
+msgid "Two suits"
+msgstr "Две масти"
+
+msgid "Four suits"
+msgstr "Четыре масти"
+
+#, c-sharp-format
+msgid "Deal #{0}"
+msgstr "Расклад №{0}"
+
+msgid "Deal number"
+msgstr "Номер расклада"
+
+msgid "Click or drag cards to move them · a free cell holds any one card · right-drag moves the felt"
+msgstr "Нажимайте на карты или перетаскивайте их · в свободную ячейку помещается одна любая карта · правой кнопкой можно сдвинуть стол"
+
+msgid "Build each suit down from king to ace · click the stock to deal a row · right-drag moves the felt"
+msgstr "Собирайте каждую масть от короля до туза · нажмите на колоду, чтобы сдать ряд · правой кнопкой можно сдвинуть стол"
+
+msgid "Fill every column before dealing"
+msgstr "Перед раздачей заполните все столбцы"
+
+#, c-sharp-format
+msgid "Room to move {0} cards at once"
+msgstr "За один ход можно перенести карт: {0}"
+
+msgid "Suit complete!"
+msgstr "Масть собрана!"
+
+#, c-sharp-format
+msgid "FreeCell #{0} · won in {1} moves"
+msgstr "«Свободная ячейка» №{0} · разложена за {1} ходов"
+
+#, c-sharp-format
+msgid "FreeCell #{0} · {1} of 52 cards home"
+msgstr "«Свободная ячейка» №{0} · дома {1} из 52 карт"
+
+#, c-sharp-format
+msgid "Spider, {0} · won in {1} moves"
+msgstr "«Паук», {0} · разложен за {1} ходов"
+
+#, c-sharp-format
+msgid "Solitaire · solved in {0} moves · {1}"
+msgstr "Пасьянс · разложен за {0} ходов · {1}"
+
+msgid "Free and clear"
+msgstr "Всё по местам"
+
+msgid "Solve a FreeCell deal"
+msgstr "Разложите «Свободную ячейку»"
+
+msgid "Eight legs"
+msgstr "Восемь лап"
+
+msgid "Solve a game of Spider"
+msgstr "Разложите «Паука»"

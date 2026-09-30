@@ -38,6 +38,8 @@ public static class Achievements
         // 1.8.6 · Spot the Bug
 
         // 1.8.6 · arcade
+        new("freecell-win", "solitaire", "Free and clear", "Solve a FreeCell deal", "solitaire.freecell", 1),
+        new("spider-win", "solitaire", "Eight legs", "Solve a game of Spider", "solitaire.spider", 1),
 
 
         new("hoops-100", "hoops", "Hundred baskets", "Score 100 baskets", "hoops.baskets", 100),

@@ -1,0 +1,81 @@
+# Desk Arcade: Uzbek (uz), the 1.8.6 arcade games: Load Balancer, Pipeline, FreeCell and Spider.
+# The English text is the msgid. Keep {0}-style placeholders, "·" separators and "×" as they are, and keep
+# the number last in "Best {0}"-style lines (the compact scoreboard shows only the last word).
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: uz\n"
+"X-Language-Name: O'zbekcha\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. ---- Solitaire: FreeCell and Spider
+msgid "Klondike"
+msgstr "Klondayk"
+
+msgid "FreeCell"
+msgstr "Bo'sh katak"
+
+msgid "Spider"
+msgstr "O'rgimchak"
+
+msgid "One suit"
+msgstr "Bitta mast"
+
+msgid "Two suits"
+msgstr "Ikkita mast"
+
+msgid "Four suits"
+msgstr "To'rtta mast"
+
+#, c-sharp-format
+msgid "Deal #{0}"
+msgstr "Tarqatma #{0}"
+
+msgid "Deal number"
+msgstr "Tarqatma raqami"
+
+msgid "Click or drag cards to move them · a free cell holds any one card · right-drag moves the felt"
+msgstr "Kartalarni bosing yoki suring · bo'sh katakka istalgan bitta karta sig'adi · stolni o'ng tugma bilan suring"
+
+msgid "Build each suit down from king to ace · click the stock to deal a row · right-drag moves the felt"
+msgstr "Har bir mastni qiroldan tuzgacha yig'ing · qator tarqatish uchun to'plamni bosing · stolni o'ng tugma bilan suring"
+
+msgid "Fill every column before dealing"
+msgstr "Tarqatishdan oldin har bir ustunni to'ldiring"
+
+#, c-sharp-format
+msgid "Room to move {0} cards at once"
+msgstr "Bir yurishda ko'chirsa bo'ladigan kartalar: {0}"
+
+msgid "Suit complete!"
+msgstr "Mast yig'ildi!"
+
+#, c-sharp-format
+msgid "FreeCell #{0} · won in {1} moves"
+msgstr "«Bo'sh katak» #{0} · {1} yurishda yechildi"
+
+#, c-sharp-format
+msgid "FreeCell #{0} · {1} of 52 cards home"
+msgstr "«Bo'sh katak» #{0} · 52 tadan {1} ta karta uyda"
+
+#, c-sharp-format
+msgid "Spider, {0} · won in {1} moves"
+msgstr "«O'rgimchak», {0} · {1} yurishda yechildi"
+
+#, c-sharp-format
+msgid "Solitaire · solved in {0} moves · {1}"
+msgstr "Pasyans · {0} yurishda yechildi · {1}"
+
+msgid "Free and clear"
+msgstr "Hammasi joyida"
+
+msgid "Solve a FreeCell deal"
+msgstr "«Bo'sh katak»ni bir marta yeching"
+
+msgid "Eight legs"
+msgstr "Sakkiz oyoq"
+
+msgid "Solve a game of Spider"
+msgstr "«O'rgimchak»ni bir marta yeching"
