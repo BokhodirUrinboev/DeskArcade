@@ -68,6 +68,8 @@ public sealed class Daily
         // 1.8.6 · party games
 
         // 1.8.6 · card games
+        new("poker", "poker.pots", 5, "Win {0} pots in Poker"),
+        new("hearts", "hearts.hands", 4, "Play {0} hands of Hearts"),
 
         // 1.8.6 · word and key games
 

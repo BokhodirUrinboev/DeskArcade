@@ -293,6 +293,9 @@ public sealed partial class OverlayWindow : Window, IGameHost
         var poker = new PokerGame(this);
         poker.SetupRequested += () => RoomWindow.ShowFor(this, poker);
         _games.Add(poker);
+        var hearts = new HeartsGame(this);
+        hearts.SetupRequested += () => RoomWindow.ShowFor(this, hearts);
+        _games.Add(hearts);
 
         // 1.8.6 · word and key games (Word Guess, Shortcut Trainer, Bit Flip)
 
@@ -924,6 +927,8 @@ public sealed partial class OverlayWindow : Window, IGameHost
         // 1.8.6 · party games
 
         // 1.8.6 · card games
+        "poker" => L.T("pick a table — fold, check or call, or raise with the slider; the best five cards win the pot"),
+        "hearts" => L.T("pass three cards, then follow suit — duck the hearts and the queen of spades"),
 
         // 1.8.6 · word and key games
 

@@ -60,7 +60,7 @@ public sealed partial class OfficeDesk
             _w.SaveSettings();
             BuildThree();
         }
-        StepMorning(atComputer);
+        if (!_w.Demo && !_w.Snapshotting) StepMorning(atComputer); // a demo or a snapshot shows the game, not the morning card
         if (_tickCount % 300 == 0) SaveMyDay();
     }
 

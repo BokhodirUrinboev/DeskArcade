@@ -1,0 +1,438 @@
+# Desk Arcade: Uzbek (uz), 1.8.6 additions (cards).
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Poker"
+msgstr "Poker"
+
+msgid "Hearts"
+msgstr "Yuraklar"
+
+msgid "Texas hold'em for chips · the best five cards win the pot"
+msgstr "Fishkalarga Texas hold'em · bankni eng yaxshi beshta karta oladi"
+
+msgid "Pick a table to start a game"
+msgstr "O'yinni boshlash uchun stol tanlang"
+
+msgid "You won the table · click New game"
+msgstr "Stolni yutdingiz · «Yangi o'yin»ni bosing"
+
+#, c-sharp-format
+msgid "{0} won the table · click New game"
+msgstr "{0} stolni yutdi · «Yangi o'yin»ni bosing"
+
+#, c-sharp-format
+msgid "You're out in place {0} · the others play on"
+msgstr "Siz {0}-o'rinda chiqdingiz · qolganlar o'ynashda davom etadi"
+
+msgid "All in · the board runs out"
+msgstr "Hammasi tikildi · qolgan kartalar ochiladi"
+
+#, c-sharp-format
+msgid "Your turn · {0} to call"
+msgstr "Sizning navbatingiz · tenglashtirish uchun {0}"
+
+msgid "Your turn · check or bet"
+msgstr "Sizning navbatingiz · chek yoki tikish"
+
+msgid "You folded · watching the hand"
+msgstr "Siz tashladingiz · qo'lni kuzatmoqdasiz"
+
+#, c-sharp-format
+msgid "{0} split {1} with {2}"
+msgstr "{0} {1} ni bo'lishdi: {2}"
+
+#, c-sharp-format
+msgid "You win {0}"
+msgstr "Siz {0} yutdingiz"
+
+#, c-sharp-format
+msgid "{0} wins {1}"
+msgstr "{0} {1} yutdi"
+
+#, c-sharp-format
+msgid "You win {0} with {1}"
+msgstr "Siz {0} yutdingiz: {1}"
+
+#, c-sharp-format
+msgid "{0} wins {1} with {2}"
+msgstr "{0} {1} yutdi: {2}"
+
+msgid "YOU WIN THE TABLE!"
+msgstr "STOLNI YUTDINGIZ!"
+
+#, c-sharp-format
+msgid "every chip after {0} hands"
+msgstr "{0} ta qo'ldan keyin barcha fishkalar"
+
+#, c-sharp-format
+msgid "Poker · won a {0}-player lunch-break table with {1} chips"
+msgstr "Poker · {0} o'yinchili tushlik stolini {1} fishka bilan yutdim"
+
+#, c-sharp-format
+msgid "Poker · won a {0}-player table in {1} hands"
+msgstr "Poker · {0} o'yinchili stolni {1} ta qo'lda yutdim"
+
+#, c-sharp-format
+msgid "PLACE {0} OF {1}"
+msgstr "{1} TADAN {0}-O'RIN"
+
+#, c-sharp-format
+msgid "Poker · place {0} of {1} after {2} hands"
+msgstr "Poker · {2} ta qo'ldan keyin {1} tadan {0}-o'rin"
+
+#, c-sharp-format
+msgid "out · place {0}"
+msgstr "chiqdi · {0}-o'rin"
+
+msgid "thinking…"
+msgstr "o'ylayapti…"
+
+msgid "Fold"
+msgstr "Tashlash"
+
+#, c-sharp-format
+msgid "Call {0}"
+msgstr "Tenglashtirish {0}"
+
+#, c-sharp-format
+msgid "Bet {0}"
+msgstr "Tikish {0}"
+
+#, c-sharp-format
+msgid "Raise to {0}"
+msgstr "{0} gacha oshirish"
+
+msgid "All in"
+msgstr "Hammasini tikish"
+
+#, c-sharp-format
+msgid "Pot {0}"
+msgstr "Bank {0}"
+
+#, c-sharp-format
+msgid "Blinds {0}/{1}"
+msgstr "Blaynd {0}/{1}"
+
+#, c-sharp-format
+msgid "hand {0} of {1}"
+msgstr "{1} tadan {0}-qo'l"
+
+#, c-sharp-format
+msgid "hand {0}"
+msgstr "{0}-qo'l"
+
+#, c-sharp-format
+msgid "{0} next hand"
+msgstr "keyingi qo'ldan {0}"
+
+#, c-sharp-format
+msgid "{0} in {1} hands"
+msgstr "{1} qo'ldan keyin {0}"
+
+msgid "Hint: on"
+msgstr "Maslahat: yoqilgan"
+
+msgid "Hint: off"
+msgstr "Maslahat: o'chirilgan"
+
+#, c-sharp-format
+msgid "All in {0}"
+msgstr "Hammasini tikish {0}"
+
+msgid "½ pot"
+msgstr "½ bank"
+
+msgid "Pot"
+msgstr "Bank"
+
+#, c-sharp-format
+msgid "{0} · about {1} % to win against 1 player"
+msgstr "{0} · 1 o'yinchiga qarshi yutish ehtimoli taxminan {1} %"
+
+#, c-sharp-format
+msgid "{0} · about {1} % to win against {2} players"
+msgstr "{0} · {2} o'yinchiga qarshi yutish ehtimoli taxminan {1} %"
+
+#, c-sharp-format
+msgid "Game: lunch break, {0} hands"
+msgstr "O'yin: tushlik tanaffusi, {0} ta qo'l"
+
+msgid "Game: until one player has every chip"
+msgstr "O'yin: barcha fishkalar bitta o'yinchida qolguncha"
+
+msgid "Duck the hearts and the queen of spades · the lowest score wins"
+msgstr "Yuraklar va qarg'a malikasidan qoching · eng kam ochko yutadi"
+
+msgid "Play against 3 computers"
+msgstr "3 ta kompyuterga qarshi o'ynash"
+
+msgid "to the left"
+msgstr "chapga"
+
+msgid "to the right"
+msgstr "o'ngga"
+
+msgid "across"
+msgstr "ro'paradagiga"
+
+#, c-sharp-format
+msgid "You win with {0} points · click New game"
+msgstr "{0} ochko bilan yutdingiz · «Yangi o'yin»ni bosing"
+
+#, c-sharp-format
+msgid "{0} wins · click New game"
+msgstr "{0} yutdi · «Yangi o'yin»ni bosing"
+
+msgid "You shot the moon!"
+msgstr "Hammasini oldingiz — «oyga o'q»!"
+
+#, c-sharp-format
+msgid "{0} shot the moon!"
+msgstr "{0} hammasini oldi — «oyga o'q»!"
+
+#, c-sharp-format
+msgid "Hand {0} over · the next one is coming"
+msgstr "{0}-qo'l tugadi · keyingisi kelmoqda"
+
+#, c-sharp-format
+msgid "Pass these three {0}"
+msgstr "Shu uchtasini {0} berish"
+
+#, c-sharp-format
+msgid "Pick three cards to pass {0} ({1}/3)"
+msgstr "{0} berish uchun uchta karta tanlang ({1}/3)"
+
+msgid "Waiting for the others to pass"
+msgstr "Boshqalar berishini kutyapmiz"
+
+msgid "Your lead · the two of clubs"
+msgstr "Siz boshlaysiz · chillak ikkiligi"
+
+msgid "Your lead"
+msgstr "Siz boshlaysiz"
+
+msgid "Your turn · follow suit if you can"
+msgstr "Sizning navbatingiz · iloji bo'lsa, shu mastdan yuring"
+
+msgid "YOU SHOT THE MOON!"
+msgstr "OYGA O'Q!"
+
+#, c-sharp-format
+msgid "{0} SHOT THE MOON"
+msgstr "{0}: OYGA O'Q"
+
+msgid "26 points to everyone else"
+msgstr "qolganlarning hammasiga 26 ochkodan"
+
+#, c-sharp-format
+msgid "{0} points after {1} hands"
+msgstr "{1} ta qo'ldan keyin {0} ochko"
+
+#, c-sharp-format
+msgid "Hearts · won with {0} points after {1} hands ♥"
+msgstr "Yuraklar · {1} ta qo'ldan keyin {0} ochko bilan yutdim ♥"
+
+#, c-sharp-format
+msgid "Hearts · place {0} of 4 with {1} points"
+msgstr "Yuraklar · {1} ochko bilan 4 tadan {0}-o'rin"
+
+#, c-sharp-format
+msgid "{0} points (+{1})"
+msgstr "{0} ochko (+{1})"
+
+#, c-sharp-format
+msgid "{0} points · {1} this hand"
+msgstr "{0} ochko · bu qo'lda {1}"
+
+#, c-sharp-format
+msgid "Hand {0}"
+msgstr "{0}-qo'l"
+
+#, c-sharp-format
+msgid "game to {0}"
+msgstr "{0} gacha o'yin"
+
+msgid "hearts broken"
+msgstr "yuraklar ochildi"
+
+#, c-sharp-format
+msgid "Pass {0}"
+msgstr "{0} berish"
+
+#, c-sharp-format
+msgid "High card, {0}"
+msgstr "Katta karta: {0}"
+
+#, c-sharp-format
+msgid "Pair of {0}"
+msgstr "Juftlik: {0}"
+
+#, c-sharp-format
+msgid "Two pair, {0} and {1}"
+msgstr "Ikki juftlik: {0} va {1}"
+
+#, c-sharp-format
+msgid "Three of a kind, {0}"
+msgstr "Uchlik: {0}"
+
+#, c-sharp-format
+msgid "Straight, {0} high"
+msgstr "{0} gacha strit"
+
+#, c-sharp-format
+msgid "Flush, {0} high"
+msgstr "{0} gacha flesh"
+
+#, c-sharp-format
+msgid "Full house, {0} over {1}"
+msgstr "Full-haus: {0} va {1}"
+
+#, c-sharp-format
+msgid "Four of a kind, {0}"
+msgstr "Kare: {0}"
+
+msgid "Royal flush"
+msgstr "Royal-flesh"
+
+#, c-sharp-format
+msgid "Straight flush, {0} high"
+msgstr "{0} gacha strit-flesh"
+
+#, c-sharp-format
+msgid "{0} and {1}"
+msgstr "{0} va {1}"
+
+#, c-sharp-format
+msgid "{0}, suited"
+msgstr "{0}, bir mastda"
+
+msgid "two"
+msgstr "ikkilik"
+
+msgid "three"
+msgstr "uchlik"
+
+msgid "four"
+msgstr "to'rtlik"
+
+msgid "five"
+msgstr "beshlik"
+
+msgid "six"
+msgstr "oltilik"
+
+msgid "seven"
+msgstr "yettilik"
+
+msgid "eight"
+msgstr "sakkizlik"
+
+msgid "nine"
+msgstr "to'qqizlik"
+
+msgid "ten"
+msgstr "o'nlik"
+
+msgid "jack"
+msgstr "valet"
+
+msgid "queen"
+msgstr "malika"
+
+msgid "king"
+msgstr "qirol"
+
+msgid "ace"
+msgstr "tuz"
+
+msgid "twos"
+msgstr "ikkiliklar"
+
+msgid "threes"
+msgstr "uchliklar"
+
+msgid "fours"
+msgstr "to'rtliklar"
+
+msgid "fives"
+msgstr "beshliklar"
+
+msgid "sixes"
+msgstr "oltiliklar"
+
+msgid "sevens"
+msgstr "yettiliklar"
+
+msgid "eights"
+msgstr "sakkizliklar"
+
+msgid "nines"
+msgstr "to'qqizliklar"
+
+msgid "tens"
+msgstr "o'nliklar"
+
+msgid "jacks"
+msgstr "valetlar"
+
+msgid "queens"
+msgstr "malikalar"
+
+msgid "kings"
+msgstr "qirollar"
+
+msgid "aces"
+msgstr "tuzlar"
+
+msgid "pick a table — fold, check or call, or raise with the slider; the best five cards win the pot"
+msgstr "stol tanlang — tashlang, chek yoki tenglashtiring, yoki surgich bilan oshiring; bankni eng yaxshi beshta karta oladi"
+
+msgid "pass three cards, then follow suit — duck the hearts and the queen of spades"
+msgstr "uchta karta bering, keyin mastdan yuring — yuraklar va qarg'a malikasidan qoching"
+
+msgid "Table captain"
+msgstr "Stol sardori"
+
+msgid "Win a table of Poker"
+msgstr "Pokerda stolni yuting"
+
+msgid "Chip leader"
+msgstr "Fishkalar yetakchisi"
+
+msgid "Win 100 pots in Poker"
+msgstr "Pokerda 100 ta bankni yuting"
+
+msgid "Win 10 all-in showdowns"
+msgstr "Hammasi tikilgan 10 ta ochilishni yuting"
+
+msgid "Queen dodger"
+msgstr "Malikadan qochuvchi"
+
+msgid "Win a game of Hearts"
+msgstr "Yuraklarda bitta o'yinni yuting"
+
+msgid "Shoot the moon"
+msgstr "Oyga o'q"
+
+msgid "Take all 26 points in one hand"
+msgstr "Bitta qo'lda hamma 26 ochkoni oling"
+
+msgid "Clean hands"
+msgstr "Toza qo'llar"
+
+msgid "Take no points in 25 hands"
+msgstr "25 ta qo'lda birorta ham ochko olmang"
+
+#, c-sharp-format
+msgid "Win {0} pots in Poker"
+msgstr "Pokerda {0} ta bankni yuting"
+
+#, c-sharp-format
+msgid "Play {0} hands of Hearts"
+msgstr "Yuraklarda {0} ta qo'l o'ynang"

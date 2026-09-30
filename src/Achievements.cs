@@ -42,6 +42,12 @@ public static class Achievements
         // 1.8.6 · party games
 
         // 1.8.6 · card games
+        new("poker-win", "poker", "Table captain", "Win a table of Poker", "poker.wins", 1),
+        new("poker-pots", "poker", "Chip leader", "Win 100 pots in Poker", "poker.pots", 100),
+        new("poker-allin", "poker", "All in", "Win 10 all-in showdowns", "poker.allinwins", 10),
+        new("hearts-win", "hearts", "Queen dodger", "Win a game of Hearts", "hearts.wins", 1),
+        new("hearts-moon", "hearts", "Shoot the moon", "Take all 26 points in one hand", "hearts.moon", 1),
+        new("hearts-clean", "hearts", "Clean hands", "Take no points in 25 hands", "hearts.clean", 25),
 
         // 1.8.6 · word and key games
 
