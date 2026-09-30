@@ -22,7 +22,7 @@ namespace DeskArcade;
 /// Full-monitor, transparent, topmost window that never takes focus. Only the hit shapes the games
 /// report (ball, hoop, bow, scoreboard) receive the mouse; the platform layer passes the rest through.
 /// </summary>
-public sealed class OverlayWindow : Window, IGameHost
+public sealed partial class OverlayWindow : Window, IGameHost
 {
     readonly bool _demo;
     readonly string? _startGame;
@@ -203,6 +203,7 @@ public sealed class OverlayWindow : Window, IGameHost
             Stats.Save();
             Waits.Save();
             Rivals.Save();
+            CheckYearCard();
             if (Themes.Apply(Settings.Theme, DateTime.Today)) OnThemeChanged(); // "seasonal" at the turn of a month
         };
         _root.PointerPressed += OnPointerPressed;
@@ -371,8 +372,9 @@ public sealed class OverlayWindow : Window, IGameHost
             SaveSettings();
             DispatcherTimer.RunOnce(() =>
             {
-                Fx.Popup(new Vec2(Arena.Left + Arena.Width / 2, Arena.Top + Arena.Height * 0.45), L.T("Welcome to Desk Arcade"),
-                    Color.FromRgb(255, 209, 102), 34, 6, L.F("click the scoreboard to pick a game · {0} show/hide · {1} next game", Shortcuts.Label(HotkeyAction.ToggleOverlay), Shortcuts.Label(HotkeyAction.NextGame)));
+                Fx.Popup(new Vec2(Arena.Left + Arena.Width / 2, Arena.Top + Arena.Height * 0.2), L.T("Welcome to Desk Arcade"),
+                    Color.FromRgb(255, 209, 102), 34, 3, L.T("three things to know"));
+                if (!_demo && !Snapshotting) ShowTour(); // a demo or a snapshot shows the game, not the tour
                 Wake();
             }, TimeSpan.FromSeconds(2.2));
         }
@@ -446,6 +448,7 @@ public sealed class OverlayWindow : Window, IGameHost
         PlaceWindow();
         UpdateArena();
         PlaceHud();
+        _infoCard?.Place(Arena);
         Current?.Layout();
         Office?.Layout();
         RefreshPlatforms();
@@ -579,6 +582,7 @@ public sealed class OverlayWindow : Window, IGameHost
             if (_hud != null && !_peeking) _hitShapes.Add(HitShape.Box(_hud.Area));
             if (_bubble != null) _hitShapes.Add(HitShape.Box(_bubbleRect));
             Office?.CollectHitShapes(_hitShapes);
+            CollectCardShapes(_hitShapes);
         }
         bool capture = _captured || HudBusy || Office?.IsInteracting == true;
         if (capture == _pushedCapture && _hitShapes.SequenceEqual(_pushedHitShapes)) return;
@@ -1072,6 +1076,10 @@ public sealed class OverlayWindow : Window, IGameHost
             case "lan-leave": LeaveLan(); break;
             case "lan-find": OpenLobby(); break;
             case "shortcuts": OpenShortcuts(); break;
+            case "tour": ShowTour(); break;
+            case "year": ShowYear(); break;
+            case "share": ShareResult(); break;
+            case "share-picture": SharePicture(); break;
             case "quit": Quit(); break;
             case "durak-rooms": OpenDurakRooms(); break;
             case "lastcard-rooms": OpenLastCardRooms(); break;

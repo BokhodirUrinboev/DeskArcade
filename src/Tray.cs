@@ -59,6 +59,13 @@ public sealed class Tray : IDisposable
         var daily = Item(_w.DailyLine, () => _w.PlayDaily());
         _refreshers.Add(() => daily.Header = _w.DailyLine);
         menu.Add(daily);
+        var share = new NativeMenu();
+        share.Add(Item(L.T("Copy the result as text"), () => _w.ShareResult()));
+        share.Add(Item(L.T("Copy a picture of the game"), () => _w.SharePicture()));
+        var year = Item(L.T("Your year at the desk…"), () => _w.ShowYear());
+        _refreshers.Add(() => year.IsVisible = YearInReview.InSeason(DateTime.Now));
+        share.Add(year);
+        menu.Add(new NativeMenuItem(L.T("Share")) { Menu = share });
 
         var lan = new NativeMenu();
         var status = new NativeMenuItem(_w.LanStatus) { IsEnabled = false };
@@ -179,6 +186,7 @@ public sealed class Tray : IDisposable
         menu.Add(new NativeMenuItem("Claude Code") { Menu = claude });
 
         menu.Add(Item(L.T("Shortcuts…"), () => _w.OpenShortcuts()));
+        menu.Add(Item(L.T("Show the tour again"), () => _w.ShowTour()));
         menu.Add(Check(L.T("Start when I sign in"), () =>
         {
             _w.AutostartEnabled = !_w.AutostartEnabled;

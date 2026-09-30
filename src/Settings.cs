@@ -61,6 +61,11 @@ public sealed class Settings
     public int BestBubbles { get; set; }
     public int HockeyWins { get; set; }
     public bool FirstRun { get; set; } = true;
+    /// <summary>The year "your year at the desk" was last shown in (see <see cref="YearInReview"/>).</summary>
+    public int? YearCardShown { get; set; }
+    /// <summary>The year <see cref="YearBase"/> was taken in, and the counters' totals then, so the card counts the year's own.</summary>
+    public int? YearBaseYear { get; set; }
+    public Dictionary<string, long>? YearBase { get; set; }
     public bool ReducedMotion { get; set; }
     public bool ColorBlind { get; set; }
     /// <summary>Colours for mallets, paddles and balls: a theme id from <see cref="Engine.Themes"/>, or "seasonal".</summary>

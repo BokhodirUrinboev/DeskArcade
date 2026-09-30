@@ -36,7 +36,7 @@ public sealed record WaitEntry(WaitKind Kind, string Label, DateTime StartUtc, d
 /// </summary>
 public sealed class WaitLog
 {
-    public const int KeepDays = 120, MaxEntries = 20_000;
+    public const int KeepDays = 400, MaxEntries = 30_000;
     /// <summary>Waits shorter than this are not worth a line (an instant "done").</summary>
     public const double MinSeconds = 2;
 

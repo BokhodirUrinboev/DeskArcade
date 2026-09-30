@@ -23,3 +23,151 @@ msgstr "Офисный рейтинг: {0} в этом месяце, после 
 
 msgid "Office ladder: play a board game against a co-worker this month to get a rating"
 msgstr "Офисный рейтинг: сыграйте в этом месяце настольную игру с коллегой, чтобы получить рейтинг"
+
+msgid "Playing Desk Arcade while it builds"
+msgstr "Играю в Desk Arcade, пока идёт сборка"
+
+msgid "Desk Arcade · games on your desktop while it builds"
+msgstr "Desk Arcade · игры на рабочем столе, пока идёт сборка"
+
+#, c-sharp-format
+msgid "Desk Arcade daily · {0}: {1} ✓"
+msgstr "Задание дня Desk Arcade · {0}: {1} ✓"
+
+msgid "Copied · paste it into Teams, Slack or Telegram"
+msgstr "Скопировано · вставьте в Teams, Slack или Telegram"
+
+msgid "Picture copied · paste it into a chat"
+msgstr "Картинка скопирована · вставьте её в чат"
+
+#, c-sharp-format
+msgid "also saved as {0}"
+msgstr "также сохранена: {0}"
+
+msgid "Couldn't copy the picture"
+msgstr "Не удалось скопировать картинку"
+
+#, c-sharp-format
+msgid "{0} of {1}"
+msgstr "{0} из {1}"
+
+msgid "Back"
+msgstr "Назад"
+
+msgid "Let's play"
+msgstr "Играем!"
+
+msgid "Clicks go through"
+msgstr "Клики проходят насквозь"
+
+msgid "Only the game and the scoreboard take the mouse. Everywhere else your clicks and typing go to your windows, as if Desk Arcade were not there."
+msgstr "Мышь ловят только игра и табло. Во всех остальных местах щелчки и набор текста попадают в ваши окна, будто Desk Arcade и нет."
+
+msgid "Window tops are platforms: balls, bugs and the pet land on them and ride along when you drag a window."
+msgstr "Верх окон — это платформы: мячи, жуки и питомец садятся на них и едут вместе с окном, когда вы его тянете."
+
+msgid "Everything is in two menus"
+msgstr "Всё — в двух меню"
+
+msgid "Right-click the tray icon, or click ☰ on the scoreboard: games, the pet, At work, themes, and playing with co-workers."
+msgstr "Щёлкните правой кнопкой по значку в трее или нажмите ☰ на табло: игры, питомец, «На работе», темы и игра с коллегами."
+
+#, c-sharp-format
+msgid "{0} shows or hides the overlay · {1} next game · {2} brings the ball to the cursor"
+msgstr "{0} показать или скрыть · {1} следующая игра · {2} мяч к курсору"
+
+msgid "Play while it builds"
+msgstr "Играйте, пока идёт сборка"
+
+msgid "Put arcade in front of a command (arcade dotnet test) and the scoreboard shows it running, then chimes when it passes or fails."
+msgstr "Поставьте arcade перед командой (arcade dotnet test): табло покажет, что она выполняется, и прозвенит, когда она пройдёт или упадёт."
+
+msgid "Connect Claude Code and other coding agents under Coding agents & CI, and it tells you when they are done or need you."
+msgstr "Подключите Claude Code и других агентов в разделе «Агенты и CI» — табло скажет, когда они закончили или ждут вас."
+
+msgid "Desk Arcade"
+msgstr "Desk Arcade"
+
+msgid "Close"
+msgstr "Закрыть"
+
+msgid "Save as a picture"
+msgstr "Сохранить картинкой"
+
+#, c-sharp-format
+msgid "Waited on builds, tests, CI and agents: {0} over {1} waits, and played {2} of it"
+msgstr "Ожидание сборок, тестов, CI и агентов: {0} за {1} раз, из них игры — {2}"
+
+#, c-sharp-format
+msgid "The longest wait: {0}, {1}"
+msgstr "Самое долгое ожидание: {0}, {1}"
+
+#, c-sharp-format
+msgid "Favourite game: {0}, {1} played"
+msgstr "Любимая игра: {0}, сыграно {1}"
+
+#, c-sharp-format
+msgid "Best rival: {0}, {1}–{2} in {3} games"
+msgstr "Главный соперник: {0}, {1}–{2} за {3} игр"
+
+#, c-sharp-format
+msgid "Focus blocks: {0} · glasses of water: {1}"
+msgstr "Блоков фокуса: {0} · стаканов воды: {1}"
+
+#, c-sharp-format
+msgid "Claude finished {0} times while you played"
+msgstr "Claude закончил {0} раз, пока вы играли"
+
+#, c-sharp-format
+msgid "Daily challenges done: {0}"
+msgstr "Заданий дня выполнено: {0}"
+
+#, c-sharp-format
+msgid "Your pet has kept you company for {0} days"
+msgstr "Питомец составляет вам компанию уже {0} дн."
+
+#, c-sharp-format
+msgid "Achievements: {0} of {1}"
+msgstr "Достижения: {0} из {1}"
+
+#, c-sharp-format
+msgid "{0} s"
+msgstr "{0} с"
+
+#, c-sharp-format
+msgid "Your {0} at the desk"
+msgstr "Ваш {0} год за рабочим столом"
+
+msgid "Share"
+msgstr "Поделиться"
+
+msgid "Copy the result as text"
+msgstr "Скопировать результат текстом"
+
+msgid "Copy a picture of the game"
+msgstr "Скопировать картинку игры"
+
+msgid "Your year at the desk…"
+msgstr "Ваш год за рабочим столом…"
+
+msgid "Show the tour again"
+msgstr "Показать знакомство снова"
+
+#, c-sharp-format
+msgid "Sudoku daily · {0} ({1}): solved in {2} 🧩"
+msgstr "Судоку дня · {0} ({1}): решено за {2} 🧩"
+
+#, c-sharp-format
+msgid "Sudoku ({0}): solved in {1} 🧩"
+msgstr "Судоку ({0}): решено за {1} 🧩"
+
+#, c-sharp-format
+msgid "Minesweeper daily · {0} ({1}): cleared in {2} s 💣"
+msgstr "Сапер дня · {0} ({1}): разминировано за {2} с 💣"
+
+#, c-sharp-format
+msgid "Minesweeper ({0}): cleared in {1} s 💣"
+msgstr "Сапер ({0}): разминировано за {1} с 💣"
+
+msgid "three things to know"
+msgstr "три вещи, которые стоит знать"

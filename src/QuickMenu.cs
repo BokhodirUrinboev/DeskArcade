@@ -100,6 +100,11 @@ public static class QuickMenu
         yield return Item(L.T("Next game") + "   (" + Shortcuts.Label(HotkeyAction.NextGame) + ")", w.NextGame);
         yield return Item(L.T("Bring to cursor") + "   (" + Shortcuts.Label(HotkeyAction.Summon) + ")", w.SummonToCursor);
         yield return Item(w.DailyLine, w.PlayDaily);
+        var share = Sub(L.T("Share"));
+        share.Items.Add(Item(L.T("Copy the result as text"), w.ShareResult));
+        share.Items.Add(Item(L.T("Copy a picture of the game"), w.SharePicture));
+        if (YearInReview.InSeason(DateTime.Now)) share.Items.Add(Item(L.T("Your year at the desk…"), w.ShowYear));
+        yield return share;
 
         var sound = Sub(L.T("Sound"));
         sound.Items.Add(Check(L.T("Sound"), w.Settings.Sound, () => Toggle(w, s => s.Sound = !s.Sound)));
@@ -151,6 +156,7 @@ public static class QuickMenu
 
         yield return Item(L.T("Stats & achievements…"), w.OpenStats);
         yield return Item(L.T("Shortcuts…"), w.OpenShortcuts);
+        yield return Item(L.T("Show the tour again"), w.ShowTour);
         yield return Item(L.T("Move to next monitor"), w.MoveToNextMonitor);
         yield return Item(L.T("Reset positions"), w.ResetPositions);
         if (w.AvailableUpdate is { } update)

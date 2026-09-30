@@ -122,6 +122,11 @@ public sealed class SudokuGame : MiniGame
         }
     }
 
+    /// <summary>A solved puzzle to share: its time, and the date when it was the daily puzzle everyone had.</summary>
+    public override string? ShareText => !_rules.Solved ? null
+        : _daily && !LanOn ? L.F("Sudoku daily · {0} ({1}): solved in {2} 🧩", DateTime.Today.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture), L.T(Level.ToString()), Clock(Math.Max(1, Seconds)))
+        : L.F("Sudoku ({0}): solved in {1} 🧩", L.T(Level.ToString()), Clock(Math.Max(1, Seconds)));
+
     // ------------------------------------------------------------------ races
 
     public override bool SupportsLan => true;
