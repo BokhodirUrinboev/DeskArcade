@@ -289,6 +289,9 @@ public sealed class OverlayWindow : Window, IGameHost
         // 1.8.6 · party games (Quiz Night, Draw & Guess)
 
         // 1.8.6 · card games (Poker, Hearts)
+        var poker = new PokerGame(this);
+        poker.SetupRequested += () => RoomWindow.ShowFor(this, poker);
+        _games.Add(poker);
 
         // 1.8.6 · word and key games (Word Guess, Shortcut Trainer, Bit Flip)
 

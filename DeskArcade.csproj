@@ -44,7 +44,7 @@
   <ItemGroup>
     <!-- the translations, one gettext file per language (see Strings.cs) -->
     <EmbeddedResource Include="i18n\*.po" LogicalName="i18n/%(Filename)%(Extension)" />
-    <EmbeddedResource Include="i18n\parts\*.po" LogicalName="i18n/parts/%(Filename)%(Extension)" />
+    <EmbeddedResource Include="i18n\parts\*.po" LogicalName="i18n/parts/%(Filename)%(Extension)" WithCulture="false" />
   </ItemGroup>
 
   <ItemGroup>
