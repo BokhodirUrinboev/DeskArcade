@@ -431,6 +431,7 @@ public sealed partial class TypingRaceGame : MiniGame, IKeySink
         if (won is not { } w) return;
         _resultShown = true;
         _won = w;
+        if (LanOn) Host.RecordResult(Id, RivalName, w ? 1 : -1);
         var at = new Vec2(PanelRect.Center.X, PanelRect.Top - 10);
         if (w)
         {

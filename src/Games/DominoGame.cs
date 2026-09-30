@@ -330,6 +330,7 @@ public sealed class DominoGame : MiniGame
         if (_rules.MatchOver)
         {
             bool won = _rules.MatchWinner == Me;
+            if (LanOn) Host.RecordResult(Id, Rival, won ? 1 : -1);
             if (won && !_demo)
             {
                 Host.Stats.Add("dominoes.wins");

@@ -43,6 +43,7 @@ public sealed class OfficeBoard : IDisposable
         ("bugs", "Bugs squashed", new[] { "bugs.squashed", "whack.hits" }),
         ("tower", "Tallest tower", new[] { "tower.height" }),
         ("lan", "LAN wins", new[] { "lan.wins" }),
+        ("ladder", "Office ladder · this month's rating", Array.Empty<string>()), // board games against co-workers (see Rivalries)
         ("minutes", "Minutes played", new[] { "play.ms" }), // milliseconds; shown in minutes
     };
 
@@ -111,9 +112,17 @@ public sealed class OfficeBoard : IDisposable
             if ((now - seen).TotalSeconds > ForgetSeconds) _others.Remove(key);
     }
 
-    /// <summary>Today's scores for every category, from a counter reader such as <c>Stats.Today</c>.</summary>
-    public static Dictionary<string, long> Scores(Func<string, long> today) =>
-        Categories.ToDictionary(c => c.Key, c => c.Key == "minutes" ? today("play.ms") / 60000 : c.Counters.Sum(today));
+    /// <summary>
+    /// Today's scores for every category, from a counter reader such as <c>Stats.Today</c>, and the month's ladder
+    /// rating when this player has played a board game against a co-worker this month.
+    /// </summary>
+    public static Dictionary<string, long> Scores(Func<string, long> today, int? ladder = null) =>
+        Categories.ToDictionary(c => c.Key, c => c.Key switch
+        {
+            "minutes" => today("play.ms") / 60000,
+            "ladder" => ladder ?? 0,
+            _ => c.Counters.Sum(today),
+        });
 
     /// <summary>Ranks everyone on one category, best first, leaving out zeros.</summary>
     public static List<(string Id, string Name, long Score)> Rank(IEnumerable<BoardEntry> entries, string key) =>

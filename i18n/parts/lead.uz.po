@@ -1,0 +1,25 @@
+# Desk Arcade: Uzbek (uz), 1.8.6 additions by the lead: rivalries, sharing, the tour, the year.
+msgid ""
+msgstr ""
+"Project-Id-Version: Desk Arcade\n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Office ladder · this month's rating"
+msgstr "Ofis reytingi · shu oy uchun"
+
+msgid "Your record"
+msgstr "Sizning hisobingiz"
+
+#, c-sharp-format
+msgid "{0}: won {1}, lost {2}, drawn {3}"
+msgstr "{0}: {1} ta g'alaba, {2} ta mag'lubiyat, {3} ta durang"
+
+#, c-sharp-format
+msgid "Office ladder: {0} this month, after {1} board games against co-workers"
+msgstr "Ofis reytingi: shu oyda {0}, hamkasblar bilan {1} ta stol o'yinidan keyin"
+
+msgid "Office ladder: play a board game against a co-worker this month to get a rating"
+msgstr "Ofis reytingi: reyting olish uchun shu oyda hamkasb bilan stol o'yini o'ynang"

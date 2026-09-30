@@ -171,6 +171,7 @@ public sealed partial class ArcheryGame
         var a = Host.Arena;
         var at = new Vec2(a.Center.X, a.Top + a.Height * 0.3);
         string sub = L.F("{0}–{1} · pull the bow for a rematch", _match.MyScore, _match.TheirScore);
+        Host.RecordResult("archery", Host.Lan.PeerName, _match.Won switch { true => 1, false => -1, _ => 0 });
         if (_match.Won == true)
         {
             Host.Stats.Add("archery.duelwins");

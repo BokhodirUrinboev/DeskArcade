@@ -13,7 +13,8 @@ namespace DeskArcade;
 
 /// <summary>
 /// Lists the Desk Arcade hosts on the local network (refreshed every couple of seconds) and joins the one
-/// you click, or an address you type when the network blocks broadcasts. Opened from the tray menu.
+/// you click, or an address you type when the network blocks broadcasts. Under them, your record against each
+/// co-worker you have played (see <see cref="Rivalries"/>) and your ladder rating this month. Opened from the tray menu.
 /// </summary>
 public sealed class LobbyWindow : Window
 {
@@ -66,6 +67,7 @@ public sealed class LobbyWindow : Window
         panel.Children.Add(_hosts);
         panel.Children.Add(Text(L.T("Or join by address (ask the host for their IP):"), 12, "#AAB3C0"));
         panel.Children.Add(new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8, Children = { _address, join } });
+        AddRecord(panel);
         Content = new ScrollViewer { Content = panel };
 
         _timer.Tick += (_, _) => Search();
@@ -122,6 +124,31 @@ public sealed class LobbyWindow : Window
     {
         _overlay.JoinLan(address);
         Close();
+    }
+
+    /// <summary>"Your record": each co-worker played (the most games first), game by game, and this month's ladder rating.</summary>
+    void AddRecord(StackPanel panel)
+    {
+        var rivals = _overlay.Rivals;
+        var names = rivals.Opponents.Take(8).ToList();
+        if (names.Count == 0) return;
+        panel.Children.Add(Text(L.T("Your record"), 15, "#FFD166", FontWeight.Bold));
+        foreach (string name in names)
+        {
+            var (won, drawn, lost) = rivals.Against(name);
+            var games = rivals.ByGame(name).Take(4).Select(g =>
+            {
+                string title = _overlay.Games.FirstOrDefault(x => x.Id == g.GameId) is { } game ? L.T(game.Title) : g.GameId;
+                return g.Drawn > 0 ? $"{title} {g.Won}–{g.Lost}–{g.Drawn}" : $"{title} {g.Won}–{g.Lost}";
+            });
+            panel.Children.Add(Text(L.F("{0}: won {1}, lost {2}, drawn {3}", name, won, lost, drawn), 13, "#FFFFFF", FontWeight.SemiBold));
+            panel.Children.Add(Text(string.Join(" · ", games), 12, "#AAB3C0"));
+        }
+        var now = DateTime.UtcNow;
+        int played = rivals.LadderGamesPlayed(now);
+        panel.Children.Add(Text(played > 0
+            ? L.F("Office ladder: {0} this month, after {1} board games against co-workers", rivals.Rating(now), played)
+            : L.T("Office ladder: play a board game against a co-worker this month to get a rating"), 12, "#AAB3C0"));
     }
 
     static TextBlock Text(string text, double size, string color, FontWeight weight = FontWeight.Normal) =>

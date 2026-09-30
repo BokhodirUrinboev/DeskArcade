@@ -187,6 +187,7 @@ public sealed partial class GolfGame
         var a = Host.Arena;
         var at = new Vec2(a.Center.X, a.Top + a.Height * 0.3 + 80);
         string sub = L.F("holes {0}–{1} · putt for a rematch", _match.MyHoles, _match.TheirHoles);
+        Host.RecordResult("golf", Host.Lan.PeerName, _match.Won switch { true => 1, false => -1, _ => 0 });
         if (_match.Won == true)
         {
             Host.Stats.Add("golf.duelwins");

@@ -293,6 +293,7 @@ public sealed partial class HoopsGame
 
     void HorseGameOver(bool won)
     {
+        Host.RecordResult("hoops", Host.Lan.PeerName, won ? 1 : -1);
         var a = Host.Arena;
         var at = new Vec2(a.Center.X, a.Top + a.Height * 0.3);
         if (won)

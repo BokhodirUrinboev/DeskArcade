@@ -302,6 +302,12 @@ public sealed class LastCardGame : MiniGame, IRoomGame
         _announced = true;
         var at = new Vec2(_area.Center.X, _area.Top + _area.Height * 0.3);
         Host.Stats.Add("lastcard.games");
+        if (_mode != Mode.Solo && v.Winner >= 0)
+            for (int seat = 0; seat < v.Names.Length; seat++)
+            {
+                bool person = seat != v.Seat && !(seat < v.Cpu.Length && v.Cpu[seat]);
+                if (person && (v.Winner == v.Seat || v.Winner == seat)) Host.RecordResult(Id, v.Names[seat], v.Winner == v.Seat ? 1 : -1);
+            }
         if (v.Winner == v.Seat)
         {
             Host.Stats.Add("lastcard.wins");

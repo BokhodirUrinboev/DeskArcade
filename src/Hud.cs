@@ -370,6 +370,7 @@ public sealed class Hud : Border
             false => level.Length > 0 ? turn + " · " + level : turn,
             _ => opp.Teammate ? L.F("with {0}", who) : L.F("vs {0}", who),
         };
+        if (opp.Record is { Length: > 0 } record) _oppText.Text += " · " + record; // the rivalry so far, on the board only
         _pillOppText.Text = turn.Length > 0 ? turn : who;
         ToolTip.SetTip(_pillOpp, opp.MyTurn == null ? _oppText.Text : L.F("vs {0}", who) + " · " + turn);
         ToolTip.SetTip(_oppChip, _oppText.Text);

@@ -288,6 +288,7 @@ public sealed class HockeyGame : MiniGame
     /// <summary>A LAN match is over; the series counts already include it.</summary>
     void LanMatchOverFx(bool won, Vec2 at)
     {
+        Host.RecordResult(Id, Host.Lan.PeerName, won ? 1 : -1);
         if (won)
         {
             Host.Stats.Add("hockey.lanwins");

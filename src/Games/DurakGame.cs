@@ -558,6 +558,12 @@ public sealed class DurakGame : MiniGame, IRoomGame
         _announced = true;
         var at = new Vec2(_area.Center.X, _area.Top + _area.Height * 0.3);
         Host.Stats.Add("durak.games");
+        if (_mode != Mode.Solo && v.Durak >= 0)
+            for (int seat = 0; seat < v.Names.Length; seat++)
+            {
+                bool person = seat != v.Seat && !(seat < v.Cpu.Length && v.Cpu[seat]);
+                if (person && (v.Durak == v.Seat || v.Durak == seat)) Host.RecordResult(Id, v.Names[seat], v.Durak == seat ? 1 : -1);
+            }
         if (v.Durak == v.Seat)
         {
             Host.Fx.Popup(at, L.T("YOU'RE THE DURAK!"), Colors.White, 40, 2.6, L.T("better luck next deal"));

@@ -312,6 +312,7 @@ public sealed class CurlingGame : MiniGame
     {
         var at = new Vec2(_box.Center.X, _box.Top - 70);
         int mine = _rules.Score(Me), theirs = _rules.Score(1 - Me);
+        if (LanOn) Host.RecordResult(Id, Host.Lan.PeerName, _rules.Winner == Me ? 1 : _rules.Winner < 0 ? 0 : -1);
         if (_rules.Winner == Me)
         {
             Host.Stats.Add("curling.wins");

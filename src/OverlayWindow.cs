@@ -649,7 +649,18 @@ public sealed class OverlayWindow : Window, IGameHost
 
     public void HudChanged()
     {
-        if (Current != null) _hud.Show(Current.Hud, Current.Opponent ?? _race.Opponent);
+        if (Current == null) return;
+        var opponent = Current.Opponent ?? _race.Opponent;
+        if (opponent is { IsCpu: false, Teammate: false }) opponent = opponent with { Record = RecordLine(Current.Id, opponent.Name) };
+        _hud.Show(Current.Hud, opponent);
+    }
+
+    /// <summary>"7–5" (wins–losses, "7–5–1" with draws) against a co-worker in a game, or null before the first game.</summary>
+    public string? RecordLine(string gameId, string opponent)
+    {
+        var (won, drawn, lost) = Rivals.Against(opponent, gameId);
+        if (won + drawn + lost == 0) return null;
+        return drawn > 0 ? $"{won}–{lost}–{drawn}" : $"{won}–{lost}";
     }
 
     /// <summary>Seconds since the overlay started, for pacing things that live outside the games.</summary>
@@ -1140,6 +1151,7 @@ public sealed class OverlayWindow : Window, IGameHost
     {
         if (_demo || string.IsNullOrWhiteSpace(opponent)) return; // a demo's "co-worker" is another demo
         Rivals.Record(gameId, opponent, outcome);
+        HudChanged(); // the record on the chip
     }
 
     public void OpenShortcuts() => ShortcutsWindow.ShowFor(this);
@@ -1719,7 +1731,7 @@ public sealed class OverlayWindow : Window, IGameHost
 
     /// <summary>Snapshots today's scores on the UI thread; the board shares the snapshot from its own thread.</summary>
     void RefreshBoardEntry() => _boardEntry = new BoardEntry(OfficeBoard.InstanceId, LanLink.MyName, DateTime.Now.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture),
-        OfficeBoard.Scores(Stats.Today));
+        OfficeBoard.Scores(Stats.Today, Rivals.LadderGamesPlayed(DateTime.UtcNow) > 0 ? Rivals.Rating(DateTime.UtcNow) : null));
 
     public void SetBreakMinutes(int minutes)
     {
