@@ -1,0 +1,1629 @@
+[
+ {
+  "en": "cat",
+  "ru": "кошка|кот|котик",
+  "uz": "mushuk"
+ },
+ {
+  "en": "dog",
+  "ru": "собака|пёс|пес|собачка",
+  "uz": "it|kuchuk"
+ },
+ {
+  "en": "mouse",
+  "ru": "мышь|мышка",
+  "uz": "sichqon"
+ },
+ {
+  "en": "horse",
+  "ru": "лошадь|конь|лошадка",
+  "uz": "ot"
+ },
+ {
+  "en": "cow",
+  "ru": "корова",
+  "uz": "sigir"
+ },
+ {
+  "en": "sheep|lamb",
+  "ru": "овца|баран|овечка|барашек",
+  "uz": "qo'y|qo'zi"
+ },
+ {
+  "en": "goat",
+  "ru": "коза|козёл|козел",
+  "uz": "echki"
+ },
+ {
+  "en": "chicken|hen",
+  "ru": "курица",
+  "uz": "tovuq"
+ },
+ {
+  "en": "cockerel|rooster",
+  "ru": "петух|петушок",
+  "uz": "xo'roz"
+ },
+ {
+  "en": "duck",
+  "ru": "утка|уточка",
+  "uz": "o'rdak"
+ },
+ {
+  "en": "rabbit|bunny|hare",
+  "ru": "кролик|заяц|зайчик|зайка",
+  "uz": "quyon"
+ },
+ {
+  "en": "bear",
+  "ru": "медведь|мишка",
+  "uz": "ayiq"
+ },
+ {
+  "en": "wolf",
+  "ru": "волк",
+  "uz": "bo'ri"
+ },
+ {
+  "en": "fox",
+  "ru": "лиса|лисица",
+  "uz": "tulki"
+ },
+ {
+  "en": "lion",
+  "ru": "лев",
+  "uz": "sher|arslon"
+ },
+ {
+  "en": "tiger",
+  "ru": "тигр",
+  "uz": "yo'lbars"
+ },
+ {
+  "en": "elephant",
+  "ru": "слон",
+  "uz": "fil"
+ },
+ {
+  "en": "giraffe",
+  "ru": "жираф",
+  "uz": "jirafa|jiraf"
+ },
+ {
+  "en": "zebra",
+  "ru": "зебра",
+  "uz": "zebra"
+ },
+ {
+  "en": "monkey",
+  "ru": "обезьяна|мартышка",
+  "uz": "maymun"
+ },
+ {
+  "en": "camel",
+  "ru": "верблюд",
+  "uz": "tuya"
+ },
+ {
+  "en": "snake",
+  "ru": "змея",
+  "uz": "ilon"
+ },
+ {
+  "en": "frog",
+  "ru": "лягушка",
+  "uz": "qurbaqa|baqa"
+ },
+ {
+  "en": "turtle|tortoise",
+  "ru": "черепаха",
+  "uz": "toshbaqa"
+ },
+ {
+  "en": "fish",
+  "ru": "рыба|рыбка",
+  "uz": "baliq"
+ },
+ {
+  "en": "shark",
+  "ru": "акула",
+  "uz": "akula"
+ },
+ {
+  "en": "whale",
+  "ru": "кит",
+  "uz": "kit"
+ },
+ {
+  "en": "dolphin",
+  "ru": "дельфин",
+  "uz": "delfin"
+ },
+ {
+  "en": "octopus",
+  "ru": "осьминог",
+  "uz": "sakkizoyoq|osminog"
+ },
+ {
+  "en": "crab",
+  "ru": "краб",
+  "uz": "qisqichbaqa|krab"
+ },
+ {
+  "en": "bird",
+  "ru": "птица|птичка",
+  "uz": "qush"
+ },
+ {
+  "en": "owl",
+  "ru": "сова|филин",
+  "uz": "boyqush|boyo'g'li"
+ },
+ {
+  "en": "eagle",
+  "ru": "орёл|орел",
+  "uz": "burgut"
+ },
+ {
+  "en": "penguin",
+  "ru": "пингвин",
+  "uz": "pingvin"
+ },
+ {
+  "en": "parrot",
+  "ru": "попугай",
+  "uz": "to'tiqush|to'ti"
+ },
+ {
+  "en": "butterfly",
+  "ru": "бабочка",
+  "uz": "kapalak"
+ },
+ {
+  "en": "bee",
+  "ru": "пчела|пчёлка|пчелка",
+  "uz": "asalari|ari"
+ },
+ {
+  "en": "spider",
+  "ru": "паук",
+  "uz": "o'rgimchak"
+ },
+ {
+  "en": "snail",
+  "ru": "улитка",
+  "uz": "shilliqqurt"
+ },
+ {
+  "en": "ladybird|ladybug",
+  "ru": "божья коровка",
+  "uz": "xonqizi"
+ },
+ {
+  "en": "bat",
+  "ru": "летучая мышь",
+  "uz": "ko'rshapalak"
+ },
+ {
+  "en": "hedgehog",
+  "ru": "ёж|еж|ёжик|ежик",
+  "uz": "tipratikan"
+ },
+ {
+  "en": "squirrel",
+  "ru": "белка",
+  "uz": "olmaxon|tiyin"
+ },
+ {
+  "en": "kangaroo",
+  "ru": "кенгуру",
+  "uz": "kenguru"
+ },
+ {
+  "en": "crocodile|alligator",
+  "ru": "крокодил",
+  "uz": "timsoh"
+ },
+ {
+  "en": "deer",
+  "ru": "олень",
+  "uz": "bug'u|kiyik"
+ },
+ {
+  "en": "dinosaur",
+  "ru": "динозавр",
+  "uz": "dinozavr"
+ },
+ {
+  "en": "panda",
+  "ru": "панда",
+  "uz": "panda"
+ },
+ {
+  "en": "apple",
+  "ru": "яблоко",
+  "uz": "olma"
+ },
+ {
+  "en": "banana",
+  "ru": "банан",
+  "uz": "banan"
+ },
+ {
+  "en": "pear",
+  "ru": "груша",
+  "uz": "nok"
+ },
+ {
+  "en": "orange",
+  "ru": "апельсин",
+  "uz": "apelsin"
+ },
+ {
+  "en": "lemon",
+  "ru": "лимон",
+  "uz": "limon"
+ },
+ {
+  "en": "cherry|cherries",
+  "ru": "вишня|черешня",
+  "uz": "olcha|gilos"
+ },
+ {
+  "en": "strawberry",
+  "ru": "клубника|земляника",
+  "uz": "qulupnay"
+ },
+ {
+  "en": "grapes|grape",
+  "ru": "виноград",
+  "uz": "uzum"
+ },
+ {
+  "en": "watermelon",
+  "ru": "арбуз",
+  "uz": "tarvuz"
+ },
+ {
+  "en": "melon",
+  "ru": "дыня",
+  "uz": "qovun"
+ },
+ {
+  "en": "pomegranate",
+  "ru": "гранат",
+  "uz": "anor"
+ },
+ {
+  "en": "peach",
+  "ru": "персик",
+  "uz": "shaftoli"
+ },
+ {
+  "en": "pineapple",
+  "ru": "ананас",
+  "uz": "ananas"
+ },
+ {
+  "en": "carrot",
+  "ru": "морковь|морковка",
+  "uz": "sabzi"
+ },
+ {
+  "en": "tomato",
+  "ru": "помидор|томат",
+  "uz": "pomidor"
+ },
+ {
+  "en": "cucumber",
+  "ru": "огурец",
+  "uz": "bodring"
+ },
+ {
+  "en": "potato",
+  "ru": "картошка|картофель",
+  "uz": "kartoshka"
+ },
+ {
+  "en": "onion",
+  "ru": "лук|луковица",
+  "uz": "piyoz"
+ },
+ {
+  "en": "corn|sweetcorn|maize",
+  "ru": "кукуруза",
+  "uz": "makkajo'xori"
+ },
+ {
+  "en": "mushroom",
+  "ru": "гриб|грибок",
+  "uz": "qo'ziqorin"
+ },
+ {
+  "en": "pepper|chilli|chili",
+  "ru": "перец|перчик",
+  "uz": "qalampir"
+ },
+ {
+  "en": "bread|loaf|flatbread",
+  "ru": "хлеб|батон|лепёшка|лепешка",
+  "uz": "non"
+ },
+ {
+  "en": "cheese",
+  "ru": "сыр",
+  "uz": "pishloq"
+ },
+ {
+  "en": "egg",
+  "ru": "яйцо",
+  "uz": "tuxum"
+ },
+ {
+  "en": "cake",
+  "ru": "торт",
+  "uz": "tort"
+ },
+ {
+  "en": "ice cream",
+  "ru": "мороженое",
+  "uz": "muzqaymoq"
+ },
+ {
+  "en": "pizza",
+  "ru": "пицца",
+  "uz": "pitsa"
+ },
+ {
+  "en": "burger|hamburger",
+  "ru": "бургер|гамбургер",
+  "uz": "burger|gamburger"
+ },
+ {
+  "en": "hot dog|hotdog",
+  "ru": "хот-дог|хотдог",
+  "uz": "hot-dog|xot-dog|hotdog"
+ },
+ {
+  "en": "sandwich",
+  "ru": "бутерброд|сэндвич",
+  "uz": "buterbrod|sendvich"
+ },
+ {
+  "en": "sweet|candy",
+  "ru": "конфета|конфетка",
+  "uz": "konfet"
+ },
+ {
+  "en": "doughnut|donut",
+  "ru": "пончик",
+  "uz": "ponchik|donut"
+ },
+ {
+  "en": "biscuit|cookie",
+  "ru": "печенье|печенька",
+  "uz": "pechenye"
+ },
+ {
+  "en": "honey",
+  "ru": "мёд|мед",
+  "uz": "asal"
+ },
+ {
+  "en": "pilaf|plov|pilau",
+  "ru": "плов",
+  "uz": "palov|osh"
+ },
+ {
+  "en": "sausage",
+  "ru": "сосиска|колбаса",
+  "uz": "sosiska|kolbasa"
+ },
+ {
+  "en": "chocolate",
+  "ru": "шоколад|шоколадка",
+  "uz": "shokolad"
+ },
+ {
+  "en": "popcorn",
+  "ru": "попкорн",
+  "uz": "popkorn"
+ },
+ {
+  "en": "pumpkin",
+  "ru": "тыква",
+  "uz": "qovoq"
+ },
+ {
+  "en": "kebab|shish kebab|shashlik",
+  "ru": "шашлык",
+  "uz": "shashlik|kabob"
+ },
+ {
+  "en": "chair",
+  "ru": "стул|стульчик",
+  "uz": "stul"
+ },
+ {
+  "en": "table",
+  "ru": "стол|столик",
+  "uz": "stol"
+ },
+ {
+  "en": "bed",
+  "ru": "кровать",
+  "uz": "karavot"
+ },
+ {
+  "en": "sofa|couch|settee",
+  "ru": "диван",
+  "uz": "divan"
+ },
+ {
+  "en": "armchair",
+  "ru": "кресло",
+  "uz": "kreslo"
+ },
+ {
+  "en": "door",
+  "ru": "дверь",
+  "uz": "eshik"
+ },
+ {
+  "en": "window",
+  "ru": "окно|окошко",
+  "uz": "deraza"
+ },
+ {
+  "en": "light bulb|bulb|lightbulb",
+  "ru": "лампочка",
+  "uz": "lampochka"
+ },
+ {
+  "en": "television|tv|telly",
+  "ru": "телевизор|телик",
+  "uz": "televizor"
+ },
+ {
+  "en": "mirror",
+  "ru": "зеркало",
+  "uz": "oyna|ko'zgu"
+ },
+ {
+  "en": "bath|bathtub|tub",
+  "ru": "ванна",
+  "uz": "vanna"
+ },
+ {
+  "en": "umbrella",
+  "ru": "зонт|зонтик",
+  "uz": "soyabon|zontik"
+ },
+ {
+  "en": "candle",
+  "ru": "свеча|свечка",
+  "uz": "sham"
+ },
+ {
+  "en": "broom",
+  "ru": "метла|веник",
+  "uz": "supurgi"
+ },
+ {
+  "en": "bucket",
+  "ru": "ведро",
+  "uz": "chelak"
+ },
+ {
+  "en": "spoon",
+  "ru": "ложка",
+  "uz": "qoshiq"
+ },
+ {
+  "en": "fork",
+  "ru": "вилка",
+  "uz": "sanchqi|vilka"
+ },
+ {
+  "en": "knife",
+  "ru": "нож",
+  "uz": "pichoq"
+ },
+ {
+  "en": "plate",
+  "ru": "тарелка",
+  "uz": "likopcha|tarelka"
+ },
+ {
+  "en": "glass|tumbler",
+  "ru": "стакан",
+  "uz": "stakan"
+ },
+ {
+  "en": "bottle",
+  "ru": "бутылка",
+  "uz": "shisha|butilka"
+ },
+ {
+  "en": "teapot",
+  "ru": "чайник",
+  "uz": "choynak"
+ },
+ {
+  "en": "tea bowl|bowl|piala",
+  "ru": "пиала",
+  "uz": "piyola"
+ },
+ {
+  "en": "cauldron|kazan|pot",
+  "ru": "казан|котёл|котел",
+  "uz": "qozon"
+ },
+ {
+  "en": "frying pan|pan|skillet",
+  "ru": "сковорода|сковородка",
+  "uz": "tova|skovorodka"
+ },
+ {
+  "en": "fridge|refrigerator",
+  "ru": "холодильник",
+  "uz": "muzlatgich|xolodilnik"
+ },
+ {
+  "en": "vacuum cleaner|vacuum",
+  "ru": "пылесос",
+  "uz": "changyutgich"
+ },
+ {
+  "en": "iron",
+  "ru": "утюг",
+  "uz": "dazmol"
+ },
+ {
+  "en": "pillow|cushion",
+  "ru": "подушка",
+  "uz": "yostiq"
+ },
+ {
+  "en": "basket",
+  "ru": "корзина|корзинка",
+  "uz": "savat"
+ },
+ {
+  "en": "toothbrush",
+  "ru": "зубная щётка|зубная щетка|щётка|щетка",
+  "uz": "tish cho'tkasi"
+ },
+ {
+  "en": "present|gift",
+  "ru": "подарок",
+  "uz": "sovg'a"
+ },
+ {
+  "en": "book",
+  "ru": "книга|книжка",
+  "uz": "kitob"
+ },
+ {
+  "en": "pencil",
+  "ru": "карандаш",
+  "uz": "qalam"
+ },
+ {
+  "en": "coin",
+  "ru": "монета|монетка",
+  "uz": "tanga"
+ },
+ {
+  "en": "ladder",
+  "ru": "лестница|стремянка",
+  "uz": "narvon"
+ },
+ {
+  "en": "sun",
+  "ru": "солнце|солнышко",
+  "uz": "quyosh"
+ },
+ {
+  "en": "moon|crescent|crescent moon",
+  "ru": "луна|месяц",
+  "uz": "oy"
+ },
+ {
+  "en": "star",
+  "ru": "звезда|звёздочка|звездочка",
+  "uz": "yulduz"
+ },
+ {
+  "en": "rain",
+  "ru": "дождь",
+  "uz": "yomg'ir"
+ },
+ {
+  "en": "snowflake",
+  "ru": "снежинка",
+  "uz": "qor parchasi|qor uchquni"
+ },
+ {
+  "en": "snowman",
+  "ru": "снеговик",
+  "uz": "qor odam|qordan odam"
+ },
+ {
+  "en": "lightning|lightning bolt",
+  "ru": "молния",
+  "uz": "chaqmoq|yashin"
+ },
+ {
+  "en": "rainbow",
+  "ru": "радуга",
+  "uz": "kamalak"
+ },
+ {
+  "en": "tree",
+  "ru": "дерево",
+  "uz": "daraxt"
+ },
+ {
+  "en": "flower",
+  "ru": "цветок|цветочек",
+  "uz": "gul"
+ },
+ {
+  "en": "leaf",
+  "ru": "лист|листок|листик",
+  "uz": "barg"
+ },
+ {
+  "en": "mountain",
+  "ru": "гора|горы",
+  "uz": "tog'"
+ },
+ {
+  "en": "volcano",
+  "ru": "вулкан",
+  "uz": "vulqon|vulkan"
+ },
+ {
+  "en": "island",
+  "ru": "остров",
+  "uz": "orol"
+ },
+ {
+  "en": "river",
+  "ru": "река|речка",
+  "uz": "daryo"
+ },
+ {
+  "en": "wave",
+  "ru": "волна",
+  "uz": "to'lqin"
+ },
+ {
+  "en": "fire|flame|flames",
+  "ru": "огонь|пламя",
+  "uz": "olov|alanga"
+ },
+ {
+  "en": "tornado|twister|whirlwind",
+  "ru": "торнадо|смерч|вихрь",
+  "uz": "quyun|tornado"
+ },
+ {
+  "en": "cactus",
+  "ru": "кактус",
+  "uz": "kaktus"
+ },
+ {
+  "en": "palm tree|palm",
+  "ru": "пальма",
+  "uz": "palma"
+ },
+ {
+  "en": "rose",
+  "ru": "роза|розочка",
+  "uz": "atirgul"
+ },
+ {
+  "en": "sunflower",
+  "ru": "подсолнух|подсолнечник",
+  "uz": "kungaboqar"
+ },
+ {
+  "en": "tulip",
+  "ru": "тюльпан",
+  "uz": "lola"
+ },
+ {
+  "en": "stone|rock",
+  "ru": "камень",
+  "uz": "tosh"
+ },
+ {
+  "en": "planet",
+  "ru": "планета",
+  "uz": "sayyora|planeta"
+ },
+ {
+  "en": "waterfall",
+  "ru": "водопад",
+  "uz": "sharshara"
+ },
+ {
+  "en": "car",
+  "ru": "машина|автомобиль",
+  "uz": "mashina|avtomobil"
+ },
+ {
+  "en": "bus",
+  "ru": "автобус",
+  "uz": "avtobus"
+ },
+ {
+  "en": "lorry|truck",
+  "ru": "грузовик",
+  "uz": "yuk mashinasi"
+ },
+ {
+  "en": "bike|bicycle",
+  "ru": "велосипед|велик",
+  "uz": "velosiped"
+ },
+ {
+  "en": "motorbike|motorcycle",
+  "ru": "мотоцикл",
+  "uz": "mototsikl"
+ },
+ {
+  "en": "train",
+  "ru": "поезд",
+  "uz": "poyezd"
+ },
+ {
+  "en": "aeroplane|airplane|plane",
+  "ru": "самолёт|самолет",
+  "uz": "samolyot"
+ },
+ {
+  "en": "helicopter",
+  "ru": "вертолёт|вертолет",
+  "uz": "vertolyot"
+ },
+ {
+  "en": "ship",
+  "ru": "корабль",
+  "uz": "kema"
+ },
+ {
+  "en": "boat",
+  "ru": "лодка",
+  "uz": "qayiq"
+ },
+ {
+  "en": "sailing boat|sailboat|yacht",
+  "ru": "парусник|яхта",
+  "uz": "yelkanli qayiq|yaxta"
+ },
+ {
+  "en": "submarine",
+  "ru": "подводная лодка",
+  "uz": "suvosti kemasi"
+ },
+ {
+  "en": "tractor",
+  "ru": "трактор",
+  "uz": "traktor"
+ },
+ {
+  "en": "taxi",
+  "ru": "такси",
+  "uz": "taksi"
+ },
+ {
+  "en": "ambulance",
+  "ru": "скорая помощь|скорая",
+  "uz": "tez yordam"
+ },
+ {
+  "en": "traffic light|traffic lights",
+  "ru": "светофор",
+  "uz": "svetofor"
+ },
+ {
+  "en": "wheel",
+  "ru": "колесо",
+  "uz": "g'ildirak"
+ },
+ {
+  "en": "anchor",
+  "ru": "якорь",
+  "uz": "langar"
+ },
+ {
+  "en": "parachute",
+  "ru": "парашют",
+  "uz": "parashyut"
+ },
+ {
+  "en": "hat",
+  "ru": "шляпа",
+  "uz": "shlyapa"
+ },
+ {
+  "en": "cap|baseball cap",
+  "ru": "кепка",
+  "uz": "kepka"
+ },
+ {
+  "en": "skullcap|doppi|tubeteika",
+  "ru": "тюбетейка",
+  "uz": "do'ppi"
+ },
+ {
+  "en": "t-shirt|tee shirt",
+  "ru": "футболка",
+  "uz": "futbolka"
+ },
+ {
+  "en": "trousers|pants",
+  "ru": "брюки|штаны",
+  "uz": "shim"
+ },
+ {
+  "en": "dress",
+  "ru": "платье",
+  "uz": "ko'ylak"
+ },
+ {
+  "en": "skirt",
+  "ru": "юбка",
+  "uz": "yubka"
+ },
+ {
+  "en": "sock|socks",
+  "ru": "носок|носки",
+  "uz": "paypoq"
+ },
+ {
+  "en": "shoe|shoes",
+  "ru": "ботинок|туфля|ботинки|туфли",
+  "uz": "tufli|poyabzal|botinka"
+ },
+ {
+  "en": "boot|boots|wellies",
+  "ru": "сапог|сапоги",
+  "uz": "etik"
+ },
+ {
+  "en": "glove|gloves",
+  "ru": "перчатка|перчатки",
+  "uz": "qo'lqop"
+ },
+ {
+  "en": "scarf",
+  "ru": "шарф",
+  "uz": "sharf"
+ },
+ {
+  "en": "tie|necktie",
+  "ru": "галстук",
+  "uz": "galstuk"
+ },
+ {
+  "en": "glasses|spectacles|specs",
+  "ru": "очки",
+  "uz": "ko'zoynak"
+ },
+ {
+  "en": "crown",
+  "ru": "корона",
+  "uz": "toj"
+ },
+ {
+  "en": "ring",
+  "ru": "кольцо|колечко",
+  "uz": "uzuk"
+ },
+ {
+  "en": "handbag|bag",
+  "ru": "сумка|сумочка",
+  "uz": "sumka"
+ },
+ {
+  "en": "eye",
+  "ru": "глаз",
+  "uz": "ko'z"
+ },
+ {
+  "en": "nose",
+  "ru": "нос",
+  "uz": "burun"
+ },
+ {
+  "en": "ear",
+  "ru": "ухо",
+  "uz": "quloq"
+ },
+ {
+  "en": "mouth|lips",
+  "ru": "рот|губы",
+  "uz": "og'iz|lab"
+ },
+ {
+  "en": "hand",
+  "ru": "рука|ладонь",
+  "uz": "qo'l|kaft"
+ },
+ {
+  "en": "foot",
+  "ru": "ступня|нога",
+  "uz": "oyoq"
+ },
+ {
+  "en": "tooth",
+  "ru": "зуб",
+  "uz": "tish"
+ },
+ {
+  "en": "brain",
+  "ru": "мозг",
+  "uz": "miya"
+ },
+ {
+  "en": "skeleton",
+  "ru": "скелет",
+  "uz": "skelet"
+ },
+ {
+  "en": "finger",
+  "ru": "палец|пальчик",
+  "uz": "barmoq"
+ },
+ {
+  "en": "bone",
+  "ru": "кость|косточка",
+  "uz": "suyak"
+ },
+ {
+  "en": "ball",
+  "ru": "мяч|мячик",
+  "uz": "to'p"
+ },
+ {
+  "en": "racket|tennis racket|racquet",
+  "ru": "ракетка",
+  "uz": "raketka"
+ },
+ {
+  "en": "chess|chess piece",
+  "ru": "шахматы",
+  "uz": "shaxmat"
+ },
+ {
+  "en": "dice",
+  "ru": "кубик|игральные кости",
+  "uz": "zar|kubik"
+ },
+ {
+  "en": "playing card|card|cards",
+  "ru": "карта|карты|игральная карта",
+  "uz": "karta"
+ },
+ {
+  "en": "trophy|cup",
+  "ru": "кубок",
+  "uz": "kubok|sovrin"
+ },
+ {
+  "en": "medal",
+  "ru": "медаль",
+  "uz": "medal"
+ },
+ {
+  "en": "kite",
+  "ru": "воздушный змей|змей",
+  "uz": "varrak"
+ },
+ {
+  "en": "balloon",
+  "ru": "воздушный шар|шарик|шар",
+  "uz": "shar|sharik|havo shari"
+ },
+ {
+  "en": "skateboard",
+  "ru": "скейтборд|скейт",
+  "uz": "skeytbord|skeyt"
+ },
+ {
+  "en": "whistle",
+  "ru": "свисток",
+  "uz": "hushtak"
+ },
+ {
+  "en": "dumbbell",
+  "ru": "гантель|гантеля",
+  "uz": "gantel"
+ },
+ {
+  "en": "jigsaw|puzzle|jigsaw puzzle",
+  "ru": "пазл",
+  "uz": "pazl|boshqotirma"
+ },
+ {
+  "en": "teddy bear|teddy",
+  "ru": "плюшевый мишка|мишка",
+  "uz": "ayiqcha"
+ },
+ {
+  "en": "doll",
+  "ru": "кукла",
+  "uz": "qo'g'irchoq"
+ },
+ {
+  "en": "target|dartboard|bullseye",
+  "ru": "мишень",
+  "uz": "nishon"
+ },
+ {
+  "en": "guitar",
+  "ru": "гитара",
+  "uz": "gitara"
+ },
+ {
+  "en": "piano",
+  "ru": "пианино|рояль|фортепиано",
+  "uz": "pianino|royal|fortepiano"
+ },
+ {
+  "en": "drum",
+  "ru": "барабан",
+  "uz": "baraban|nog'ora"
+ },
+ {
+  "en": "violin|fiddle",
+  "ru": "скрипка",
+  "uz": "skripka"
+ },
+ {
+  "en": "trumpet",
+  "ru": "труба",
+  "uz": "truba"
+ },
+ {
+  "en": "flute",
+  "ru": "флейта|дудка|дудочка",
+  "uz": "nay|fleyta"
+ },
+ {
+  "en": "microphone|mic",
+  "ru": "микрофон",
+  "uz": "mikrofon"
+ },
+ {
+  "en": "harp",
+  "ru": "арфа",
+  "uz": "arfa"
+ },
+ {
+  "en": "accordion",
+  "ru": "аккордеон|гармонь|гармошка|баян",
+  "uz": "akkordeon|garmon"
+ },
+ {
+  "en": "saxophone|sax",
+  "ru": "саксофон",
+  "uz": "saksofon"
+ },
+ {
+  "en": "tambourine|frame drum|doira",
+  "ru": "бубен|дойра",
+  "uz": "doira|childirma"
+ },
+ {
+  "en": "house",
+  "ru": "дом|домик",
+  "uz": "uy"
+ },
+ {
+  "en": "castle",
+  "ru": "замок|крепость",
+  "uz": "qal'a|qasr"
+ },
+ {
+  "en": "school",
+  "ru": "школа",
+  "uz": "maktab"
+ },
+ {
+  "en": "hospital",
+  "ru": "больница|госпиталь",
+  "uz": "kasalxona|shifoxona"
+ },
+ {
+  "en": "bridge",
+  "ru": "мост",
+  "uz": "ko'prik"
+ },
+ {
+  "en": "tower",
+  "ru": "башня",
+  "uz": "minora"
+ },
+ {
+  "en": "lighthouse",
+  "ru": "маяк",
+  "uz": "mayoq"
+ },
+ {
+  "en": "tent",
+  "ru": "палатка|шатёр|шатер",
+  "uz": "chodir"
+ },
+ {
+  "en": "pyramid",
+  "ru": "пирамида",
+  "uz": "piramida|ehrom"
+ },
+ {
+  "en": "skyscraper",
+  "ru": "небоскрёб|небоскреб",
+  "uz": "osmono'par"
+ },
+ {
+  "en": "well|wishing well",
+  "ru": "колодец",
+  "uz": "quduq"
+ },
+ {
+  "en": "windmill|mill",
+  "ru": "мельница",
+  "uz": "tegirmon"
+ },
+ {
+  "en": "factory",
+  "ru": "завод|фабрика",
+  "uz": "zavod|fabrika"
+ },
+ {
+  "en": "bench|park bench",
+  "ru": "скамейка|лавочка|скамья",
+  "uz": "skameyka|o'rindiq"
+ },
+ {
+  "en": "fountain",
+  "ru": "фонтан",
+  "uz": "favvora"
+ },
+ {
+  "en": "yurt",
+  "ru": "юрта",
+  "uz": "o'tov|yurta"
+ },
+ {
+  "en": "hammer",
+  "ru": "молоток",
+  "uz": "bolg'a"
+ },
+ {
+  "en": "saw",
+  "ru": "пила",
+  "uz": "arra"
+ },
+ {
+  "en": "axe|ax",
+  "ru": "топор",
+  "uz": "bolta"
+ },
+ {
+  "en": "screwdriver",
+  "ru": "отвёртка|отвертка",
+  "uz": "otvyortka|otvertka"
+ },
+ {
+  "en": "spanner|wrench",
+  "ru": "гаечный ключ",
+  "uz": "gayka kaliti|klyuch"
+ },
+ {
+  "en": "nail",
+  "ru": "гвоздь",
+  "uz": "mix"
+ },
+ {
+  "en": "screw",
+  "ru": "шуруп|винт|саморез",
+  "uz": "vint|shurup"
+ },
+ {
+  "en": "shovel|spade",
+  "ru": "лопата",
+  "uz": "belkurak|kurak"
+ },
+ {
+  "en": "paintbrush|brush",
+  "ru": "кисть|кисточка",
+  "uz": "mo'yqalam"
+ },
+ {
+  "en": "drill",
+  "ru": "дрель",
+  "uz": "drel|parma"
+ },
+ {
+  "en": "ruler",
+  "ru": "линейка",
+  "uz": "chizg'ich"
+ },
+ {
+  "en": "scissors",
+  "ru": "ножницы",
+  "uz": "qaychi"
+ },
+ {
+  "en": "torch|flashlight",
+  "ru": "фонарик|фонарь",
+  "uz": "fonar|fonarik"
+ },
+ {
+  "en": "watering can",
+  "ru": "лейка",
+  "uz": "leyka"
+ },
+ {
+  "en": "needle",
+  "ru": "иголка|игла",
+  "uz": "igna"
+ },
+ {
+  "en": "brick",
+  "ru": "кирпич",
+  "uz": "g'isht"
+ },
+ {
+  "en": "magnifying glass|magnifier",
+  "ru": "лупа",
+  "uz": "lupa"
+ },
+ {
+  "en": "heart",
+  "ru": "сердце|сердечко",
+  "uz": "yurak"
+ },
+ {
+  "en": "circle",
+  "ru": "круг|кружок|окружность",
+  "uz": "aylana|doira"
+ },
+ {
+  "en": "square",
+  "ru": "квадрат",
+  "uz": "kvadrat"
+ },
+ {
+  "en": "triangle",
+  "ru": "треугольник",
+  "uz": "uchburchak"
+ },
+ {
+  "en": "arrow",
+  "ru": "стрелка|стрела",
+  "uz": "strelka|o'q"
+ },
+ {
+  "en": "smiley|smiley face",
+  "ru": "смайлик|смайл",
+  "uz": "smaylik|smayl"
+ },
+ {
+  "en": "question mark",
+  "ru": "знак вопроса|вопрос",
+  "uz": "so'roq belgisi"
+ },
+ {
+  "en": "musical note|note",
+  "ru": "нота|ноты",
+  "uz": "nota"
+ },
+ {
+  "en": "flag",
+  "ru": "флаг|флажок",
+  "uz": "bayroq"
+ },
+ {
+  "en": "diamond|gem|jewel",
+  "ru": "алмаз|бриллиант|кристалл",
+  "uz": "olmos|brilliant"
+ },
+ {
+  "en": "spiral",
+  "ru": "спираль",
+  "uz": "spiral"
+ },
+ {
+  "en": "cube",
+  "ru": "куб",
+  "uz": "kub"
+ },
+ {
+  "en": "bug|beetle",
+  "ru": "жук|баг|жучок",
+  "uz": "qo'ng'iz",
+  "tag": "code"
+ },
+ {
+  "en": "cloud",
+  "ru": "облако|туча|облачко",
+  "uz": "bulut",
+  "tag": "code"
+ },
+ {
+  "en": "server|server rack",
+  "ru": "сервер",
+  "uz": "server",
+  "tag": "code"
+ },
+ {
+  "en": "keyboard",
+  "ru": "клавиатура",
+  "uz": "klaviatura",
+  "tag": "code"
+ },
+ {
+  "en": "computer mouse|mouse",
+  "ru": "мышка|мышь",
+  "uz": "sichqoncha",
+  "tag": "code"
+ },
+ {
+  "en": "robot",
+  "ru": "робот",
+  "uz": "robot",
+  "tag": "code"
+ },
+ {
+  "en": "laptop|notebook",
+  "ru": "ноутбук|ноут",
+  "uz": "noutbuk",
+  "tag": "code"
+ },
+ {
+  "en": "monitor|screen|display",
+  "ru": "монитор|экран",
+  "uz": "monitor|ekran",
+  "tag": "code"
+ },
+ {
+  "en": "printer",
+  "ru": "принтер",
+  "uz": "printer",
+  "tag": "code"
+ },
+ {
+  "en": "database|db",
+  "ru": "база данных|база",
+  "uz": "baza|ma'lumot bazasi",
+  "tag": "code"
+ },
+ {
+  "en": "cable|wire|cord",
+  "ru": "кабель|провод|шнур",
+  "uz": "kabel|sim|shnur",
+  "tag": "code"
+ },
+ {
+  "en": "battery",
+  "ru": "батарейка|батарея|аккумулятор",
+  "uz": "batareya|batareyka",
+  "tag": "code"
+ },
+ {
+  "en": "folder",
+  "ru": "папка",
+  "uz": "papka|jild",
+  "tag": "code"
+ },
+ {
+  "en": "envelope|email|e-mail|letter|mail",
+  "ru": "конверт|письмо|почта",
+  "uz": "konvert|xat|pochta",
+  "tag": "code"
+ },
+ {
+  "en": "mobile phone|phone|cell phone|smartphone|mobile|telephone|cellphone",
+  "ru": "телефон|смартфон|мобильник",
+  "uz": "telefon|smartfon",
+  "tag": "code"
+ },
+ {
+  "en": "headphones|headset",
+  "ru": "наушники",
+  "uz": "quloqchin|naushnik",
+  "tag": "code"
+ },
+ {
+  "en": "camera",
+  "ru": "фотоаппарат|камера",
+  "uz": "fotoapparat|kamera",
+  "tag": "code"
+ },
+ {
+  "en": "flash drive|usb stick|memory stick|usb|pen drive",
+  "ru": "флешка|флэшка",
+  "uz": "fleshka",
+  "tag": "code"
+ },
+ {
+  "en": "chip|microchip|processor|cpu",
+  "ru": "микросхема|чип|процессор",
+  "uz": "mikrosxema|chip|protsessor",
+  "tag": "code"
+ },
+ {
+  "en": "satellite",
+  "ru": "спутник",
+  "uz": "sun'iy yo'ldosh|sputnik|yo'ldosh",
+  "tag": "code"
+ },
+ {
+  "en": "antenna|aerial",
+  "ru": "антенна",
+  "uz": "antenna",
+  "tag": "code"
+ },
+ {
+  "en": "lock|padlock",
+  "ru": "навесной замок|замок",
+  "uz": "qulf",
+  "tag": "code"
+ },
+ {
+  "en": "key",
+  "ru": "ключ|ключик",
+  "uz": "kalit",
+  "tag": "code"
+ },
+ {
+  "en": "magnet",
+  "ru": "магнит",
+  "uz": "magnit",
+  "tag": "code"
+ },
+ {
+  "en": "floppy disk|floppy|diskette",
+  "ru": "дискета",
+  "uz": "disketa",
+  "tag": "code"
+ },
+ {
+  "en": "mug|coffee cup|cup|coffee mug",
+  "ru": "кружка|чашка|чашка кофе",
+  "uz": "krujka|finjon|chashka",
+  "tag": "code"
+ },
+ {
+  "en": "rubbish bin|trash can|bin|dustbin|wastebasket|trash",
+  "ru": "мусорное ведро|урна|мусорка|корзина",
+  "uz": "axlat qutisi|axlat chelagi",
+  "tag": "code"
+ },
+ {
+  "en": "calendar",
+  "ru": "календарь",
+  "uz": "kalendar|taqvim",
+  "tag": "code"
+ },
+ {
+  "en": "clock",
+  "ru": "часы",
+  "uz": "soat",
+  "tag": "code"
+ },
+ {
+  "en": "calculator",
+  "ru": "калькулятор",
+  "uz": "kalkulyator",
+  "tag": "code"
+ },
+ {
+  "en": "desk|writing desk",
+  "ru": "письменный стол|стол",
+  "uz": "yozuv stoli|stol",
+  "tag": "code"
+ },
+ {
+  "en": "office chair|swivel chair|desk chair",
+  "ru": "офисное кресло|кресло",
+  "uz": "ofis kreslosi|kreslo",
+  "tag": "code"
+ },
+ {
+  "en": "lamp|desk lamp",
+  "ru": "лампа|настольная лампа|светильник",
+  "uz": "chiroq|lampa|stol chirog'i",
+  "tag": "code"
+ },
+ {
+  "en": "rocket",
+  "ru": "ракета",
+  "uz": "raketa",
+  "tag": "code"
+ },
+ {
+  "en": "wifi|wi-fi",
+  "ru": "вайфай|вай-фай",
+  "uz": "wifi|wi-fi|vay-fay|vayfay",
+  "tag": "code"
+ },
+ {
+  "en": "cursor|pointer|mouse pointer",
+  "ru": "курсор|указатель",
+  "uz": "kursor",
+  "tag": "code"
+ },
+ {
+  "en": "sticky note|sticker",
+  "ru": "стикер|стикеры",
+  "uz": "stiker",
+  "tag": "code"
+ },
+ {
+  "en": "paper clip|paperclip",
+  "ru": "скрепка",
+  "uz": "skrepka",
+  "tag": "code"
+ },
+ {
+  "en": "stapler",
+  "ru": "степлер",
+  "uz": "stepler",
+  "tag": "code"
+ },
+ {
+  "en": "backpack|rucksack",
+  "ru": "рюкзак",
+  "uz": "ryukzak",
+  "tag": "code"
+ },
+ {
+  "en": "charger|phone charger",
+  "ru": "зарядка|зарядник",
+  "uz": "zaryadka|quvvatlagich",
+  "tag": "code"
+ },
+ {
+  "en": "plug|power plug",
+  "ru": "штепсель|вилка",
+  "uz": "shtepsel|vilka",
+  "tag": "code"
+ },
+ {
+  "en": "router|wifi router",
+  "ru": "роутер|маршрутизатор",
+  "uz": "router|marshrutizator",
+  "tag": "code"
+ },
+ {
+  "en": "gear|cog|cogwheel|gearwheel",
+  "ru": "шестерёнка|шестеренка|шестерня",
+  "uz": "shesterna|tishli g'ildirak",
+  "tag": "code"
+ },
+ {
+  "en": "bell",
+  "ru": "колокольчик|колокол",
+  "uz": "qo'ng'iroq",
+  "tag": "code"
+ },
+ {
+  "en": "brackets|curly brackets|braces",
+  "ru": "скобки|фигурные скобки",
+  "uz": "qavslar|qavs",
+  "tag": "code"
+ },
+ {
+  "en": "hourglass|sand timer|sandglass",
+  "ru": "песочные часы",
+  "uz": "qum soati|qum soat",
+  "tag": "code"
+ }
+]

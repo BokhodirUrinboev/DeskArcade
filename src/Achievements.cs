@@ -30,6 +30,9 @@ public static class Achievements
         // 1.8.6 · the programmer's day
 
         // 1.8.6 · party games
+        new("quiz-100", "quiz", "Know-it-all", "Answer 100 quiz questions right", "quiz.right", 100),
+        new("quiz-perfect", "quiz", "Full marks", "Answer every question of a quiz right", "quiz.perfect", 1),
+        new("quiz-quick", "quiz", "Quick on the buzzer", "Answer right within two seconds 20 times", "quiz.quick", 20),
 
         // 1.8.6 · card games
 

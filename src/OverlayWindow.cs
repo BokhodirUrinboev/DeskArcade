@@ -287,6 +287,9 @@ public sealed class OverlayWindow : Window, IGameHost
         _games.Add(new JengaGame(this));
         _games.Add(new BridgeGame(this));
         // 1.8.6 · party games (Quiz Night, Draw & Guess)
+        var quiz = new QuizGame(this);
+        quiz.SetupRequested += () => RoomWindow.ShowFor(this, quiz);
+        _games.Add(quiz);
 
         // 1.8.6 · card games (Poker, Hearts)
 
@@ -762,6 +765,7 @@ public sealed class OverlayWindow : Window, IGameHost
         "jenga" => L.T("drag a block out of the tower slowly, then lay it on top — don't let the weight lean past what is left"),
         "bridge" => L.T("drag planks onto the rope before the interns reach the gap — and replace the cracked ones"),
         // 1.8.6 · party games
+        "quiz" => L.T("click an answer — the faster you're right, the more it scores"),
 
         // 1.8.6 · card games
 

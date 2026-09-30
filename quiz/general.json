@@ -1,0 +1,1866 @@
+{
+  "id": "general",
+  "title": {
+    "en": "General knowledge",
+    "ru": "Эрудиция",
+    "uz": "Umumiy bilim"
+  },
+  "questions": [
+    {
+      "en": {
+        "q": "Who painted the Mona Lisa?",
+        "a": [
+          "Leonardo da Vinci",
+          "Michelangelo",
+          "Raphael",
+          "Titian"
+        ]
+      },
+      "ru": {
+        "q": "Кто написал «Мону Лизу»?",
+        "a": [
+          "Леонардо да Винчи",
+          "Микеланджело",
+          "Рафаэль",
+          "Тициан"
+        ]
+      },
+      "uz": {
+        "q": "«Mona Liza» kartinasini kim chizgan?",
+        "a": [
+          "Leonardo da Vinchi",
+          "Mikelanjelo",
+          "Rafael",
+          "Titsian"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which city was the capital of Amir Timur's empire?",
+        "a": [
+          "Samarkand",
+          "Bukhara",
+          "Khiva",
+          "Tashkent"
+        ]
+      },
+      "ru": {
+        "q": "Какой город был столицей державы Амира Темура?",
+        "a": [
+          "Самарканд",
+          "Бухара",
+          "Хива",
+          "Ташкент"
+        ]
+      },
+      "uz": {
+        "q": "Amir Temur davlatining poytaxti qaysi shahar bo'lgan?",
+        "a": [
+          "Samarqand",
+          "Buxoro",
+          "Xiva",
+          "Toshkent"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "How many players does each team have on the pitch in football?",
+        "a": [
+          "11",
+          "10",
+          "9",
+          "12"
+        ]
+      },
+      "ru": {
+        "q": "Сколько игроков одной команды одновременно находятся на поле в футболе?",
+        "a": [
+          "11",
+          "10",
+          "9",
+          "12"
+        ]
+      },
+      "uz": {
+        "q": "Futbolda har bir jamoadan maydonda bir vaqtda nechta o'yinchi bo'ladi?",
+        "a": [
+          "11",
+          "10",
+          "9",
+          "12"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who wrote “Romeo and Juliet”?",
+        "a": [
+          "William Shakespeare",
+          "Christopher Marlowe",
+          "Ben Jonson",
+          "Geoffrey Chaucer"
+        ]
+      },
+      "ru": {
+        "q": "Кто написал «Ромео и Джульетту»?",
+        "a": [
+          "Уильям Шекспир",
+          "Кристофер Марло",
+          "Бен Джонсон",
+          "Джеффри Чосер"
+        ]
+      },
+      "uz": {
+        "q": "«Romeo va Julyetta» asarini kim yozgan?",
+        "a": [
+          "Uilyam Shekspir",
+          "Kristofer Marlo",
+          "Ben Jonson",
+          "Jeffri Choser"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who was the first Roman emperor?",
+        "a": [
+          "Augustus",
+          "Julius Caesar",
+          "Nero",
+          "Caligula"
+        ]
+      },
+      "ru": {
+        "q": "Кто был первым римским императором?",
+        "a": [
+          "Октавиан Август",
+          "Юлий Цезарь",
+          "Нерон",
+          "Калигула"
+        ]
+      },
+      "uz": {
+        "q": "Rimning birinchi imperatori kim bo'lgan?",
+        "a": [
+          "Oktavian Avgust",
+          "Yuliy Sezar",
+          "Neron",
+          "Kaligula"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who composed the music for the ballet “Swan Lake”?",
+        "a": [
+          "Pyotr Tchaikovsky",
+          "Igor Stravinsky",
+          "Sergei Prokofiev",
+          "Nikolai Rimsky-Korsakov"
+        ]
+      },
+      "ru": {
+        "q": "Кто написал музыку к балету «Лебединое озеро»?",
+        "a": [
+          "Пётр Чайковский",
+          "Игорь Стравинский",
+          "Сергей Прокофьев",
+          "Николай Римский-Корсаков"
+        ]
+      },
+      "uz": {
+        "q": "«Oqqush ko'li» baleti musiqasini kim yozgan?",
+        "a": [
+          "Pyotr Chaykovskiy",
+          "Igor Stravinskiy",
+          "Sergey Prokofyev",
+          "Nikolay Rimskiy-Korsakov"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who is the king of the gods in Greek mythology?",
+        "a": [
+          "Zeus",
+          "Poseidon",
+          "Hades",
+          "Apollo"
+        ]
+      },
+      "ru": {
+        "q": "Кто царь богов в греческой мифологии?",
+        "a": [
+          "Зевс",
+          "Посейдон",
+          "Аид",
+          "Аполлон"
+        ]
+      },
+      "uz": {
+        "q": "Yunon mifologiyasida xudolarning shohi kim?",
+        "a": [
+          "Zevs",
+          "Poseydon",
+          "Aid",
+          "Apollon"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Alisher Navoi's “Khamsa” is made up of how many epic poems?",
+        "a": [
+          "5",
+          "3",
+          "4",
+          "7"
+        ]
+      },
+      "ru": {
+        "q": "Из скольких поэм состоит «Хамса» Алишера Навои?",
+        "a": [
+          "5",
+          "3",
+          "4",
+          "7"
+        ]
+      },
+      "uz": {
+        "q": "Alisher Navoiyning «Xamsa»si nechta dostondan iborat?",
+        "a": [
+          "5",
+          "3",
+          "4",
+          "7"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who painted “Guernica” (1937)?",
+        "a": [
+          "Pablo Picasso",
+          "Salvador Dalí",
+          "Joan Miró",
+          "Henri Matisse"
+        ]
+      },
+      "ru": {
+        "q": "Кто написал картину «Герника» (1937)?",
+        "a": [
+          "Пабло Пикассо",
+          "Сальвадор Дали",
+          "Жоан Миро",
+          "Анри Матисс"
+        ]
+      },
+      "uz": {
+        "q": "«Gernika» (1937) kartinasini kim chizgan?",
+        "a": [
+          "Pablo Pikasso",
+          "Salvador Dali",
+          "Joan Miro",
+          "Anri Matiss"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "How many days are there in a leap year?",
+        "a": [
+          "366",
+          "365",
+          "364",
+          "367"
+        ]
+      },
+      "ru": {
+        "q": "Сколько дней в високосном году?",
+        "a": [
+          "366",
+          "365",
+          "364",
+          "367"
+        ]
+      },
+      "uz": {
+        "q": "Kabisa yilida necha kun bor?",
+        "a": [
+          "366",
+          "365",
+          "364",
+          "367"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who directed the 1960 thriller “Psycho”?",
+        "a": [
+          "Alfred Hitchcock",
+          "Stanley Kubrick",
+          "Orson Welles",
+          "Billy Wilder"
+        ]
+      },
+      "ru": {
+        "q": "Кто снял триллер «Психо» (1960)?",
+        "a": [
+          "Альфред Хичкок",
+          "Стэнли Кубрик",
+          "Орсон Уэллс",
+          "Билли Уайлдер"
+        ]
+      },
+      "uz": {
+        "q": "1960-yilgi «Psixo» trillerini kim suratga olgan?",
+        "a": [
+          "Alfred Xichkok",
+          "Stenli Kubrik",
+          "Orson Uells",
+          "Billi Uaylder"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which chess piece moves in an L shape and can jump over other pieces?",
+        "a": [
+          "Knight",
+          "Bishop",
+          "King",
+          "Queen"
+        ]
+      },
+      "ru": {
+        "q": "Какая шахматная фигура ходит буквой «Г» и может перепрыгивать через другие фигуры?",
+        "a": [
+          "Конь",
+          "Слон",
+          "Король",
+          "Ферзь"
+        ]
+      },
+      "uz": {
+        "q": "Shaxmatda qaysi dona «L» harfi shaklida yuradi va boshqa donalar ustidan sakray oladi?",
+        "a": [
+          "Ot",
+          "Fil",
+          "Shoh",
+          "Farzin"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which spice is made from the dried stigmas of a crocus flower?",
+        "a": [
+          "Saffron",
+          "Turmeric",
+          "Paprika",
+          "Cardamom"
+        ]
+      },
+      "ru": {
+        "q": "Какую пряность получают из высушенных рылец цветков крокуса?",
+        "a": [
+          "Шафран",
+          "Куркума",
+          "Паприка",
+          "Кардамон"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi ziravor krokus gulining quritilgan urug'chi tumshuqchalaridan olinadi?",
+        "a": [
+          "Za'faron",
+          "Zarchava",
+          "Paprika",
+          "Kardamon"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In which year did Christopher Columbus first reach the Americas?",
+        "a": [
+          "1492",
+          "1498",
+          "1488",
+          "1506"
+        ]
+      },
+      "ru": {
+        "q": "В каком году Христофор Колумб впервые достиг Америки?",
+        "a": [
+          "1492",
+          "1498",
+          "1488",
+          "1506"
+        ]
+      },
+      "uz": {
+        "q": "Xristofor Kolumb Amerikaga birinchi marta qaysi yili yetib kelgan?",
+        "a": [
+          "1492",
+          "1498",
+          "1488",
+          "1506"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which language is written with the Hangul alphabet?",
+        "a": [
+          "Korean",
+          "Japanese",
+          "Chinese",
+          "Mongolian"
+        ]
+      },
+      "ru": {
+        "q": "Для какого языка создан алфавит хангыль?",
+        "a": [
+          "Для корейского",
+          "Для японского",
+          "Для китайского",
+          "Для монгольского"
+        ]
+      },
+      "uz": {
+        "q": "Hangul alifbosi qaysi tilda yozish uchun ishlatiladi?",
+        "a": [
+          "Koreys tili",
+          "Yapon tili",
+          "Xitoy tili",
+          "Mo'g'ul tili"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "How many madrasas stand on the Registan square in Samarkand?",
+        "a": [
+          "3",
+          "2",
+          "4",
+          "5"
+        ]
+      },
+      "ru": {
+        "q": "Сколько медресе стоит на площади Регистан в Самарканде?",
+        "a": [
+          "3",
+          "2",
+          "4",
+          "5"
+        ]
+      },
+      "uz": {
+        "q": "Samarqanddagi Registon maydonida nechta madrasa bor?",
+        "a": [
+          "3",
+          "2",
+          "4",
+          "5"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who wrote the novel “War and Peace”?",
+        "a": [
+          "Leo Tolstoy",
+          "Fyodor Dostoevsky",
+          "Anton Chekhov",
+          "Ivan Turgenev"
+        ]
+      },
+      "ru": {
+        "q": "Кто автор романа «Война и мир»?",
+        "a": [
+          "Лев Толстой",
+          "Фёдор Достоевский",
+          "Антон Чехов",
+          "Иван Тургенев"
+        ]
+      },
+      "uz": {
+        "q": "«Urush va tinchlik» romanining muallifi kim?",
+        "a": [
+          "Lev Tolstoy",
+          "Fyodor Dostoyevskiy",
+          "Anton Chexov",
+          "Ivan Turgenev"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who introduced printing with movable metal type in Europe around 1450?",
+        "a": [
+          "Johannes Gutenberg",
+          "William Caxton",
+          "Aldus Manutius",
+          "Ivan Fyodorov"
+        ]
+      },
+      "ru": {
+        "q": "Кто около 1450 года первым в Европе начал печатать подвижными металлическими литерами?",
+        "a": [
+          "Иоганн Гутенберг",
+          "Уильям Кекстон",
+          "Альд Мануций",
+          "Иван Фёдоров"
+        ]
+      },
+      "uz": {
+        "q": "Taxminan 1450-yilda Yevropada birinchi bo'lib ko'chma metall harflar bilan kitob bosishni kim boshlagan?",
+        "a": [
+          "Iogann Gutenberg",
+          "Uilyam Kekston",
+          "Ald Manutsiy",
+          "Ivan Fyodorov"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In tennis, which score comes after 15 and 30 in a game?",
+        "a": [
+          "40",
+          "45",
+          "35",
+          "50"
+        ]
+      },
+      "ru": {
+        "q": "Какой счёт в теннисе идёт в гейме после 15 и 30?",
+        "a": [
+          "40",
+          "45",
+          "35",
+          "50"
+        ]
+      },
+      "uz": {
+        "q": "Tennisda geym davomida 15 va 30 dan keyin qanday hisob keladi?",
+        "a": [
+          "40",
+          "45",
+          "35",
+          "50"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which hero of the Trojan War could be wounded only in his heel?",
+        "a": [
+          "Achilles",
+          "Hector",
+          "Odysseus",
+          "Ajax"
+        ]
+      },
+      "ru": {
+        "q": "Какого героя Троянской войны можно было ранить только в пятку?",
+        "a": [
+          "Ахилл",
+          "Гектор",
+          "Одиссей",
+          "Аякс"
+        ]
+      },
+      "uz": {
+        "q": "Troya urushidagi qaysi qahramonni faqat tovonidan yaralash mumkin edi?",
+        "a": [
+          "Axilles",
+          "Gektor",
+          "Odissey",
+          "Ayaks"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "On which date is Navruz celebrated in Uzbekistan?",
+        "a": [
+          "21 March",
+          "1 January",
+          "1 May",
+          "22 June"
+        ]
+      },
+      "ru": {
+        "q": "Какого числа в Узбекистане отмечают Навруз?",
+        "a": [
+          "21 марта",
+          "1 января",
+          "1 мая",
+          "22 июня"
+        ]
+      },
+      "uz": {
+        "q": "O'zbekistonda Navro'z bayrami qaysi kuni nishonlanadi?",
+        "a": [
+          "21-mart",
+          "1-yanvar",
+          "1-may",
+          "22-iyun"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who painted “Girl with a Pearl Earring”?",
+        "a": [
+          "Johannes Vermeer",
+          "Rembrandt",
+          "Frans Hals",
+          "Jan van Eyck"
+        ]
+      },
+      "ru": {
+        "q": "Кто написал «Девушку с жемчужной серёжкой»?",
+        "a": [
+          "Ян Вермеер",
+          "Рембрандт",
+          "Франс Хальс",
+          "Ян ван Эйк"
+        ]
+      },
+      "uz": {
+        "q": "«Marvarid sirg'ali qiz» kartinasini kim chizgan?",
+        "a": [
+          "Yan Vermeer",
+          "Rembrandt",
+          "Frans Xals",
+          "Yan van Eyk"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who directed the silent film “Battleship Potemkin” (1925)?",
+        "a": [
+          "Sergei Eisenstein",
+          "Dziga Vertov",
+          "Vsevolod Pudovkin",
+          "Andrei Tarkovsky"
+        ]
+      },
+      "ru": {
+        "q": "Кто снял немой фильм «Броненосец „Потёмкин“» (1925)?",
+        "a": [
+          "Сергей Эйзенштейн",
+          "Дзига Вертов",
+          "Всеволод Пудовкин",
+          "Андрей Тарковский"
+        ]
+      },
+      "uz": {
+        "q": "1925-yilgi «Bronenoses Potyomkin» ovozsiz filmini kim suratga olgan?",
+        "a": [
+          "Sergey Eyzenshteyn",
+          "Dziga Vertov",
+          "Vsevolod Pudovkin",
+          "Andrey Tarkovskiy"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which wedding anniversary is known as the golden wedding?",
+        "a": [
+          "50th",
+          "25th",
+          "40th",
+          "60th"
+        ]
+      },
+      "ru": {
+        "q": "Какую годовщину свадьбы называют золотой?",
+        "a": [
+          "50 лет",
+          "25 лет",
+          "40 лет",
+          "60 лет"
+        ]
+      },
+      "uz": {
+        "q": "Nikohning nechanchi yilligi «oltin to'y» deb ataladi?",
+        "a": [
+          "50-yilligi",
+          "25-yilligi",
+          "40-yilligi",
+          "60-yilligi"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which composer wrote his Ninth Symphony, with the “Ode to Joy”, while almost completely deaf?",
+        "a": [
+          "Ludwig van Beethoven",
+          "Johann Sebastian Bach",
+          "George Frideric Handel",
+          "Franz Schubert"
+        ]
+      },
+      "ru": {
+        "q": "Какой композитор написал Девятую симфонию с «Одой к радости», будучи почти полностью глухим?",
+        "a": [
+          "Людвиг ван Бетховен",
+          "Иоганн Себастьян Бах",
+          "Георг Фридрих Гендель",
+          "Франц Шуберт"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi bastakor To'qqizinchi simfoniyasini deyarli butunlay kar bo'lib qolgan paytida yozgan?",
+        "a": [
+          "Lyudvig van Betxoven",
+          "Iogann Sebastyan Bax",
+          "Georg Fridrix Gendel",
+          "Frans Shubert"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In which year did Constantinople fall to the Ottoman Turks?",
+        "a": [
+          "1453",
+          "1204",
+          "1389",
+          "1492"
+        ]
+      },
+      "ru": {
+        "q": "В каком году Константинополь пал под натиском турок-османов?",
+        "a": [
+          "1453",
+          "1204",
+          "1389",
+          "1492"
+        ]
+      },
+      "uz": {
+        "q": "Konstantinopol qaysi yili usmonli turklar tomonidan zabt etilgan?",
+        "a": [
+          "1453",
+          "1204",
+          "1389",
+          "1492"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which scholar, born near Bukhara, wrote “The Canon of Medicine”?",
+        "a": [
+          "Ibn Sina (Avicenna)",
+          "Al-Biruni",
+          "Al-Khwarizmi",
+          "Al-Farabi"
+        ]
+      },
+      "ru": {
+        "q": "Какой учёный, родившийся под Бухарой, написал «Канон врачебной науки»?",
+        "a": [
+          "Ибн Сина (Авиценна)",
+          "Аль-Бируни",
+          "Аль-Хорезми",
+          "Аль-Фараби"
+        ]
+      },
+      "uz": {
+        "q": "Buxoro yaqinida tug'ilgan qaysi olim «Tib qonunlari» asarini yozgan?",
+        "a": [
+          "Abu Ali ibn Sino",
+          "Abu Rayhon Beruniy",
+          "Muhammad al-Xorazmiy",
+          "Abu Nasr Forobiy"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the total number of dots on a standard six-sided die?",
+        "a": [
+          "21",
+          "18",
+          "24",
+          "20"
+        ]
+      },
+      "ru": {
+        "q": "Сколько всего точек на обычном шестигранном игральном кубике?",
+        "a": [
+          "21",
+          "18",
+          "24",
+          "20"
+        ]
+      },
+      "uz": {
+        "q": "Oddiy olti yoqli zarda jami nechta nuqta bor?",
+        "a": [
+          "21",
+          "18",
+          "24",
+          "20"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who wrote “Don Quixote”?",
+        "a": [
+          "Miguel de Cervantes",
+          "Lope de Vega",
+          "Dante Alighieri",
+          "François Rabelais"
+        ]
+      },
+      "ru": {
+        "q": "Кто написал «Дон Кихота»?",
+        "a": [
+          "Мигель де Сервантес",
+          "Лопе де Вега",
+          "Данте Алигьери",
+          "Франсуа Рабле"
+        ]
+      },
+      "uz": {
+        "q": "«Don Kixot» romanining muallifi kim?",
+        "a": [
+          "Migel de Servantes",
+          "Lope de Vega",
+          "Dante Aligyeri",
+          "Fransua Rable"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which vegetable gives classic red borscht its deep red colour?",
+        "a": [
+          "Beetroot",
+          "Carrot",
+          "Radish",
+          "Pumpkin"
+        ]
+      },
+      "ru": {
+        "q": "Какой овощ придаёт классическому борщу насыщенный красный цвет?",
+        "a": [
+          "Свёкла",
+          "Морковь",
+          "Редис",
+          "Тыква"
+        ]
+      },
+      "uz": {
+        "q": "Klassik borshga to'q qizil rangni qaysi sabzavot beradi?",
+        "a": [
+          "Lavlagi",
+          "Sabzi",
+          "Rediska",
+          "Qovoq"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which hero of Greek myth performed twelve labours?",
+        "a": [
+          "Heracles",
+          "Perseus",
+          "Theseus",
+          "Jason"
+        ]
+      },
+      "ru": {
+        "q": "Какой герой греческих мифов совершил двенадцать подвигов?",
+        "a": [
+          "Геракл",
+          "Персей",
+          "Тесей",
+          "Ясон"
+        ]
+      },
+      "uz": {
+        "q": "Yunon afsonalaridagi qaysi qahramon o'n ikki jasorat ko'rsatgan?",
+        "a": [
+          "Gerakl",
+          "Persey",
+          "Tesey",
+          "Yason"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "The founder of India's Mughal Empire was born in Andijan in 1483. Who was he?",
+        "a": [
+          "Babur",
+          "Akbar",
+          "Humayun",
+          "Shah Jahan"
+        ]
+      },
+      "ru": {
+        "q": "Основатель империи Великих Моголов родился в 1483 году в Андижане. Кто он?",
+        "a": [
+          "Бабур",
+          "Акбар",
+          "Хумаюн",
+          "Шах-Джахан"
+        ]
+      },
+      "uz": {
+        "q": "Hindistondagi Buyuk mo'g'ullar saltanati asoschisi 1483-yilda Andijonda tug'ilgan. U kim?",
+        "a": [
+          "Zahiriddin Muhammad Bobur",
+          "Akbar",
+          "Humoyun",
+          "Shoh Jahon"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "How many players from each team are on the court at once in basketball?",
+        "a": [
+          "5",
+          "6",
+          "7",
+          "4"
+        ]
+      },
+      "ru": {
+        "q": "Сколько игроков одной команды одновременно находятся на площадке в баскетболе?",
+        "a": [
+          "5",
+          "6",
+          "7",
+          "4"
+        ]
+      },
+      "uz": {
+        "q": "Basketbolda har bir jamoadan maydonda bir vaqtda nechta o'yinchi o'ynaydi?",
+        "a": [
+          "5",
+          "6",
+          "7",
+          "4"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is a word that reads the same backwards as forwards, like “level”, called?",
+        "a": [
+          "Palindrome",
+          "Anagram",
+          "Acronym",
+          "Synonym"
+        ]
+      },
+      "ru": {
+        "q": "Как называется слово, которое одинаково читается слева направо и справа налево, например «шалаш»?",
+        "a": [
+          "Палиндром",
+          "Анаграмма",
+          "Аббревиатура",
+          "Синоним"
+        ]
+      },
+      "uz": {
+        "q": "Ikki tomondan bir xil o'qiladigan so'z (masalan, «kiyik») nima deb ataladi?",
+        "a": [
+          "Palindrom",
+          "Anagramma",
+          "Abbreviatura",
+          "Sinonim"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who painted “The Starry Night”?",
+        "a": [
+          "Vincent van Gogh",
+          "Claude Monet",
+          "Paul Gauguin",
+          "Paul Cézanne"
+        ]
+      },
+      "ru": {
+        "q": "Кто автор картины «Звёздная ночь»?",
+        "a": [
+          "Винсент Ван Гог",
+          "Клод Моне",
+          "Поль Гоген",
+          "Поль Сезанн"
+        ]
+      },
+      "uz": {
+        "q": "«Yulduzli tun» kartinasini kim chizgan?",
+        "a": [
+          "Vinsent van Gog",
+          "Klod Mone",
+          "Pol Gogen",
+          "Pol Sezann"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In the film “The Irony of Fate” (1975), the hero flies from Moscow by mistake to which city?",
+        "a": [
+          "Leningrad",
+          "Riga",
+          "Minsk",
+          "Tallinn"
+        ]
+      },
+      "ru": {
+        "q": "В какой город по ошибке улетает из Москвы герой фильма «Ирония судьбы, или С лёгким паром!»?",
+        "a": [
+          "Ленинград",
+          "Рига",
+          "Минск",
+          "Таллин"
+        ]
+      },
+      "uz": {
+        "q": "«Taqdir kinoyasi» (1975) filmi qahramoni adashib Moskvadan qaysi shaharga uchib ketadi?",
+        "a": [
+          "Leningrad",
+          "Riga",
+          "Minsk",
+          "Tallin"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which of the Seven Wonders of the Ancient World still stands today?",
+        "a": [
+          "Great Pyramid of Giza",
+          "Colossus of Rhodes",
+          "Lighthouse of Alexandria",
+          "Hanging Gardens of Babylon"
+        ]
+      },
+      "ru": {
+        "q": "Какое из семи чудес света сохранилось до наших дней?",
+        "a": [
+          "Пирамида Хеопса",
+          "Колосс Родосский",
+          "Александрийский маяк",
+          "Висячие сады Семирамиды"
+        ]
+      },
+      "uz": {
+        "q": "Dunyoning yetti mo''jizasidan qaysi biri bugungacha saqlanib qolgan?",
+        "a": [
+          "Xeops ehromi",
+          "Rodos kolossi",
+          "Iskandariya mayog'i",
+          "Bobil osma bog'lari"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "How many maqoms make up the Central Asian classical music cycle “Shashmaqom”?",
+        "a": [
+          "6",
+          "5",
+          "7",
+          "12"
+        ]
+      },
+      "ru": {
+        "q": "Из скольких макомов состоит среднеазиатский классический цикл «Шашмаком»?",
+        "a": [
+          "6",
+          "5",
+          "7",
+          "12"
+        ]
+      },
+      "uz": {
+        "q": "«Shashmaqom» mumtoz musiqa turkumi nechta maqomdan iborat?",
+        "a": [
+          "6",
+          "5",
+          "7",
+          "12"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which month is named after Julius Caesar?",
+        "a": [
+          "July",
+          "June",
+          "August",
+          "March"
+        ]
+      },
+      "ru": {
+        "q": "Какой месяц назван в честь Юлия Цезаря?",
+        "a": [
+          "Июль",
+          "Июнь",
+          "Август",
+          "Март"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi oy Yuliy Sezar sharafiga nomlangan?",
+        "a": [
+          "Iyul",
+          "Iyun",
+          "Avgust",
+          "Mart"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which brothers made the first powered aeroplane flight in 1903?",
+        "a": [
+          "The Wright brothers",
+          "The Montgolfier brothers",
+          "The Grimm brothers",
+          "The Warner brothers"
+        ]
+      },
+      "ru": {
+        "q": "Какие братья в 1903 году совершили первый полёт на самолёте с двигателем?",
+        "a": [
+          "Братья Райт",
+          "Братья Монгольфье",
+          "Братья Гримм",
+          "Братья Уорнер"
+        ]
+      },
+      "uz": {
+        "q": "1903-yilda motorli samolyotda birinchi parvozni qaysi aka-ukalar amalga oshirgan?",
+        "a": [
+          "Aka-uka Raytlar",
+          "Aka-uka Mongolfyelar",
+          "Aka-uka Grimmlar",
+          "Aka-uka Uornerlar"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who wrote “One Hundred Years of Solitude”?",
+        "a": [
+          "Gabriel García Márquez",
+          "Jorge Luis Borges",
+          "Mario Vargas Llosa",
+          "Julio Cortázar"
+        ]
+      },
+      "ru": {
+        "q": "Кто написал роман «Сто лет одиночества»?",
+        "a": [
+          "Габриэль Гарсиа Маркес",
+          "Хорхе Луис Борхес",
+          "Марио Варгас Льоса",
+          "Хулио Кортасар"
+        ]
+      },
+      "uz": {
+        "q": "«Yolg'izlikning yuz yili» romanini kim yozgan?",
+        "a": [
+          "Gabriel Garsia Markes",
+          "Xorxe Luis Borxes",
+          "Mario Vargas Lyosa",
+          "Xulio Kortasar"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Koalas feed almost entirely on the leaves of which tree?",
+        "a": [
+          "Eucalyptus",
+          "Acacia",
+          "Oak",
+          "Willow"
+        ]
+      },
+      "ru": {
+        "q": "Листьями какого дерева почти исключительно питаются коалы?",
+        "a": [
+          "Эвкалипта",
+          "Акации",
+          "Дуба",
+          "Ивы"
+        ]
+      },
+      "uz": {
+        "q": "Koalalar deyarli faqat qaysi daraxtning barglari bilan oziqlanadi?",
+        "a": [
+          "Evkalipt",
+          "Akatsiya",
+          "Eman",
+          "Tol"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who composed the opera “The Magic Flute”?",
+        "a": [
+          "Wolfgang Amadeus Mozart",
+          "Joseph Haydn",
+          "Antonio Salieri",
+          "Christoph Gluck"
+        ]
+      },
+      "ru": {
+        "q": "Кто написал оперу «Волшебная флейта»?",
+        "a": [
+          "Вольфганг Амадей Моцарт",
+          "Йозеф Гайдн",
+          "Антонио Сальери",
+          "Кристоф Глюк"
+        ]
+      },
+      "uz": {
+        "q": "«Sehrli nay» operasini kim yozgan?",
+        "a": [
+          "Volfgang Amadey Motsart",
+          "Yozef Gaydn",
+          "Antonio Salyeri",
+          "Kristof Glyuk"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In what kind of pot is Uzbek plov traditionally cooked?",
+        "a": [
+          "Kazan",
+          "Tandoor",
+          "Samovar",
+          "Frying pan"
+        ]
+      },
+      "ru": {
+        "q": "В какой посуде традиционно готовят узбекский плов?",
+        "a": [
+          "Казан",
+          "Тандыр",
+          "Самовар",
+          "Сковорода"
+        ]
+      },
+      "uz": {
+        "q": "O'zbek palovi an'anaga ko'ra qanday idishda tayyorlanadi?",
+        "a": [
+          "Qozon",
+          "Tandir",
+          "Samovar",
+          "Tova"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which English king agreed to the Magna Carta in 1215?",
+        "a": [
+          "King John",
+          "Richard the Lionheart",
+          "Henry VIII",
+          "Edward I"
+        ]
+      },
+      "ru": {
+        "q": "Какой английский король в 1215 году утвердил Великую хартию вольностей?",
+        "a": [
+          "Иоанн Безземельный",
+          "Ричард Львиное Сердце",
+          "Генрих VIII",
+          "Эдуард I"
+        ]
+      },
+      "uz": {
+        "q": "1215-yilda Buyuk erkinliklar xartiyasini (Magna Carta) qaysi ingliz qiroli tasdiqlagan?",
+        "a": [
+          "Ioann Yersiz",
+          "Richard Sherdil",
+          "Genrix VIII",
+          "Eduard I"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "How many rings are there on the Olympic flag?",
+        "a": [
+          "5",
+          "4",
+          "6",
+          "7"
+        ]
+      },
+      "ru": {
+        "q": "Сколько колец на олимпийском флаге?",
+        "a": [
+          "5",
+          "4",
+          "6",
+          "7"
+        ]
+      },
+      "uz": {
+        "q": "Olimpiya bayrog'ida nechta halqa bor?",
+        "a": [
+          "5",
+          "4",
+          "6",
+          "7"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who invented the system of raised dots that lets blind people read by touch?",
+        "a": [
+          "Louis Braille",
+          "Samuel Morse",
+          "Thomas Edison",
+          "Louis Pasteur"
+        ]
+      },
+      "ru": {
+        "q": "Кто изобрёл рельефно-точечный шрифт, позволяющий незрячим читать на ощупь?",
+        "a": [
+          "Луи Брайль",
+          "Сэмюэл Морзе",
+          "Томас Эдисон",
+          "Луи Пастер"
+        ]
+      },
+      "uz": {
+        "q": "Ko'zi ojizlarga barmoq bilan paypaslab o'qish imkonini beruvchi bo'rtma nuqtali yozuvni kim ixtiro qilgan?",
+        "a": [
+          "Lui Brayl",
+          "Semyuel Morze",
+          "Tomas Edison",
+          "Lui Paster"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who painted the ceiling of the Sistine Chapel in the Vatican?",
+        "a": [
+          "Michelangelo",
+          "Raphael",
+          "Sandro Botticelli",
+          "Titian"
+        ]
+      },
+      "ru": {
+        "q": "Кто расписал потолок Сикстинской капеллы в Ватикане?",
+        "a": [
+          "Микеланджело",
+          "Рафаэль",
+          "Сандро Боттичелли",
+          "Тициан"
+        ]
+      },
+      "uz": {
+        "q": "Vatikandagi Sikstin kapellasining shiftini kim rasmlar bilan bezagan?",
+        "a": [
+          "Mikelanjelo",
+          "Rafael",
+          "Sandro Bottichelli",
+          "Titsian"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Mirzo Ulugbek, the astronomer-ruler of Samarkand, was the grandson of whom?",
+        "a": [
+          "Amir Timur",
+          "Babur",
+          "Genghis Khan",
+          "Tokhtamysh"
+        ]
+      },
+      "ru": {
+        "q": "Чьим внуком был Мирзо Улугбек, правитель Самарканда и астроном?",
+        "a": [
+          "Амира Темура",
+          "Бабура",
+          "Чингисхана",
+          "Тохтамыша"
+        ]
+      },
+      "uz": {
+        "q": "Samarqand hukmdori va astronom Mirzo Ulug'bek kimning nevarasi bo'lgan?",
+        "a": [
+          "Amir Temur",
+          "Zahiriddin Bobur",
+          "Chingizxon",
+          "To'xtamish"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "How many checkers does each player start with in backgammon?",
+        "a": [
+          "15",
+          "12",
+          "16",
+          "10"
+        ]
+      },
+      "ru": {
+        "q": "Сколько шашек у каждого игрока в начале партии в нарды?",
+        "a": [
+          "15",
+          "12",
+          "16",
+          "10"
+        ]
+      },
+      "uz": {
+        "q": "Nard o'yinida har bir o'yinchi nechta tosh bilan o'yinni boshlaydi?",
+        "a": [
+          "15",
+          "12",
+          "16",
+          "10"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which silent-film star created the famous character of the Tramp, with a bowler hat and a cane?",
+        "a": [
+          "Charlie Chaplin",
+          "Buster Keaton",
+          "Harold Lloyd",
+          "Stan Laurel"
+        ]
+      },
+      "ru": {
+        "q": "Кто из звёзд немого кино создал образ Бродяги в котелке и с тросточкой?",
+        "a": [
+          "Чарли Чаплин",
+          "Бастер Китон",
+          "Гарольд Ллойд",
+          "Стэн Лорел"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi ovozsiz kino yulduzi shlyapa kiygan, hassali mashhur Daydi obrazini yaratgan?",
+        "a": [
+          "Charli Chaplin",
+          "Baster Kiton",
+          "Garold Lloyd",
+          "Sten Lorel"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which calendar did the Gregorian calendar replace, starting in 1582?",
+        "a": [
+          "Julian",
+          "Mayan",
+          "Hebrew",
+          "Islamic"
+        ]
+      },
+      "ru": {
+        "q": "На смену какому календарю в 1582 году пришёл григорианский?",
+        "a": [
+          "Юлианскому",
+          "Календарю майя",
+          "Еврейскому",
+          "Исламскому"
+        ]
+      },
+      "uz": {
+        "q": "1582-yildan boshlab grigorian kalendari qaysi kalendar o'rnini egallagan?",
+        "a": [
+          "Yulian kalendari",
+          "Mayya kalendari",
+          "Yahudiy kalendari",
+          "Hijriy kalendar"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who wrote “Bygone Days” (O'tkan kunlar), the first Uzbek novel?",
+        "a": [
+          "Abdulla Qodiriy",
+          "Abdulhamid Cho'lpon",
+          "Abdulla Qahhor",
+          "G'afur G'ulom"
+        ]
+      },
+      "ru": {
+        "q": "Кто автор «Минувших дней» — первого узбекского романа?",
+        "a": [
+          "Абдулла Кадыри",
+          "Абдулхамид Чулпан",
+          "Абдулла Каххар",
+          "Гафур Гулям"
+        ]
+      },
+      "uz": {
+        "q": "Birinchi o'zbek romani «O'tkan kunlar»ning muallifi kim?",
+        "a": [
+          "Abdulla Qodiriy",
+          "Abdulhamid Cho'lpon",
+          "Abdulla Qahhor",
+          "G'afur G'ulom"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the Japanese dish of thinly sliced raw fish served without rice called?",
+        "a": [
+          "Sashimi",
+          "Sushi",
+          "Tempura",
+          "Ramen"
+        ]
+      },
+      "ru": {
+        "q": "Как называется японское блюдо из тонких ломтиков сырой рыбы без риса?",
+        "a": [
+          "Сашими",
+          "Суши",
+          "Темпура",
+          "Рамэн"
+        ]
+      },
+      "uz": {
+        "q": "Guruchsiz tortiladigan, yupqa kesilgan xom baliqdan tayyorlangan yapon taomi nima deb ataladi?",
+        "a": [
+          "Sashimi",
+          "Sushi",
+          "Tempura",
+          "Ramen"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who was the first person to fly into space, in 1961?",
+        "a": [
+          "Yuri Gagarin",
+          "Gherman Titov",
+          "Neil Armstrong",
+          "Alexei Leonov"
+        ]
+      },
+      "ru": {
+        "q": "Кто в 1961 году стал первым человеком в космосе?",
+        "a": [
+          "Юрий Гагарин",
+          "Герман Титов",
+          "Нил Армстронг",
+          "Алексей Леонов"
+        ]
+      },
+      "uz": {
+        "q": "1961-yilda kosmosga uchgan birinchi inson kim?",
+        "a": [
+          "Yuriy Gagarin",
+          "German Titov",
+          "Nil Armstrong",
+          "Aleksey Leonov"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who painted the famous “Black Square” (1915)?",
+        "a": [
+          "Kazimir Malevich",
+          "Wassily Kandinsky",
+          "Marc Chagall",
+          "Ilya Repin"
+        ]
+      },
+      "ru": {
+        "q": "Кто автор знаменитого «Чёрного квадрата» (1915)?",
+        "a": [
+          "Казимир Малевич",
+          "Василий Кандинский",
+          "Марк Шагал",
+          "Илья Репин"
+        ]
+      },
+      "uz": {
+        "q": "Mashhur «Qora kvadrat» (1915) kartinasining muallifi kim?",
+        "a": [
+          "Kazimir Malevich",
+          "Vasiliy Kandinskiy",
+          "Mark Shagal",
+          "Ilya Repin"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "How many players does each side have on the field in rugby union?",
+        "a": [
+          "15",
+          "13",
+          "11",
+          "12"
+        ]
+      },
+      "ru": {
+        "q": "Сколько игроков одной команды на поле в классическом регби (регби-юнион)?",
+        "a": [
+          "15",
+          "13",
+          "11",
+          "12"
+        ]
+      },
+      "uz": {
+        "q": "Klassik regbida (regbi-yunion) har bir jamoadan maydonda nechta o'yinchi bo'ladi?",
+        "a": [
+          "15",
+          "13",
+          "11",
+          "12"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which Greek hero came up with the idea of the Trojan Horse?",
+        "a": [
+          "Odysseus",
+          "Achilles",
+          "Agamemnon",
+          "Menelaus"
+        ]
+      },
+      "ru": {
+        "q": "Кто из греческих героев придумал троянского коня?",
+        "a": [
+          "Одиссей",
+          "Ахилл",
+          "Агамемнон",
+          "Менелай"
+        ]
+      },
+      "uz": {
+        "q": "Troya otini qaysi yunon qahramoni o'ylab topgan?",
+        "a": [
+          "Odissey",
+          "Axilles",
+          "Agamemnon",
+          "Menelay"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who wrote the novel “Oliver Twist”?",
+        "a": [
+          "Charles Dickens",
+          "William Thackeray",
+          "Thomas Hardy",
+          "Walter Scott"
+        ]
+      },
+      "ru": {
+        "q": "Кто автор романа «Оливер Твист»?",
+        "a": [
+          "Чарльз Диккенс",
+          "Уильям Теккерей",
+          "Томас Гарди",
+          "Вальтер Скотт"
+        ]
+      },
+      "uz": {
+        "q": "«Oliver Tvist» romanini kim yozgan?",
+        "a": [
+          "Charlz Dikkens",
+          "Uilyam Tekkerey",
+          "Tomas Gardi",
+          "Valter Skott"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which brothers held a famous public film screening in a Paris café in 1895?",
+        "a": [
+          "The Lumière brothers",
+          "The Warner brothers",
+          "The Pathé brothers",
+          "The Grimm brothers"
+        ]
+      },
+      "ru": {
+        "q": "Какие братья в 1895 году устроили знаменитый публичный киносеанс в парижском кафе?",
+        "a": [
+          "Братья Люмьер",
+          "Братья Уорнер",
+          "Братья Пате",
+          "Братья Гримм"
+        ]
+      },
+      "uz": {
+        "q": "1895-yilda Parijdagi kafeda mashhur ommaviy kino namoyishini qaysi aka-ukalar o'tkazgan?",
+        "a": [
+          "Aka-uka Lyumyerlar",
+          "Aka-uka Uornerlar",
+          "Aka-uka Patelar",
+          "Aka-uka Grimmlar"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who wrote the Persian epic “Shahnameh” (The Book of Kings)?",
+        "a": [
+          "Ferdowsi",
+          "Rumi",
+          "Hafez",
+          "Omar Khayyam"
+        ]
+      },
+      "ru": {
+        "q": "Кто автор персидской эпопеи «Шахнаме»?",
+        "a": [
+          "Фирдоуси",
+          "Руми",
+          "Хафиз",
+          "Омар Хайям"
+        ]
+      },
+      "uz": {
+        "q": "Fors dostoni «Shohnoma»ning muallifi kim?",
+        "a": [
+          "Firdavsiy",
+          "Jaloliddin Rumiy",
+          "Hofiz Sheroziy",
+          "Umar Xayyom"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who wrote the set of violin concertos “The Four Seasons”?",
+        "a": [
+          "Antonio Vivaldi",
+          "Johann Sebastian Bach",
+          "Arcangelo Corelli",
+          "Niccolò Paganini"
+        ]
+      },
+      "ru": {
+        "q": "Кто написал цикл скрипичных концертов «Времена года»?",
+        "a": [
+          "Антонио Вивальди",
+          "Иоганн Себастьян Бах",
+          "Арканджело Корелли",
+          "Никколо Паганини"
+        ]
+      },
+      "uz": {
+        "q": "«Yil fasllari» skripka konsertlari turkumini kim yozgan?",
+        "a": [
+          "Antonio Vivaldi",
+          "Iogann Sebastyan Bax",
+          "Arkanjelo Korelli",
+          "Nikkolo Paganini"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "How many humps does a Bactrian camel have?",
+        "a": [
+          "2",
+          "1",
+          "3",
+          "4"
+        ]
+      },
+      "ru": {
+        "q": "Сколько горбов у бактриана?",
+        "a": [
+          "2",
+          "1",
+          "3",
+          "4"
+        ]
+      },
+      "uz": {
+        "q": "Baqtriya tuyasining nechta o'rkachi bo'ladi?",
+        "a": [
+          "2",
+          "1",
+          "3",
+          "4"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who created the international language Esperanto, first published in 1887?",
+        "a": [
+          "Ludwik Zamenhof",
+          "J. R. R. Tolkien",
+          "Noah Webster",
+          "Jacob Grimm"
+        ]
+      },
+      "ru": {
+        "q": "Кто создал международный язык эсперанто, впервые опубликованный в 1887 году?",
+        "a": [
+          "Людвиг Заменгоф",
+          "Джон Р. Р. Толкин",
+          "Ной Уэбстер",
+          "Якоб Гримм"
+        ]
+      },
+      "uz": {
+        "q": "1887-yilda e'lon qilingan xalqaro esperanto tilini kim yaratgan?",
+        "a": [
+          "Lyudvig Zamengof",
+          "Jon R. R. Tolkin",
+          "Noy Uebster",
+          "Yakob Grimm"
+        ]
+      }
+    }
+  ]
+}

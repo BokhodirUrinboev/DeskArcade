@@ -1,0 +1,1866 @@
+{
+  "id": "programming",
+  "title": {
+    "en": "Programming",
+    "ru": "Программирование",
+    "uz": "Dasturlash"
+  },
+  "questions": [
+    {
+      "en": {
+        "q": "Which data structure works on the last in, first out (LIFO) principle?",
+        "a": [
+          "Stack",
+          "Queue",
+          "Linked list",
+          "Hash table"
+        ]
+      },
+      "ru": {
+        "q": "Какая структура данных работает по принципу LIFO — «последним пришёл, первым вышел»?",
+        "a": [
+          "Стек",
+          "Очередь",
+          "Связный список",
+          "Хеш-таблица"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi ma'lumotlar tuzilmasi LIFO — «oxirgi kirgan birinchi chiqadi» tamoyili bo'yicha ishlaydi?",
+        "a": [
+          "Stek",
+          "Navbat",
+          "Bog'langan ro'yxat",
+          "Xesh-jadval"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which data structure works on the first in, first out (FIFO) principle?",
+        "a": [
+          "Queue",
+          "Stack",
+          "Binary tree",
+          "Graph"
+        ]
+      },
+      "ru": {
+        "q": "Какая структура данных работает по принципу FIFO — «первым пришёл, первым вышел»?",
+        "a": [
+          "Очередь",
+          "Стек",
+          "Двоичное дерево",
+          "Граф"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi ma'lumotlar tuzilmasi FIFO — «birinchi kirgan birinchi chiqadi» tamoyili bo'yicha ishlaydi?",
+        "a": [
+          "Navbat",
+          "Stek",
+          "Ikkilik daraxt",
+          "Graf"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What does HTML stand for?",
+        "a": [
+          "HyperText Markup Language",
+          "HyperText Machine Language",
+          "Hyperlink Text Mode Language",
+          "Home Tool Markup Language"
+        ]
+      },
+      "ru": {
+        "q": "Как расшифровывается HTML?",
+        "a": [
+          "HyperText Markup Language",
+          "HyperText Machine Language",
+          "Hyperlink Text Mode Language",
+          "Home Tool Markup Language"
+        ]
+      },
+      "uz": {
+        "q": "HTML nimaning qisqartmasi?",
+        "a": [
+          "HyperText Markup Language",
+          "HyperText Machine Language",
+          "Hyperlink Text Mode Language",
+          "Home Tool Markup Language"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What does CSS stand for?",
+        "a": [
+          "Cascading Style Sheets",
+          "Computer Style Sheets",
+          "Creative Style System",
+          "Colourful Style Syntax"
+        ]
+      },
+      "ru": {
+        "q": "Как расшифровывается CSS?",
+        "a": [
+          "Cascading Style Sheets",
+          "Computer Style Sheets",
+          "Creative Style System",
+          "Colourful Style Syntax"
+        ]
+      },
+      "uz": {
+        "q": "CSS nimaning qisqartmasi?",
+        "a": [
+          "Cascading Style Sheets",
+          "Computer Style Sheets",
+          "Creative Style System",
+          "Colourful Style Syntax"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which HTTP status code means the requested page was not found?",
+        "a": [
+          "404",
+          "403",
+          "500",
+          "301"
+        ]
+      },
+      "ru": {
+        "q": "Какой код ответа HTTP означает, что запрошенная страница не найдена?",
+        "a": [
+          "404",
+          "403",
+          "500",
+          "301"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi HTTP holat kodi so'ralgan sahifa topilmaganini bildiradi?",
+        "a": [
+          "404",
+          "403",
+          "500",
+          "301"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "How many bits are there in a byte?",
+        "a": [
+          "8",
+          "4",
+          "16",
+          "10"
+        ]
+      },
+      "ru": {
+        "q": "Сколько бит в одном байте?",
+        "a": [
+          "8",
+          "4",
+          "16",
+          "10"
+        ]
+      },
+      "uz": {
+        "q": "Bir baytda necha bit bor?",
+        "a": [
+          "8",
+          "4",
+          "16",
+          "10"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the binary number 1010 in decimal?",
+        "a": [
+          "10",
+          "12",
+          "5",
+          "20"
+        ]
+      },
+      "ru": {
+        "q": "Чему равно двоичное число 1010 в десятичной системе?",
+        "a": [
+          "10",
+          "12",
+          "5",
+          "20"
+        ]
+      },
+      "uz": {
+        "q": "Ikkilik sanoq tizimidagi 1010 soni o'nlik tizimda nechaga teng?",
+        "a": [
+          "10",
+          "12",
+          "5",
+          "20"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which JavaScript keyword declares a constant?",
+        "a": [
+          "const",
+          "let",
+          "var",
+          "static"
+        ]
+      },
+      "ru": {
+        "q": "Каким ключевым словом в JavaScript объявляют константу?",
+        "a": [
+          "const",
+          "let",
+          "var",
+          "static"
+        ]
+      },
+      "uz": {
+        "q": "JavaScript'da konstanta qaysi kalit so'z bilan e'lon qilinadi?",
+        "a": [
+          "const",
+          "let",
+          "var",
+          "static"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is it called when a function calls itself?",
+        "a": [
+          "Recursion",
+          "Iteration",
+          "Encapsulation",
+          "Compilation"
+        ]
+      },
+      "ru": {
+        "q": "Как называется ситуация, когда функция вызывает саму себя?",
+        "a": [
+          "Рекурсия",
+          "Итерация",
+          "Инкапсуляция",
+          "Компиляция"
+        ]
+      },
+      "uz": {
+        "q": "Funksiyaning o'zini o'zi chaqirishi nima deb ataladi?",
+        "a": [
+          "Rekursiya",
+          "Iteratsiya",
+          "Inkapsulyatsiya",
+          "Kompilyatsiya"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In OOP, what is it called when a class is built on another and gets its fields and methods?",
+        "a": [
+          "Inheritance",
+          "Encapsulation",
+          "Polymorphism",
+          "Abstraction"
+        ]
+      },
+      "ru": {
+        "q": "Как в ООП называется механизм, когда класс создаётся на основе другого и получает его поля и методы?",
+        "a": [
+          "Наследование",
+          "Инкапсуляция",
+          "Полиморфизм",
+          "Абстракция"
+        ]
+      },
+      "uz": {
+        "q": "OOP'da sinf boshqa sinf asosida yaratilib, uning maydon va metodlarini olishi nima deb ataladi?",
+        "a": [
+          "Vorislik",
+          "Inkapsulyatsiya",
+          "Polimorfizm",
+          "Abstraksiya"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What does JSON stand for?",
+        "a": [
+          "JavaScript Object Notation",
+          "JavaScript Online Notation",
+          "Java Standard Object Network",
+          "JavaScript Ordered Nodes"
+        ]
+      },
+      "ru": {
+        "q": "Как расшифровывается JSON?",
+        "a": [
+          "JavaScript Object Notation",
+          "JavaScript Online Notation",
+          "Java Standard Object Network",
+          "JavaScript Ordered Nodes"
+        ]
+      },
+      "uz": {
+        "q": "JSON nimaning qisqartmasi?",
+        "a": [
+          "JavaScript Object Notation",
+          "JavaScript Online Notation",
+          "Java Standard Object Network",
+          "JavaScript Ordered Nodes"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which HTML tag marks the top-level, most important heading?",
+        "a": [
+          "<h1>",
+          "<h6>",
+          "<head>",
+          "<header>"
+        ]
+      },
+      "ru": {
+        "q": "Какой HTML-тег задаёт заголовок самого верхнего уровня?",
+        "a": [
+          "<h1>",
+          "<h6>",
+          "<head>",
+          "<header>"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi HTML tegi eng yuqori darajadagi sarlavhani bildiradi?",
+        "a": [
+          "<h1>",
+          "<h6>",
+          "<head>",
+          "<header>"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What does the S in HTTPS stand for?",
+        "a": [
+          "Secure",
+          "Simple",
+          "Standard",
+          "Server"
+        ]
+      },
+      "ru": {
+        "q": "Что означает буква S в HTTPS?",
+        "a": [
+          "Secure",
+          "Simple",
+          "Standard",
+          "Server"
+        ]
+      },
+      "uz": {
+        "q": "HTTPS dagi S harfi nimani anglatadi?",
+        "a": [
+          "Secure",
+          "Simple",
+          "Standard",
+          "Server"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which symbol starts a single-line comment in Python?",
+        "a": [
+          "#",
+          "//",
+          "--",
+          ";"
+        ]
+      },
+      "ru": {
+        "q": "С какого символа начинается однострочный комментарий в Python?",
+        "a": [
+          "#",
+          "//",
+          "--",
+          ";"
+        ]
+      },
+      "uz": {
+        "q": "Python'da bir qatorli izoh qaysi belgi bilan boshlanadi?",
+        "a": [
+          "#",
+          "//",
+          "--",
+          ";"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which git command copies a remote repository to your computer for the first time?",
+        "a": [
+          "git clone",
+          "git pull",
+          "git fetch",
+          "git init"
+        ]
+      },
+      "ru": {
+        "q": "Какая команда git впервые копирует удалённый репозиторий на ваш компьютер?",
+        "a": [
+          "git clone",
+          "git pull",
+          "git fetch",
+          "git init"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi git buyrug'i masofaviy repozitoriyni kompyuteringizga ilk bor nusxalaydi?",
+        "a": [
+          "git clone",
+          "git pull",
+          "git fetch",
+          "git init"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which Linux command lists the files in a directory?",
+        "a": [
+          "ls",
+          "cd",
+          "pwd",
+          "rm"
+        ]
+      },
+      "ru": {
+        "q": "Какая команда Linux выводит список файлов в каталоге?",
+        "a": [
+          "ls",
+          "cd",
+          "pwd",
+          "rm"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi Linux buyrug'i katalogdagi fayllar ro'yxatini chiqaradi?",
+        "a": [
+          "ls",
+          "cd",
+          "pwd",
+          "rm"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is 2 to the power of 10?",
+        "a": [
+          "1024",
+          "1000",
+          "512",
+          "2048"
+        ]
+      },
+      "ru": {
+        "q": "Чему равно 2 в десятой степени?",
+        "a": [
+          "1024",
+          "1000",
+          "512",
+          "2048"
+        ]
+      },
+      "uz": {
+        "q": "2 ning 10-darajasi nechaga teng?",
+        "a": [
+          "1024",
+          "1000",
+          "512",
+          "2048"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which HTML tag creates a clickable link to another page?",
+        "a": [
+          "<a>",
+          "<link>",
+          "<href>",
+          "<url>"
+        ]
+      },
+      "ru": {
+        "q": "Какой HTML-тег создаёт кликабельную ссылку на другую страницу?",
+        "a": [
+          "<a>",
+          "<link>",
+          "<href>",
+          "<url>"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi HTML tegi boshqa sahifaga bosiladigan havola yaratadi?",
+        "a": [
+          "<a>",
+          "<link>",
+          "<href>",
+          "<url>"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who created the Linux kernel?",
+        "a": [
+          "Linus Torvalds",
+          "Richard Stallman",
+          "Dennis Ritchie",
+          "Ken Thompson"
+        ]
+      },
+      "ru": {
+        "q": "Кто создал ядро Linux?",
+        "a": [
+          "Линус Торвальдс",
+          "Ричард Столлман",
+          "Деннис Ритчи",
+          "Кен Томпсон"
+        ]
+      },
+      "uz": {
+        "q": "Linux yadrosini kim yaratgan?",
+        "a": [
+          "Linus Torvalds",
+          "Richard Stallman",
+          "Dennis Ritchie",
+          "Ken Thompson"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who invented the World Wide Web?",
+        "a": [
+          "Tim Berners-Lee",
+          "Vint Cerf",
+          "Alan Turing",
+          "Bill Gates"
+        ]
+      },
+      "ru": {
+        "q": "Кто изобрёл Всемирную паутину (World Wide Web)?",
+        "a": [
+          "Тим Бернерс-Ли",
+          "Винт Серф",
+          "Алан Тьюринг",
+          "Билл Гейтс"
+        ]
+      },
+      "uz": {
+        "q": "Butunjahon o'rgimchak to'rini (World Wide Web) kim ixtiro qilgan?",
+        "a": [
+          "Tim Berners-Lee",
+          "Vint Cerf",
+          "Alan Turing",
+          "Bill Gates"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which HTTP method is meant simply for retrieving a resource?",
+        "a": [
+          "GET",
+          "POST",
+          "PUT",
+          "DELETE"
+        ]
+      },
+      "ru": {
+        "q": "Какой HTTP-метод предназначен просто для получения ресурса?",
+        "a": [
+          "GET",
+          "POST",
+          "PUT",
+          "DELETE"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi HTTP metodi resursni shunchaki olish uchun mo'ljallangan?",
+        "a": [
+          "GET",
+          "POST",
+          "PUT",
+          "DELETE"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the time complexity of binary search in a sorted array?",
+        "a": [
+          "O(log n)",
+          "O(n)",
+          "O(1)",
+          "O(n log n)"
+        ]
+      },
+      "ru": {
+        "q": "Какова временная сложность двоичного поиска в отсортированном массиве?",
+        "a": [
+          "O(log n)",
+          "O(n)",
+          "O(1)",
+          "O(n log n)"
+        ]
+      },
+      "uz": {
+        "q": "Saralangan massivda ikkilik qidiruvning vaqt murakkabligi qanday?",
+        "a": [
+          "O(log n)",
+          "O(n)",
+          "O(1)",
+          "O(n log n)"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the average time complexity of quicksort?",
+        "a": [
+          "O(n log n)",
+          "O(n²)",
+          "O(n)",
+          "O(log n)"
+        ]
+      },
+      "ru": {
+        "q": "Какова средняя временная сложность быстрой сортировки (quicksort)?",
+        "a": [
+          "O(n log n)",
+          "O(n²)",
+          "O(n)",
+          "O(log n)"
+        ]
+      },
+      "uz": {
+        "q": "Tezkor saralashning (quicksort) o'rtacha vaqt murakkabligi qanday?",
+        "a": [
+          "O(n log n)",
+          "O(n²)",
+          "O(n)",
+          "O(log n)"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the time complexity of reading an array element by its index?",
+        "a": [
+          "O(1)",
+          "O(n)",
+          "O(log n)",
+          "O(n²)"
+        ]
+      },
+      "ru": {
+        "q": "Какова сложность чтения элемента массива по индексу?",
+        "a": [
+          "O(1)",
+          "O(n)",
+          "O(log n)",
+          "O(n²)"
+        ]
+      },
+      "uz": {
+        "q": "Massiv elementini indeksi bo'yicha o'qishning murakkabligi qanday?",
+        "a": [
+          "O(1)",
+          "O(n)",
+          "O(log n)",
+          "O(n²)"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which data structure does breadth-first search use to hold the nodes still to visit?",
+        "a": [
+          "Queue",
+          "Stack",
+          "Priority queue",
+          "Binary tree"
+        ]
+      },
+      "ru": {
+        "q": "Какую структуру данных использует поиск в ширину для хранения вершин, которые ещё предстоит обойти?",
+        "a": [
+          "Очередь",
+          "Стек",
+          "Очередь с приоритетом",
+          "Двоичное дерево"
+        ]
+      },
+      "uz": {
+        "q": "Kenglik bo'yicha qidiruv hali ko'rilmagan tugunlarni qaysi ma'lumotlar tuzilmasida saqlaydi?",
+        "a": [
+          "Navbat",
+          "Stek",
+          "Ustuvor navbat",
+          "Ikkilik daraxt"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the hexadecimal number FF in decimal?",
+        "a": [
+          "255",
+          "256",
+          "15",
+          "240"
+        ]
+      },
+      "ru": {
+        "q": "Чему равно шестнадцатеричное число FF в десятичной системе?",
+        "a": [
+          "255",
+          "256",
+          "15",
+          "240"
+        ]
+      },
+      "uz": {
+        "q": "O'n oltilik sanoq tizimidagi FF soni o'nlik tizimda nechaga teng?",
+        "a": [
+          "255",
+          "256",
+          "15",
+          "240"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which HTTP status code means Internal Server Error?",
+        "a": [
+          "500",
+          "404",
+          "403",
+          "302"
+        ]
+      },
+      "ru": {
+        "q": "Какой код ответа HTTP означает Internal Server Error — внутреннюю ошибку сервера?",
+        "a": [
+          "500",
+          "404",
+          "403",
+          "302"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi HTTP holat kodi Internal Server Error, ya'ni serverning ichki xatosini bildiradi?",
+        "a": [
+          "500",
+          "404",
+          "403",
+          "302"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which port does HTTPS use by default?",
+        "a": [
+          "443",
+          "80",
+          "8080",
+          "22"
+        ]
+      },
+      "ru": {
+        "q": "Какой порт HTTPS использует по умолчанию?",
+        "a": [
+          "443",
+          "80",
+          "8080",
+          "22"
+        ]
+      },
+      "uz": {
+        "q": "HTTPS standart holatda qaysi portdan foydalanadi?",
+        "a": [
+          "443",
+          "80",
+          "8080",
+          "22"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which SQL clause filters groups after GROUP BY?",
+        "a": [
+          "HAVING",
+          "WHERE",
+          "ORDER BY",
+          "LIMIT"
+        ]
+      },
+      "ru": {
+        "q": "Какая конструкция SQL фильтрует группы после GROUP BY?",
+        "a": [
+          "HAVING",
+          "WHERE",
+          "ORDER BY",
+          "LIMIT"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi SQL konstruksiyasi GROUP BY dan keyin guruhlarni filtrlaydi?",
+        "a": [
+          "HAVING",
+          "WHERE",
+          "ORDER BY",
+          "LIMIT"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which SQL join returns only the rows that match in both tables?",
+        "a": [
+          "INNER JOIN",
+          "LEFT JOIN",
+          "FULL JOIN",
+          "CROSS JOIN"
+        ]
+      },
+      "ru": {
+        "q": "Какой JOIN в SQL возвращает только строки, совпадающие в обеих таблицах?",
+        "a": [
+          "INNER JOIN",
+          "LEFT JOIN",
+          "FULL JOIN",
+          "CROSS JOIN"
+        ]
+      },
+      "uz": {
+        "q": "SQL'dagi qaysi JOIN faqat ikkala jadvalda ham mos keladigan satrlarni qaytaradi?",
+        "a": [
+          "INNER JOIN",
+          "LEFT JOIN",
+          "FULL JOIN",
+          "CROSS JOIN"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In the database acronym ACID, what does the A stand for?",
+        "a": [
+          "Atomicity",
+          "Availability",
+          "Accuracy",
+          "Authorisation"
+        ]
+      },
+      "ru": {
+        "q": "Что означает буква A в аббревиатуре ACID для баз данных?",
+        "a": [
+          "Атомарность",
+          "Доступность",
+          "Точность",
+          "Авторизация"
+        ]
+      },
+      "uz": {
+        "q": "Ma'lumotlar bazalaridagi ACID qisqartmasida A harfi nimani anglatadi?",
+        "a": [
+          "Atomarlik",
+          "Foydalanish imkoniyati",
+          "Aniqlik",
+          "Avtorizatsiya"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In the CSS box model, what lies between the content and the border?",
+        "a": [
+          "padding",
+          "margin",
+          "outline",
+          "gap"
+        ]
+      },
+      "ru": {
+        "q": "Что в блочной модели CSS находится между содержимым и рамкой (border)?",
+        "a": [
+          "padding",
+          "margin",
+          "outline",
+          "gap"
+        ]
+      },
+      "uz": {
+        "q": "CSS blok modelida kontent bilan chegara (border) orasida nima joylashgan?",
+        "a": [
+          "padding",
+          "margin",
+          "outline",
+          "gap"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In which text editor do you type :q! to quit without saving?",
+        "a": [
+          "Vim",
+          "Nano",
+          "Emacs",
+          "Notepad"
+        ]
+      },
+      "ru": {
+        "q": "В каком текстовом редакторе для выхода без сохранения набирают :q!?",
+        "a": [
+          "Vim",
+          "Nano",
+          "Emacs",
+          "Notepad"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi matn muharririda saqlamasdan chiqish uchun :q! yoziladi?",
+        "a": [
+          "Vim",
+          "Nano",
+          "Emacs",
+          "Notepad"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which Unix command changes a file's access permissions?",
+        "a": [
+          "chmod",
+          "chown",
+          "touch",
+          "mv"
+        ]
+      },
+      "ru": {
+        "q": "Какая команда Unix меняет права доступа к файлу?",
+        "a": [
+          "chmod",
+          "chown",
+          "touch",
+          "mv"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi Unix buyrug'i faylga kirish huquqlarini o'zgartiradi?",
+        "a": [
+          "chmod",
+          "chown",
+          "touch",
+          "mv"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which git command fetches remote changes and integrates them into the current branch?",
+        "a": [
+          "git pull",
+          "git fetch",
+          "git push",
+          "git clone"
+        ]
+      },
+      "ru": {
+        "q": "Какая команда git скачивает изменения из удалённого репозитория и вливает их в текущую ветку?",
+        "a": [
+          "git pull",
+          "git fetch",
+          "git push",
+          "git clone"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi git buyrug'i masofaviy o'zgarishlarni yuklab olib, ularni joriy tarmoqqa (branch) qo'shadi?",
+        "a": [
+          "git pull",
+          "git fetch",
+          "git push",
+          "git clone"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which git command sets aside uncommitted changes so you can come back to them later?",
+        "a": [
+          "git stash",
+          "git reset",
+          "git revert",
+          "git tag"
+        ]
+      },
+      "ru": {
+        "q": "Какая команда git временно откладывает незакоммиченные изменения, чтобы вернуться к ним позже?",
+        "a": [
+          "git stash",
+          "git reset",
+          "git revert",
+          "git tag"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi git buyrug'i commit qilinmagan o'zgarishlarni keyinroq qaytish uchun vaqtincha chetga olib qo'yadi?",
+        "a": [
+          "git stash",
+          "git reset",
+          "git revert",
+          "git tag"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which file lists the files that git should ignore?",
+        "a": [
+          ".gitignore",
+          ".gitconfig",
+          ".gitkeep",
+          ".gitmodules"
+        ]
+      },
+      "ru": {
+        "q": "В каком файле перечисляют файлы, которые git должен игнорировать?",
+        "a": [
+          ".gitignore",
+          ".gitconfig",
+          ".gitkeep",
+          ".gitmodules"
+        ]
+      },
+      "uz": {
+        "q": "Git e'tiborsiz qoldirishi kerak bo'lgan fayllar qaysi faylda ko'rsatiladi?",
+        "a": [
+          ".gitignore",
+          ".gitconfig",
+          ".gitkeep",
+          ".gitmodules"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who created the C programming language at Bell Labs?",
+        "a": [
+          "Dennis Ritchie",
+          "Bjarne Stroustrup",
+          "James Gosling",
+          "Niklaus Wirth"
+        ]
+      },
+      "ru": {
+        "q": "Кто создал язык программирования C в Bell Labs?",
+        "a": [
+          "Деннис Ритчи",
+          "Бьёрн Страуструп",
+          "Джеймс Гослинг",
+          "Никлаус Вирт"
+        ]
+      },
+      "uz": {
+        "q": "Bell Labs'da C dasturlash tilini kim yaratgan?",
+        "a": [
+          "Dennis Ritchie",
+          "Bjarne Stroustrup",
+          "James Gosling",
+          "Niklaus Wirth"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who is often called the first programmer, for her notes on Babbage's Analytical Engine?",
+        "a": [
+          "Ada Lovelace",
+          "Grace Hopper",
+          "Hedy Lamarr",
+          "Margaret Hamilton"
+        ]
+      },
+      "ru": {
+        "q": "Кого часто называют первым программистом благодаря заметкам об аналитической машине Бэббиджа?",
+        "a": [
+          "Ада Лавлейс",
+          "Грейс Хоппер",
+          "Хеди Ламарр",
+          "Маргарет Гамильтон"
+        ]
+      },
+      "uz": {
+        "q": "Bebbijning Analitik mashinasi haqidagi yozuvlari tufayli kim ko'pincha birinchi dasturchi deb ataladi?",
+        "a": [
+          "Ada Lovelace",
+          "Grace Hopper",
+          "Hedy Lamarr",
+          "Margaret Hamilton"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which language did Brendan Eich create at Netscape in 1995?",
+        "a": [
+          "JavaScript",
+          "Java",
+          "PHP",
+          "Perl"
+        ]
+      },
+      "ru": {
+        "q": "Какой язык Брендан Эйх создал в Netscape в 1995 году?",
+        "a": [
+          "JavaScript",
+          "Java",
+          "PHP",
+          "Perl"
+        ]
+      },
+      "uz": {
+        "q": "Brendan Eich 1995-yilda Netscape'da qaysi tilni yaratgan?",
+        "a": [
+          "JavaScript",
+          "Java",
+          "PHP",
+          "Perl"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which language, created at Google, has a gopher as its mascot?",
+        "a": [
+          "Go",
+          "Dart",
+          "Kotlin",
+          "Rust"
+        ]
+      },
+      "ru": {
+        "q": "У какого языка, созданного в Google, талисман — гофер (суслик)?",
+        "a": [
+          "Go",
+          "Dart",
+          "Kotlin",
+          "Rust"
+        ]
+      },
+      "uz": {
+        "q": "Google'da yaratilgan qaysi tilning maskoti — gofer (yumronqoziq)?",
+        "a": [
+          "Go",
+          "Dart",
+          "Kotlin",
+          "Rust"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which language uses Cargo as its package manager and build tool?",
+        "a": [
+          "Rust",
+          "Go",
+          "Swift",
+          "Haskell"
+        ]
+      },
+      "ru": {
+        "q": "В каком языке менеджер пакетов и система сборки называется Cargo?",
+        "a": [
+          "Rust",
+          "Go",
+          "Swift",
+          "Haskell"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi tilda paketlar menejeri va yig'ish vositasi Cargo deb ataladi?",
+        "a": [
+          "Rust",
+          "Go",
+          "Swift",
+          "Haskell"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In Python 3, what does 7 // 2 evaluate to?",
+        "a": [
+          "3",
+          "3.5",
+          "4",
+          "1"
+        ]
+      },
+      "ru": {
+        "q": "Чему равно 7 // 2 в Python 3?",
+        "a": [
+          "3",
+          "3.5",
+          "4",
+          "1"
+        ]
+      },
+      "uz": {
+        "q": "Python 3 da 7 // 2 ifodasining qiymati nechaga teng?",
+        "a": [
+          "3",
+          "3.5",
+          "4",
+          "1"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In JavaScript, what does 0.1 + 0.2 === 0.3 return?",
+        "a": [
+          "false",
+          "true",
+          "undefined",
+          "NaN"
+        ]
+      },
+      "ru": {
+        "q": "Что вернёт 0.1 + 0.2 === 0.3 в JavaScript?",
+        "a": [
+          "false",
+          "true",
+          "undefined",
+          "NaN"
+        ]
+      },
+      "uz": {
+        "q": "JavaScript'da 0.1 + 0.2 === 0.3 nima qaytaradi?",
+        "a": [
+          "false",
+          "true",
+          "undefined",
+          "NaN"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In rubber duck debugging, what do you do with the duck?",
+        "a": [
+          "Explain your code to it",
+          "Squeeze it for every bug",
+          "Put it on the build server",
+          "Let it pick the next task"
+        ]
+      },
+      "ru": {
+        "q": "Что делают с резиновой уточкой при «методе утёнка» (rubber duck debugging)?",
+        "a": [
+          "Объясняют ей свой код",
+          "Сжимают её при каждом баге",
+          "Ставят на сервер сборки",
+          "Дают ей выбрать задачу"
+        ]
+      },
+      "uz": {
+        "q": "Rubber duck debugging usulida rezina o'rdakcha bilan nima qilinadi?",
+        "a": [
+          "Unga kod tushuntiriladi",
+          "Har bir xatoda u siqiladi",
+          "U build serverga qo'yiladi",
+          "Keyingi vazifani u tanlaydi"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which IPv4 address is the standard loopback address, localhost?",
+        "a": [
+          "127.0.0.1",
+          "192.168.0.1",
+          "0.0.0.0",
+          "255.255.255.255"
+        ]
+      },
+      "ru": {
+        "q": "Какой IPv4-адрес — стандартный петлевой адрес localhost?",
+        "a": [
+          "127.0.0.1",
+          "192.168.0.1",
+          "0.0.0.0",
+          "255.255.255.255"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi IPv4 manzil standart loopback manzil, ya'ni localhost hisoblanadi?",
+        "a": [
+          "127.0.0.1",
+          "192.168.0.1",
+          "0.0.0.0",
+          "255.255.255.255"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In a Unix shell, what does the | (pipe) symbol do?",
+        "a": [
+          "Passes output to next command",
+          "Runs a command in background",
+          "Writes output to a file",
+          "Runs next only on success"
+        ]
+      },
+      "ru": {
+        "q": "Что делает символ | (конвейер, pipe) в командной оболочке Unix?",
+        "a": [
+          "Передаёт вывод другой команде",
+          "Запускает команду в фоне",
+          "Записывает вывод в файл",
+          "Продолжает только при успехе"
+        ]
+      },
+      "uz": {
+        "q": "Unix shell'ida | (pipe) belgisi nima qiladi?",
+        "a": [
+          "Natijani keyingisiga uzatadi",
+          "Buyruqni fonda ishga tushiradi",
+          "Natijani faylga yozadi",
+          "Xatosiz bo'lsa davom etadi"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which exit code means that a Unix program finished successfully?",
+        "a": [
+          "0",
+          "1",
+          "-1",
+          "255"
+        ]
+      },
+      "ru": {
+        "q": "Какой код возврата означает, что программа в Unix завершилась успешно?",
+        "a": [
+          "0",
+          "1",
+          "-1",
+          "255"
+        ]
+      },
+      "uz": {
+        "q": "Unix'da qaysi chiqish kodi dastur muvaffaqiyatli tugaganini bildiradi?",
+        "a": [
+          "0",
+          "1",
+          "-1",
+          "255"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Unix time counts seconds from the start of which year?",
+        "a": [
+          "1970",
+          "1960",
+          "1980",
+          "2000"
+        ]
+      },
+      "ru": {
+        "q": "С начала какого года Unix-время отсчитывает секунды?",
+        "a": [
+          "1970",
+          "1960",
+          "1980",
+          "2000"
+        ]
+      },
+      "uz": {
+        "q": "Unix vaqti soniyalarni qaysi yil boshidan boshlab hisoblaydi?",
+        "a": [
+          "1970",
+          "1960",
+          "1980",
+          "2000"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is it called when two threads wait forever for locks held by each other?",
+        "a": [
+          "Deadlock",
+          "Race condition",
+          "Memory leak",
+          "Buffer overflow"
+        ]
+      },
+      "ru": {
+        "q": "Как называется ситуация, когда два потока бесконечно ждут блокировок, захваченных друг другом?",
+        "a": [
+          "Взаимоблокировка",
+          "Состояние гонки",
+          "Утечка памяти",
+          "Переполнение буфера"
+        ]
+      },
+      "uz": {
+        "q": "Ikki oqim bir-birining qulfini abadiy kutib qolishi nima deb ataladi?",
+        "a": [
+          "O'zaro bloklanish",
+          "Poyga holati",
+          "Xotira oqishi",
+          "Bufer to'lishi"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What does the DRY principle stand for?",
+        "a": [
+          "Don't Repeat Yourself",
+          "Do Refactor Yearly",
+          "Design, Run, Yield",
+          "Data Rules You"
+        ]
+      },
+      "ru": {
+        "q": "Как расшифровывается принцип DRY?",
+        "a": [
+          "Don't Repeat Yourself",
+          "Do Refactor Yearly",
+          "Design, Run, Yield",
+          "Data Rules You"
+        ]
+      },
+      "uz": {
+        "q": "DRY tamoyili nimaning qisqartmasi?",
+        "a": [
+          "Don't Repeat Yourself",
+          "Do Refactor Yearly",
+          "Design, Run, Yield",
+          "Data Rules You"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In semantic versioning, what does the 5 in 2.5.1 mean?",
+        "a": [
+          "Minor version",
+          "Major version",
+          "Patch version",
+          "Build number"
+        ]
+      },
+      "ru": {
+        "q": "Что означает 5 в версии 2.5.1 по семантическому версионированию?",
+        "a": [
+          "Минорная версия",
+          "Мажорная версия",
+          "Патч-версия",
+          "Номер сборки"
+        ]
+      },
+      "uz": {
+        "q": "Semantik versiyalashda 2.5.1 dagi 5 nimani bildiradi?",
+        "a": [
+          "Minor versiya",
+          "Major versiya",
+          "Patch versiya",
+          "Yig'ish raqami"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which algorithm finds shortest paths from one node when all edge weights are non-negative?",
+        "a": [
+          "Dijkstra's algorithm",
+          "Kruskal's algorithm",
+          "Prim's algorithm",
+          "Depth-first search"
+        ]
+      },
+      "ru": {
+        "q": "Какой алгоритм находит кратчайшие пути от одной вершины, если веса рёбер неотрицательны?",
+        "a": [
+          "Алгоритм Дейкстры",
+          "Алгоритм Краскала",
+          "Алгоритм Прима",
+          "Поиск в глубину"
+        ]
+      },
+      "uz": {
+        "q": "Qirralar og'irligi manfiy bo'lmaganda bitta tugundan eng qisqa yo'llarni qaysi algoritm topadi?",
+        "a": [
+          "Deykstra algoritmi",
+          "Kruskal algoritmi",
+          "Prim algoritmi",
+          "Chuqurlik bo'yicha qidiruv"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In 1947, a moth found in a relay was taped into the logbook of which computer?",
+        "a": [
+          "Harvard Mark II",
+          "ENIAC",
+          "UNIVAC I",
+          "Colossus"
+        ]
+      },
+      "ru": {
+        "q": "В 1947 году мотылька, найденного в реле, вклеили в журнал какого компьютера?",
+        "a": [
+          "Harvard Mark II",
+          "ENIAC",
+          "UNIVAC I",
+          "Colossus"
+        ]
+      },
+      "uz": {
+        "q": "1947-yilda relega tiqilib qolgan kuya qaysi kompyuterning jurnaliga yopishtirilgan?",
+        "a": [
+          "Harvard Mark II",
+          "ENIAC",
+          "UNIVAC I",
+          "Colossus"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In JavaScript, what does typeof null return?",
+        "a": [
+          "\"object\"",
+          "\"null\"",
+          "\"undefined\"",
+          "\"number\""
+        ]
+      },
+      "ru": {
+        "q": "Что возвращает typeof null в JavaScript?",
+        "a": [
+          "\"object\"",
+          "\"null\"",
+          "\"undefined\"",
+          "\"number\""
+        ]
+      },
+      "uz": {
+        "q": "JavaScript'da typeof null nima qaytaradi?",
+        "a": [
+          "\"object\"",
+          "\"null\"",
+          "\"undefined\"",
+          "\"number\""
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In standard SQL, what is the result of NULL = NULL?",
+        "a": [
+          "NULL (unknown)",
+          "TRUE",
+          "FALSE",
+          "An error"
+        ]
+      },
+      "ru": {
+        "q": "Каков результат NULL = NULL в стандартном SQL?",
+        "a": [
+          "NULL (неизвестно)",
+          "TRUE",
+          "FALSE",
+          "Ошибка"
+        ]
+      },
+      "uz": {
+        "q": "Standart SQL'da NULL = NULL ifodasining natijasi qanday?",
+        "a": [
+          "NULL (noma'lum)",
+          "TRUE",
+          "FALSE",
+          "Xatolik"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What was Java first called, after a tree outside James Gosling's office?",
+        "a": [
+          "Oak",
+          "Pine",
+          "Maple",
+          "Birch"
+        ]
+      },
+      "ru": {
+        "q": "Как сначала назывался Java — в честь дерева у офиса Джеймса Гослинга?",
+        "a": [
+          "Oak (дуб)",
+          "Pine (сосна)",
+          "Maple (клён)",
+          "Birch (берёза)"
+        ]
+      },
+      "uz": {
+        "q": "Java dastlab qanday atalgan? Nomi James Gosling ofisi yonidagi daraxtdan olingan edi.",
+        "a": [
+          "Oak (eman)",
+          "Pine (qarag'ay)",
+          "Maple (zarang)",
+          "Birch (qayin)"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What does the recursive acronym GNU stand for?",
+        "a": [
+          "GNU's Not Unix",
+          "General Network Utilities",
+          "Global Native Unix",
+          "Great New Utilities"
+        ]
+      },
+      "ru": {
+        "q": "Как расшифровывается рекурсивный акроним GNU?",
+        "a": [
+          "GNU's Not Unix",
+          "General Network Utilities",
+          "Global Native Unix",
+          "Great New Utilities"
+        ]
+      },
+      "uz": {
+        "q": "GNU rekursiv qisqartmasi nimani anglatadi?",
+        "a": [
+          "GNU's Not Unix",
+          "General Network Utilities",
+          "Global Native Unix",
+          "Great New Utilities"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In which year will a signed 32-bit Unix timestamp overflow?",
+        "a": [
+          "2038",
+          "2036",
+          "2048",
+          "2100"
+        ]
+      },
+      "ru": {
+        "q": "В каком году переполнится знаковая 32-битная метка Unix-времени?",
+        "a": [
+          "2038",
+          "2036",
+          "2048",
+          "2100"
+        ]
+      },
+      "uz": {
+        "q": "Ishorali 32 bitli Unix vaqt belgisi qaysi yilda to'lib ketadi?",
+        "a": [
+          "2038",
+          "2036",
+          "2048",
+          "2100"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the smallest value of a signed 8-bit integer in two's complement?",
+        "a": [
+          "-128",
+          "-127",
+          "-255",
+          "-256"
+        ]
+      },
+      "ru": {
+        "q": "Какое наименьшее значение у знакового 8-битного целого в дополнительном коде?",
+        "a": [
+          "-128",
+          "-127",
+          "-255",
+          "-256"
+        ]
+      },
+      "uz": {
+        "q": "Qo'shimcha kodda ishorali 8 bitli butun sonning eng kichik qiymati qancha?",
+        "a": [
+          "-128",
+          "-127",
+          "-255",
+          "-256"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Who wrote the famous 1968 letter Go To Statement Considered Harmful?",
+        "a": [
+          "Edsger Dijkstra",
+          "Donald Knuth",
+          "Alan Kay",
+          "John McCarthy"
+        ]
+      },
+      "ru": {
+        "q": "Кто написал знаменитое письмо 1968 года «Go To Statement Considered Harmful»?",
+        "a": [
+          "Эдсгер Дейкстра",
+          "Дональд Кнут",
+          "Алан Кэй",
+          "Джон Маккарти"
+        ]
+      },
+      "uz": {
+        "q": "1968-yildagi mashhur «Go To Statement Considered Harmful» maktubini kim yozgan?",
+        "a": [
+          "Edsger Dijkstra",
+          "Donald Knuth",
+          "Alan Kay",
+          "John McCarthy"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "John McCarthy created which language, famous for its many parentheses?",
+        "a": [
+          "Lisp",
+          "Fortran",
+          "COBOL",
+          "ALGOL"
+        ]
+      },
+      "ru": {
+        "q": "Какой язык, знаменитый обилием скобок, создал Джон Маккарти?",
+        "a": [
+          "Lisp",
+          "Fortran",
+          "COBOL",
+          "ALGOL"
+        ]
+      },
+      "uz": {
+        "q": "Qavslarining ko'pligi bilan mashhur qaysi tilni John McCarthy yaratgan?",
+        "a": [
+          "Lisp",
+          "Fortran",
+          "COBOL",
+          "ALGOL"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which language did John Backus's team at IBM create in the 1950s?",
+        "a": [
+          "Fortran",
+          "COBOL",
+          "BASIC",
+          "Pascal"
+        ]
+      },
+      "ru": {
+        "q": "Какой язык создала команда Джона Бэкуса в IBM в 1950-х годах?",
+        "a": [
+          "Fortran",
+          "COBOL",
+          "BASIC",
+          "Pascal"
+        ]
+      },
+      "uz": {
+        "q": "1950-yillarda IBM'da John Backus jamoasi qaysi tilni yaratgan?",
+        "a": [
+          "Fortran",
+          "COBOL",
+          "BASIC",
+          "Pascal"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which HTTP status code is the April Fools' joke I'm a teapot?",
+        "a": [
+          "418",
+          "420",
+          "429",
+          "451"
+        ]
+      },
+      "ru": {
+        "q": "Какой код ответа HTTP — первоапрельская шутка «I'm a teapot»?",
+        "a": [
+          "418",
+          "420",
+          "429",
+          "451"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi HTTP holat kodi 1-aprel hazili bo'lgan «I'm a teapot»?",
+        "a": [
+          "418",
+          "420",
+          "429",
+          "451"
+        ]
+      }
+    }
+  ]
+}

@@ -13,6 +13,16 @@ using DeskArcade.Net;
 namespace DeskArcade;
 
 /// <summary>
+/// A room game with settings of its own for the host (Quiz Night's question pack): the setup window shows its panel
+/// above the number of players while the room is being hosted.
+/// </summary>
+public interface IRoomOptions
+{
+    /// <summary>The host's settings, built once per setup window; <paramref name="owner"/> is that window (for file pickers).</summary>
+    Control OptionsPanel(Window owner);
+}
+
+/// <summary>
 /// Sets up a room game (Durak, Last Card) with co-workers: create a room (its code appears for the others to
 /// type), or join one from the list of rooms on the network or by its code, optionally at an IP address when
 /// the network blocks broadcasts. The host picks how many seats to play with; computer players fill the empty
@@ -98,6 +108,7 @@ public sealed class RoomWindow : Window
         _hostPanel.Children.Add(Text(L.T("Your room code — tell it to your co-workers:"), 13, "#AAB3C0"));
         _hostPanel.Children.Add(_code);
         _hostPanel.Children.Add(_players);
+        if (game is IRoomOptions options) _hostPanel.Children.Add(options.OptionsPanel(this));
         _hostPanel.Children.Add(new StackPanel
         {
             Orientation = Orientation.Horizontal, Spacing = 8,
@@ -116,7 +127,9 @@ public sealed class RoomWindow : Window
 
         var panel = new StackPanel { Margin = new Thickness(22, 18), Spacing = 10 };
         panel.Children.Add(Text(Title, 22, "#FFFFFF", FontWeight.Bold));
-        panel.Children.Add(Text(L.F("Two to four players on the same network. Everyone needs Desk Arcade {0} or newer.", game.MinVersion), 12, "#AAB3C0"));
+        panel.Children.Add(Text(game.MinPlayers == 2 && game.MaxPlayers == RoomLink.MaxSeats
+            ? L.F("Two to four players on the same network. Everyone needs Desk Arcade {0} or newer.", game.MinVersion)
+            : L.F("{0} to {1} players on the same network. Everyone needs Desk Arcade {2} or newer.", game.MinPlayers, game.MaxPlayers, game.MinVersion), 12, "#AAB3C0"));
         panel.Children.Add(_status);
         panel.Children.Add(_hostPanel);
         panel.Children.Add(_joinPanel);

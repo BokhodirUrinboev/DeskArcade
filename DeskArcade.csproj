@@ -44,7 +44,13 @@
   <ItemGroup>
     <!-- the translations, one gettext file per language (see Strings.cs) -->
     <EmbeddedResource Include="i18n\*.po" LogicalName="i18n/%(Filename)%(Extension)" />
-    <EmbeddedResource Include="i18n\parts\*.po" LogicalName="i18n/parts/%(Filename)%(Extension)" />
+    <EmbeddedResource Include="i18n\parts\*.po" LogicalName="i18n/parts/%(Filename)%(Extension)" WithCulture="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Quiz Night's question packs, and Draw & Guess's words and the computer's pictures -->
+    <EmbeddedResource Include="quiz\*.json" LogicalName="quiz/%(Filename)%(Extension)" WithCulture="false" />
+    <EmbeddedResource Include="draw\*.json;draw\*.txt" LogicalName="draw/%(Filename)%(Extension)" WithCulture="false" />
   </ItemGroup>
 
   <ItemGroup>

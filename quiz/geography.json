@@ -1,0 +1,1866 @@
+{
+  "id": "geography",
+  "title": {
+    "en": "Geography",
+    "ru": "География",
+    "uz": "Geografiya"
+  },
+  "questions": [
+    {
+      "en": {
+        "q": "What is the capital of France?",
+        "a": [
+          "Paris",
+          "Lyon",
+          "Marseille",
+          "Nice"
+        ]
+      },
+      "ru": {
+        "q": "Какой город — столица Франции?",
+        "a": [
+          "Париж",
+          "Лион",
+          "Марсель",
+          "Ницца"
+        ]
+      },
+      "uz": {
+        "q": "Fransiyaning poytaxti qaysi shahar?",
+        "a": [
+          "Parij",
+          "Lion",
+          "Marsel",
+          "Nitssa"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which is the largest ocean on Earth?",
+        "a": [
+          "Pacific Ocean",
+          "Atlantic Ocean",
+          "Indian Ocean",
+          "Arctic Ocean"
+        ]
+      },
+      "ru": {
+        "q": "Какой океан самый большой на Земле?",
+        "a": [
+          "Тихий океан",
+          "Атлантический океан",
+          "Индийский океан",
+          "Северный Ледовитый океан"
+        ]
+      },
+      "uz": {
+        "q": "Yer yuzidagi eng katta okean qaysi?",
+        "a": [
+          "Tinch okeani",
+          "Atlantika okeani",
+          "Hind okeani",
+          "Shimoliy Muz okeani"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which is the largest country in the world by area?",
+        "a": [
+          "Russia",
+          "Canada",
+          "China",
+          "United States"
+        ]
+      },
+      "ru": {
+        "q": "Какая страна самая большая в мире по площади?",
+        "a": [
+          "Россия",
+          "Канада",
+          "Китай",
+          "США"
+        ]
+      },
+      "uz": {
+        "q": "Maydoni bo'yicha dunyodagi eng katta davlat qaysi?",
+        "a": [
+          "Rossiya",
+          "Kanada",
+          "Xitoy",
+          "AQSh"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the highest mountain above sea level?",
+        "a": [
+          "Everest",
+          "K2",
+          "Kangchenjunga",
+          "Mont Blanc"
+        ]
+      },
+      "ru": {
+        "q": "Какая гора самая высокая над уровнем моря?",
+        "a": [
+          "Джомолунгма (Эверест)",
+          "Чогори (K2)",
+          "Канченджанга",
+          "Монблан"
+        ]
+      },
+      "uz": {
+        "q": "Dengiz sathidan hisoblaganda eng baland tog' qaysi?",
+        "a": [
+          "Everest (Jomolungma)",
+          "K2 (Chogori)",
+          "Kanchenjanga",
+          "Monblan"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which is the largest hot desert in the world?",
+        "a": [
+          "Sahara",
+          "Arabian Desert",
+          "Kalahari",
+          "Thar"
+        ]
+      },
+      "ru": {
+        "q": "Какая жаркая пустыня самая большая в мире?",
+        "a": [
+          "Сахара",
+          "Аравийская пустыня",
+          "Калахари",
+          "Тар"
+        ]
+      },
+      "uz": {
+        "q": "Dunyodagi eng katta issiq cho'l qaysi?",
+        "a": [
+          "Sahroi Kabir",
+          "Arabiston cho'li",
+          "Kalaxari",
+          "Tar cho'li"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the capital of Uzbekistan?",
+        "a": [
+          "Tashkent",
+          "Samarkand",
+          "Bukhara",
+          "Namangan"
+        ]
+      },
+      "ru": {
+        "q": "Какой город — столица Узбекистана?",
+        "a": [
+          "Ташкент",
+          "Самарканд",
+          "Бухара",
+          "Наманган"
+        ]
+      },
+      "uz": {
+        "q": "O'zbekistonning poytaxti qaysi shahar?",
+        "a": [
+          "Toshkent",
+          "Samarqand",
+          "Buxoro",
+          "Namangan"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In which city is the Statue of Liberty?",
+        "a": [
+          "New York",
+          "Washington",
+          "Boston",
+          "Philadelphia"
+        ]
+      },
+      "ru": {
+        "q": "В каком городе стоит статуя Свободы?",
+        "a": [
+          "Нью-Йорк",
+          "Вашингтон",
+          "Бостон",
+          "Филадельфия"
+        ]
+      },
+      "uz": {
+        "q": "Ozodlik haykali qaysi shaharda joylashgan?",
+        "a": [
+          "Nyu-York",
+          "Vashington",
+          "Boston",
+          "Filadelfiya"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which country is shaped like a boot on the map?",
+        "a": [
+          "Italy",
+          "Greece",
+          "Spain",
+          "Croatia"
+        ]
+      },
+      "ru": {
+        "q": "Очертания какой страны на карте напоминают сапог?",
+        "a": [
+          "Италия",
+          "Греция",
+          "Испания",
+          "Хорватия"
+        ]
+      },
+      "uz": {
+        "q": "Xaritada qaysi davlat etikka o'xshaydi?",
+        "a": [
+          "Italiya",
+          "Gretsiya",
+          "Ispaniya",
+          "Xorvatiya"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the currency of the United Kingdom?",
+        "a": [
+          "Pound sterling",
+          "Euro",
+          "Dollar",
+          "Franc"
+        ]
+      },
+      "ru": {
+        "q": "Какая национальная валюта Великобритании?",
+        "a": [
+          "Фунт стерлингов",
+          "Евро",
+          "Доллар",
+          "Франк"
+        ]
+      },
+      "uz": {
+        "q": "Buyuk Britaniyada qaysi valyuta ishlatiladi?",
+        "a": [
+          "Funt sterling",
+          "Yevro",
+          "Dollar",
+          "Frank"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Whose flag is a single red circle on a white background?",
+        "a": [
+          "Japan",
+          "South Korea",
+          "China",
+          "Bangladesh"
+        ]
+      },
+      "ru": {
+        "q": "Флаг какой страны — красный круг на белом фоне?",
+        "a": [
+          "Япония",
+          "Южная Корея",
+          "Китай",
+          "Бангладеш"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi davlat bayrog'i oq fonda bitta qizil doiradan iborat?",
+        "a": [
+          "Yaponiya",
+          "Janubiy Koreya",
+          "Xitoy",
+          "Bangladesh"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which river flows through London?",
+        "a": [
+          "Thames",
+          "Seine",
+          "Rhine",
+          "Danube"
+        ]
+      },
+      "ru": {
+        "q": "Какая река протекает через Лондон?",
+        "a": [
+          "Темза",
+          "Сена",
+          "Рейн",
+          "Дунай"
+        ]
+      },
+      "uz": {
+        "q": "London orqali qaysi daryo oqib o'tadi?",
+        "a": [
+          "Temza",
+          "Sena",
+          "Reyn",
+          "Dunay"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Into which ocean does the Amazon flow?",
+        "a": [
+          "Atlantic Ocean",
+          "Pacific Ocean",
+          "Indian Ocean",
+          "Arctic Ocean"
+        ]
+      },
+      "ru": {
+        "q": "В какой океан впадает Амазонка?",
+        "a": [
+          "Атлантический океан",
+          "Тихий океан",
+          "Индийский океан",
+          "Северный Ледовитый океан"
+        ]
+      },
+      "uz": {
+        "q": "Amazonka qaysi okeanga quyiladi?",
+        "a": [
+          "Atlantika okeani",
+          "Tinch okeani",
+          "Hind okeani",
+          "Shimoliy Muz okeani"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which is the smallest continent?",
+        "a": [
+          "Australia",
+          "Antarctica",
+          "South America",
+          "North America"
+        ]
+      },
+      "ru": {
+        "q": "Какой материк самый маленький?",
+        "a": [
+          "Австралия",
+          "Антарктида",
+          "Южная Америка",
+          "Северная Америка"
+        ]
+      },
+      "uz": {
+        "q": "Eng kichik materik qaysi?",
+        "a": [
+          "Avstraliya",
+          "Antarktida",
+          "Janubiy Amerika",
+          "Shimoliy Amerika"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which is the largest island in the world?",
+        "a": [
+          "Greenland",
+          "New Guinea",
+          "Borneo",
+          "Madagascar"
+        ]
+      },
+      "ru": {
+        "q": "Какой остров самый большой в мире?",
+        "a": [
+          "Гренландия",
+          "Новая Гвинея",
+          "Калимантан",
+          "Мадагаскар"
+        ]
+      },
+      "uz": {
+        "q": "Dunyodagi eng katta orol qaysi?",
+        "a": [
+          "Grenlandiya",
+          "Yangi Gvineya",
+          "Kalimantan",
+          "Madagaskar"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which is the smallest country in the world by area?",
+        "a": [
+          "Vatican City",
+          "Monaco",
+          "San Marino",
+          "Malta"
+        ]
+      },
+      "ru": {
+        "q": "Какое государство самое маленькое в мире по площади?",
+        "a": [
+          "Ватикан",
+          "Монако",
+          "Сан-Марино",
+          "Мальта"
+        ]
+      },
+      "uz": {
+        "q": "Maydoni bo'yicha dunyodagi eng kichik davlat qaysi?",
+        "a": [
+          "Vatikan",
+          "Monako",
+          "San-Marino",
+          "Malta"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which is the only country that borders Portugal?",
+        "a": [
+          "Spain",
+          "France",
+          "Morocco",
+          "Italy"
+        ]
+      },
+      "ru": {
+        "q": "С какой единственной страной граничит Португалия?",
+        "a": [
+          "Испания",
+          "Франция",
+          "Марокко",
+          "Италия"
+        ]
+      },
+      "uz": {
+        "q": "Portugaliya faqat qaysi davlat bilan chegaradosh?",
+        "a": [
+          "Ispaniya",
+          "Fransiya",
+          "Marokash",
+          "Italiya"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In which city are the Acropolis and the Parthenon?",
+        "a": [
+          "Athens",
+          "Rome",
+          "Thessaloniki",
+          "Istanbul"
+        ]
+      },
+      "ru": {
+        "q": "В каком городе находятся Акрополь и Парфенон?",
+        "a": [
+          "Афины",
+          "Рим",
+          "Салоники",
+          "Стамбул"
+        ]
+      },
+      "uz": {
+        "q": "Akropol va Parfenon qaysi shaharda joylashgan?",
+        "a": [
+          "Afina",
+          "Rim",
+          "Saloniki",
+          "Istanbul"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "The Christ the Redeemer statue overlooks which city?",
+        "a": [
+          "Rio de Janeiro",
+          "São Paulo",
+          "Buenos Aires",
+          "Lima"
+        ]
+      },
+      "ru": {
+        "q": "Над каким городом возвышается статуя Христа-Искупителя?",
+        "a": [
+          "Рио-де-Жанейро",
+          "Сан-Паулу",
+          "Буэнос-Айрес",
+          "Лима"
+        ]
+      },
+      "uz": {
+        "q": "Mashhur Xaloskor Iso Masih haykali qaysi shahar uzra qad rostlagan?",
+        "a": [
+          "Rio-de-Janeyro",
+          "San-Paulu",
+          "Buenos-Ayres",
+          "Lima"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which canal links the Mediterranean Sea with the Red Sea?",
+        "a": [
+          "Suez Canal",
+          "Panama Canal",
+          "Kiel Canal",
+          "Corinth Canal"
+        ]
+      },
+      "ru": {
+        "q": "Какой канал соединяет Средиземное и Красное моря?",
+        "a": [
+          "Суэцкий канал",
+          "Панамский канал",
+          "Кильский канал",
+          "Коринфский канал"
+        ]
+      },
+      "uz": {
+        "q": "O'rta Yer dengizi bilan Qizil dengizni qaysi kanal bog'laydi?",
+        "a": [
+          "Suvaysh kanali",
+          "Panama kanali",
+          "Kil kanali",
+          "Korinf kanali"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which line divides the Earth into the Northern and Southern Hemispheres?",
+        "a": [
+          "Equator",
+          "Prime Meridian",
+          "Tropic of Cancer",
+          "Arctic Circle"
+        ]
+      },
+      "ru": {
+        "q": "Какая линия делит Землю на Северное и Южное полушария?",
+        "a": [
+          "Экватор",
+          "Нулевой меридиан",
+          "Северный тропик",
+          "Северный полярный круг"
+        ]
+      },
+      "uz": {
+        "q": "Yerni Shimoliy va Janubiy yarimsharlarga qaysi chiziq ajratadi?",
+        "a": [
+          "Ekvator",
+          "Bosh meridian",
+          "Shimoliy tropik",
+          "Shimoliy qutb doirasi"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which country has a red maple leaf on its flag?",
+        "a": [
+          "Canada",
+          "United States",
+          "Australia",
+          "New Zealand"
+        ]
+      },
+      "ru": {
+        "q": "На флаге какой страны изображён красный кленовый лист?",
+        "a": [
+          "Канада",
+          "США",
+          "Австралия",
+          "Новая Зеландия"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi davlat bayrog'ida qizil zarang bargi tasvirlangan?",
+        "a": [
+          "Kanada",
+          "AQSh",
+          "Avstraliya",
+          "Yangi Zelandiya"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the capital of Canada?",
+        "a": [
+          "Ottawa",
+          "Toronto",
+          "Montreal",
+          "Vancouver"
+        ]
+      },
+      "ru": {
+        "q": "Какой город — столица Канады?",
+        "a": [
+          "Оттава",
+          "Торонто",
+          "Монреаль",
+          "Ванкувер"
+        ]
+      },
+      "uz": {
+        "q": "Kanadaning poytaxti qaysi shahar?",
+        "a": [
+          "Ottava",
+          "Toronto",
+          "Monreal",
+          "Vankuver"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the capital of Australia?",
+        "a": [
+          "Canberra",
+          "Sydney",
+          "Melbourne",
+          "Perth"
+        ]
+      },
+      "ru": {
+        "q": "Какой город — столица Австралии?",
+        "a": [
+          "Канберра",
+          "Сидней",
+          "Мельбурн",
+          "Перт"
+        ]
+      },
+      "uz": {
+        "q": "Avstraliyaning poytaxti qaysi shahar?",
+        "a": [
+          "Kanberra",
+          "Sidney",
+          "Melburn",
+          "Pert"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the capital of Turkey?",
+        "a": [
+          "Ankara",
+          "Istanbul",
+          "Izmir",
+          "Antalya"
+        ]
+      },
+      "ru": {
+        "q": "Какой город — столица Турции?",
+        "a": [
+          "Анкара",
+          "Стамбул",
+          "Измир",
+          "Анталья"
+        ]
+      },
+      "uz": {
+        "q": "Turkiyaning poytaxti qaysi shahar?",
+        "a": [
+          "Anqara",
+          "Istanbul",
+          "Izmir",
+          "Antaliya"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the capital of New Zealand?",
+        "a": [
+          "Wellington",
+          "Auckland",
+          "Christchurch",
+          "Dunedin"
+        ]
+      },
+      "ru": {
+        "q": "Какой город — столица Новой Зеландии?",
+        "a": [
+          "Веллингтон",
+          "Окленд",
+          "Крайстчерч",
+          "Данидин"
+        ]
+      },
+      "uz": {
+        "q": "Yangi Zelandiyaning poytaxti qaysi shahar?",
+        "a": [
+          "Vellington",
+          "Oklend",
+          "Kraystcherch",
+          "Danidin"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In which city is the Registan, the ensemble of three madrasahs?",
+        "a": [
+          "Samarkand",
+          "Khiva",
+          "Kokand",
+          "Shahrisabz"
+        ]
+      },
+      "ru": {
+        "q": "В каком городе находится Регистан — ансамбль из трёх медресе?",
+        "a": [
+          "Самарканд",
+          "Хива",
+          "Коканд",
+          "Шахрисабз"
+        ]
+      },
+      "uz": {
+        "q": "Uchta madrasadan iborat Registon ansambli qaysi shaharda?",
+        "a": [
+          "Samarqand",
+          "Xiva",
+          "Qo'qon",
+          "Shahrisabz"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "The walled old town of Itchan Kala is in which city?",
+        "a": [
+          "Khiva",
+          "Bukhara",
+          "Samarkand",
+          "Kokand"
+        ]
+      },
+      "ru": {
+        "q": "В каком городе находится Ичан-Кала — старый город за крепостными стенами?",
+        "a": [
+          "Хива",
+          "Бухара",
+          "Самарканд",
+          "Коканд"
+        ]
+      },
+      "uz": {
+        "q": "Devorlar bilan o'ralgan qadimiy Ichan qal'a qaysi shaharda?",
+        "a": [
+          "Xiva",
+          "Buxoro",
+          "Samarqand",
+          "Qo'qon"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In which city does the Kalon Minaret stand?",
+        "a": [
+          "Bukhara",
+          "Samarkand",
+          "Khiva",
+          "Termez"
+        ]
+      },
+      "ru": {
+        "q": "В каком городе стоит минарет Калян?",
+        "a": [
+          "Бухара",
+          "Самарканд",
+          "Хива",
+          "Термез"
+        ]
+      },
+      "uz": {
+        "q": "Minorai Kalon qaysi shaharda joylashgan?",
+        "a": [
+          "Buxoro",
+          "Samarqand",
+          "Xiva",
+          "Termiz"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which two great rivers feed the Aral Sea?",
+        "a": [
+          "Amu Darya and Syr Darya",
+          "Volga and Ural",
+          "Ob and Irtysh",
+          "Tigris and Euphrates"
+        ]
+      },
+      "ru": {
+        "q": "Какие две большие реки питают Аральское море?",
+        "a": [
+          "Амударья и Сырдарья",
+          "Волга и Урал",
+          "Обь и Иртыш",
+          "Тигр и Евфрат"
+        ]
+      },
+      "uz": {
+        "q": "Orol dengizini qaysi ikki yirik daryo suv bilan ta'minlaydi?",
+        "a": [
+          "Amudaryo va Sirdaryo",
+          "Volga va Ural",
+          "Ob va Irtish",
+          "Dajla va Frot"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which of these countries borders Uzbekistan?",
+        "a": [
+          "Afghanistan",
+          "Iran",
+          "China",
+          "Pakistan"
+        ]
+      },
+      "ru": {
+        "q": "Какая из этих стран граничит с Узбекистаном?",
+        "a": [
+          "Афганистан",
+          "Иран",
+          "Китай",
+          "Пакистан"
+        ]
+      },
+      "uz": {
+        "q": "Quyidagi davlatlardan qaysi biri O'zbekiston bilan chegaradosh?",
+        "a": [
+          "Afg'oniston",
+          "Eron",
+          "Xitoy",
+          "Pokiston"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "The Fergana Valley is shared by Uzbekistan, Kyrgyzstan and which other country?",
+        "a": [
+          "Tajikistan",
+          "Kazakhstan",
+          "Turkmenistan",
+          "Afghanistan"
+        ]
+      },
+      "ru": {
+        "q": "Ферганская долина лежит в Узбекистане, Кыргызстане и какой ещё стране?",
+        "a": [
+          "Таджикистан",
+          "Казахстан",
+          "Туркменистан",
+          "Афганистан"
+        ]
+      },
+      "uz": {
+        "q": "Farg'ona vodiysi O'zbekiston, Qirg'iziston va yana qaysi davlat hududida joylashgan?",
+        "a": [
+          "Tojikiston",
+          "Qozog'iston",
+          "Turkmaniston",
+          "Afg'oniston"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which desert lies between the Amu Darya and the Syr Darya?",
+        "a": [
+          "Kyzylkum",
+          "Karakum",
+          "Gobi",
+          "Taklamakan"
+        ]
+      },
+      "ru": {
+        "q": "Какая пустыня лежит между Амударьёй и Сырдарьёй?",
+        "a": [
+          "Кызылкум",
+          "Каракумы",
+          "Гоби",
+          "Такламакан"
+        ]
+      },
+      "uz": {
+        "q": "Amudaryo bilan Sirdaryo oralig'ida qaysi cho'l joylashgan?",
+        "a": [
+          "Qizilqum",
+          "Qoraqum",
+          "Gobi",
+          "Taklamakon"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which two countries share the longest international border in the world?",
+        "a": [
+          "Canada and the USA",
+          "Russia and China",
+          "Chile and Argentina",
+          "Brazil and Peru"
+        ]
+      },
+      "ru": {
+        "q": "Какие две страны разделяет самая длинная государственная граница в мире?",
+        "a": [
+          "Канада и США",
+          "Россия и Китай",
+          "Чили и Аргентина",
+          "Бразилия и Перу"
+        ]
+      },
+      "uz": {
+        "q": "Dunyodagi eng uzun davlat chegarasi qaysi ikki davlat o'rtasida?",
+        "a": [
+          "Kanada va AQSh",
+          "Rossiya va Xitoy",
+          "Chili va Argentina",
+          "Braziliya va Peru"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the currency of Switzerland?",
+        "a": [
+          "Swiss franc",
+          "Euro",
+          "Krona",
+          "Lira"
+        ]
+      },
+      "ru": {
+        "q": "Какая национальная валюта Швейцарии?",
+        "a": [
+          "Швейцарский франк",
+          "Евро",
+          "Крона",
+          "Лира"
+        ]
+      },
+      "uz": {
+        "q": "Shveytsariyada qaysi valyuta ishlatiladi?",
+        "a": [
+          "Shveytsariya franki",
+          "Yevro",
+          "Krona",
+          "Lira"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "The Equator passes through which of these African countries?",
+        "a": [
+          "Kenya",
+          "Nigeria",
+          "Egypt",
+          "South Africa"
+        ]
+      },
+      "ru": {
+        "q": "Через какую из этих африканских стран проходит экватор?",
+        "a": [
+          "Кения",
+          "Нигерия",
+          "Египет",
+          "ЮАР"
+        ]
+      },
+      "uz": {
+        "q": "Ekvator quyidagi Afrika davlatlaridan qaysi biri orqali o'tadi?",
+        "a": [
+          "Keniya",
+          "Nigeriya",
+          "Misr",
+          "Janubiy Afrika"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which is the smallest ocean?",
+        "a": [
+          "Arctic Ocean",
+          "Indian Ocean",
+          "Southern Ocean",
+          "Atlantic Ocean"
+        ]
+      },
+      "ru": {
+        "q": "Какой океан самый маленький?",
+        "a": [
+          "Северный Ледовитый океан",
+          "Индийский океан",
+          "Южный океан",
+          "Атлантический океан"
+        ]
+      },
+      "uz": {
+        "q": "Eng kichik okean qaysi?",
+        "a": [
+          "Shimoliy Muz okeani",
+          "Hind okeani",
+          "Janubiy okean",
+          "Atlantika okeani"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which strait separates Europe from Africa?",
+        "a": [
+          "Strait of Gibraltar",
+          "Bosphorus",
+          "Dardanelles",
+          "Strait of Hormuz"
+        ]
+      },
+      "ru": {
+        "q": "Какой пролив отделяет Европу от Африки?",
+        "a": [
+          "Гибралтарский пролив",
+          "Босфор",
+          "Дарданеллы",
+          "Ормузский пролив"
+        ]
+      },
+      "uz": {
+        "q": "Yevropani Afrikadan qaysi bo'g'oz ajratib turadi?",
+        "a": [
+          "Gibraltar bo'g'ozi",
+          "Bosfor bo'g'ozi",
+          "Dardanell bo'g'ozi",
+          "Hurmuz bo'g'ozi"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which is the longest river in Europe?",
+        "a": [
+          "Volga",
+          "Danube",
+          "Rhine",
+          "Dnieper"
+        ]
+      },
+      "ru": {
+        "q": "Какая река самая длинная в Европе?",
+        "a": [
+          "Волга",
+          "Дунай",
+          "Рейн",
+          "Днепр"
+        ]
+      },
+      "uz": {
+        "q": "Yevropadagi eng uzun daryo qaysi?",
+        "a": [
+          "Volga",
+          "Dunay",
+          "Reyn",
+          "Dnepr"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which river flows through Vienna, Budapest and Belgrade?",
+        "a": [
+          "Danube",
+          "Rhine",
+          "Elbe",
+          "Vistula"
+        ]
+      },
+      "ru": {
+        "q": "Какая река протекает через Вену, Будапешт и Белград?",
+        "a": [
+          "Дунай",
+          "Рейн",
+          "Эльба",
+          "Висла"
+        ]
+      },
+      "uz": {
+        "q": "Vena, Budapesht va Belgrad orqali qaysi daryo oqib o'tadi?",
+        "a": [
+          "Dunay",
+          "Reyn",
+          "Elba",
+          "Visla"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which is the deepest lake in the world?",
+        "a": [
+          "Lake Baikal",
+          "Lake Tanganyika",
+          "Caspian Sea",
+          "Lake Superior"
+        ]
+      },
+      "ru": {
+        "q": "Какое озеро самое глубокое в мире?",
+        "a": [
+          "Байкал",
+          "Танганьика",
+          "Каспийское море",
+          "Верхнее"
+        ]
+      },
+      "uz": {
+        "q": "Dunyodagi eng chuqur ko'l qaysi?",
+        "a": [
+          "Baykal",
+          "Tanganika",
+          "Kaspiy dengizi",
+          "Yuqori ko'l"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which is the largest lake in the world by area?",
+        "a": [
+          "Caspian Sea",
+          "Lake Superior",
+          "Lake Victoria",
+          "Lake Baikal"
+        ]
+      },
+      "ru": {
+        "q": "Какое озеро самое большое в мире по площади?",
+        "a": [
+          "Каспийское море",
+          "Верхнее",
+          "Виктория",
+          "Байкал"
+        ]
+      },
+      "uz": {
+        "q": "Maydoni bo'yicha dunyodagi eng katta ko'l qaysi?",
+        "a": [
+          "Kaspiy dengizi",
+          "Yuqori ko'l",
+          "Viktoriya",
+          "Baykal"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which is Africa's largest lake by area?",
+        "a": [
+          "Lake Victoria",
+          "Lake Tanganyika",
+          "Lake Malawi",
+          "Lake Chad"
+        ]
+      },
+      "ru": {
+        "q": "Какое озеро самое большое в Африке по площади?",
+        "a": [
+          "Виктория",
+          "Танганьика",
+          "Малави",
+          "Чад"
+        ]
+      },
+      "uz": {
+        "q": "Maydoni bo'yicha Afrikadagi eng katta ko'l qaysi?",
+        "a": [
+          "Viktoriya",
+          "Tanganika",
+          "Malavi",
+          "Chad"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which mountains run north to south across Russia and divide Europe from Asia?",
+        "a": [
+          "Ural Mountains",
+          "Caucasus",
+          "Altai",
+          "Carpathians"
+        ]
+      },
+      "ru": {
+        "q": "Какие горы тянутся через Россию с севера на юг, разделяя Европу и Азию?",
+        "a": [
+          "Уральские горы",
+          "Кавказ",
+          "Алтай",
+          "Карпаты"
+        ]
+      },
+      "uz": {
+        "q": "Rossiya bo'ylab shimoldan janubga cho'zilib, Yevropa va Osiyoni ajratuvchi tog'lar qaysi?",
+        "a": [
+          "Ural tog'lari",
+          "Kavkaz tog'lari",
+          "Oltoy tog'lari",
+          "Karpat tog'lari"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the highest mountain in Africa?",
+        "a": [
+          "Kilimanjaro",
+          "Mount Kenya",
+          "Mount Cameroon",
+          "Toubkal"
+        ]
+      },
+      "ru": {
+        "q": "Какая гора самая высокая в Африке?",
+        "a": [
+          "Килиманджаро",
+          "Гора Кения",
+          "Гора Камерун",
+          "Тубкаль"
+        ]
+      },
+      "uz": {
+        "q": "Afrikadagi eng baland tog' qaysi?",
+        "a": [
+          "Kilimanjaro",
+          "Keniya tog'i",
+          "Kamerun tog'i",
+          "Tubkal"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "The Gobi Desert lies in China and which other country?",
+        "a": [
+          "Mongolia",
+          "Kazakhstan",
+          "Russia",
+          "Afghanistan"
+        ]
+      },
+      "ru": {
+        "q": "Пустыня Гоби лежит в Китае и в какой ещё стране?",
+        "a": [
+          "Монголия",
+          "Казахстан",
+          "Россия",
+          "Афганистан"
+        ]
+      },
+      "uz": {
+        "q": "Gobi cho'li Xitoy va yana qaysi davlat hududida joylashgan?",
+        "a": [
+          "Mo'g'uliston",
+          "Qozog'iston",
+          "Rossiya",
+          "Afg'oniston"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which is the largest island in the Mediterranean Sea?",
+        "a": [
+          "Sicily",
+          "Sardinia",
+          "Cyprus",
+          "Crete"
+        ]
+      },
+      "ru": {
+        "q": "Какой остров самый большой в Средиземном море?",
+        "a": [
+          "Сицилия",
+          "Сардиния",
+          "Кипр",
+          "Крит"
+        ]
+      },
+      "uz": {
+        "q": "O'rta Yer dengizidagi eng katta orol qaysi?",
+        "a": [
+          "Sitsiliya",
+          "Sardiniya",
+          "Kipr",
+          "Krit"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Greenwich, through which the Prime Meridian runs, is part of which city?",
+        "a": [
+          "London",
+          "Paris",
+          "Madrid",
+          "Lisbon"
+        ]
+      },
+      "ru": {
+        "q": "Гринвич, через который проходит нулевой меридиан, — район какого города?",
+        "a": [
+          "Лондон",
+          "Париж",
+          "Мадрид",
+          "Лиссабон"
+        ]
+      },
+      "uz": {
+        "q": "Bosh meridian o'tadigan Grinvich qaysi shaharning bir qismi?",
+        "a": [
+          "London",
+          "Parij",
+          "Madrid",
+          "Lissabon"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which imaginary line, mostly in the Pacific, marks where the calendar date changes?",
+        "a": [
+          "International Date Line",
+          "Prime Meridian",
+          "Equator",
+          "Tropic of Capricorn"
+        ]
+      },
+      "ru": {
+        "q": "Какая условная линия, проходящая в основном по Тихому океану, разделяет календарные даты?",
+        "a": [
+          "Линия перемены дат",
+          "Нулевой меридиан",
+          "Экватор",
+          "Южный тропик"
+        ]
+      },
+      "uz": {
+        "q": "Asosan Tinch okeanidan o'tadigan qaysi shartli chiziqda kalendar sanasi almashadi?",
+        "a": [
+          "Sana o'zgarish chizig'i",
+          "Bosh meridian",
+          "Ekvator",
+          "Janubiy tropik"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Whose flag shows an eagle on a cactus devouring a snake?",
+        "a": [
+          "Mexico",
+          "Spain",
+          "Peru",
+          "Albania"
+        ]
+      },
+      "ru": {
+        "q": "На флаге какой страны изображён орёл на кактусе, терзающий змею?",
+        "a": [
+          "Мексика",
+          "Испания",
+          "Перу",
+          "Албания"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi davlat bayrog'ida kaktus ustida ilonni cho'qiyotgan burgut tasvirlangan?",
+        "a": [
+          "Meksika",
+          "Ispaniya",
+          "Peru",
+          "Albaniya"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In which city is the Sagrada Família?",
+        "a": [
+          "Barcelona",
+          "Madrid",
+          "Seville",
+          "Valencia"
+        ]
+      },
+      "ru": {
+        "q": "В каком городе находится храм Саграда Фамилия?",
+        "a": [
+          "Барселона",
+          "Мадрид",
+          "Севилья",
+          "Валенсия"
+        ]
+      },
+      "uz": {
+        "q": "Sagrada Familiya ibodatxonasi qaysi shaharda joylashgan?",
+        "a": [
+          "Barselona",
+          "Madrid",
+          "Sevilya",
+          "Valensiya"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In which country is Machu Picchu?",
+        "a": [
+          "Peru",
+          "Bolivia",
+          "Chile",
+          "Ecuador"
+        ]
+      },
+      "ru": {
+        "q": "В какой стране находится Мачу-Пикчу?",
+        "a": [
+          "Перу",
+          "Боливия",
+          "Чили",
+          "Эквадор"
+        ]
+      },
+      "uz": {
+        "q": "Machu-Pikchu qaysi davlatda joylashgan?",
+        "a": [
+          "Peru",
+          "Boliviya",
+          "Chili",
+          "Ekvador"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In which Indian city is the Taj Mahal?",
+        "a": [
+          "Agra",
+          "Delhi",
+          "Mumbai",
+          "Jaipur"
+        ]
+      },
+      "ru": {
+        "q": "В каком индийском городе находится Тадж-Махал?",
+        "a": [
+          "Агра",
+          "Дели",
+          "Мумбаи",
+          "Джайпур"
+        ]
+      },
+      "uz": {
+        "q": "Tojmahal Hindistonning qaysi shahrida joylashgan?",
+        "a": [
+          "Agra",
+          "Dehli",
+          "Mumbay",
+          "Jaypur"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the currency of India?",
+        "a": [
+          "Rupee",
+          "Taka",
+          "Yuan",
+          "Riyal"
+        ]
+      },
+      "ru": {
+        "q": "Какая национальная валюта Индии?",
+        "a": [
+          "Рупия",
+          "Така",
+          "Юань",
+          "Риал"
+        ]
+      },
+      "uz": {
+        "q": "Hindistonda qaysi valyuta ishlatiladi?",
+        "a": [
+          "Rupiya",
+          "Taka",
+          "Yuan",
+          "Riyol"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Uzbekistan is one of only two doubly landlocked countries. Which is the other?",
+        "a": [
+          "Liechtenstein",
+          "Switzerland",
+          "Austria",
+          "Luxembourg"
+        ]
+      },
+      "ru": {
+        "q": "Узбекистан — одна из двух дважды внутриконтинентальных стран мира. Какая вторая?",
+        "a": [
+          "Лихтенштейн",
+          "Швейцария",
+          "Австрия",
+          "Люксембург"
+        ]
+      },
+      "uz": {
+        "q": "O'zbekiston — dengizga chiqish uchun ikki davlat chegarasini kesib o'tish kerak bo'lgan ikki davlatdan biri. Ikkinchisi qaysi?",
+        "a": [
+          "Lixtenshteyn",
+          "Shveytsariya",
+          "Avstriya",
+          "Lyuksemburg"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which river is formed where the Naryn and the Kara Darya meet?",
+        "a": [
+          "Syr Darya",
+          "Amu Darya",
+          "Zarafshan",
+          "Chu"
+        ]
+      },
+      "ru": {
+        "q": "Какая река образуется при слиянии Нарына и Карадарьи?",
+        "a": [
+          "Сырдарья",
+          "Амударья",
+          "Зеравшан",
+          "Чу"
+        ]
+      },
+      "uz": {
+        "q": "Norin va Qoradaryo qo'shilishidan qaysi daryo hosil bo'ladi?",
+        "a": [
+          "Sirdaryo",
+          "Amudaryo",
+          "Zarafshon",
+          "Chu"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which sea is bounded by ocean currents rather than by land?",
+        "a": [
+          "Sargasso Sea",
+          "Coral Sea",
+          "Caribbean Sea",
+          "Tasman Sea"
+        ]
+      },
+      "ru": {
+        "q": "Какое море ограничено не сушей, а океанскими течениями?",
+        "a": [
+          "Саргассово море",
+          "Коралловое море",
+          "Карибское море",
+          "Тасманово море"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi dengiz quruqlik bilan emas, okean oqimlari bilan chegaralangan?",
+        "a": [
+          "Sargasso dengizi",
+          "Marjon dengizi",
+          "Karib dengizi",
+          "Tasman dengizi"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which country is completely surrounded by South Africa?",
+        "a": [
+          "Lesotho",
+          "Eswatini",
+          "Botswana",
+          "Namibia"
+        ]
+      },
+      "ru": {
+        "q": "Какая страна со всех сторон окружена территорией ЮАР?",
+        "a": [
+          "Лесото",
+          "Эсватини",
+          "Ботсвана",
+          "Намибия"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi davlat har tomondan Janubiy Afrika Respublikasi bilan o'ralgan?",
+        "a": [
+          "Lesoto",
+          "Esvatini",
+          "Botsvana",
+          "Namibiya"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which African river crosses the Equator twice?",
+        "a": [
+          "Congo",
+          "Nile",
+          "Niger",
+          "Zambezi"
+        ]
+      },
+      "ru": {
+        "q": "Какая африканская река дважды пересекает экватор?",
+        "a": [
+          "Конго",
+          "Нил",
+          "Нигер",
+          "Замбези"
+        ]
+      },
+      "uz": {
+        "q": "Qaysi Afrika daryosi ekvatorni ikki marta kesib o'tadi?",
+        "a": [
+          "Kongo",
+          "Nil",
+          "Niger",
+          "Zambezi"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "Which is the driest non-polar desert in the world?",
+        "a": [
+          "Atacama",
+          "Sahara",
+          "Namib",
+          "Kalahari"
+        ]
+      },
+      "ru": {
+        "q": "Какая неполярная пустыня самая засушливая в мире?",
+        "a": [
+          "Атакама",
+          "Сахара",
+          "Намиб",
+          "Калахари"
+        ]
+      },
+      "uz": {
+        "q": "Qutbiy hududlardan tashqaridagi eng quruq cho'l qaysi?",
+        "a": [
+          "Atakama",
+          "Sahroi Kabir",
+          "Namib",
+          "Kalaxari"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "What is the highest mountain in South America?",
+        "a": [
+          "Aconcagua",
+          "Ojos del Salado",
+          "Huascarán",
+          "Cotopaxi"
+        ]
+      },
+      "ru": {
+        "q": "Какая гора самая высокая в Южной Америке?",
+        "a": [
+          "Аконкагуа",
+          "Охос-дель-Саладо",
+          "Уаскаран",
+          "Котопахи"
+        ]
+      },
+      "uz": {
+        "q": "Janubiy Amerikadagi eng baland tog' qaysi?",
+        "a": [
+          "Akonkagua",
+          "Ohos-del-Salado",
+          "Uaskaran",
+          "Kotopaxi"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In which Spanish city is the Alhambra palace?",
+        "a": [
+          "Granada",
+          "Seville",
+          "Córdoba",
+          "Toledo"
+        ]
+      },
+      "ru": {
+        "q": "В каком испанском городе находится дворец Альгамбра?",
+        "a": [
+          "Гранада",
+          "Севилья",
+          "Кордова",
+          "Толедо"
+        ]
+      },
+      "uz": {
+        "q": "Alhambra saroyi Ispaniyaning qaysi shahrida joylashgan?",
+        "a": [
+          "Granada",
+          "Sevilya",
+          "Kordova",
+          "Toledo"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "On which river are the Victoria Falls?",
+        "a": [
+          "Zambezi",
+          "Congo",
+          "Limpopo",
+          "Orange"
+        ]
+      },
+      "ru": {
+        "q": "На какой реке находится водопад Виктория?",
+        "a": [
+          "Замбези",
+          "Конго",
+          "Лимпопо",
+          "Оранжевая"
+        ]
+      },
+      "uz": {
+        "q": "Viktoriya sharsharasi qaysi daryoda joylashgan?",
+        "a": [
+          "Zambezi",
+          "Kongo",
+          "Limpopo",
+          "Oranj"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In which country is Angel Falls?",
+        "a": [
+          "Venezuela",
+          "Brazil",
+          "Guyana",
+          "Colombia"
+        ]
+      },
+      "ru": {
+        "q": "В какой стране находится водопад Анхель?",
+        "a": [
+          "Венесуэла",
+          "Бразилия",
+          "Гайана",
+          "Колумбия"
+        ]
+      },
+      "uz": {
+        "q": "Anxel sharsharasi qaysi davlatda joylashgan?",
+        "a": [
+          "Venesuela",
+          "Braziliya",
+          "Gayana",
+          "Kolumbiya"
+        ]
+      }
+    },
+    {
+      "en": {
+        "q": "In which mountain range is Mount Elbrus?",
+        "a": [
+          "Caucasus",
+          "Alps",
+          "Urals",
+          "Carpathians"
+        ]
+      },
+      "ru": {
+        "q": "В каких горах находится Эльбрус?",
+        "a": [
+          "Кавказ",
+          "Альпы",
+          "Урал",
+          "Карпаты"
+        ]
+      },
+      "uz": {
+        "q": "Elbrus tog'i qaysi tog' tizmasida joylashgan?",
+        "a": [
+          "Kavkaz tog'lari",
+          "Alp tog'lari",
+          "Ural tog'lari",
+          "Karpat tog'lari"
+        ]
+      }
+    }
+  ]
+}
