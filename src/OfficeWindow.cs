@@ -71,7 +71,15 @@ public sealed class OfficeWindow : Window
             foreach (var m in later)
             {
                 string at = TimeZoneInfo.ConvertTimeFromUtc(m.Start, TimeZoneInfo.Local).ToString("HH:mm", CultureInfo.InvariantCulture);
-                panel.Children.Add(Text($"{at}  {(m.Title.Length > 0 ? m.Title : L.T("Meeting"))}", 13, FontWeight.Normal, "#E6EAF0"));
+                var line = Text($"{at}  {(m.Title.Length > 0 ? m.Title : L.T("Meeting"))}", 13, FontWeight.Normal, "#E6EAF0");
+                if (m.JoinUrl == null) panel.Children.Add(line);
+                else
+                {
+                    // a call: its Join button here too
+                    var join = new Button { Content = L.T("Join"), Padding = new Thickness(10, 2), FontSize = 12 };
+                    join.Click += (_, _) => desk.JoinMeeting(m);
+                    panel.Children.Add(Row(line, join));
+                }
             }
         }
 

@@ -29,6 +29,10 @@ public static class Achievements
 
         // 1.8.6 · the programmer's day
 
+        new("work-join", "work", "Straight in", "Join 10 meetings with a Join button", "work.joined", 10),
+        new("work-sounds", "work", "In the zone", "Listen to focus sounds for 10 hours", "work.sounds", 600),
+        new("work-knocks", "work", "Open door", "Answer 5 knocks", "work.knocks", 5),
+
         // 1.8.6 · party games
 
         // 1.8.6 · card games
