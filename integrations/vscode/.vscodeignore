@@ -1,0 +1,12 @@
+# What stays out of the .vsix: sources, tests and build tooling. The package keeps out/src, the
+# manifest, the translations, the icon, the README, the CHANGELOG and the LICENSE.
+src/**
+test/**
+out/test/**
+node_modules/**
+.vscode-test/**
+.gitignore
+tsconfig.json
+**/*.map
+**/*.ts
+*.vsix
