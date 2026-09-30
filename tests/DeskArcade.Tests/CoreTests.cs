@@ -167,6 +167,7 @@ public class TranslationCoverageTests
         }
         foreach (var c in Daily.Pool) yield return c.Text;
         foreach (var s in DeskArcade.Games.BingoCard.Desk) yield return s.Text; // shown through L.F(square.Text, amount)
+        foreach (var d in DeskArcade.Games.ShortcutDrills.All) yield return d.Action; // shown through L.T(drill.Action)
     }
 
     /// <summary>A C# string literal's text as the program sees it: \" and \\ undone.</summary>

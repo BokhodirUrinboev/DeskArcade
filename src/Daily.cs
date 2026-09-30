@@ -74,6 +74,8 @@ public sealed class Daily
         new("hearts", "hearts.hands", 4, "Play {0} hands of Hearts"),
 
         // 1.8.6 · word and key games
+        new("bits", "bits.cleared", 15, "Clear {0} numbers in Bit Flip"),
+        new("keys", "keys.right", 8, "Press {0} shortcuts right in Shortcut Trainer"),
         new("words", "words.won", 2, "Solve {0} words in Word Guess"),
 
         // 1.8.6 · Spot the Bug

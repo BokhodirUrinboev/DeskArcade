@@ -58,6 +58,12 @@ public static class Achievements
         // 1.8.6 · word and key games
         new("words-25", "words", "Wordsmith", "Solve 25 words in Word Guess", "words.won", 25),
         new("words-two", "words", "Lucky guess", "Solve a word in two guesses", "words.two", 1),
+        new("bits-100", "bits", "Bit twiddler", "Clear 100 numbers in Bit Flip", "bits.cleared", 100),
+        new("bits-16", "bits", "Sixteen bits", "Reach 16 bits in Bit Flip", "bits.level", 9),
+        new("bits-hex", "bits", "Hex appeal", "Clear 50 numbers written in hex", "bits.hex", 50),
+        new("keys-100", "keys", "Keyboard warrior", "Press 100 shortcuts right at the first try", "keys.right", 100),
+        new("keys-perfect", "keys", "No mouse needed", "Get all ten shortcuts of a drill right at the first try", "keys.perfect", 1),
+        new("keys-sets", "keys", "Polyglot", "Finish a drill in every set of Shortcut Trainer", "keys.sets", 5),
         new("words-streak", "words", "Every morning", "Solve the daily word 7 days in a row", "words.streak", 7),
 
         // 1.8.6 · Spot the Bug

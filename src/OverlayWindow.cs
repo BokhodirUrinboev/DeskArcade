@@ -305,6 +305,8 @@ public sealed partial class OverlayWindow : Window, IGameHost
 
         // 1.8.6 · word and key games (Word Guess, Shortcut Trainer, Bit Flip)
         _games.Add(new WordGuessGame(this));
+        _games.Add(new ShortcutGame(this));
+        _games.Add(new BitFlipGame(this));
 
         // 1.8.6 · Spot the Bug
         _games.Add(new SpotBugGame(this));
@@ -942,6 +944,8 @@ public sealed partial class OverlayWindow : Window, IGameHost
         "hearts" => L.T("pass three cards, then follow suit — duck the hearts and the queen of spades"),
 
         // 1.8.6 · word and key games
+        "bits" => L.T("click the bits to make the lowest number before it lands — the place values are under the bits"),
+        "keys" => L.T("click Start, then press the shortcut asked for — a miss shows the keys, and they come back until you know them"),
         "words" => L.T("type a five-letter word and press Enter — green is the right place, yellow is elsewhere in the word"),
 
         // 1.8.6 · Spot the Bug
