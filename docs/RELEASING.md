@@ -16,6 +16,9 @@ signing, publishing to the package managers, and the manual steps for Flathub. T
 - [Package managers](#package-managers)
 - [winget](#winget)
 - [Homebrew and Scoop](#homebrew-and-scoop)
+- [Chocolatey](#chocolatey)
+- [AUR](#aur)
+- [The web page](#the-web-page)
 - [Flatpak and Flathub](#flatpak-and-flathub)
 - [AppImage](#appimage)
 - [macOS](#macos)
@@ -178,6 +181,12 @@ After `release.yml` publishes a release, it runs `packages.yml`:
   pinned [wingetcreate](https://github.com/microsoft/winget-create) submits them, opening a pull request
   on microsoft/winget-pkgs from the fork `BokhodirUrinboev/winget-pkgs`. The job skips when winget-pkgs
   doesn't have the package yet, already has the version, or already has an open pull request for it.
+- **Chocolatey** (windows-latest): `packaging/chocolatey/Update-ChocolateyPackage.ps1` stamps the version, the
+  Setup URLs and their SHA256 into a copy of the package and packs it; the job installs and uninstalls it on the
+  runner and pushes it to the community repository, where it waits for moderation.
+- **AUR** (ubuntu-24.04): `packaging/aur/Update-AurPackage.ps1` stamps `pkgver` and the .deb digests into the
+  PKGBUILD and .SRCINFO; the job builds and installs the package in an Arch Linux container and pushes both files
+  to `ssh://aur@aur.archlinux.org/deskarcade-bin.git`.
 
 To publish an existing release again (after a failed push, a renewed token, or once winget accepts the
 package), run **Actions → Package managers → Run workflow** with its version.
@@ -191,6 +200,8 @@ secret.
 |---|---|---|
 | `PACKAGING_TOKEN` | [Fine-grained](https://github.com/settings/personal-access-tokens/new) | Only the repositories `homebrew-tap` and `scoop-bucket`, with Contents: Read and write |
 | `WINGET_TOKEN` | [Classic](https://github.com/settings/tokens/new) | The `public_repo` scope only; wingetcreate doesn't support fine-grained tokens |
+| `CHOCOLATEY_API_KEY` | The API key of a free [community.chocolatey.org](https://community.chocolatey.org/account/Register) account | Pushing the packages that account owns |
+| `AUR_SSH_KEY` | A private SSH key whose public half is on a free [AUR account](https://aur.archlinux.org/register) | Pushing `deskarcade-bin` |
 
 ## winget
 
@@ -247,6 +258,50 @@ templates don't need updating after a release. To stamp them by hand:
   holds the JSON in `bucket/`; users run
   `scoop bucket add deskarcade https://github.com/BokhodirUrinboev/scoop-bucket` and
   `scoop install deskarcade/deskarcade`. `checkver` and `autoupdate` let Scoop's tooling follow new releases.
+
+## Chocolatey
+
+`packaging/chocolatey/` holds the package: the nuspec and the install and uninstall scripts, which run the
+release's per-user Setup silently (`-standalone` on x64, `-arm64` on Windows on ARM) and its uninstaller. Nothing is
+embedded, so it needs no VERIFICATION.txt. The template keeps the release last stamped into it. To try a release's
+package by hand:
+
+```powershell
+.\packaging\chocolatey\Update-ChocolateyPackage.ps1 -Version 1.8.6    # stamps and packs dist\chocolatey
+choco install deskarcade --source dist\chocolatey -y                     # best in Windows Sandbox
+```
+
+**One-time setup:** register at community.chocolatey.org and put the API key from the account page in the
+`CHOCOLATEY_API_KEY` secret; the next release publishes by itself. The first version goes through human
+moderation, which can take a few days. Users then run `choco install deskarcade`.
+
+## AUR
+
+`packaging/aur/` holds `PKGBUILD` and `.SRCINFO` for `deskarcade-bin`, which unpacks the release's .deb (the
+self-contained build in `/opt/deskarcade`, the launcher, the desktop entry and the icon). Checked with 1.8.5 in an
+`archlinux:latest` container: `makepkg` built it and `pacman -U` installed it.
+
+**One-time setup:** create an AUR account, add the public half of a new SSH key to it (My Account → SSH Public
+Key), put the private half in the `AUR_SSH_KEY` secret, and push the package once by hand so the name is yours:
+
+```bash
+git clone ssh://aur@aur.archlinux.org/deskarcade-bin.git && cd deskarcade-bin
+cp ../DeskArcade/packaging/aur/PKGBUILD ../DeskArcade/packaging/aur/.SRCINFO .
+git add PKGBUILD .SRCINFO && git commit -m "deskarcade-bin 1.8.6" && git push
+```
+
+Users then install it with an AUR helper (`yay -S deskarcade-bin`) or with `makepkg -si`.
+
+## The web page
+
+`site/` is the web page: plain HTML and CSS, with the GIFs from `docs/media/`.
+[`.github/workflows/pages.yml`](../.github/workflows/pages.yml) publishes it to GitHub Pages on every push to `main`
+that touches `site/` or `docs/media/`, and by hand. **One-time setup:** Settings → Pages → Build and deployment →
+Source: GitHub Actions. It is then at https://bokhodirurinboev.github.io/DeskArcade/.
+
+The GIFs come from `tools/record-gifs.ps1`, which runs each game's demo with `--record` (numbered frames of the
+overlay, over stand-in windows) and turns the frames into looping GIFs with ffmpeg; `tools/record-gifs.csv` lists the
+games, how long to record and how to crop.
 
 ## Flatpak and Flathub
 

@@ -1,0 +1,46 @@
+# Publishes the web page (site/, with the GIFs from docs/media/) to GitHub Pages: on pushes to main that change either,
+# and by hand (Actions → Web page → Run workflow). Pages must be set to "GitHub Actions" once, in Settings → Pages;
+# docs/RELEASING.md has the details.
+name: Web page
+
+on:
+  push:
+    branches: [main]
+    paths: ['site/**', 'docs/media/**', '.github/workflows/pages.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; a newer push replaces a queued one, but a running deployment finishes.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: Put the page and the GIFs together
+        run: |
+          mkdir -p _site
+          cp -r site/. _site/
+          mkdir -p _site/media
+          cp docs/media/*.gif _site/media/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
